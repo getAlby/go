@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export function Layout({ children }: React.PropsWithChildren) {
   return (
     <>
-      <SafeAreaView className="flex-1 flex items-center justify-center p-0 h-full flex-col">
+      <SafeAreaView className="flex items-center justify-center h-full">
         <PolyfillCrypto />
         <SWRConfig value={swrConfiguration}>{children}</SWRConfig>
       </SafeAreaView>

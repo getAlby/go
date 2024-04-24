@@ -3,7 +3,11 @@
     "name": "Alby Mobile",
     "slug": "alby-mobile",
     "version": "1.0.2",
-    "scheme": ["bitcoin", "lightning", "alby"],
+    "scheme": [
+      "bitcoin",
+      "lightning",
+      "alby"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,7 +16,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
       [
         "expo-camera",
