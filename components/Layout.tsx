@@ -1,5 +1,4 @@
 import React from "react";
-import "react-native-webview";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
