@@ -1,6 +1,6 @@
 import { BarCodeScanningResult, Camera } from "expo-camera";
-import React from "react";
-import { ActivityIndicator, Pressable, Text } from "react-native";
+import React, { useEffect } from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useAppStore } from "lib/state/appStore";
 import { lnurl } from "lib/lnurl";
@@ -12,9 +12,19 @@ export function Send() {
   const [preimage, setPreimage] = React.useState("");
   const [invoice, setInvoice] = React.useState("");
 
+  useEffect(() => {
+    scan();
+  }, []);
+
   async function scan() {
     const { status } = await Camera.requestCameraPermissionsAsync();
     setScanning(status === "granted");
+  }
+
+  function reset() {
+    setInvoice("")
+    setScanning(false);
+    scan();
   }
 
   async function paste() {
@@ -96,6 +106,9 @@ export function Send() {
     return (
       <>
         <Text className="">Paid! preimage: {preimage}</Text>
+        <Pressable className="bg-primary rounded-lg p-3" onPress={reset}>
+          <Text className="text-center text-white font-semibold">Start Over</Text>
+        </Pressable>
       </>
     );
   }
@@ -107,38 +120,48 @@ export function Send() {
     return (
       <>
         <Text className="">Confirm Payment</Text>
-        <Text className="">{decodedInvoice.satoshi} sats</Text>
-
-        <Pressable className="mt-4 p-4 bg-green-300" onPress={pay}>
-          <Text className="">Pay</Text>
-        </Pressable>
-        <Pressable
-          className="mt-4 p-4 bg-green-300"
-          onPress={() => setInvoice("")}
-        >
-          <Text className="">Cancel</Text>
-        </Pressable>
+        <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
+        <View className="flex flex-row gap-3 justify-center items-center px-3 mt-3">
+          <Pressable
+            className="flex-1"
+            onPress={() => setInvoice("")}
+          >
+            <Text className="text-center">Cancel</Text>
+          </Pressable>
+          <Pressable className="flex-1 bg-primary rounded-lg p-3" onPress={pay}>
+            <Text className="text-center text-white font-semibold">Pay</Text>
+          </Pressable>
+        </View>
       </>
     );
   }
 
   return (
     <>
-      <Text className="">Pay</Text>
-      {isScanning && (
+      {isScanning && (<>
         <Camera
           onBarCodeScanned={handleBarCodeScanned}
           style={{ flex: 1, width: "100%" }}
         />
+        <View className="absolute bottom-12 mx-auto z-10 flex flex-row gap-3">
+          <Pressable className="bg-primary rounded-lg p-3" onPress={paste}>
+            <Text className="text-white">Paste from Clipboard</Text>
+          </Pressable>
+          <Pressable className="bg-primary rounded-lg p-3" onPress={paste}>
+            <Text className="text-white">Enter Manually</Text>
+          </Pressable>
+        </View>
+      </>
       )}
       {!isScanning && (
-        <Pressable className="mt-4 p-4 bg-green-300" onPress={scan}>
-          <Text className="">Scan</Text>
-        </Pressable>
+        <>
+          <Text className="mb-3">Camera Permissions Needed</Text>
+          <Pressable className="bg-primary rounded-lg p-3" onPress={scan}>
+            <Text className="text-white">Grant Permissions</Text>
+          </Pressable>
+        </>
       )}
-      <Pressable className="mt-4 p-4 bg-green-300" onPress={paste}>
-        <Text className="">Paste</Text>
-      </Pressable>
+
     </>
   );
 }
