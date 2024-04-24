@@ -5,6 +5,7 @@ import { useAppStore } from "lib/state/appStore";
 import { Setup } from "./Setup";
 import { secureStorage } from "lib/secureStorage";
 import { useTransactions } from "hooks/useTransactions";
+import { Link } from "expo-router";
 
 export function Home() {
   const nwcClient = useAppStore((store) => store.nwcClient);
@@ -36,8 +37,17 @@ export function Home() {
         </ScrollView>
       )}
 
+      <View className="flex flex-row w-full gap-4">
+        <Link href="/send" className="flex-1 p-4 bg-red-500">
+          <Text>Send</Text>
+        </Link>
+        <Link href="/receive" className="flex-1 p-4 bg-green-500">
+          <Text>Receive</Text>
+        </Link>
+      </View>
+
       <Pressable
-        className="my-8"
+        className="mt-32"
         onPress={() => {
           secureStorage.removeItem("nostrWalletConnectUrl");
           useAppStore.getState().setNWCClient(undefined);

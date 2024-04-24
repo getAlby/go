@@ -23,9 +23,13 @@ export function Setup() {
   }
 
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
-    setScanning(false);
-    console.log(`Bar code with data ${data} has been scanned!`);
-    connect(data);
+    setScanning((current) => {
+      if (current === true) {
+        // console.log(`Bar code with data ${data} has been scanned!`);
+        connect(data);
+      }
+      return false;
+    });
   };
 
   async function paste() {
