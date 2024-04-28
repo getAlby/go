@@ -1,15 +1,15 @@
-import { Pressable, ScrollView, Text, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
+import { Pressable, ScrollView, Text as RNText, View } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { Setup } from "./Setup";
-import { secureStorage } from "lib/secureStorage";
 import { useTransactions } from "hooks/useTransactions";
 import { Link } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { StatusBar } from "expo-status-bar";
-import { ArrowUp, Camera, UploadIcon } from "lucide-react-native";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
+import { AlertCircle } from "~/components/Icons";
 
 dayjs.extend(relativeTime);
 
@@ -25,54 +25,82 @@ export function Home() {
   return (
     <>
       <View className="w-full pt-12 pb-8">
-        <Text className="text-4xl text-center">
-          <Text className="text-neutral-500">₿ </Text>
-          {balance ?
+        <RNText className="text-4xl text-center">
+          <RNText className="text-neutral-500">₿ </RNText>
+          {balance ? (
             <>
-              {new Intl.NumberFormat().format(Math.floor(balance.balance / 1000))}
-            </> :
-            "Loading"}
-          {" "}sats
-        </Text>
+              {new Intl.NumberFormat().format(
+                Math.floor(balance.balance / 1000)
+              )}
+            </>
+          ) : (
+            "Loading"
+          )}{" "}
+          sats
+        </RNText>
       </View>
       <View className="flex flex-row w-full gap-x-4">
         <Pressable>
-          <Link href="/receive" className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center">
-            <Text>Receive</Text>
+          <Link
+            href="/receive"
+            className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center"
+          >
+            <RNText>Receive</RNText>
           </Link>
         </Pressable>
-        <Link href="/send" className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center">
-          <Text>Send</Text>
+        <Link
+          href="/send"
+          className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center"
+        >
+          <RNText>Send</RNText>
         </Link>
       </View>
 
-      <ScrollView className="w-full flex-1 flex flex-col gap-y-4 px-3">
-        {transactions &&
-          transactions.transactions.map((t) => (
-            <View key={t.payment_hash} className="flex flex-row items-center text-sm gap-x-4">
-              <View className="w-5">
-                <Text className="text-center">{t.type === "incoming" ? "+" : "-"}</Text>
+      <View className="px-4 py-4">
+        <Button variant="secondary">
+          <View className="flex flex-row justify-center items-center gap-2">
+            <AlertCircle className="text-primary" />
+            <Text className="">RNR button</Text>
+          </View>
+        </Button>
+      </View>
 
+      {transactions ? (
+        <ScrollView>
+          {transactions.transactions.map((t) => (
+            <View
+              key={t.payment_hash}
+              className="flex flex-row items-center text-sm gap-x-4"
+            >
+              <View className="w-5">
+                <RNText className="text-center">
+                  {t.type === "incoming" ? "+" : "-"}
+                </RNText>
               </View>
               <View className="flex flex-col flex-1">
-                <Text numberOfLines={1} className="font-medium">
-                  {t.description ? t.description : t.type === "incoming" ? "Received" : "Sent"}
-                </Text>
-                <Text className="text-neutral-500">{dayjs.unix(t.settled_at).fromNow()}</Text>
+                <RNText numberOfLines={1} className="font-medium">
+                  {t.description
+                    ? t.description
+                    : t.type === "incoming"
+                    ? "Received"
+                    : "Sent"}
+                </RNText>
+                <RNText className="text-neutral-500">
+                  {dayjs.unix(t.settled_at).fromNow()}
+                </RNText>
               </View>
               <View className="">
-                <Text className="text-right">
-                  {Math.floor(t.amount / 1000)}{" "}
-                  sats
-                </Text>
-                <Text className="text-right text-neutral-500">
-                  &nbsp;
-                </Text>
+                <RNText className="text-right">
+                  {Math.floor(t.amount / 1000)} sats
+                </RNText>
+                <RNText className="text-right text-neutral-500">&nbsp;</RNText>
               </View>
             </View>
-          ))
-        }
-      </ScrollView>
+          ))}
+        </ScrollView>
+      ) : (
+        <RNText>Loading transactions...</RNText>
+      )}
 
       {/* <Pressable
         className="mt-32"
@@ -81,7 +109,7 @@ export function Home() {
           useAppStore.getState().setNWCClient(undefined);
         }}
       >
-        <Text>Disconnect</Text>
+        <RNText>Disconnect</RNText>
       </Pressable> */}
     </>
   );
