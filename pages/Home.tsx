@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, Text, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
+import { FlatList, Pressable, ScrollView, Text, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -36,43 +36,39 @@ export function Home() {
         </Text>
       </View>
       <View className="flex flex-row w-full gap-x-4">
-        <Pressable>
-          <Link href="/receive" className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center">
-            <Text>Receive</Text>
-          </Link>
-        </Pressable>
+        <Link href="/receive" className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center">
+          <Text>Receive</Text>
+        </Link>
         <Link href="/send" className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center">
           <Text>Send</Text>
         </Link>
       </View>
 
-      <ScrollView className="w-full flex-1 flex flex-col gap-y-4 px-3">
-        {transactions &&
-          transactions.transactions.map((t) => (
-            <View key={t.payment_hash} className="flex flex-row items-center text-sm gap-x-4">
-              <View className="w-5">
-                <Text className="text-center">{t.type === "incoming" ? "+" : "-"}</Text>
-
-              </View>
-              <View className="flex flex-col flex-1">
-                <Text numberOfLines={1} className="font-medium">
-                  {t.description ? t.description : t.type === "incoming" ? "Received" : "Sent"}
-                </Text>
-                <Text className="text-neutral-500">{dayjs.unix(t.settled_at).fromNow()}</Text>
-              </View>
-              <View className="">
-                <Text className="text-right">
-                  {Math.floor(t.amount / 1000)}{" "}
-                  sats
-                </Text>
-                <Text className="text-right text-neutral-500">
-                  &nbsp;
-                </Text>
-              </View>
+      <View className="w-full flex-1 flex flex-col gap-y-4">
+        <FlatList data={transactions?.transactions}
+          renderItem={({ item }) => <View key={item.payment_hash}
+            className="flex flex-row items-center text-sm gap-x-4 px-3 py-1.5">
+            <View className="w-5">
+              <Text className="text-center">{item.type === "incoming" ? "+" : "-"}</Text>
             </View>
-          ))
-        }
-      </ScrollView>
+            <View className="flex flex-col flex-1">
+              <Text numberOfLines={1} className="font-medium">
+                {item.description ? item.description : item.type === "incoming" ? "Received" : "Sent"}
+              </Text>
+              <Text className="text-neutral-500">{dayjs.unix(item.settled_at).fromNow()}</Text>
+            </View>
+            <View className="">
+              <Text className="text-right">
+                {Math.floor(item.amount / 1000)}{" "}
+                sats
+              </Text>
+              <Text className="text-right text-neutral-500">
+                &nbsp;
+              </Text>
+            </View>
+          </View>}>
+        </FlatList>
+      </View>
 
       {/* <Pressable
         className="mt-32"
