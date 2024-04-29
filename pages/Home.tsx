@@ -48,7 +48,7 @@ export function Home() {
         >
           <Button size="lg">
             <View className="flex flex-row justify-center items-center gap-2">
-              <MoveDownRight className="text-white" />
+              <MoveDownLeft className="text-white" />
               <Text className="">Receive</Text>
             </View>
           </Button>
@@ -76,14 +76,11 @@ export function Home() {
             >
               <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
                 {t.type === "incoming" && <>
-                  <MoveDownRight className="text-green-500 " />
+                  <MoveDownLeft className="text-green-500 " />
                 </>}
                 {t.type === "outgoing" && <>
                   <MoveUpRight className="text-red-600 " />
                 </>}
-                {/* <RNText className="text-center">
-                  {t.type === "incoming" ? "+" : "-"}
-                </RNText> */}
               </View>
               <View className="flex flex-col flex-1">
                 <RNText numberOfLines={1} className="font-medium">

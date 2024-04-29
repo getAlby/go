@@ -1,10 +1,12 @@
+
 import { BarCodeScanningResult, Camera } from "expo-camera";
 import React, { useEffect } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, Text as RNText, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useAppStore } from "lib/state/appStore";
 import { lnurl } from "lib/lnurl";
 import { Invoice } from "@getalby/lightning-tools";
+import { Button } from "~/components/ui/button";
 
 export function Send() {
   const [isScanning, setScanning] = React.useState(false);
@@ -143,13 +145,10 @@ export function Send() {
           onBarCodeScanned={handleBarCodeScanned}
           style={{ flex: 1, width: "100%" }}
         />
-        <View className="absolute bottom-12 mx-auto z-10 flex flex-row gap-3">
-          <Pressable className="bg-primary rounded-lg p-3" onPress={paste}>
-            <Text className="text-white">Paste from Clipboard</Text>
-          </Pressable>
-          <Pressable className="bg-primary rounded-lg p-3" onPress={paste}>
-            <Text className="text-white">Enter Manually</Text>
-          </Pressable>
+        <View className="absolute bottom-12 w-full z-10 flex flex-row items-center justify-center gap-3">
+          <Button onPress={paste}>
+            <RNText className="text-white">Paste from Clipboard</RNText>
+          </Button>
         </View>
       </>
       )}

@@ -74,7 +74,7 @@ export default function RootLayout() {
   return (
     <SWRConfig value={swrConfiguration}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+        <StatusBar style={isDarkColorScheme ? "dark" : "light"} />
         <PolyfillCrypto />
         <Stack />
       </ThemeProvider>
