@@ -9,7 +9,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { AlertCircle } from "~/components/Icons";
+import { MoveUpRight, MoveDownRight, MoveDownLeft } from "~/components/Icons";
+import { cn } from "~/lib/utils";
 
 dayjs.extend(relativeTime);
 
@@ -39,30 +40,31 @@ export function Home() {
           sats
         </RNText>
       </View>
-      <View className="flex flex-row w-full gap-x-4">
-        <Pressable>
-          <Link
-            href="/receive"
-            className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center"
-          >
-            <RNText>Receive</RNText>
-          </Link>
-        </Pressable>
+      <View className="flex flex-row w-full gap-x-4 p-3 mb-3">
+        <Link
+          href="/receive"
+          className="flex-1"
+          asChild
+        >
+          <Button size="lg">
+            <View className="flex flex-row justify-center items-center gap-2">
+              <MoveDownRight className="text-white" />
+              <Text className="">Receive</Text>
+            </View>
+          </Button>
+        </Link>
         <Link
           href="/send"
-          className="flex-1 p-4 bg-primary text-white rounded-md font-bold text-center"
+          className="flex-1"
+          asChild
         >
-          <RNText>Send</RNText>
+          <Button size="lg">
+            <View className="flex flex-row justify-center items-center gap-2">
+              <MoveUpRight className="text-white" />
+              <Text>Send</Text>
+            </View>
+          </Button>
         </Link>
-      </View>
-
-      <View className="px-4 py-4">
-        <Button variant="secondary">
-          <View className="flex flex-row justify-center items-center gap-2">
-            <AlertCircle className="text-primary" />
-            <Text className="">RNR button</Text>
-          </View>
-        </Button>
       </View>
 
       {transactions ? (
@@ -70,28 +72,35 @@ export function Home() {
           {transactions.transactions.map((t) => (
             <View
               key={t.payment_hash}
-              className="flex flex-row items-center text-sm gap-x-4"
+              className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4"
             >
-              <View className="w-5">
-                <RNText className="text-center">
+              <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
+                {t.type === "incoming" && <>
+                  <MoveDownRight className="text-green-500 " />
+                </>}
+                {t.type === "outgoing" && <>
+                  <MoveUpRight className="text-red-600 " />
+                </>}
+                {/* <RNText className="text-center">
                   {t.type === "incoming" ? "+" : "-"}
-                </RNText>
+                </RNText> */}
               </View>
               <View className="flex flex-col flex-1">
                 <RNText numberOfLines={1} className="font-medium">
                   {t.description
                     ? t.description
                     : t.type === "incoming"
-                    ? "Received"
-                    : "Sent"}
+                      ? "Received"
+                      : "Sent"}
                 </RNText>
                 <RNText className="text-neutral-500">
                   {dayjs.unix(t.settled_at).fromNow()}
                 </RNText>
               </View>
-              <View className="">
-                <RNText className="text-right">
-                  {Math.floor(t.amount / 1000)} sats
+              <View>
+                <RNText className={cn("text-right", t.type === "incoming" ? "text-green-500" : "text-red-600")}>
+                  {Math.floor(t.amount / 1000)}
+                  <RNText className="text-neutral-500"> sats</RNText>
                 </RNText>
                 <RNText className="text-right text-neutral-500">&nbsp;</RNText>
               </View>

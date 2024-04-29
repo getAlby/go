@@ -3,6 +3,9 @@ import {
   CheckCircle,
   LucideIcon,
   XCircle,
+  MoveUpRight,
+  MoveDownRight,
+  MoveDownLeft
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -21,5 +24,8 @@ function interopIcon(icon: LucideIcon) {
 interopIcon(AlertCircle);
 interopIcon(CheckCircle);
 interopIcon(XCircle);
+interopIcon(MoveDownRight);
+interopIcon(MoveUpRight);
+interopIcon(MoveDownLeft);
 
-export { AlertCircle, CheckCircle, XCircle };
+export { AlertCircle, CheckCircle, XCircle, MoveDownRight, MoveUpRight, MoveDownLeft };
