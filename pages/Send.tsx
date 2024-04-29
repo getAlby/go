@@ -121,18 +121,24 @@ export function Send() {
     });
     return (
       <>
-        <Text className="">Confirm Payment</Text>
-        <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
-        <View className="flex flex-row gap-3 justify-center items-center px-3 mt-3">
-          <Pressable
+        <View className="flex-1 justify-center items-center">
+          <Text className="">Confirm Payment</Text>
+          <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
+        </View>
+        <View className="flex flex-row gap-3 justify-center items-center px-3 pb-3">
+          <Button
             className="flex-1"
-            onPress={() => setInvoice("")}
-          >
-            <Text className="text-center">Cancel</Text>
-          </Pressable>
-          <Pressable className="flex-1 bg-primary rounded-lg p-3" onPress={pay}>
-            <Text className="text-center text-white font-semibold">Pay</Text>
-          </Pressable>
+            size="lg"
+            variant="ghost"
+            onPress={() => setInvoice("")}>
+            <RNText className="text-foreground">Cancel</RNText>
+          </Button>
+          <Button
+            className="flex-1"
+            size="lg"
+            onPress={pay}>
+            <RNText className="text-background">Pay</RNText>
+          </Button>
         </View>
       </>
     );
