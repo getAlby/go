@@ -7,6 +7,7 @@ import { useAppStore } from "lib/state/appStore";
 import { lnurl } from "lib/lnurl";
 import { Invoice } from "@getalby/lightning-tools";
 import { Button } from "~/components/ui/button";
+import { Camera as CameraIcon } from "~/components/Icons";
 
 export function Send() {
   const [isScanning, setScanning] = React.useState(false);
@@ -153,17 +154,20 @@ export function Send() {
         />
         <View className="absolute bottom-12 w-full z-10 flex flex-row items-center justify-center gap-3">
           <Button onPress={paste}>
-            <RNText className="text-white">Paste from Clipboard</RNText>
+            <RNText className="text-background">Paste from Clipboard</RNText>
           </Button>
         </View>
       </>
       )}
       {!isScanning && (
         <>
-          <Text className="mb-3">Camera Permissions Needed</Text>
-          <Pressable className="bg-primary rounded-lg p-3" onPress={scan}>
-            <Text className="text-white">Grant Permissions</Text>
-          </Pressable>
+          <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
+            <CameraIcon className="text-black w-32 h-32" />
+            <Text className="text-2xl">Camera Permissions Needed</Text>
+            <Button onPress={scan}>
+              <RNText className="text-background">Grant Permissions</RNText>
+            </Button>
+          </View>
         </>
       )}
 

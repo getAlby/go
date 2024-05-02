@@ -16,6 +16,7 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
+import { Home } from "~/pages/Home";
 
 const LIGHT_THEME: Theme = {
   dark: false,
