@@ -21,10 +21,12 @@ export function ConfirmPayment() {
         invoice,
       });
 
+      console.log("payInvoice Response", response);
+
       router.dismissAll();
       router.replace({
         pathname: "/send/success",
-        params: { primage: response.preimage },
+        params: { preimage: response.preimage },
       });
     } catch (error) {
       console.error(error);
@@ -51,7 +53,6 @@ export function ConfirmPayment() {
       {!isLoading && (
         <>
           <View className="flex-1 justify-center items-center">
-            {!isLoading && <></>}
             <Text className="">Confirm Payment</Text>
             <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
             {decodedInvoice.description && (

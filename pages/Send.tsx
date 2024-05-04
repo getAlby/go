@@ -1,6 +1,11 @@
 import { BarCodeScanningResult, Camera } from "expo-camera";
 import React, { useEffect } from "react";
-import { ActivityIndicator, Text as RNText, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text as RNText,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useAppStore } from "lib/state/appStore";
 import { lnurl } from "lib/lnurl";
@@ -13,6 +18,7 @@ import { Text } from "~/components/ui/text";
 export function Send() {
   const [isScanning, setScanning] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const [autoFocus, setAutoFocus] = React.useState(true);
 
   useEffect(() => {
     scan();
@@ -48,22 +54,18 @@ export function Send() {
     setLoading(true);
     try {
       const lnurlValue = lnurl.findLnurl(text);
+      console.log("Checked lnurl value", text, lnurlValue);
       if (lnurlValue) {
-        /*const lnurlDetails = await lnurl.getDetails(lnurlValue);
+        const lnurlDetails = await lnurl.getDetails(lnurlValue);
 
         if (lnurlDetails.tag !== "payRequest") {
           throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
         }
 
-        // TODO: allow user to enter these
-        const callback = new URL(lnurlDetails.callback);
-        callback.searchParams.append("amount", "1000");
-        callback.searchParams.append("comment", "Test");
-        callback.searchParams.append("payerdata", JSON.stringify({ test: 1 }));
-        const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-        console.log("Got pay request", lnurlPayInfo.pr);
-        text = lnurlPayInfo.pr;*/
-        console.error("TODO");
+        router.push({
+          pathname: "/send/lnurl-pay",
+          params: { lnurlDetailsJSON: JSON.stringify(lnurlDetails) },
+        });
       } else {
         router.push({ pathname: "/send/confirm", params: { invoice: text } });
       }
@@ -73,6 +75,13 @@ export function Send() {
     setLoading(false);
   }
 
+  const focusCamera = () => {
+    setAutoFocus(false);
+    setTimeout(() => {
+      setAutoFocus(true);
+    }, 200);
+  };
+
   return (
     <>
       <Stack.Screen
@@ -80,7 +89,11 @@ export function Send() {
           title: "Send",
         }}
       />
-      {isLoading && <ActivityIndicator />}
+      {isLoading && (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator />
+        </View>
+      )}
       {!isLoading && (
         <>
           {isScanning && (
@@ -88,7 +101,21 @@ export function Send() {
               <Camera
                 onBarCodeScanned={handleBarCodeScanned}
                 style={{ flex: 1, width: "100%" }}
-              />
+                autoFocus={autoFocus}
+              >
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={focusCamera}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "transparent",
+                  }}
+                />
+              </Camera>
               <View className="absolute bottom-12 w-full z-10 flex flex-row items-center justify-center gap-3">
                 <Button onPress={paste}>
                   <RNText className="text-background">

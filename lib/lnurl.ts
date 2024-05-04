@@ -7,7 +7,7 @@ interface LNURLError {
   reason: string;
 }
 
-interface LNURLPayServiceResponse {
+export interface LNURLPayServiceResponse {
   callback: string; // The URL from LN SERVICE which will accept the pay request parameters
   maxSendable: number; // Max amount LN SERVICE is willing to receive
   minSendable: number; // Min amount LN SERVICE is willing to receive, can not be less than 1 or more than `maxSendable`
@@ -87,7 +87,7 @@ export const lnurl = {
     return "status" in res && res.status.toUpperCase() === "ERROR";
   },
   findLnurl(text: string) {
-    const stringToText = text.trim().toLowerCase();
+    const stringToText = text.trim().toLowerCase().replace("lightning:", "");
     let match;
 
     // look for a LNURL with protocol scheme
