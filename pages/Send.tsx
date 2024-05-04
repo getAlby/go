@@ -2,23 +2,25 @@ import { BarCodeScanningResult, Camera } from "expo-camera";
 import React, { useEffect } from "react";
 import {
   ActivityIndicator,
-  Text as RNText,
+  Keyboard,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import { useAppStore } from "lib/state/appStore";
 import { lnurl } from "lib/lnurl";
-import { Invoice } from "@getalby/lightning-tools";
 import { Button } from "~/components/ui/button";
 import { Camera as CameraIcon } from "~/components/Icons";
 import { Stack, router } from "expo-router";
 import { Text } from "~/components/ui/text";
+import { Input } from "~/components/ui/input";
 
 export function Send() {
   const [isScanning, setScanning] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [autoFocus, setAutoFocus] = React.useState(true);
+  const [keyboardOpen, setKeyboardOpen] = React.useState(false);
+  const [keyboardText, setKeyboardText] = React.useState("");
 
   useEffect(() => {
     scan();
@@ -40,6 +42,11 @@ export function Send() {
     loadPayment(clipboardText);
   }
 
+  async function openKeyboard() {
+    setScanning(false);
+    setKeyboardOpen(true);
+  }
+
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
     setScanning((current) => {
       if (current === true) {
@@ -49,6 +56,10 @@ export function Send() {
     });
     console.log(`Bar code with data ${data} has been scanned!`);
   };
+
+  function submitKeyboardText() {
+    loadPayment(keyboardText);
+  }
 
   async function loadPayment(text: string) {
     setLoading(true);
@@ -116,22 +127,43 @@ export function Send() {
                   }}
                 />
               </Camera>
-              <View className="absolute bottom-12 w-full z-10 flex flex-row items-center justify-center gap-3">
+              <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
                 <Button onPress={paste}>
-                  <RNText className="text-background">
-                    Paste from Clipboard
-                  </RNText>
+                  <Text className="text-background">Paste from Clipboard</Text>
+                </Button>
+                <Button onPress={openKeyboard}>
+                  <Text className="text-background">Type an Address</Text>
                 </Button>
               </View>
             </>
           )}
-          {!isScanning && (
+          {keyboardOpen && (
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Keyboard.dismiss();
+              }}
+            >
+              <View className="flex-1 h-full flex flex-col items-center justify-center gap-5 p-3">
+                <Input
+                  className="w-full text-center mt-6"
+                  placeholder="hello@getalby.com"
+                  value={keyboardText}
+                  onChangeText={setKeyboardText}
+                  // aria-errormessage="inputError"
+                />
+                <Button onPress={submitKeyboardText}>
+                  <Text>Pay</Text>
+                </Button>
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          {!isScanning && !keyboardOpen && (
             <>
               <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
                 <CameraIcon className="text-black w-32 h-32" />
                 <Text className="text-2xl">Camera Permissions Needed</Text>
                 <Button onPress={scan}>
-                  <RNText className="text-background">Grant Permissions</RNText>
+                  <Text className="text-background">Grant Permissions</Text>
                 </Button>
               </View>
             </>

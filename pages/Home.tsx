@@ -65,9 +65,9 @@ export function Home() {
         </Link>
       </View>
 
-      {transactions ? (
-        <ScrollView>
-          {transactions.transactions.map((t) => (
+      <ScrollView>
+        {transactions ? (
+          transactions.transactions.map((t) => (
             <View
               key={t.payment_hash}
               className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4"
@@ -109,27 +109,27 @@ export function Home() {
                 <RNText className="text-right text-neutral-500">&nbsp;</RNText>
               </View>
             </View>
-          ))}
-        </ScrollView>
-      ) : (
-        <>
-          {[...Array(10)].map((e, i) => (
-            <View
-              key={i}
-              className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4"
-            >
-              <Skeleton className="rounded-full w-10 h-10" />
-              <View className="flex flex-col flex-1 gap-1">
-                <Skeleton className="w-32 h-4" />
-                <Skeleton className="w-16 h-4" />
+          ))
+        ) : (
+          <>
+            {[...Array(20)].map((e, i) => (
+              <View
+                key={i}
+                className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4"
+              >
+                <Skeleton className="rounded-full w-10 h-10" />
+                <View className="flex flex-col flex-1 gap-1">
+                  <Skeleton className="w-32 h-4" />
+                  <Skeleton className="w-16 h-4" />
+                </View>
+                <View className="flex items-center">
+                  <Skeleton className="w-8 h-4" />
+                </View>
               </View>
-              <View className="flex items-center">
-                <Skeleton className="w-8 h-4" />
-              </View>
-            </View>
-          ))}
-        </>
-      )}
+            ))}
+          </>
+        )}
+      </ScrollView>
 
       {/* <Pressable
         className="mt-32"
