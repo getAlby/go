@@ -1,12 +1,15 @@
+import { Invoice } from "@getalby/lightning-tools";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import * as Clipboard from "expo-clipboard";
 
-export function PaymentSuccess() {
-  const { preimage } = useLocalSearchParams() as { preimage: string };
+export function ReceiveSuccess() {
+  const { invoice } = useLocalSearchParams() as { invoice: string };
+  const decodedInvoice = new Invoice({
+    pr: invoice,
+  });
   return (
     <View className="flex-1 flex flex-col">
       <Stack.Screen
@@ -16,15 +19,12 @@ export function PaymentSuccess() {
       />
       <View className="flex-1 justify-center items-center">
         <Paid />
-        <Pressable
-          onPress={() => {
-            Clipboard.setStringAsync(preimage);
-          }}
-        >
-          <Text className="font-mono text-sm max-w-sm">
-            Preimage: {preimage}
-          </Text>
-        </Pressable>
+        <Text className="text-lg -mt-24">
+          Received {decodedInvoice.satoshi} sats
+        </Text>
+        {decodedInvoice.description && (
+          <Text className="mt-4">{decodedInvoice.description}</Text>
+        )}
       </View>
       <View className="flex flex-col flex-shrink-0 gap-3 justify-center items-center px-3 pb-3">
         <Button
@@ -32,10 +32,10 @@ export function PaymentSuccess() {
           className="w-full"
           onPress={() => {
             router.replace("/");
-            router.push("/send");
+            router.push("/receive");
           }}
         >
-          <Text className="text-background">Pay Again</Text>
+          <Text className="text-background">Receive Again</Text>
         </Button>
         <Button
           size="lg"

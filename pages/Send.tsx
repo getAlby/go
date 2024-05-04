@@ -42,7 +42,7 @@ export function Send() {
     loadPayment(clipboardText);
   }
 
-  async function openKeyboard() {
+  function openKeyboard() {
     setScanning(false);
     setKeyboardOpen(true);
   }
