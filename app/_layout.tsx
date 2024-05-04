@@ -10,13 +10,12 @@ import { Theme, ThemeProvider } from "@react-navigation/native";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { Platform } from "react-native";
+import { Platform, SafeAreaView } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
-import { Home } from "~/pages/Home";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -77,7 +76,9 @@ export default function RootLayout() {
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? "dark" : "light"} />
         <PolyfillCrypto />
-        <Stack />
+        <SafeAreaView className="w-full h-full">
+          <Stack />
+        </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>
   );
