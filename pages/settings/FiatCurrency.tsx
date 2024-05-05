@@ -6,32 +6,30 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 
-export function LightningAddress() {
-  const [lightningAddress, setLightningAddress] = React.useState(
-    useAppStore.getState().lightningAddress
+export function FiatCurrency() {
+  const [fiatCurrency, setFiatCurrency] = React.useState(
+    useAppStore.getState().fiatCurrency
   );
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
       <Stack.Screen
         options={{
-          title: "Lightning Address",
+          title: "FiatCurrency",
         }}
       />
       <Input
         autoFocus
         className="w-full text-center mt-6"
-        placeholder="hello@getalby.com"
-        value={lightningAddress}
-        onChangeText={setLightningAddress}
+        placeholder="USD"
+        value={fiatCurrency}
+        onChangeText={setFiatCurrency}
         aria-labelledbyledBy="lightningAddress"
         // aria-errormessage="inputError"
       />
       <Button
-        onPress={() =>
-          useAppStore.getState().setLightningAddress(lightningAddress)
-        }
+        onPress={() => useAppStore.getState().setFiatCurrency(fiatCurrency)}
       >
-        <Text>Update Lightning Address</Text>
+        <Text>Update Fiat Currency</Text>
       </Button>
     </View>
   );

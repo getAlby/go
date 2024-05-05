@@ -6,18 +6,22 @@ import { secureStorage } from "lib/secureStorage";
 interface AppState {
   readonly nwcClient: NWCClient | undefined;
   readonly lightningAddress: string;
+  readonly fiatCurrency: string;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
   disconnectWallet(): void;
   setLightningAddress(lightningAddress: string): void;
+  setFiatCurrency(fiatCurrency: string): void;
 }
 
 const nostrWalletConnectUrlKey = "nostrWalletConnectUrl";
 const lightningAddressKey = "lightningAddress";
+const fiatCurrencyKey = "fiatCurrency";
 
 export const useAppStore = create<AppState>()((set) => ({
   nwcClient: getNWCClient(),
   lightningAddress: secureStorage.getItem(lightningAddressKey) || "",
+  fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
   setNWCClient: (nwcClient) => set({ nwcClient }),
   disconnectWallet: () => {
     secureStorage.removeItem(nostrWalletConnectUrlKey);
@@ -29,6 +33,10 @@ export const useAppStore = create<AppState>()((set) => ({
   setLightningAddress: (lightningAddress) => {
     secureStorage.setItem(lightningAddressKey, lightningAddress);
     set({ lightningAddress });
+  },
+  setFiatCurrency: (fiatCurrency) => {
+    secureStorage.setItem(fiatCurrencyKey, fiatCurrency);
+    set({ fiatCurrency });
   },
 }));
 

@@ -11,6 +11,7 @@ import {
   ZapIcon,
   WalletIcon,
   Copy,
+  Currency,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -37,6 +38,7 @@ interopIcon(Menu);
 interopIcon(ZapIcon);
 interopIcon(WalletIcon);
 interopIcon(Copy);
+interopIcon(Currency);
 
 export {
   AlertCircle,
@@ -50,4 +52,5 @@ export {
   ZapIcon,
   WalletIcon,
   Copy,
+  Currency,
 };

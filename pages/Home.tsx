@@ -14,6 +14,7 @@ import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 dayjs.extend(relativeTime);
 
@@ -26,6 +27,7 @@ export function Home() {
   const [allTransactions, setAllTransactions] = React.useState<
     Nip47Transaction[]
   >([]);
+  const getFiatAmount = useGetFiatAmount();
 
   React.useEffect(() => {
     if (
@@ -65,7 +67,7 @@ export function Home() {
           ),
         }}
       />
-      <View className="w-full pt-12 pb-8 flex flex-row justify-center items-center gap-2">
+      <View className="w-full pt-12 flex flex-row justify-center items-center gap-2">
         <Text className="text-4xl text-neutral-500">₿</Text>
         {balance ? (
           <Text className="text-4xl">
@@ -74,6 +76,15 @@ export function Home() {
           </Text>
         ) : (
           <Skeleton className="w-48 h-8" />
+        )}
+      </View>
+      <View className="w-full pt-2 pb-8 flex justify-center items-center">
+        {getFiatAmount && balance ? (
+          <Text className="text-center">
+            {getFiatAmount(Math.floor(balance.balance / 1000))}
+          </Text>
+        ) : (
+          <Skeleton className="w-32 h-6" />
         )}
       </View>
       <View className="flex flex-row w-full gap-x-4 p-3 mb-3">

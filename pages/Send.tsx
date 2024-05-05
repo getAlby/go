@@ -173,7 +173,7 @@ export function Send() {
                   // aria-errormessage="inputError"
                 />
                 <Button onPress={submitKeyboardText}>
-                  <Text>Pay</Text>
+                  <Text>Next</Text>
                 </Button>
               </View>
             </TouchableWithoutFeedback>

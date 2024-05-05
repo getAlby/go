@@ -14,6 +14,7 @@ import { Text } from "~/components/ui/text";
 import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function LNURLPay() {
   const { lnurlDetailsJSON, originalText } =
@@ -26,6 +27,7 @@ export function LNURLPay() {
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
   const [addComment, setAddComment] = React.useState(false);
+  const getFiatAmount = useGetFiatAmount();
 
   async function requestInvoice() {
     setLoading(true);
@@ -91,6 +93,7 @@ export function LNURLPay() {
               >
                 sats
               </Label>
+              {getFiatAmount && <Text>{getFiatAmount(+amount)}</Text>}
 
               {!addComment && (
                 <Button

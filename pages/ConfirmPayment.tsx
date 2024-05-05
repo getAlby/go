@@ -4,6 +4,7 @@ import React from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
@@ -11,6 +12,7 @@ export function ConfirmPayment() {
     invoice: string;
     originalText: string;
   };
+  const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
 
   async function pay() {
@@ -58,6 +60,10 @@ export function ConfirmPayment() {
           <View className="flex-1 justify-center items-center gap-3">
             <Text className="">Confirm Payment</Text>
             <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
+            {getFiatAmount && (
+              <Text>{getFiatAmount(decodedInvoice.satoshi)}</Text>
+            )}
+
             {decodedInvoice.description && (
               <Text className="">{decodedInvoice.description}</Text>
             )}

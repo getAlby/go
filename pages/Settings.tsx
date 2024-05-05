@@ -1,6 +1,6 @@
 import { Link, Stack } from "expo-router";
 import { Pressable, View } from "react-native";
-import { ZapIcon, WalletIcon } from "~/components/Icons";
+import { ZapIcon, WalletIcon, Currency } from "~/components/Icons";
 
 import {
   Card,
@@ -40,6 +40,20 @@ export function Settings() {
               </CardTitle>
               <CardDescription>
                 Configure your wallet connection
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </Pressable>
+      </Link>
+      <Link href="/settings/fiat-currency" asChild>
+        <Pressable>
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle className="">
+                <Currency className="text-primary" /> Fiat Currency
+              </CardTitle>
+              <CardDescription>
+                Configure fiat currency conversion
               </CardDescription>
             </CardHeader>
           </Card>

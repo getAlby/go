@@ -16,6 +16,7 @@ import { Label } from "~/components/ui/label";
 import QRCode from "react-native-qrcode-svg";
 import { Text } from "~/components/ui/text";
 import { Copy, ZapIcon } from "~/components/Icons";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function Receive() {
   const [isLoading, setLoading] = React.useState(false);
@@ -26,6 +27,7 @@ export function Receive() {
   const [addComment, setAddComment] = React.useState(false);
   const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
   const lightningAddress = useAppStore((store) => store.lightningAddress);
+  const getFiatAmount = useGetFiatAmount();
   function copyInvoice() {
     Clipboard.setStringAsync(invoice);
   }
@@ -173,6 +175,8 @@ export function Receive() {
                 >
                   sats
                 </Label>
+                {getFiatAmount && <Text>{getFiatAmount(+amount)}</Text>}
+
                 {!addComment && (
                   <Button
                     variant="ghost"
