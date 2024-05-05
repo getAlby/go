@@ -64,6 +64,15 @@ export function Send() {
   async function loadPayment(text: string) {
     setLoading(true);
     try {
+      if (text.startsWith("bitcoin:")) {
+        const universalUrl = text.replace("bitcoin:", "http://");
+        const url = new URL(universalUrl);
+        const lightningParam = url.searchParams.get("lightning");
+        if (!lightningParam) {
+          throw new Error("No lightning param found in bitcoin payment link");
+        }
+        text = lightningParam;
+      }
       const lnurlValue = lnurl.findLnurl(text);
       console.log("Checked lnurl value", text, lnurlValue);
       if (lnurlValue) {
