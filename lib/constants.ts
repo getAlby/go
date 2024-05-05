@@ -16,3 +16,5 @@ export const NAV_THEME = {
     text: "hsl(0 0% 98%)", // foreground
   },
 };
+
+export const TRANSACTIONS_PAGE_SIZE = 20;

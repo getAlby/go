@@ -12,13 +12,34 @@ import { Text } from "~/components/ui/text";
 import { MoveUpRight, MoveDownLeft, Menu } from "~/components/Icons";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
+import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
+import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
 
 dayjs.extend(relativeTime);
 
 export function Home() {
   const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance } = useBalance();
-  const { data: transactions } = useTransactions();
+  const [page, setPage] = React.useState(1);
+  const { data: transactions } = useTransactions(page);
+  const [loadingNextPage, setLoadingNextPage] = React.useState(false);
+  const [allTransactions, setAllTransactions] = React.useState<
+    Nip47Transaction[]
+  >([]);
+
+  React.useEffect(() => {
+    if (
+      transactions?.transactions.length &&
+      !allTransactions.some((t) =>
+        transactions.transactions.some(
+          (other) => t.payment_hash === other.payment_hash
+        )
+      )
+    ) {
+      setAllTransactions([...allTransactions, ...transactions.transactions]);
+      setLoadingNextPage(false);
+    }
+  }, [allTransactions, transactions]);
 
   if (!nwcClient) {
     return <WalletConnection />;
@@ -75,9 +96,23 @@ export function Home() {
       </View>
 
       <>
-        {transactions ? (
+        {allTransactions.length ? (
           <FlatList
-            data={transactions?.transactions}
+            ListFooterComponent={
+              loadingNextPage ? (
+                <Text className="text-center animate-pulse">
+                  Loading more transactions...
+                </Text>
+              ) : undefined
+            }
+            data={allTransactions}
+            onEndReachedThreshold={0.9}
+            onEndReached={() => {
+              if (allTransactions.length / TRANSACTIONS_PAGE_SIZE === page) {
+                setLoadingNextPage(true);
+                setPage(page + 1);
+              }
+            }}
             renderItem={({ item: transaction }) => (
               <Pressable
                 key={transaction.payment_hash}
