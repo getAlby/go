@@ -7,7 +7,7 @@ const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
 export function useHandleLinking() {
   const rootNavigationState = useRootNavigationState();
   let url = Linking.useURL();
-  let hasNavigationState = !!rootNavigationState.key;
+  let hasNavigationState = !!rootNavigationState?.key;
 
   React.useEffect(() => {
     if (!hasNavigationState) {
@@ -24,6 +24,7 @@ export function useHandleLinking() {
 
         // TODO: it should not always navigate to send,
         // but that's the only linking functionality supported right now
+        router.dismissAll();
         router.navigate({
           pathname: "/send",
           params: {
