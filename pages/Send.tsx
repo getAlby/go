@@ -1,16 +1,26 @@
 import { BarCodeScanningResult, Camera } from "expo-camera";
 import React, { useEffect } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import * as Clipboard from "expo-clipboard";
-import { useAppStore } from "lib/state/appStore";
 import { lnurl } from "lib/lnurl";
-import { Invoice } from "@getalby/lightning-tools";
+import { Button } from "~/components/ui/button";
+import { Camera as CameraIcon } from "~/components/Icons";
+import { Stack, router } from "expo-router";
+import { Text } from "~/components/ui/text";
+import { Input } from "~/components/ui/input";
 
 export function Send() {
   const [isScanning, setScanning] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const [preimage, setPreimage] = React.useState("");
-  const [invoice, setInvoice] = React.useState("");
+  const [autoFocus, setAutoFocus] = React.useState(true);
+  const [keyboardOpen, setKeyboardOpen] = React.useState(false);
+  const [keyboardText, setKeyboardText] = React.useState("");
 
   useEffect(() => {
     scan();
@@ -19,12 +29,6 @@ export function Send() {
   async function scan() {
     const { status } = await Camera.requestCameraPermissionsAsync();
     setScanning(status === "granted");
-  }
-
-  function reset() {
-    setInvoice("")
-    setScanning(false);
-    scan();
   }
 
   async function paste() {
@@ -38,6 +42,11 @@ export function Send() {
     loadPayment(clipboardText);
   }
 
+  function openKeyboard() {
+    setScanning(false);
+    setKeyboardOpen(true);
+  }
+
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
     setScanning((current) => {
       if (current === true) {
@@ -48,28 +57,15 @@ export function Send() {
     console.log(`Bar code with data ${data} has been scanned!`);
   };
 
-  async function pay() {
-    setLoading(true);
-    try {
-      const nwcClient = useAppStore.getState().nwcClient;
-      if (!nwcClient) {
-        throw new Error("NWC client not connected");
-      }
-      const response = await nwcClient.payInvoice({
-        invoice,
-      });
-
-      setPreimage(response?.preimage);
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false);
+  function submitKeyboardText() {
+    loadPayment(keyboardText);
   }
 
   async function loadPayment(text: string) {
     setLoading(true);
     try {
       const lnurlValue = lnurl.findLnurl(text);
+      console.log("Checked lnurl value", text, lnurlValue);
       if (lnurlValue) {
         const lnurlDetails = await lnurl.getDetails(lnurlValue);
 
@@ -77,91 +73,103 @@ export function Send() {
           throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
         }
 
-        // TODO: allow user to enter these
-        const callback = new URL(lnurlDetails.callback);
-        callback.searchParams.append("amount", "1000");
-        callback.searchParams.append("comment", "Test");
-        callback.searchParams.append("payerdata", JSON.stringify({ test: 1 }));
-        const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-        console.log("Got pay request", lnurlPayInfo.pr);
-        text = lnurlPayInfo.pr;
+        router.push({
+          pathname: "/send/lnurl-pay",
+          params: { lnurlDetailsJSON: JSON.stringify(lnurlDetails) },
+        });
+      } else {
+        router.push({ pathname: "/send/confirm", params: { invoice: text } });
       }
-
-      setInvoice(text);
     } catch (error) {
       console.error(error);
     }
     setLoading(false);
   }
 
-  if (isLoading) {
-    return (
-      <>
-        <ActivityIndicator />
-      </>
-    );
-  }
-
-  if (preimage) {
-    return (
-      <>
-        <Text className="">Paid! preimage: {preimage}</Text>
-        <Pressable className="bg-primary rounded-lg p-3" onPress={reset}>
-          <Text className="text-center text-white font-semibold">Start Over</Text>
-        </Pressable>
-      </>
-    );
-  }
-
-  if (invoice) {
-    const decodedInvoice = new Invoice({
-      pr: invoice,
-    });
-    return (
-      <>
-        <Text className="">Confirm Payment</Text>
-        <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
-        <View className="flex flex-row gap-3 justify-center items-center px-3 mt-3">
-          <Pressable
-            className="flex-1"
-            onPress={() => setInvoice("")}
-          >
-            <Text className="text-center">Cancel</Text>
-          </Pressable>
-          <Pressable className="flex-1 bg-primary rounded-lg p-3" onPress={pay}>
-            <Text className="text-center text-white font-semibold">Pay</Text>
-          </Pressable>
-        </View>
-      </>
-    );
-  }
+  const focusCamera = () => {
+    setAutoFocus(false);
+    setTimeout(() => {
+      setAutoFocus(true);
+    }, 200);
+  };
 
   return (
     <>
-      {isScanning && (<>
-        <Camera
-          onBarCodeScanned={handleBarCodeScanned}
-          style={{ flex: 1, width: "100%" }}
-        />
-        <View className="absolute bottom-12 mx-auto z-10 flex flex-row gap-3">
-          <Pressable className="bg-primary rounded-lg p-3" onPress={paste}>
-            <Text className="text-white">Paste from Clipboard</Text>
-          </Pressable>
-          <Pressable className="bg-primary rounded-lg p-3" onPress={paste}>
-            <Text className="text-white">Enter Manually</Text>
-          </Pressable>
+      <Stack.Screen
+        options={{
+          title: "Send",
+        }}
+      />
+      {isLoading && (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator />
         </View>
-      </>
       )}
-      {!isScanning && (
+      {!isLoading && (
         <>
-          <Text className="mb-3">Camera Permissions Needed</Text>
-          <Pressable className="bg-primary rounded-lg p-3" onPress={scan}>
-            <Text className="text-white">Grant Permissions</Text>
-          </Pressable>
+          {isScanning && (
+            <>
+              <Camera
+                onBarCodeScanned={handleBarCodeScanned}
+                style={{ flex: 1, width: "100%" }}
+                autoFocus={autoFocus}
+              >
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={focusCamera}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "transparent",
+                  }}
+                />
+              </Camera>
+              <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
+                <Button onPress={paste}>
+                  <Text className="text-background">Paste from Clipboard</Text>
+                </Button>
+                <Button onPress={openKeyboard}>
+                  <Text className="text-background">Type an Address</Text>
+                </Button>
+              </View>
+            </>
+          )}
+          {keyboardOpen && (
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Keyboard.dismiss();
+              }}
+            >
+              <View className="flex-1 h-full flex flex-col items-center justify-center gap-5 p-3">
+                <Input
+                  className="w-full text-center mt-6"
+                  placeholder="hello@getalby.com"
+                  value={keyboardText}
+                  onChangeText={setKeyboardText}
+                  // aria-errormessage="inputError"
+                />
+                <Button onPress={submitKeyboardText}>
+                  <Text>Pay</Text>
+                </Button>
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          {!isScanning && !keyboardOpen && (
+            <>
+              <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
+                <CameraIcon className="text-black w-32 h-32" />
+                <Text className="text-2xl">Camera Permissions Needed</Text>
+                <Button onPress={scan}>
+                  <Text className="text-background">Grant Permissions</Text>
+                </Button>
+              </View>
+            </>
+          )}
         </>
       )}
-
     </>
   );
 }
