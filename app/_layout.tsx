@@ -16,6 +16,7 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
+import { useHandleLinking } from "~/hooks/useHandleLinking";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -42,13 +43,11 @@ export default function RootLayout() {
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
+  useHandleLinking();
+
   React.useEffect(() => {
     (async () => {
       const theme = await AsyncStorage.getItem("theme");
-      if (Platform.OS === "web") {
-        // Adds the background color to the html element to prevent white background on overscroll.
-        document.documentElement.classList.add("bg-background");
-      }
       if (!theme) {
         AsyncStorage.setItem("theme", colorScheme);
         setIsColorSchemeLoaded(true);

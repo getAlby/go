@@ -11,11 +11,12 @@ import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
 import { Camera as CameraIcon } from "~/components/Icons";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 
 export function Send() {
+  const { url } = useLocalSearchParams<{ url: string }>();
   const [isScanning, setScanning] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [autoFocus, setAutoFocus] = React.useState(true);
@@ -23,8 +24,12 @@ export function Send() {
   const [keyboardText, setKeyboardText] = React.useState("");
 
   useEffect(() => {
-    scan();
-  }, []);
+    if (url) {
+      loadPayment(url);
+    } else {
+      scan();
+    }
+  }, [url]);
 
   async function scan() {
     const { status } = await Camera.requestCameraPermissionsAsync();
