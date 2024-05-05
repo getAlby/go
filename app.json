@@ -40,11 +40,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "extra": {
       "eas": {
-        "projectId": "08913956-3d30-405a-9643-684f7fa5c184"
+        "projectId": "294965ec-3a67-4994-8794-5cc1117ef155"
       }
     },
     "owner": "roland_alby"
