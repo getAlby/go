@@ -11,15 +11,16 @@ import {
 } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { useAppStore } from "~/lib/state/appStore";
 import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 
 export function LNURLPay() {
-  const { lnurlDetailsJSON } = useLocalSearchParams() as unknown as {
-    lnurlDetailsJSON: string;
-  };
+  const { lnurlDetailsJSON, originalText } =
+    useLocalSearchParams() as unknown as {
+      lnurlDetailsJSON: string;
+      originalText: string;
+    };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
@@ -39,7 +40,7 @@ export function LNURLPay() {
       //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
-        params: { invoice: lnurlPayInfo.pr },
+        params: { invoice: lnurlPayInfo.pr, originalText },
       });
     } catch (error) {
       console.error(error);
@@ -69,8 +70,13 @@ export function LNURLPay() {
             }}
           >
             <View className="flex-1 justify-center items-center p-3">
+              <Text className="text-sm text-muted-foreground">Payment to</Text>
+              <Text className="text-sm max-w-sm text-muted-foreground">
+                {originalText}
+              </Text>
+
               <Input
-                className="w-full border-transparent text-center bg-muted"
+                className="w-full border-transparent text-center bg-muted mt-3"
                 placeholder="0"
                 keyboardType="number-pad"
                 value={amount}

@@ -67,6 +67,7 @@ export function Send() {
   }
 
   async function loadPayment(text: string) {
+    const originalText = text;
     setLoading(true);
     try {
       if (text.startsWith("bitcoin:")) {
@@ -89,10 +90,16 @@ export function Send() {
 
         router.push({
           pathname: "/send/lnurl-pay",
-          params: { lnurlDetailsJSON: JSON.stringify(lnurlDetails) },
+          params: {
+            lnurlDetailsJSON: JSON.stringify(lnurlDetails),
+            originalText,
+          },
         });
       } else {
-        router.push({ pathname: "/send/confirm", params: { invoice: text } });
+        router.push({
+          pathname: "/send/confirm",
+          params: { invoice: text, originalText },
+        });
       }
     } catch (error) {
       console.error(error);

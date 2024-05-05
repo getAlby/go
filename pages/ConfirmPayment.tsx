@@ -7,7 +7,10 @@ import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
-  const { invoice } = useLocalSearchParams() as { invoice: string };
+  const { invoice, originalText } = useLocalSearchParams() as {
+    invoice: string;
+    originalText: string;
+  };
   const [isLoading, setLoading] = React.useState(false);
 
   async function pay() {
@@ -52,12 +55,17 @@ export function ConfirmPayment() {
 
       {!isLoading && (
         <>
-          <View className="flex-1 justify-center items-center">
+          <View className="flex-1 justify-center items-center gap-3">
             <Text className="">Confirm Payment</Text>
             <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
             {decodedInvoice.description && (
               <Text className="">{decodedInvoice.description}</Text>
             )}
+
+            <Text className="text-sm text-muted-foreground">to</Text>
+            <Text className="text-sm max-w-sm text-muted-foreground">
+              {originalText}
+            </Text>
           </View>
           <View className="flex flex-row gap-3 justify-center items-center px-3 pb-3">
             <Button
