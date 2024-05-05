@@ -10,7 +10,7 @@ type FetchArgs = Parameters<typeof fetch>;
 const fetcher = (...args: FetchArgs) => {
   const nwcClient = useAppStore.getState().nwcClient;
   if (!nwcClient) {
-    return undefined;
+    throw new Error("No NWC client");
   }
 
   return nwcClient.listTransactions({
@@ -19,5 +19,6 @@ const fetcher = (...args: FetchArgs) => {
 };
 
 export function useTransactions() {
-  return useSWR("listTransactions", fetcher);
+  const nwcClient = useAppStore((store) => store.nwcClient);
+  return useSWR(nwcClient && "listTransactions", fetcher);
 }

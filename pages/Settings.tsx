@@ -31,7 +31,7 @@ export function Settings() {
           </Card>
         </Pressable>
       </Link>
-      <Link href="/setup" asChild>
+      <Link href="/settings/wallet-connection" asChild>
         <Pressable>
           <Card className="w-full">
             <CardHeader>

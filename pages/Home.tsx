@@ -2,7 +2,7 @@ import { ScrollView, View, FlatList, Image, Pressable } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
-import { Setup } from "./Setup";
+import { WalletConnection } from "pages/settings/WalletConnection";
 import { useTransactions } from "hooks/useTransactions";
 import { Link, Stack, router } from "expo-router";
 import dayjs from "dayjs";
@@ -21,7 +21,7 @@ export function Home() {
   const { data: transactions } = useTransactions();
 
   if (!nwcClient) {
-    return <Setup />;
+    return <WalletConnection />;
   }
 
   return (

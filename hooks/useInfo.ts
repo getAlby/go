@@ -7,10 +7,10 @@ const fetcher = (...args: FetchArgs) => {
   if (!nwcClient) {
     throw new Error("No NWC client");
   }
-  return nwcClient.getBalance();
+  return nwcClient.getInfo();
 };
 
-export function useBalance() {
+export function useInfo() {
   const nwcClient = useAppStore((store) => store.nwcClient);
-  return useSWR(nwcClient && "getBalance", fetcher);
+  return useSWR(nwcClient && "getInfo", fetcher);
 }

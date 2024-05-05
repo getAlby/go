@@ -8,6 +8,7 @@ interface AppState {
   readonly lightningAddress: string;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
+  disconnectWallet(): void;
   setLightningAddress(lightningAddress: string): void;
 }
 
@@ -18,6 +19,10 @@ export const useAppStore = create<AppState>()((set) => ({
   nwcClient: getNWCClient(),
   lightningAddress: secureStorage.getItem(lightningAddressKey) || "",
   setNWCClient: (nwcClient) => set({ nwcClient }),
+  disconnectWallet: () => {
+    secureStorage.removeItem(nostrWalletConnectUrlKey);
+    set({ nwcClient: undefined });
+  },
   setNostrWalletConnectUrl: (nostrWalletConnectUrl) => {
     secureStorage.setItem(nostrWalletConnectUrlKey, nostrWalletConnectUrl);
   },
