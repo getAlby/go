@@ -6,7 +6,11 @@ import {
   MoveUpRight,
   MoveDownRight,
   MoveDownLeft,
-  Camera
+  Camera,
+  Menu,
+  ZapIcon,
+  WalletIcon,
+  Copy,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -29,5 +33,21 @@ interopIcon(MoveDownRight);
 interopIcon(MoveUpRight);
 interopIcon(MoveDownLeft);
 interopIcon(Camera);
+interopIcon(Menu);
+interopIcon(ZapIcon);
+interopIcon(WalletIcon);
+interopIcon(Copy);
 
-export { AlertCircle, Camera, CheckCircle, XCircle, MoveDownRight, MoveUpRight, MoveDownLeft };
+export {
+  AlertCircle,
+  Camera,
+  CheckCircle,
+  XCircle,
+  MoveDownRight,
+  MoveUpRight,
+  MoveDownLeft,
+  Menu,
+  ZapIcon,
+  WalletIcon,
+  Copy,
+};

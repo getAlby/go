@@ -12,6 +12,7 @@ import { nwc } from "@getalby/sdk";
 import { secureStorage } from "lib/secureStorage";
 import { useAppStore } from "lib/state/appStore";
 import { BarCodeScanningResult, Camera } from "expo-camera";
+import { Stack } from "expo-router";
 
 export function Setup() {
   const [isScanning, setScanning] = React.useState(false);
@@ -52,7 +53,7 @@ export function Setup() {
       });
       const info = await nwcClient.getInfo();
       console.log("NWC connected", info);
-      secureStorage.setItem("nostrWalletConnectUrl", nostrWalletConnectUrl);
+      useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
       useAppStore.getState().setNWCClient(nwcClient);
     } catch (error) {
       console.error(error);
@@ -62,6 +63,11 @@ export function Setup() {
 
   return (
     <>
+      <Stack.Screen
+        options={{
+          title: "Setup Wallet Connection",
+        }}
+      />
       {isConnecting && (
         <>
           <ActivityIndicator />

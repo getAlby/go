@@ -1,7 +1,8 @@
-import { Stack, router } from "expo-router";
+import { Link, Stack, router } from "expo-router";
 import {
   ActivityIndicator,
   Keyboard,
+  Pressable,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -14,6 +15,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import QRCode from "react-native-qrcode-svg";
 import { Text } from "~/components/ui/text";
+import { Copy, ZapIcon } from "~/components/Icons";
 
 export function Receive() {
   const [isLoading, setLoading] = React.useState(false);
@@ -22,6 +24,8 @@ export function Receive() {
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
   const [addComment, setAddComment] = React.useState(false);
+  const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
+  const lightningAddress = useAppStore((store) => store.lightningAddress);
   function copyInvoice() {
     Clipboard.setStringAsync(invoice);
   }
@@ -31,6 +35,10 @@ export function Receive() {
   }
 
   function generateInvoice(amount?: number) {
+    if (!amount) {
+      console.error("0-amount invoices are currently not supported");
+      return;
+    }
     (async () => {
       setLoading(true);
       try {
@@ -39,19 +47,23 @@ export function Receive() {
           throw new Error("NWC client not connected");
         }
         const response = await nwcClient.makeInvoice({
-          amount: (amount as number) * 1000 /*FIXME: allow 0-amount invoices */,
+          amount: amount * 1000 /*FIXME: allow 0-amount invoices */,
           ...(comment ? { description: comment } : {}),
         });
 
         console.log("makeInvoice Response", response);
 
         setInvoice(response.invoice);
-        setLoading(false);
+        setEnterCustomAmount(false);
       } catch (error) {
         console.error(error);
       }
       setLoading(false);
     })();
+  }
+
+  function copy() {
+    Clipboard.setStringAsync(invoice || lightningAddress);
   }
 
   // TODO: move this somewhere else to have app-wide notifications of incoming payments
@@ -85,9 +97,9 @@ export function Receive() {
     };
   }, []);
 
-  /*React.useEffect(() => {
-    generateInvoice();
-  }, []);*/
+  // React.useEffect(() => {
+  //   generateInvoice();
+  // }, []);
 
   return (
     <>
@@ -103,17 +115,42 @@ export function Receive() {
       )}
       {!isLoading && (
         <>
-          {invoice && (
-            <View className="flex-1 justify-center items-center">
-              <View className="flex flex-row justify-center items-center gap-3 mb-3">
+          {!invoice && !lightningAddress && (
+            <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
+              <ZapIcon className="text-black w-32 h-32" />
+              <Text className="text-2xl max-w-64 text-center">
+                Receive Quickly with a Lightning Address
+              </Text>
+              <Link href="/settings/lightning-address" asChild>
+                <Button className="touch-none">
+                  <Text className="text-background">Set Lightning Address</Text>
+                </Button>
+              </Link>
+            </View>
+          )}
+          {!enterCustomAmount && (invoice.length || lightningAddress) && (
+            <View className="flex-1 justify-center items-center gap-5">
+              <View className="flex flex-row justify-center items-center gap-3">
                 <ActivityIndicator />
                 <Text>Waiting for payment</Text>
               </View>
-              <QRCode value={invoice} size={300} />
+              <QRCode value={invoice || lightningAddress} size={300} />
+              <Pressable onPress={copy}>
+                <View className="flex flex-row items-center justify-center gap-3">
+                  <Copy
+                    className="text-muted-foreground"
+                    width={16}
+                    height={16}
+                  />
+                  <Text className="text-muted-foreground">
+                    {invoice ? amount + " sats" : lightningAddress}
+                  </Text>
+                </View>
+              </Pressable>
             </View>
           )}
           {/* TODO: move to one place - this is all copied from LNURL-Pay */}
-          {!invoice && (
+          {!invoice && enterCustomAmount && (
             <TouchableWithoutFeedback
               onPress={() => {
                 Keyboard.dismiss();
@@ -163,15 +200,15 @@ export function Receive() {
             </TouchableWithoutFeedback>
           )}
 
-          <View className="absolute bottom-12 w-full flex flex-col items-center justify-center gap-3">
-            {invoice && (
-              <Button onPress={copyInvoice}>
-                <Text className="text-background">Copy Invoice</Text>
+          <View className="w-full flex flex-col items-center justify-center gap-3">
+            {!enterCustomAmount && (
+              <Button
+                variant="secondary"
+                onPress={() => setEnterCustomAmount(true)}
+              >
+                <Text>Enter Custom Amount</Text>
               </Button>
             )}
-            {/* <Button onPress={openKeyboard}>
-            <Text className="text-background">Enter Custom Amount</Text>
-          </Button> */}
           </View>
         </>
       )}

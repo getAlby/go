@@ -1,4 +1,4 @@
-import { ScrollView, View, FlatList } from "react-native";
+import { ScrollView, View, FlatList, Image } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { MoveUpRight, MoveDownLeft } from "~/components/Icons";
+import { MoveUpRight, MoveDownLeft, Menu } from "~/components/Icons";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 
@@ -28,7 +28,20 @@ export function Home() {
     <>
       <Stack.Screen
         options={{
-          title: "Alby Mobile",
+          title: "Home",
+          headerTitle: () => (
+            <Image
+              className="w-12 h-12"
+              source={require("../assets/adaptive-icon.png")}
+            />
+          ),
+          headerRight: () => (
+            <Link href="/settings">
+              <View className="flex justify-center items-center">
+                <Menu />
+              </View>
+            </Link>
+          ),
         }}
       />
       <View className="w-full pt-12 pb-8 flex flex-row justify-center items-center gap-2">
@@ -73,12 +86,20 @@ export function Home() {
                 <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
                   {item.type === "incoming" && (
                     <>
-                      <MoveDownLeft className="text-green-500 " />
+                      <MoveDownLeft
+                        className="text-receive"
+                        width={20}
+                        height={20}
+                      />
                     </>
                   )}
                   {item.type === "outgoing" && (
                     <>
-                      <MoveUpRight className="text-red-600 " />
+                      <MoveUpRight
+                        className="text-send"
+                        width={20}
+                        height={20}
+                      />
                     </>
                   )}
                 </View>
@@ -98,9 +119,7 @@ export function Home() {
                   <Text
                     className={cn(
                       "text-right",
-                      item.type === "incoming"
-                        ? "text-green-500"
-                        : "text-red-600"
+                      item.type === "incoming" ? "text-receive" : "text-send"
                     )}
                   >
                     {Math.floor(item.amount / 1000)}
@@ -131,16 +150,6 @@ export function Home() {
           </ScrollView>
         )}
       </>
-
-      {/* <Pressable
-        className="mt-32"
-        onPress={() => {
-          secureStorage.removeItem("nostrWalletConnectUrl");
-          useAppStore.getState().setNWCClient(undefined);
-        }}
-      >
-        <Text>Disconnect</Text>
-      </Pressable> */}
     </>
   );
 }
