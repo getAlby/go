@@ -20,7 +20,7 @@ export function LNURLPay() {
   const { lnurlDetailsJSON } = useLocalSearchParams() as unknown as {
     lnurlDetailsJSON: string;
   };
-  const lnurlDetails = JSON.parse(lnurlDetailsJSON);
+  const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");

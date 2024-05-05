@@ -27,7 +27,9 @@ export function LightningAddress() {
         // aria-errormessage="inputError"
       />
       <Button
-        onPress={useAppStore.getState().setLightningAddress(lightningAddress)}
+        onPress={() =>
+          useAppStore.getState().setLightningAddress(lightningAddress)
+        }
       >
         <Text>Update Lightning Address</Text>
       </Button>

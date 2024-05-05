@@ -1,10 +1,10 @@
-import { ScrollView, View, FlatList, Image } from "react-native";
+import { ScrollView, View, FlatList, Image, Pressable } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { Setup } from "./Setup";
 import { useTransactions } from "hooks/useTransactions";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, router } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "~/components/ui/button";
@@ -78,56 +78,65 @@ export function Home() {
         {transactions ? (
           <FlatList
             data={transactions?.transactions}
-            renderItem={({ item }) => (
-              <View
-                key={item.payment_hash}
-                className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4"
+            renderItem={({ item: transaction }) => (
+              <Pressable
+                key={transaction.payment_hash}
+                onPress={() =>
+                  router.navigate({
+                    pathname: "/transaction",
+                    params: { transactionJSON: JSON.stringify(transaction) },
+                  })
+                }
               >
-                <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
-                  {item.type === "incoming" && (
-                    <>
-                      <MoveDownLeft
-                        className="text-receive"
-                        width={20}
-                        height={20}
-                      />
-                    </>
-                  )}
-                  {item.type === "outgoing" && (
-                    <>
-                      <MoveUpRight
-                        className="text-send"
-                        width={20}
-                        height={20}
-                      />
-                    </>
-                  )}
-                </View>
-                <View className="flex flex-col flex-1">
-                  <Text numberOfLines={1} className="font-medium">
-                    {item.description
-                      ? item.description
-                      : item.type === "incoming"
-                      ? "Received"
-                      : "Sent"}
-                  </Text>
-                  <Text className="text-neutral-500">
-                    {dayjs.unix(item.settled_at).fromNow()}
-                  </Text>
-                </View>
-                <View>
-                  <Text
-                    className={cn(
-                      "text-right",
-                      item.type === "incoming" ? "text-receive" : "text-send"
+                <View className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4">
+                  <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
+                    {transaction.type === "incoming" && (
+                      <>
+                        <MoveDownLeft
+                          className="text-receive"
+                          width={20}
+                          height={20}
+                        />
+                      </>
                     )}
-                  >
-                    {Math.floor(item.amount / 1000)}
-                    <Text className="text-neutral-500"> sats</Text>
-                  </Text>
-                  <Text className="text-right text-neutral-500">&nbsp;</Text>
+                    {transaction.type === "outgoing" && (
+                      <>
+                        <MoveUpRight
+                          className="text-send"
+                          width={20}
+                          height={20}
+                        />
+                      </>
+                    )}
+                  </View>
+                  <View className="flex flex-col flex-1">
+                    <Text numberOfLines={1} className="font-medium">
+                      {transaction.description
+                        ? transaction.description
+                        : transaction.type === "incoming"
+                        ? "Received"
+                        : "Sent"}
+                    </Text>
+                    <Text className="text-neutral-500">
+                      {dayjs.unix(transaction.settled_at).fromNow()}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text
+                      className={cn(
+                        "text-right",
+                        transaction.type === "incoming"
+                          ? "text-receive"
+                          : "text-send"
+                      )}
+                    >
+                      {Math.floor(transaction.amount / 1000)}
+                      <Text className="text-neutral-500"> sats</Text>
+                    </Text>
+                    <Text className="text-right text-neutral-500">&nbsp;</Text>
+                  </View>
                 </View>
-              </View>
+              </Pressable>
             )}
           />
         ) : (
