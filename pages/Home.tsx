@@ -1,4 +1,11 @@
-import { ScrollView, View, FlatList, Image, Pressable } from "react-native";
+import {
+  ScrollView,
+  View,
+  FlatList,
+  Image,
+  Pressable,
+  RefreshControl,
+} from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -22,15 +29,19 @@ export function Home() {
   const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance } = useBalance();
   const [page, setPage] = React.useState(1);
-  const { data: transactions } = useTransactions(page);
+  const { data: transactions, mutate: reloadTransactions } =
+    useTransactions(page);
   const [loadingNextPage, setLoadingNextPage] = React.useState(false);
   const [allTransactions, setAllTransactions] = React.useState<
     Nip47Transaction[]
   >([]);
+  const [refreshingTransactions, setRefreshingTransactions] =
+    React.useState(false);
   const getFiatAmount = useGetFiatAmount();
 
   React.useEffect(() => {
     if (
+      !refreshingTransactions &&
       transactions?.transactions.length &&
       !allTransactions.some((t) =>
         transactions.transactions.some(
@@ -41,10 +52,18 @@ export function Home() {
       setAllTransactions([...allTransactions, ...transactions.transactions]);
       setLoadingNextPage(false);
     }
-  }, [allTransactions, transactions]);
+  }, [allTransactions, transactions, refreshingTransactions]);
 
   if (!nwcClient) {
     return <WalletConnection />;
+  }
+
+  async function onRefresh() {
+    setRefreshingTransactions(true);
+    setAllTransactions([]);
+    setPage(1);
+    await reloadTransactions();
+    setRefreshingTransactions(false);
   }
 
   return (
@@ -109,6 +128,12 @@ export function Home() {
       <>
         {allTransactions.length ? (
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshingTransactions}
+                onRefresh={onRefresh}
+              />
+            }
             ListFooterComponent={
               loadingNextPage ? (
                 <Text className="text-center animate-pulse">
