@@ -17,6 +17,7 @@ import QRCode from "react-native-qrcode-svg";
 import { Text } from "~/components/ui/text";
 import { Copy, ZapIcon } from "~/components/Icons";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import Toast from "react-native-toast-message";
 
 export function Receive() {
   const [isLoading, setLoading] = React.useState(false);
@@ -28,9 +29,7 @@ export function Receive() {
   const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
   const lightningAddress = useAppStore((store) => store.lightningAddress);
   const getFiatAmount = useGetFiatAmount();
-  function copyInvoice() {
-    Clipboard.setStringAsync(invoice);
-  }
+
   function setInvoice(invoice: string) {
     _setInvoice(invoice);
     invoiceRef.current = invoice;
@@ -65,7 +64,13 @@ export function Receive() {
   }
 
   function copy() {
-    Clipboard.setStringAsync(invoice || lightningAddress);
+    const text = invoice || lightningAddress;
+    Clipboard.setStringAsync(text);
+    Toast.show({
+      type: "success",
+      text1: "Copied to clipboard",
+      text2: text,
+    });
   }
 
   // TODO: move this somewhere else to have app-wide notifications of incoming payments

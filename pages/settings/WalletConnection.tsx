@@ -17,6 +17,7 @@ import { Stack } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
 import { useBalance } from "~/hooks/useBalance";
+import Toast from "react-native-toast-message";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -74,6 +75,11 @@ export function WalletConnection() {
       console.log("NWC connected", info);
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
       useAppStore.getState().setNWCClient(nwcClient);
+      Toast.show({
+        type: "success",
+        text1: "Wallet Connected",
+        text2: "Your lightning wallet is ready to use",
+      });
     } catch (error) {
       console.error(error);
     }

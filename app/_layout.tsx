@@ -16,6 +16,8 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "~/components/ToastConfig";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -74,6 +76,7 @@ export default function RootLayout() {
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full">
           <Stack />
+          <Toast config={toastConfig} position="top" />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>

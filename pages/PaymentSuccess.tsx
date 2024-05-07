@@ -4,6 +4,8 @@ import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-toast-message";
+import { Copy } from "~/components/Icons";
 
 export function PaymentSuccess() {
   const { preimage } = useLocalSearchParams() as { preimage: string };
@@ -19,11 +21,19 @@ export function PaymentSuccess() {
         <Pressable
           onPress={() => {
             Clipboard.setStringAsync(preimage);
+            Toast.show({
+              type: "success",
+              text1: "Preimage copied",
+              text2: "You can use this to prove your payment",
+            });
           }}
         >
-          <Text className="font-mono text-sm max-w-sm">
-            Preimage: {preimage}
-          </Text>
+          <View className="flex flex-row items-center justify-center gap-3">
+            <Copy className="text-muted-foreground" width={16} height={16} />
+            <Text className="font-mono text-muted-foreground text-sm max-w-sm">
+              Preimage: {preimage}
+            </Text>
+          </View>
         </Pressable>
       </View>
       <View className="flex flex-col flex-shrink-0 gap-3 justify-center items-center px-3 pb-3">
