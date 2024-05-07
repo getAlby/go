@@ -16,7 +16,6 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
-import { useHandleLinking } from "~/hooks/useHandleLinking";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -42,8 +41,6 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-
-  useHandleLinking();
 
   React.useEffect(() => {
     (async () => {
