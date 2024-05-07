@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from "./ui/card";
 import { View } from "react-native";
-import { CheckCircle } from "./Icons";
+import { CheckCircle, XCircle } from "./Icons";
 
 export const toastConfig: ToastConfig = {
   success: ({ text1, text2 }) => (
@@ -20,7 +20,19 @@ export const toastConfig: ToastConfig = {
             <CheckCircle className="text-primary" width={20} height={20} />{" "}
             {text1}
           </CardTitle>
-          <CardDescription>{text2}</CardDescription>
+          {text2 && <CardDescription>{text2}</CardDescription>}
+        </CardHeader>
+      </Card>
+    </View>
+  ),
+  error: ({ text1, text2, hide }) => (
+    <View className="w-full p-3">
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>
+            <XCircle className="text-primary" width={20} height={20} /> {text1}
+          </CardTitle>
+          {/* <CardDescription>{text2}</CardDescription> */}
         </CardHeader>
       </Card>
     </View>

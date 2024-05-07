@@ -5,6 +5,7 @@ import { ActivityIndicator, Pressable, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
@@ -35,6 +36,7 @@ export function ConfirmPayment() {
       });
     } catch (error) {
       console.error(error);
+      errorToast(error as Error);
     }
     setLoading(false);
   }

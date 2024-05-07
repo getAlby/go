@@ -18,6 +18,7 @@ import { Text } from "~/components/ui/text";
 import { Copy, ZapIcon } from "~/components/Icons";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import Toast from "react-native-toast-message";
+import { errorToast } from "~/lib/errorToast";
 
 export function Receive() {
   const [isLoading, setLoading] = React.useState(false);
@@ -58,6 +59,7 @@ export function Receive() {
         setEnterCustomAmount(false);
       } catch (error) {
         console.error(error);
+        errorToast(error as Error);
       }
       setLoading(false);
     })();

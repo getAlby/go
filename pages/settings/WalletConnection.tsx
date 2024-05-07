@@ -18,6 +18,7 @@ import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
 import { useBalance } from "~/hooks/useBalance";
 import Toast from "react-native-toast-message";
+import { errorToast } from "~/lib/errorToast";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -59,6 +60,7 @@ export function WalletConnection() {
       nostrWalletConnectUrl = await Clipboard.getStringAsync();
     } catch (error) {
       console.error("Failed to read clipboard", error);
+      errorToast(error as Error);
       return;
     }
     connect(nostrWalletConnectUrl);
@@ -82,6 +84,7 @@ export function WalletConnection() {
       });
     } catch (error) {
       console.error(error);
+      errorToast(error as Error);
     }
     setConnecting(false);
   }

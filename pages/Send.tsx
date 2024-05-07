@@ -14,6 +14,7 @@ import { Camera as CameraIcon } from "~/components/Icons";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
+import { errorToast } from "~/lib/errorToast";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -103,6 +104,7 @@ export function Send() {
       }
     } catch (error) {
       console.error(error);
+      errorToast(error as Error);
     }
     setLoading(false);
   }

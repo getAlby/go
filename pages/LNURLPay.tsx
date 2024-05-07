@@ -15,6 +15,7 @@ import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { errorToast } from "~/lib/errorToast";
 
 export function LNURLPay() {
   const { lnurlDetailsJSON, originalText } =
@@ -46,6 +47,7 @@ export function LNURLPay() {
       });
     } catch (error) {
       console.error(error);
+      errorToast(error as Error);
     }
     setLoading(false);
   }
