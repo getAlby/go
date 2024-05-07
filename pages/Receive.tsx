@@ -19,6 +19,7 @@ import { Copy, ZapIcon } from "~/components/Icons";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
+import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 
 export function Receive() {
   const [isLoading, setLoading] = React.useState(false);
@@ -77,6 +78,54 @@ export function Receive() {
 
   // TODO: move this somewhere else to have app-wide notifications of incoming payments
   React.useEffect(() => {
+    if (useAppStore.getState().nwcCapabilities.indexOf("notifications") < 0) {
+      Toast.show({
+        type: "error",
+        text1:
+          "Wallet does not support notifications capability. Using fallback",
+      });
+      let polling = true;
+      let pollCount = 0;
+      let prevTransaction: Nip47Transaction | undefined;
+      (async () => {
+        while (polling) {
+          const transactions = await useAppStore
+            .getState()
+            .nwcClient?.listTransactions({
+              limit: 1,
+              type: "incoming",
+            });
+          const receivedTransaction = transactions?.transactions[0];
+          if (receivedTransaction) {
+            if (
+              polling &&
+              pollCount > 0 &&
+              receivedTransaction.payment_hash !== prevTransaction?.payment_hash
+            ) {
+              if (
+                !invoiceRef.current ||
+                receivedTransaction.invoice === invoiceRef.current
+              ) {
+                router.dismissAll();
+                router.navigate({
+                  pathname: "/receive/success",
+                  params: { invoice: receivedTransaction.invoice },
+                });
+              } else {
+                console.log("Received another payment");
+              }
+            }
+            prevTransaction = receivedTransaction;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          ++pollCount;
+        }
+      })();
+      return () => {
+        polling = false;
+      };
+    }
+
     const nwcClient = useAppStore.getState().nwcClient;
     if (!nwcClient) {
       throw new Error("NWC client not connected");
@@ -87,13 +136,13 @@ export function Receive() {
         console.log("RECEIVED notification", notification);
         if (notification.notification_type === "payment_received") {
           if (
-            invoiceRef.current &&
+            !invoiceRef.current ||
             notification.notification.invoice === invoiceRef.current
           ) {
             router.dismissAll();
             router.navigate({
               pathname: "/receive/success",
-              params: { invoice: invoiceRef.current },
+              params: { invoice: notification.notification.invoice },
             });
           } else {
             console.log("Received another payment");

@@ -19,6 +19,7 @@ import { useInfo } from "~/hooks/useInfo";
 import { useBalance } from "~/hooks/useBalance";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
+import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -76,6 +77,9 @@ export function WalletConnection() {
       const info = await nwcClient.getInfo();
       console.log("NWC connected", info);
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
+      useAppStore
+        .getState()
+        .setNWCCapabilities(info.methods as Nip47Capability[]);
       useAppStore.getState().setNWCClient(nwcClient);
       Toast.show({
         type: "success",
@@ -117,6 +121,7 @@ export function WalletConnection() {
             variant="destructive"
             onPress={() => {
               useAppStore.getState().disconnectWallet();
+              scan();
             }}
           >
             <Text>Disconnect Wallet</Text>
