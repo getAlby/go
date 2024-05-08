@@ -190,7 +190,7 @@ export function Receive() {
           {!enterCustomAmount && (invoice.length || lightningAddress) && (
             <View className="flex-1 justify-center items-center gap-5">
               <View className="flex flex-row justify-center items-center gap-3">
-                <ActivityIndicator />
+                <ActivityIndicator color={"#000"} />
                 <Text>Waiting for payment</Text>
               </View>
               <QRCode value={invoice || lightningAddress} size={300} />
@@ -261,7 +261,7 @@ export function Receive() {
             </TouchableWithoutFeedback>
           )}
 
-          <View className="w-full flex flex-col items-center justify-center gap-3">
+          <View className="w-full flex flex-col items-center justify-center gap-3 mb-5">
             {!enterCustomAmount && (
               <Button
                 variant="secondary"
