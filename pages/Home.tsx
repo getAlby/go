@@ -111,7 +111,7 @@ export function Home() {
           <FlatList
             ListFooterComponent={
               loadingNextPage ? (
-                <Text className="text-center animate-pulse">
+                <Text className="text-center mb-5 animate-pulse">
                   Loading more transactions...
                 </Text>
               ) : undefined
