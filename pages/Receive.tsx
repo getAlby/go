@@ -20,6 +20,7 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
+import Loading from "~/components/Loading";
 
 export function Receive() {
   const [isLoading, setLoading] = React.useState(false);
@@ -169,7 +170,7 @@ export function Receive() {
       />
       {isLoading && (
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator />
+          <Loading />
         </View>
       )}
       {!isLoading && (
@@ -190,7 +191,7 @@ export function Receive() {
           {!enterCustomAmount && (invoice.length || lightningAddress) && (
             <View className="flex-1 justify-center items-center gap-5">
               <View className="flex flex-row justify-center items-center gap-3">
-                <ActivityIndicator color={"#000"} />
+                <Loading />
                 <Text>Waiting for payment</Text>
               </View>
               <QRCode value={invoice || lightningAddress} size={300} />

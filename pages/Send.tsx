@@ -15,6 +15,7 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
+import Loading from "~/components/Loading";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -125,7 +126,7 @@ export function Send() {
       />
       {isLoading && (
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator />
+          <Loading />
         </View>
       )}
       {!isLoading && (
