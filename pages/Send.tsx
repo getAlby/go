@@ -29,7 +29,13 @@ export function Send() {
     if (url) {
       loadPayment(url);
     } else {
-      scan();
+      // Add some timeout to allow the screen transition to finish before 
+      // starting the camera to avoid stutters
+      setLoading(true);
+      window.setTimeout(async () => {
+        await scan();
+        setLoading(false);
+      }, 200);
     }
   }, [url]);
 
