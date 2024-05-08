@@ -51,7 +51,7 @@ module.exports = {
         hairline: hairlineWidth(),
       },
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+        sans: ["Inter" /*, ...defaultTheme.fontFamily.sans*/],
       },
     },
   },
