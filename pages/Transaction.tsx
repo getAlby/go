@@ -25,23 +25,24 @@ export function Transaction() {
       />
       <View className="flex flex-col gap-3 my-10 justify-center items-center">
         <CheckCircle
-          className="text-receive"
+          className={
+            transaction.type === "incoming" ? "text-receive" : "text-send"
+          }
           width={100}
           height={100}
         />
-        <Text className="text-2xl font-bold">{transaction.type === "incoming" ? "Received" : "Sent"}</Text>
+        <Text className="text-2xl font-bold">
+          {transaction.type === "incoming" ? "Received" : "Sent"}
+        </Text>
 
         <View className="flex flex-row items-center mt-5">
           <Text
             className={cn(
               "text-4xl gap-2",
-              transaction.type === "incoming"
-                ? "text-receive"
-                : "text-send"
+              transaction.type === "incoming" ? "text-receive" : "text-send"
             )}
           >
             {Math.floor(transaction.amount / 1000)}
-
           </Text>
           <Text className="text-4xl text-neutral-500"> sats</Text>
         </View>
@@ -51,36 +52,29 @@ export function Transaction() {
           </Text>
         )}
 
-        <ScrollView className="mt-10">
-          <TransactionDetailRow
-            title="Date & Time"
-            content={dayjs.unix(transaction.settled_at).fromNow()}
-          />
-          <TransactionDetailRow
-            title="Description"
-            content={transaction.description || "None"}
-          />
-          <TransactionDetailRow
-            title="Payment Hash"
-            content={transaction.payment_hash}
-          />
-          <TransactionDetailRow
-            title="Preimage"
-            content={transaction.preimage}
-          />
-        </ScrollView>
+        <TransactionDetailRow
+          title="Date & Time"
+          content={dayjs.unix(transaction.settled_at).fromNow()}
+        />
+        <TransactionDetailRow
+          title="Description"
+          content={transaction.description || "None"}
+        />
+        <TransactionDetailRow
+          title="Payment Hash"
+          content={transaction.payment_hash}
+        />
+        <TransactionDetailRow title="Preimage" content={transaction.preimage} />
       </View>
     </View>
   );
 }
 
-
-function TransactionDetailRow(props: { title: string, content: string }) {
-  return <View className="flex flex-row gap-3 w-full my-1">
-    <Text className="w-32 text-muted-foreground">{props.title}</Text>
-    <Text className="">
-      {props.content}
-    </Text>
-  </View>;
+function TransactionDetailRow(props: { title: string; content: string }) {
+  return (
+    <View className="flex flex-row gap-3 my-1">
+      <Text className="w-32 text-muted-foreground">{props.title}</Text>
+      <Text className="flex-1">{props.content}</Text>
+    </View>
+  );
 }
-
