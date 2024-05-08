@@ -155,7 +155,7 @@ export function Send() {
                   <Text className="text-background">Paste from Clipboard</Text>
                 </Button>
                 <Button onPress={openKeyboard}>
-                  <Text className="text-background">Type an Address</Text>
+                  <Text className="text-background">Enter Manually</Text>
                 </Button>
               </View>
             </>
@@ -172,7 +172,7 @@ export function Send() {
                   placeholder="hello@getalby.com"
                   value={keyboardText}
                   onChangeText={setKeyboardText}
-                  // aria-errormessage="inputError"
+                // aria-errormessage="inputError"
                 />
                 <Button onPress={submitKeyboardText}>
                   <Text>Next</Text>
