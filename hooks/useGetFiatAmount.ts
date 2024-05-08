@@ -8,7 +8,7 @@ export function useGetFiatAmount() {
   const getFiatAmount = React.useCallback(
     (amount: number) =>
       rate
-        ? `~${new Intl.NumberFormat(undefined, {
+        ? `~ ${new Intl.NumberFormat(undefined, {
             style: "currency",
             currency: fiatCurrency,
           }).format(rate * amount)}`
