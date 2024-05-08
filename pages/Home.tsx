@@ -179,7 +179,14 @@ export function Home() {
                       {Math.floor(transaction.amount / 1000)}
                       <Text className="text-neutral-500"> sats</Text>
                     </Text>
-                    <Text className="text-right text-neutral-500">&nbsp;</Text>
+                    <Text className="text-right">
+                      {getFiatAmount && (
+                        <Text className="text-right  text-neutral-500">
+                          {getFiatAmount(Math.floor(transaction.amount / 1000))}
+                        </Text>
+                      )}
+
+                    </Text>
                   </View>
                 </View>
               </Pressable>
