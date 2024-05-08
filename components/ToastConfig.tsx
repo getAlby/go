@@ -17,10 +17,10 @@ export const toastConfig: ToastConfig = {
       <Card className="w-full">
         <CardHeader>
           <CardTitle>
-            <CheckCircle className="text-primary" width={20} height={20} />{" "}
+            <CheckCircle className="text-primary" width={16} height={16} />{" "}
             {text1}
           </CardTitle>
-          {text2 && <CardDescription>{text2}</CardDescription>}
+          {text2 && <CardDescription className="mt-2">{text2}</CardDescription>}
         </CardHeader>
       </Card>
     </View>

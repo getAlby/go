@@ -68,9 +68,9 @@ export function Home() {
         }}
       />
       <View className="w-full pt-12 flex flex-row justify-center items-center gap-2">
-        <Text className="text-4xl text-neutral-500">₿</Text>
+        <Text className="text-4xl text-muted-foreground">₿</Text>
         {balance ? (
-          <Text className="text-4xl">
+          <Text className="text-4xl font-bold">
             {new Intl.NumberFormat().format(Math.floor(balance.balance / 1000))}{" "}
             sats
           </Text>
@@ -80,7 +80,7 @@ export function Home() {
       </View>
       <View className="w-full pt-2 pb-8 flex justify-center items-center">
         {getFiatAmount && balance ? (
-          <Text className="text-center">
+          <Text className="text-center text-xl text-muted-foreground">
             {getFiatAmount(Math.floor(balance.balance / 1000))}
           </Text>
         ) : (
@@ -134,7 +134,7 @@ export function Home() {
                   })
                 }
               >
-                <View className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4">
+                <View className="flex flex-row items-center gap-x-6 px-4 mb-5">
                   <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
                     {transaction.type === "incoming" && (
                       <>
@@ -156,14 +156,14 @@ export function Home() {
                     )}
                   </View>
                   <View className="flex flex-col flex-1">
-                    <Text numberOfLines={1} className="font-medium">
+                    <Text numberOfLines={1}>
                       {transaction.description
                         ? transaction.description
                         : transaction.type === "incoming"
                           ? "Received"
                           : "Sent"}
                     </Text>
-                    <Text className="text-neutral-500">
+                    <Text className="text-muted-foreground text-sm">
                       {dayjs.unix(transaction.settled_at).fromNow()}
                     </Text>
                   </View>
@@ -177,15 +177,12 @@ export function Home() {
                       )}
                     >
                       {Math.floor(transaction.amount / 1000)}
-                      <Text className="text-neutral-500"> sats</Text>
+                      <Text className="text-muted-foreground"> sats</Text>
                     </Text>
-                    <Text className="text-right">
-                      {getFiatAmount && (
-                        <Text className="text-right  text-neutral-500">
-                          {getFiatAmount(Math.floor(transaction.amount / 1000))}
-                        </Text>
-                      )}
-
+                    <Text className="text-right text-sm text-muted-foreground">
+                      {getFiatAmount &&
+                        getFiatAmount(Math.floor(transaction.amount / 1000))
+                      }
                     </Text>
                   </View>
                 </View>
