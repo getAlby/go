@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { MoveUpRight, MoveDownLeft, Menu } from "~/components/Icons";
+import { MoveUpRight, MoveDownLeft, Settings2 } from "~/components/Icons";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -61,7 +61,7 @@ export function Home() {
           headerRight: () => (
             <Link href="/settings">
               <View className="flex justify-center items-center">
-                <Menu />
+                <Settings2 className="text-primary" />
               </View>
             </Link>
           ),
@@ -160,8 +160,8 @@ export function Home() {
                       {transaction.description
                         ? transaction.description
                         : transaction.type === "incoming"
-                        ? "Received"
-                        : "Sent"}
+                          ? "Received"
+                          : "Sent"}
                     </Text>
                     <Text className="text-neutral-500">
                       {dayjs.unix(transaction.settled_at).fromNow()}

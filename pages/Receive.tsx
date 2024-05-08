@@ -83,6 +83,7 @@ export function Receive() {
         type: "error",
         text1:
           "Wallet does not support notifications capability. Using fallback",
+        position: "bottom"
       });
       let polling = true;
       let pollCount = 0;
@@ -223,7 +224,7 @@ export function Receive() {
                   onChangeText={setAmount}
                   aria-labelledbyledBy="amount"
                   style={styles.amountInput}
-                  // aria-errormessage="inputError"
+                // aria-errormessage="inputError"
                 />
                 <Label
                   nativeID="amount"
@@ -249,7 +250,7 @@ export function Receive() {
                     value={comment}
                     onChangeText={setComment}
                     aria-labelledbyledBy="comment"
-                    // aria-errormessage="inputError"
+                  // aria-errormessage="inputError"
                   />
                 )}
 
