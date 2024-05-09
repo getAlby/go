@@ -1,4 +1,4 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams, } from "expo-router";
 import { Pressable, View } from "react-native";
 import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
@@ -53,6 +53,7 @@ export function PaymentSuccess() {
           className="w-full"
           onPress={() => {
             router.replace("/");
+            router.setParams({ "reload": "true" });
           }}
         >
           <Text className="text-foreground">Home</Text>

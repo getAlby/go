@@ -11,7 +11,7 @@ import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "pages/settings/WalletConnection";
 import { useTransactions } from "hooks/useTransactions";
-import { Link, Stack, router } from "expo-router";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "~/components/ui/button";
@@ -38,6 +38,15 @@ export function Home() {
   const [refreshingTransactions, setRefreshingTransactions] =
     React.useState(false);
   const getFiatAmount = useGetFiatAmount();
+  const { reload } = useLocalSearchParams() as unknown as {
+    reload: string;
+  };
+
+  React.useEffect(() => {
+    if (reload) {
+      onRefresh();
+    }
+  }, []);
 
   React.useEffect(() => {
     if (
