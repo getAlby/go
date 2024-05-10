@@ -69,9 +69,9 @@ export function Home() {
 
   async function onRefresh() {
     setRefreshingTransactions(true);
-    setAllTransactions([]);
     setPage(1);
     await reloadTransactions();
+    setAllTransactions([]);
     setRefreshingTransactions(false);
   }
 
@@ -194,8 +194,8 @@ export function Home() {
                       {transaction.description
                         ? transaction.description
                         : transaction.type === "incoming"
-                          ? "Received"
-                          : "Sent"}
+                        ? "Received"
+                        : "Sent"}
                     </Text>
                     <Text className="text-muted-foreground text-sm">
                       {dayjs.unix(transaction.settled_at).fromNow()}
@@ -215,8 +215,7 @@ export function Home() {
                     </Text>
                     <Text className="text-right text-sm text-muted-foreground">
                       {getFiatAmount &&
-                        getFiatAmount(Math.floor(transaction.amount / 1000))
-                      }
+                        getFiatAmount(Math.floor(transaction.amount / 1000))}
                     </Text>
                   </View>
                 </View>
