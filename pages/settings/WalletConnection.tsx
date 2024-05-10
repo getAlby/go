@@ -21,12 +21,12 @@ import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
+import { FocusableCamera } from "~/components/FocusableCamera";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
   const [isScanning, setScanning] = React.useState(false);
   const [isConnecting, setConnecting] = React.useState(false);
-  const [autoFocus, setAutoFocus] = React.useState(true);
   const { data: walletInfo } = useInfo();
   const { data: balance } = useBalance();
 
@@ -35,14 +35,7 @@ export function WalletConnection() {
     setScanning(status === "granted");
   }
 
-  const focusCamera = () => {
-    setAutoFocus(false);
-    setTimeout(() => {
-      setAutoFocus(true);
-    }, 200);
-  };
-
-  const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
+  const handleScanned = (data: string) => {
     setScanning((current) => {
       if (current === true) {
         // console.log(`Bar code with data ${data} has been scanned!`);
@@ -142,26 +135,7 @@ export function WalletConnection() {
           )}
           {!isConnecting && (
             <>
-              {isScanning && (
-                <Camera
-                  onBarCodeScanned={handleBarCodeScanned}
-                  style={{ flex: 1, width: "100%" }}
-                  autoFocus={autoFocus}
-                >
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={focusCamera}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      backgroundColor: "transparent",
-                    }}
-                  />
-                </Camera>
-              )}
+              {isScanning && <FocusableCamera onScanned={handleScanned} />}
               {!isScanning && (
                 <>
                   <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">

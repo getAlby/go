@@ -2,12 +2,8 @@
   "expo": {
     "name": "Alby Mobile",
     "slug": "alby-mobile",
-    "version": "1.0.2",
-    "scheme": [
-      "bitcoin",
-      "lightning",
-      "alby"
-    ],
+    "version": "1.0.3",
+    "scheme": ["bitcoin", "lightning", "alby"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,9 +12,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
         "expo-camera",
@@ -30,9 +24,7 @@
       [
         "expo-font",
         {
-          "fonts": [
-            "./assets/fonts/Inter-Regular.otf"
-          ]
+          "fonts": ["./assets/fonts/Inter-Regular.otf"]
         }
       ],
       "expo-router",
@@ -51,9 +43,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.CAMERA"
-      ]
+      "permissions": ["android.permission.CAMERA"]
     },
     "extra": {
       "eas": {

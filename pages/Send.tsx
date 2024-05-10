@@ -16,12 +16,12 @@ import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
+import { FocusableCamera } from "~/components/FocusableCamera";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
   const [isScanning, setScanning] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const [autoFocus, setAutoFocus] = React.useState(true);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
 
@@ -60,14 +60,13 @@ export function Send() {
     setKeyboardOpen(true);
   }
 
-  const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
+  const handleScanned = (data: string) => {
     setScanning((current) => {
       if (current === true) {
         loadPayment(data);
       }
       return false;
     });
-    console.log(`Bar code with data ${data} has been scanned!`);
   };
 
   function submitKeyboardText() {
@@ -119,13 +118,6 @@ export function Send() {
     setLoading(false);
   }
 
-  const focusCamera = () => {
-    setAutoFocus(false);
-    setTimeout(() => {
-      setAutoFocus(true);
-    }, 200);
-  };
-
   return (
     <>
       <Stack.Screen
@@ -142,24 +134,7 @@ export function Send() {
         <>
           {isScanning && (
             <>
-              <Camera
-                onBarCodeScanned={handleBarCodeScanned}
-                style={{ flex: 1, width: "100%" }}
-                autoFocus={autoFocus}
-              >
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={focusCamera}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "transparent",
-                  }}
-                />
-              </Camera>
+              <FocusableCamera onScanned={handleScanned} />
               <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
                 <Button onPress={paste}>
                   <Text className="text-background">Paste from Clipboard</Text>
