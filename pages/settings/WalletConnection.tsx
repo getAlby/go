@@ -12,7 +12,7 @@ import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
 import { Camera as CameraIcon } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
-import { BarCodeScanningResult, Camera } from "expo-camera";
+import { BarCodeScanningResult, Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { Stack } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";

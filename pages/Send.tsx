@@ -1,4 +1,4 @@
-import { BarCodeScanningResult, Camera } from "expo-camera";
+import { BarCodeScanningResult, Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import React, { useEffect } from "react";
 import {
   ActivityIndicator,
@@ -29,7 +29,7 @@ export function Send() {
     if (url) {
       loadPayment(url);
     } else {
-      // Add some timeout to allow the screen transition to finish before 
+      // Add some timeout to allow the screen transition to finish before
       // starting the camera to avoid stutters
       setLoading(true);
       window.setTimeout(async () => {
@@ -179,7 +179,7 @@ export function Send() {
                   placeholder="hello@getalby.com"
                   value={keyboardText}
                   onChangeText={setKeyboardText}
-                // aria-errormessage="inputError"
+                  // aria-errormessage="inputError"
                 />
                 <Button onPress={submitKeyboardText}>
                   <Text>Next</Text>

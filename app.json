@@ -34,7 +34,9 @@
             "./assets/fonts/Inter-Regular.otf"
           ]
         }
-      ]
+      ],
+      "expo-router",
+      "expo-secure-store"
     ],
     "ios": {
       "supportsTablet": true,
