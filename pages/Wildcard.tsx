@@ -1,5 +1,6 @@
 import { usePathname } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
+import { View } from "react-native";
+import Loading from "~/components/Loading";
 import { Text } from "~/components/ui/text";
 import { useHandleLinking } from "~/hooks/useHandleLinking";
 
@@ -9,7 +10,7 @@ export function Wildcard() {
 
   return (
     <View className="flex-1 justify-center items-center flex flex-col gap-3">
-      <ActivityIndicator />
+      <Loading />
       <Text>Loading {pathname}</Text>
     </View>
   );

@@ -18,6 +18,7 @@ import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
+import * as Font from 'expo-font';
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -46,6 +47,8 @@ export default function RootLayout() {
 
   React.useEffect(() => {
     (async () => {
+      await Font.loadAsync("Inter", require('./../assets/fonts/Inter-Regular.otf'));
+
       const theme = await AsyncStorage.getItem("theme");
       if (!theme) {
         AsyncStorage.setItem("theme", colorScheme);
@@ -60,6 +63,9 @@ export default function RootLayout() {
         return;
       }
       setIsColorSchemeLoaded(true);
+
+
+
     })().finally(() => {
       SplashScreen.hideAsync();
     });

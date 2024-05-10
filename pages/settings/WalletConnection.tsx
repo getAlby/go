@@ -12,7 +12,7 @@ import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
 import { Camera as CameraIcon } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
-import { BarCodeScanningResult, Camera } from "expo-camera";
+import { BarCodeScanningResult, Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { Stack } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
@@ -20,6 +20,7 @@ import { useBalance } from "~/hooks/useBalance";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import Loading from "~/components/Loading";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -109,7 +110,7 @@ export function WalletConnection() {
                 {JSON.stringify(walletInfo, null, 2)}
               </Text>
             ) : (
-              <ActivityIndicator />
+              <Loading />
             )}
             {balance && (
               <Text className="self-start justify-self-start">
@@ -133,7 +134,7 @@ export function WalletConnection() {
           {isConnecting && (
             <>
               <View className="flex-1 justify-center items-center">
-                <ActivityIndicator />
+                <Loading />
                 <Text className="mt-4">Connecting to your Wallet</Text>
               </View>
             </>

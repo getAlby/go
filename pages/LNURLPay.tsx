@@ -16,6 +16,7 @@ import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
+import Loading from "~/components/Loading";
 
 export function LNURLPay() {
   const { lnurlDetailsJSON, originalText } =
@@ -62,7 +63,7 @@ export function LNURLPay() {
       />
       {isLoading && (
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator />
+          <Loading />
         </View>
       )}
 
@@ -87,7 +88,7 @@ export function LNURLPay() {
                 onChangeText={setAmount}
                 aria-labelledbyledBy="amount"
                 style={styles.amountInput}
-                // aria-errormessage="inputError"
+              // aria-errormessage="inputError"
               />
               <Label
                 nativeID="amount"
@@ -113,7 +114,7 @@ export function LNURLPay() {
                   value={comment}
                   onChangeText={setComment}
                   aria-labelledbyledBy="comment"
-                  // aria-errormessage="inputError"
+                // aria-errormessage="inputError"
                 />
               )}
             </View>

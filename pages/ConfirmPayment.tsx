@@ -2,6 +2,7 @@ import { Invoice } from "@getalby/lightning-tools";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
+import Loading from "~/components/Loading";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
@@ -53,7 +54,7 @@ export function ConfirmPayment() {
       />
       {isLoading && (
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator />
+          <Loading />
         </View>
       )}
 

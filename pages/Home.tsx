@@ -1,15 +1,22 @@
-import { ScrollView, View, FlatList, Image, Pressable } from "react-native";
+import {
+  ScrollView,
+  View,
+  FlatList,
+  Image,
+  Pressable,
+  RefreshControl,
+} from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "pages/settings/WalletConnection";
 import { useTransactions } from "hooks/useTransactions";
-import { Link, Stack, router } from "expo-router";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { MoveUpRight, MoveDownLeft, Menu } from "~/components/Icons";
+import { MoveUpRight, MoveDownLeft, Settings2 } from "~/components/Icons";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -22,15 +29,28 @@ export function Home() {
   const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance } = useBalance();
   const [page, setPage] = React.useState(1);
-  const { data: transactions } = useTransactions(page);
+  const { data: transactions, mutate: reloadTransactions } =
+    useTransactions(page);
   const [loadingNextPage, setLoadingNextPage] = React.useState(false);
   const [allTransactions, setAllTransactions] = React.useState<
     Nip47Transaction[]
   >([]);
+  const [refreshingTransactions, setRefreshingTransactions] =
+    React.useState(false);
   const getFiatAmount = useGetFiatAmount();
+  const { reload } = useLocalSearchParams() as unknown as {
+    reload: string;
+  };
+
+  React.useEffect(() => {
+    if (reload) {
+      onRefresh();
+    }
+  }, []);
 
   React.useEffect(() => {
     if (
+      !refreshingTransactions &&
       transactions?.transactions.length &&
       !allTransactions.some((t) =>
         transactions.transactions.some(
@@ -41,10 +61,18 @@ export function Home() {
       setAllTransactions([...allTransactions, ...transactions.transactions]);
       setLoadingNextPage(false);
     }
-  }, [allTransactions, transactions]);
+  }, [allTransactions, transactions, refreshingTransactions]);
 
   if (!nwcClient) {
     return <WalletConnection />;
+  }
+
+  async function onRefresh() {
+    setRefreshingTransactions(true);
+    setAllTransactions([]);
+    setPage(1);
+    await reloadTransactions();
+    setRefreshingTransactions(false);
   }
 
   return (
@@ -61,16 +89,16 @@ export function Home() {
           headerRight: () => (
             <Link href="/settings">
               <View className="flex justify-center items-center">
-                <Menu />
+                <Settings2 className="text-primary" />
               </View>
             </Link>
           ),
         }}
       />
       <View className="w-full pt-12 flex flex-row justify-center items-center gap-2">
-        <Text className="text-4xl text-neutral-500">₿</Text>
+        <Text className="text-4xl text-muted-foreground">₿</Text>
         {balance ? (
-          <Text className="text-4xl">
+          <Text className="text-4xl font-bold">
             {new Intl.NumberFormat().format(Math.floor(balance.balance / 1000))}{" "}
             sats
           </Text>
@@ -80,7 +108,7 @@ export function Home() {
       </View>
       <View className="w-full pt-2 pb-8 flex justify-center items-center">
         {getFiatAmount && balance ? (
-          <Text className="text-center">
+          <Text className="text-center text-xl text-muted-foreground">
             {getFiatAmount(Math.floor(balance.balance / 1000))}
           </Text>
         ) : (
@@ -109,9 +137,15 @@ export function Home() {
       <>
         {allTransactions.length ? (
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshingTransactions}
+                onRefresh={onRefresh}
+              />
+            }
             ListFooterComponent={
               loadingNextPage ? (
-                <Text className="text-center animate-pulse">
+                <Text className="text-center mb-5 animate-pulse">
                   Loading more transactions...
                 </Text>
               ) : undefined
@@ -134,7 +168,7 @@ export function Home() {
                   })
                 }
               >
-                <View className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4">
+                <View className="flex flex-row items-center gap-x-6 px-4 mb-5">
                   <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
                     {transaction.type === "incoming" && (
                       <>
@@ -156,14 +190,14 @@ export function Home() {
                     )}
                   </View>
                   <View className="flex flex-col flex-1">
-                    <Text numberOfLines={1} className="font-medium">
+                    <Text numberOfLines={1}>
                       {transaction.description
                         ? transaction.description
                         : transaction.type === "incoming"
-                        ? "Received"
-                        : "Sent"}
+                          ? "Received"
+                          : "Sent"}
                     </Text>
-                    <Text className="text-neutral-500">
+                    <Text className="text-muted-foreground text-sm">
                       {dayjs.unix(transaction.settled_at).fromNow()}
                     </Text>
                   </View>
@@ -177,9 +211,13 @@ export function Home() {
                       )}
                     >
                       {Math.floor(transaction.amount / 1000)}
-                      <Text className="text-neutral-500"> sats</Text>
+                      <Text className="text-muted-foreground"> sats</Text>
                     </Text>
-                    <Text className="text-right text-neutral-500">&nbsp;</Text>
+                    <Text className="text-right text-sm text-muted-foreground">
+                      {getFiatAmount &&
+                        getFiatAmount(Math.floor(transaction.amount / 1000))
+                      }
+                    </Text>
                   </View>
                 </View>
               </Pressable>

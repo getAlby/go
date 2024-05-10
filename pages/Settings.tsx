@@ -21,8 +21,8 @@ export function Settings() {
         <Pressable>
           <Card className="w-full">
             <CardHeader className="w-full">
-              <CardTitle className="">
-                <ZapIcon className="text-primary" /> Lightning Address
+              <CardTitle className="flex flex-col">
+                Lightning Address
               </CardTitle>
               <CardDescription>
                 Update your Lightning Address to easily receive payments
@@ -35,8 +35,8 @@ export function Settings() {
         <Pressable>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="">
-                <WalletIcon className="text-primary" /> Wallet Connection
+              <CardTitle>
+                Wallet Connection
               </CardTitle>
               <CardDescription>
                 Configure your wallet connection
@@ -49,8 +49,8 @@ export function Settings() {
         <Pressable>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="">
-                <Currency className="text-primary" /> Fiat Currency
+              <CardTitle>
+                Fiat Currency
               </CardTitle>
               <CardDescription>
                 Configure fiat currency conversion

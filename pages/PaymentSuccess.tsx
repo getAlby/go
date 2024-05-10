@@ -1,4 +1,4 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams, } from "expo-router";
 import { Pressable, View } from "react-native";
 import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
@@ -30,7 +30,7 @@ export function PaymentSuccess() {
         >
           <View className="flex flex-row items-center justify-center gap-3">
             <Copy className="text-muted-foreground" width={16} height={16} />
-            <Text className="font-mono text-muted-foreground text-sm max-w-sm">
+            <Text className="text-muted-foreground text-sm max-w-sm">
               Preimage: {preimage}
             </Text>
           </View>
@@ -45,7 +45,7 @@ export function PaymentSuccess() {
             router.push("/send");
           }}
         >
-          <Text className="text-background">Pay Again</Text>
+          <Text className="text-background">Do Another Payment</Text>
         </Button>
         <Button
           size="lg"
@@ -53,6 +53,7 @@ export function PaymentSuccess() {
           className="w-full"
           onPress={() => {
             router.replace("/");
+            router.setParams({ "reload": "true" });
           }}
         >
           <Text className="text-foreground">Home</Text>

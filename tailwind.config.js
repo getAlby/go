@@ -11,8 +11,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        receive: "#33aa33",
-        send: "#aa3333",
+        receive: "#47A66D",
+        send: "#E26842",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -49,6 +49,9 @@ module.exports = {
       },
       borderWidth: {
         hairline: hairlineWidth(),
+      },
+      fontFamily: {
+        sans: ["Inter" /*, ...defaultTheme.fontFamily.sans*/],
       },
     },
   },
