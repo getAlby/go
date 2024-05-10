@@ -87,7 +87,7 @@ export const lnurl = {
     return "status" in res && res.status.toUpperCase() === "ERROR";
   },
   findLnurl(text: string) {
-    const stringToText = text.trim().toLowerCase().replace("lightning:", "");
+    const stringToText = text.trim().toLowerCase();
     let match;
 
     // look for a LNURL with protocol scheme
