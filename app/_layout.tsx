@@ -18,7 +18,8 @@ import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
-import * as Font from 'expo-font';
+import * as Font from "expo-font";
+import { useInfo } from "~/hooks/useInfo";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -44,10 +45,14 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+  useConnectionChecker();
 
   React.useEffect(() => {
     (async () => {
-      await Font.loadAsync("Inter", require('./../assets/fonts/Inter-Regular.otf'));
+      await Font.loadAsync(
+        "Inter",
+        require("./../assets/fonts/Inter-Regular.otf")
+      );
 
       const theme = await AsyncStorage.getItem("theme");
       if (!theme) {
@@ -63,9 +68,6 @@ export default function RootLayout() {
         return;
       }
       setIsColorSchemeLoaded(true);
-
-
-
     })().finally(() => {
       SplashScreen.hideAsync();
     });
@@ -87,4 +89,16 @@ export default function RootLayout() {
       </ThemeProvider>
     </SWRConfig>
   );
+}
+
+function useConnectionChecker() {
+  const { error } = useInfo();
+  React.useEffect(() => {
+    if (error?.message) {
+      Toast.show({
+        type: "connectionError",
+        text1: error.message,
+      });
+    }
+  }, [error?.message]);
 }

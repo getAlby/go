@@ -104,7 +104,8 @@ export function WalletConnection() {
       {hasConnection && (
         <View className="flex-1 p-3">
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-            <Text>Wallet Connected!</Text>
+            {walletInfo && <Text>Wallet Connected!</Text>}
+            {!walletInfo && <Text>Loading wallet...</Text>}
             {walletInfo ? (
               <Text className="self-start justify-self-start">
                 {JSON.stringify(walletInfo, null, 2)}

@@ -10,6 +10,8 @@ import {
 } from "./ui/card";
 import { View } from "react-native";
 import { CheckCircle, XCircle } from "./Icons";
+import { Link } from "expo-router";
+import { Button } from "./ui/button";
 
 export const toastConfig: ToastConfig = {
   success: ({ text1, text2 }) => (
@@ -34,6 +36,24 @@ export const toastConfig: ToastConfig = {
           </CardTitle>
           {/* <CardDescription>{text2}</CardDescription> */}
         </CardHeader>
+      </Card>
+    </View>
+  ),
+  connectionError: ({ text1, text2, hide }) => (
+    <View className="w-full p-3">
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>
+            <XCircle className="text-primary" width={20} height={20} /> {text1}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4flex flex-row justify-end">
+          <Link href="/settings/wallet-connection" asChild>
+            <Button>
+              <Text>Update Wallet Connection</Text>
+            </Button>
+          </Link>
+        </CardContent>
       </Card>
     </View>
   ),
