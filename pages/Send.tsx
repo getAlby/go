@@ -87,6 +87,9 @@ export function Send() {
         }
         text = lightningParam;
       }
+      if (text.startsWith("lightning:")) {
+        text = text.substring("lightning:".length);
+      }
       const lnurlValue = lnurl.findLnurl(text);
       console.log("Checked lnurl value", text, lnurlValue);
       if (lnurlValue) {

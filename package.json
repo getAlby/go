@@ -15,7 +15,7 @@
     "ts:check": "tsc"
   },
   "dependencies": {
-    "@getalby/lightning-tools": "^5.0.2",
+    "@getalby/lightning-tools": "^5.0.3",
     "@getalby/sdk": "^3.5.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "bech32": "^2.0.0",
