@@ -13,6 +13,7 @@ import {
   Copy,
   Currency,
   Settings2,
+  ArrowLeftRight,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -41,6 +42,7 @@ interopIcon(WalletIcon);
 interopIcon(Copy);
 interopIcon(Currency);
 interopIcon(Settings2);
+interopIcon(ArrowLeftRight);
 
 export {
   AlertCircle,
@@ -55,5 +57,6 @@ export {
   WalletIcon,
   Copy,
   Currency,
-  Settings2
+  Settings2,
+  ArrowLeftRight,
 };

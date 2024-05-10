@@ -1,9 +1,7 @@
 import { Link, Stack, router } from "expo-router";
 import {
-  ActivityIndicator,
   Keyboard,
   Pressable,
-  StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -12,15 +10,14 @@ import * as Clipboard from "expo-clipboard";
 import React from "react";
 import { useAppStore } from "~/lib/state/appStore";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import QRCode from "react-native-qrcode-svg";
 import { Text } from "~/components/ui/text";
 import { Copy, ZapIcon } from "~/components/Icons";
-import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
+import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 
 export function Receive() {
   const [isLoading, setLoading] = React.useState(false);
@@ -31,7 +28,6 @@ export function Receive() {
   const [addComment, setAddComment] = React.useState(false);
   const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
   const lightningAddress = useAppStore((store) => store.lightningAddress);
-  const getFiatAmount = useGetFiatAmount();
 
   function setInvoice(invoice: string) {
     _setInvoice(invoice);
@@ -84,7 +80,7 @@ export function Receive() {
         type: "error",
         text1:
           "Wallet does not support notifications capability. Using fallback",
-        position: "bottom"
+        position: "bottom",
       });
       let polling = true;
       let pollCount = 0;
@@ -203,7 +199,9 @@ export function Receive() {
                     height={16}
                   />
                   <Text className="text-muted-foreground">
-                    {invoice ? amount + " sats" : lightningAddress}
+                    {invoice
+                      ? new Intl.NumberFormat().format(+amount) + " sats"
+                      : lightningAddress}
                   </Text>
                 </View>
               </Pressable>
@@ -217,23 +215,7 @@ export function Receive() {
               }}
             >
               <View className="flex-1 h-full flex flex-col items-center justify-center gap-5 p-3">
-                <Input
-                  className="w-full border-transparent text-center bg-muted"
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  value={amount}
-                  onChangeText={setAmount}
-                  aria-labelledbyledBy="amount"
-                  style={styles.amountInput}
-                // aria-errormessage="inputError"
-                />
-                <Label
-                  nativeID="amount"
-                  className="self-start justify-self-start"
-                >
-                  sats
-                </Label>
-                {getFiatAmount && <Text>{getFiatAmount(+amount)}</Text>}
+                <DualCurrencyInput amount={amount} setAmount={setAmount} />
 
                 {!addComment && (
                   <Button
@@ -251,7 +233,7 @@ export function Receive() {
                     value={comment}
                     onChangeText={setComment}
                     aria-labelledbyledBy="comment"
-                  // aria-errormessage="inputError"
+                    // aria-errormessage="inputError"
                   />
                 )}
 
@@ -277,10 +259,3 @@ export function Receive() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  amountInput: {
-    fontSize: 80,
-    height: 100,
-  },
-});

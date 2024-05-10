@@ -1,22 +1,13 @@
-import { Invoice } from "@getalby/lightning-tools";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import {
-  ActivityIndicator,
-  Keyboard,
-  Pressable,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
-import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
-import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
+import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 
 export function LNURLPay() {
   const { lnurlDetailsJSON, originalText } =
@@ -29,7 +20,6 @@ export function LNURLPay() {
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
   const [addComment, setAddComment] = React.useState(false);
-  const getFiatAmount = useGetFiatAmount();
 
   async function requestInvoice() {
     setLoading(true);
@@ -80,23 +70,7 @@ export function LNURLPay() {
                 {originalText}
               </Text>
 
-              <Input
-                className="w-full border-transparent text-center bg-muted mt-3"
-                placeholder="0"
-                keyboardType="number-pad"
-                value={amount}
-                onChangeText={setAmount}
-                aria-labelledbyledBy="amount"
-                style={styles.amountInput}
-              // aria-errormessage="inputError"
-              />
-              <Label
-                nativeID="amount"
-                className="self-start justify-self-start"
-              >
-                sats
-              </Label>
-              {getFiatAmount && <Text>{getFiatAmount(+amount)}</Text>}
+              <DualCurrencyInput amount={amount} setAmount={setAmount} />
 
               {!addComment && (
                 <Button
@@ -114,7 +88,7 @@ export function LNURLPay() {
                   value={comment}
                   onChangeText={setComment}
                   aria-labelledbyledBy="comment"
-                // aria-errormessage="inputError"
+                  // aria-errormessage="inputError"
                 />
               )}
             </View>
@@ -137,10 +111,3 @@ export function LNURLPay() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  amountInput: {
-    fontSize: 80,
-    height: 100,
-  },
-});
