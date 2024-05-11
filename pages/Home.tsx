@@ -11,7 +11,7 @@ import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "pages/settings/WalletConnection";
 import { useTransactions } from "hooks/useTransactions";
-import { Link, Stack, router, useLocalSearchParams } from "expo-router";
+import { Link, Stack, router, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "~/components/ui/button";
@@ -27,7 +27,7 @@ dayjs.extend(relativeTime);
 
 export function Home() {
   const nwcClient = useAppStore((store) => store.nwcClient);
-  const { data: balance } = useBalance();
+  const { data: balance, mutate: reloadBalance } = useBalance();
   const [page, setPage] = React.useState(1);
   const { data: transactions, mutate: reloadTransactions } =
     useTransactions(page);
@@ -38,15 +38,6 @@ export function Home() {
   const [refreshingTransactions, setRefreshingTransactions] =
     React.useState(false);
   const getFiatAmount = useGetFiatAmount();
-  const { reload } = useLocalSearchParams() as unknown as {
-    reload: string;
-  };
-
-  React.useEffect(() => {
-    if (reload) {
-      onRefresh();
-    }
-  }, []);
 
   React.useEffect(() => {
     if (
@@ -63,16 +54,20 @@ export function Home() {
     }
   }, [allTransactions, transactions, refreshingTransactions]);
 
+  const onRefresh = React.useCallback(() => {
+    (async () => {
+      setRefreshingTransactions(true);
+      setPage(1);
+      await Promise.all([reloadTransactions(), reloadBalance()]);
+      setAllTransactions([]);
+      setRefreshingTransactions(false);
+    })();
+  }, []);
+
+  useFocusEffect(onRefresh);
+
   if (!nwcClient) {
     return <WalletConnection />;
-  }
-
-  async function onRefresh() {
-    setRefreshingTransactions(true);
-    setPage(1);
-    await reloadTransactions();
-    setAllTransactions([]);
-    setRefreshingTransactions(false);
   }
 
   return (
@@ -153,7 +148,10 @@ export function Home() {
             data={allTransactions}
             onEndReachedThreshold={0.9}
             onEndReached={() => {
-              if (allTransactions.length / TRANSACTIONS_PAGE_SIZE === page) {
+              if (
+                !refreshingTransactions &&
+                allTransactions.length / TRANSACTIONS_PAGE_SIZE === page
+              ) {
                 setLoadingNextPage(true);
                 setPage(page + 1);
               }

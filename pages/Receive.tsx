@@ -27,7 +27,10 @@ export function Receive() {
   const [comment, setComment] = React.useState("");
   const [addComment, setAddComment] = React.useState(false);
   const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
-  const lightningAddress = useAppStore((store) => store.lightningAddress);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const wallets = useAppStore((store) => store.wallets);
+  const lightningAddress = wallets[selectedWalletId].lightningAddress;
+  const nwcCapabilities = wallets[selectedWalletId].nwcCapabilities;
 
   function setInvoice(invoice: string) {
     _setInvoice(invoice);
@@ -65,6 +68,9 @@ export function Receive() {
 
   function copy() {
     const text = invoice || lightningAddress;
+    if (!text) {
+      return;
+    }
     Clipboard.setStringAsync(text);
     Toast.show({
       type: "success",
@@ -75,13 +81,9 @@ export function Receive() {
 
   // TODO: move this somewhere else to have app-wide notifications of incoming payments
   React.useEffect(() => {
-    if (useAppStore.getState().nwcCapabilities.indexOf("notifications") < 0) {
-      Toast.show({
-        type: "error",
-        text1:
-          "Wallet does not support notifications capability. Using fallback",
-        position: "bottom",
-      });
+    if (!nwcCapabilities || nwcCapabilities.indexOf("notifications") < 0) {
+      // TODO: we do not check if the wallet supports listTransactions,
+      // and could also use lookupInvoice if it's a custom invoice
       let polling = true;
       let pollCount = 0;
       let prevTransaction: Nip47Transaction | undefined;
@@ -232,7 +234,7 @@ export function Receive() {
                     placeholder="comment"
                     value={comment}
                     onChangeText={setComment}
-                    aria-labelledbyledBy="comment"
+                    // aria-labelledbyledBy="comment"
                     // aria-errormessage="inputError"
                   />
                 )}

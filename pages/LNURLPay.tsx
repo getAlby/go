@@ -87,7 +87,7 @@ export function LNURLPay() {
                   placeholder="comment"
                   value={comment}
                   onChangeText={setComment}
-                  aria-labelledbyledBy="comment"
+                  // aria-labelledbyledBy="comment"
                   // aria-errormessage="inputError"
                 />
               )}

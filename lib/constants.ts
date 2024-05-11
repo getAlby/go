@@ -20,3 +20,4 @@ export const NAV_THEME = {
 export const TRANSACTIONS_PAGE_SIZE = 20;
 
 export const DEFAULT_CURRENCY = "USD";
+export const DEFAULT_WALLET_NAME = "Default Wallet";
