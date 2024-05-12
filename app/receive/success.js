@@ -1,4 +1,4 @@
-import { ReceiveSuccess } from "../../pages/ReceiveSuccess";
+import { ReceiveSuccess } from "../../pages/receive/ReceiveSuccess";
 
 export default function Page() {
   return <ReceiveSuccess />;

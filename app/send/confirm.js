@@ -1,4 +1,4 @@
-import { ConfirmPayment } from "../../pages/ConfirmPayment";
+import { ConfirmPayment } from "../../pages/send/ConfirmPayment";
 
 export default function Page() {
   return <ConfirmPayment />;

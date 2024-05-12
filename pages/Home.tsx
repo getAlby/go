@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
-import { WalletConnection } from "pages/settings/WalletConnection";
+import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 import { useTransactions } from "hooks/useTransactions";
 import { Link, Stack, router, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
@@ -55,6 +55,9 @@ export function Home() {
   }, [allTransactions, transactions, refreshingTransactions]);
 
   const onRefresh = React.useCallback(() => {
+    if (refreshingTransactions) {
+      return;
+    }
     (async () => {
       setRefreshingTransactions(true);
       setPage(1);

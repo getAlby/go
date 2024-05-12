@@ -1,17 +1,16 @@
 import { BarCodeScanningResult, Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import React, { useEffect } from "react";
-import {
-  ActivityIndicator,
-  Keyboard,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
-import { Camera as CameraIcon } from "~/components/Icons";
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import {
+  BookUser,
+  Camera as CameraIcon,
+  ClipboardPaste,
+  Keyboard as KeyboardIcon,
+} from "~/components/Icons";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
@@ -98,7 +97,7 @@ export function Send() {
           throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
         }
 
-        router.push({
+        router.replace({
           pathname: "/send/lnurl-pay",
           params: {
             lnurlDetailsJSON: JSON.stringify(lnurlDetails),
@@ -106,7 +105,7 @@ export function Send() {
           },
         });
       } else {
-        router.push({
+        router.replace({
           pathname: "/send/confirm",
           params: { invoice: text, originalText },
         });
@@ -114,8 +113,8 @@ export function Send() {
     } catch (error) {
       console.error(error);
       errorToast(error as Error);
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -135,13 +134,18 @@ export function Send() {
           {isScanning && (
             <>
               <FocusableCamera onScanned={handleScanned} />
-              <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
+              <View className="absolute bottom-12 w-full z-10 flex flex-row items-center justify-center gap-3">
                 <Button onPress={paste}>
-                  <Text className="text-background">Paste from Clipboard</Text>
+                  <ClipboardPaste className="text-background" />
                 </Button>
                 <Button onPress={openKeyboard}>
-                  <Text className="text-background">Enter Manually</Text>
+                  <KeyboardIcon className="text-background" />
                 </Button>
+                <Link href="/send/address-book" asChild>
+                  <Button>
+                    <BookUser className="text-background" />
+                  </Button>
+                </Link>
               </View>
             </>
           )}

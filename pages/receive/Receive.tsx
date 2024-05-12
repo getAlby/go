@@ -180,7 +180,10 @@ export function Receive() {
               <Text className="text-2xl max-w-64 text-center">
                 Receive Quickly with a Lightning Address
               </Text>
-              <Link href="/settings/lightning-address" asChild>
+              <Link
+                href={`/settings/wallets/${selectedWalletId}/lightning-address`}
+                asChild
+              >
                 <Button className="touch-none">
                   <Text className="text-background">Set Lightning Address</Text>
                 </Button>
