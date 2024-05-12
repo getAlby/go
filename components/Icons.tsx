@@ -16,6 +16,9 @@ import {
   ArrowLeftRight,
   PlusCircle,
   Cog,
+  ClipboardPaste,
+  Keyboard,
+  BookUser,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -47,6 +50,9 @@ interopIcon(Settings2);
 interopIcon(ArrowLeftRight);
 interopIcon(PlusCircle);
 interopIcon(Cog);
+interopIcon(ClipboardPaste);
+interopIcon(Keyboard);
+interopIcon(BookUser);
 
 export {
   AlertCircle,
@@ -65,4 +71,7 @@ export {
   ArrowLeftRight,
   PlusCircle,
   Cog,
+  ClipboardPaste,
+  Keyboard,
+  BookUser,
 };

@@ -2,12 +2,14 @@ import { create } from "zustand";
 import { NWCClient, Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import { nwc } from "@getalby/sdk";
 import { secureStorage } from "lib/secureStorage";
+import { NewAddressBookEntry } from "~/pages/settings/address-book/NewAddressBookEntry";
 
 interface AppState {
   readonly nwcClient: NWCClient | undefined;
   readonly fiatCurrency: string;
   readonly selectedWalletId: number;
   readonly wallets: Wallet[];
+  readonly addressBookEntries: AddressBookEntry[];
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
   removeNostrWalletConnectUrl(): void;
@@ -15,9 +17,11 @@ interface AppState {
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   addWallet(wallet: Wallet): void;
+  addAddressBookEntry(entry: AddressBookEntry): void;
 }
 
 const walletKeyPrefix = "wallet";
+const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
 
@@ -28,8 +32,17 @@ type Wallet = {
   nwcCapabilities?: Nip47Capability[];
 };
 
+type AddressBookEntry = {
+  name?: string;
+  lightningAddress?: string;
+};
+
 const getWalletKey = (walletId: number) => {
   return walletKeyPrefix + walletId;
+};
+
+const getAddressBookEntryKey = (addressBookEntryId: number) => {
+  return addressBookEntryKeyPrefix + addressBookEntryId;
 };
 
 function loadWallets(): Wallet[] {
@@ -71,6 +84,20 @@ function loadWallets(): Wallet[] {
   return wallets;
 }
 
+function loadAddressBookEntries(): AddressBookEntry[] {
+  const addressBookEntries: AddressBookEntry[] = [];
+  for (let i = 0; ; i++) {
+    const addressBookEntryJSON = secureStorage.getItem(
+      getAddressBookEntryKey(i)
+    );
+    if (!addressBookEntryJSON) {
+      break;
+    }
+    addressBookEntries.push(JSON.parse(addressBookEntryJSON));
+  }
+  return addressBookEntries;
+}
+
 export const useAppStore = create<AppState>()((set, get) => {
   const updateCurrentWallet = (walletUpdate: Partial<Wallet>) => {
     const selectedWalletId = get().selectedWalletId;
@@ -95,6 +122,7 @@ export const useAppStore = create<AppState>()((set, get) => {
   );
   const initialWallets = loadWallets();
   return {
+    addressBookEntries: loadAddressBookEntries(),
     wallets: initialWallets,
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
@@ -132,6 +160,17 @@ export const useAppStore = create<AppState>()((set, get) => {
         wallets: [...currentWallets, wallet],
         selectedWalletId: newWalletId,
         nwcClient: undefined,
+      });
+    },
+    addAddressBookEntry: (addressBookEntry: AddressBookEntry) => {
+      const currentAddressBookEntries = get().addressBookEntries;
+      const newAddressBookEntryId = currentAddressBookEntries.length;
+      secureStorage.setItem(
+        getAddressBookEntryKey(newAddressBookEntryId),
+        JSON.stringify(addressBookEntry)
+      );
+      set({
+        addressBookEntries: [...currentAddressBookEntries, addressBookEntry],
       });
     },
   };

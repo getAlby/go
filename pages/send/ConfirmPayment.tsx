@@ -33,7 +33,7 @@ export function ConfirmPayment() {
       router.dismissAll();
       router.replace({
         pathname: "/send/success",
-        params: { preimage: response.preimage },
+        params: { preimage: response.preimage, originalText },
       });
     } catch (error) {
       console.error(error);

@@ -48,7 +48,10 @@ export function EditWallet() {
           </Card>
         </Pressable>
       </Link>
-      <Link href="/settings/wallet-connection" asChild>
+      <Link
+        href={`/settings/wallets/${selectedWalletId}/wallet-connection`}
+        asChild
+      >
         <Pressable>
           <Card className="w-full">
             <CardHeader>
@@ -60,7 +63,10 @@ export function EditWallet() {
           </Card>
         </Pressable>
       </Link>
-      <Link href="/settings/lightning-address" asChild>
+      <Link
+        href={`/settings/wallets/${selectedWalletId}/lightning-address`}
+        asChild
+      >
         <Pressable>
           <Card className="w-full">
             <CardHeader className="w-full">

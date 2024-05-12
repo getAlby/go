@@ -8,7 +8,10 @@ import Toast from "react-native-toast-message";
 import { Copy } from "~/components/Icons";
 
 export function PaymentSuccess() {
-  const { preimage } = useLocalSearchParams() as { preimage: string };
+  const { preimage, originalText } = useLocalSearchParams() as {
+    preimage: string;
+    originalText: string;
+  };
   return (
     <View className="flex-1 flex flex-col">
       <Stack.Screen
@@ -17,6 +20,9 @@ export function PaymentSuccess() {
         }}
       />
       <View className="flex-1 justify-center items-center">
+        <Text className="text-muted-foreground text-sm max-w-sm text-center">
+          Successful payment to {originalText}
+        </Text>
         <Paid />
         <Pressable
           onPress={() => {

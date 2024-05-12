@@ -1,11 +1,9 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Scroll } from "lucide-react-native";
 import React from "react";
-import { ScrollView, View } from "react-native";
-import { CheckCircle, MoveDownLeft } from "~/components/Icons";
-import { Separator } from "~/components/ui/separator";
+import { View } from "react-native";
+import { CheckCircle } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { cn } from "~/lib/utils";
@@ -67,7 +65,10 @@ export function Transaction() {
             title="Payment Hash"
             content={transaction.payment_hash}
           />
-          <TransactionDetailRow title="Preimage" content={transaction.preimage} />
+          <TransactionDetailRow
+            title="Preimage"
+            content={transaction.preimage}
+          />
         </View>
       </View>
     </View>
