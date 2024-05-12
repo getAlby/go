@@ -27,7 +27,10 @@ export function Receive() {
   const [comment, setComment] = React.useState("");
   const [addComment, setAddComment] = React.useState(false);
   const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
-  const lightningAddress = useAppStore((store) => store.lightningAddress);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const wallets = useAppStore((store) => store.wallets);
+  const lightningAddress = wallets[selectedWalletId].lightningAddress;
+  const nwcCapabilities = wallets[selectedWalletId].nwcCapabilities;
 
   function setInvoice(invoice: string) {
     _setInvoice(invoice);
@@ -65,6 +68,9 @@ export function Receive() {
 
   function copy() {
     const text = invoice || lightningAddress;
+    if (!text) {
+      return;
+    }
     Clipboard.setStringAsync(text);
     Toast.show({
       type: "success",
@@ -75,48 +81,49 @@ export function Receive() {
 
   // TODO: move this somewhere else to have app-wide notifications of incoming payments
   React.useEffect(() => {
-    if (useAppStore.getState().nwcCapabilities.indexOf("notifications") < 0) {
-      Toast.show({
-        type: "error",
-        text1:
-          "Wallet does not support notifications capability. Using fallback",
-        position: "bottom",
-      });
+    if (!nwcCapabilities || nwcCapabilities.indexOf("notifications") < 0) {
+      // TODO: we do not check if the wallet supports listTransactions,
+      // and could also use lookupInvoice if it's a custom invoice
       let polling = true;
       let pollCount = 0;
       let prevTransaction: Nip47Transaction | undefined;
       (async () => {
         while (polling) {
-          const transactions = await useAppStore
-            .getState()
-            .nwcClient?.listTransactions({
-              limit: 1,
-              type: "incoming",
-            });
-          const receivedTransaction = transactions?.transactions[0];
-          if (receivedTransaction) {
-            if (
-              polling &&
-              pollCount > 0 &&
-              receivedTransaction.payment_hash !== prevTransaction?.payment_hash
-            ) {
+          try {
+            const transactions = await useAppStore
+              .getState()
+              .nwcClient?.listTransactions({
+                limit: 1,
+                type: "incoming",
+              });
+            const receivedTransaction = transactions?.transactions[0];
+            if (receivedTransaction) {
               if (
-                !invoiceRef.current ||
-                receivedTransaction.invoice === invoiceRef.current
+                polling &&
+                pollCount > 0 &&
+                receivedTransaction.payment_hash !==
+                  prevTransaction?.payment_hash
               ) {
-                router.dismissAll();
-                router.navigate({
-                  pathname: "/receive/success",
-                  params: { invoice: receivedTransaction.invoice },
-                });
-              } else {
-                console.log("Received another payment");
+                if (
+                  !invoiceRef.current ||
+                  receivedTransaction.invoice === invoiceRef.current
+                ) {
+                  router.dismissAll();
+                  router.navigate({
+                    pathname: "/receive/success",
+                    params: { invoice: receivedTransaction.invoice },
+                  });
+                } else {
+                  console.log("Received another payment");
+                }
               }
+              prevTransaction = receivedTransaction;
             }
-            prevTransaction = receivedTransaction;
+            ++pollCount;
+          } catch (error) {
+            console.error("Failed to list transactions", error);
           }
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          ++pollCount;
         }
       })();
       return () => {
@@ -153,10 +160,6 @@ export function Receive() {
     };
   }, []);
 
-  // React.useEffect(() => {
-  //   generateInvoice();
-  // }, []);
-
   return (
     <>
       <Stack.Screen
@@ -171,7 +174,7 @@ export function Receive() {
       )}
       {!isLoading && (
         <>
-          {!invoice && !lightningAddress && (
+          {!enterCustomAmount && !invoice && !lightningAddress && (
             <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
               <ZapIcon className="text-black w-32 h-32" />
               <Text className="text-2xl max-w-64 text-center">
@@ -232,7 +235,7 @@ export function Receive() {
                     placeholder="comment"
                     value={comment}
                     onChangeText={setComment}
-                    aria-labelledbyledBy="comment"
+                    // aria-labelledbyledBy="comment"
                     // aria-errormessage="inputError"
                   />
                 )}

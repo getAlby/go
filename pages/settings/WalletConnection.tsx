@@ -71,9 +71,9 @@ export function WalletConnection() {
       const info = await nwcClient.getInfo();
       console.log("NWC connected", info);
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
-      useAppStore
-        .getState()
-        .setNWCCapabilities(info.methods as Nip47Capability[]);
+      useAppStore.getState().updateCurrentWallet({
+        nwcCapabilities: info.methods as Nip47Capability[],
+      });
       useAppStore.getState().setNWCClient(nwcClient);
       Toast.show({
         type: "success",
@@ -115,7 +115,7 @@ export function WalletConnection() {
           <Button
             variant="destructive"
             onPress={() => {
-              useAppStore.getState().disconnectWallet();
+              useAppStore.getState().removeNostrWalletConnectUrl();
               scan();
             }}
           >

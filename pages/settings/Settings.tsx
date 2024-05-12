@@ -8,8 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { useAppStore } from "~/lib/state/appStore";
 
 export function Settings() {
+  const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
       <Stack.Screen
@@ -17,41 +20,24 @@ export function Settings() {
           title: "Settings",
         }}
       />
-      <Link href="/settings/lightning-address" asChild>
+      <Link href="/settings/wallets" asChild>
         <Pressable>
           <Card className="w-full">
             <CardHeader className="w-full">
-              <CardTitle className="flex flex-col">
-                Lightning Address
-              </CardTitle>
+              <CardTitle className="flex flex-col">Wallet</CardTitle>
               <CardDescription>
-                Update your Lightning Address to easily receive payments
+                Current Wallet: {wallet.name || DEFAULT_WALLET_NAME}
               </CardDescription>
             </CardHeader>
           </Card>
         </Pressable>
       </Link>
-      <Link href="/settings/wallet-connection" asChild>
-        <Pressable>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>
-                Wallet Connection
-              </CardTitle>
-              <CardDescription>
-                Configure your wallet connection
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </Pressable>
-      </Link>
+
       <Link href="/settings/fiat-currency" asChild>
         <Pressable>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle>
-                Fiat Currency
-              </CardTitle>
+              <CardTitle>Fiat Currency</CardTitle>
               <CardDescription>
                 Configure fiat currency conversion
               </CardDescription>

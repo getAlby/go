@@ -24,7 +24,6 @@ export function FiatCurrency() {
         placeholder="USD"
         value={fiatCurrency}
         onChangeText={setFiatCurrency}
-        aria-labelledbyledBy="lightningAddress"
         // aria-errormessage="inputError"
       />
       <Button

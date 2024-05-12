@@ -3422,10 +3422,10 @@ expo-asset@~10.0.6:
     invariant "^2.2.4"
     md5-file "^3.2.3"
 
-expo-camera@~15.0.5:
-  version "15.0.5"
-  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-15.0.5.tgz#a1fc3132b83fe3c0eae070f8ec82d231fac7acbd"
-  integrity sha512-XQWV64KAd14Z1NMg+8JwegFgtc4e8xGhUMD1CvJFAADVqeXa4Ch5HKrK5dZbyE4eWzP8sph93WcG894oxvAqZg==
+expo-camera@~15.0.6:
+  version "15.0.6"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-15.0.6.tgz#cc84bbb466ad0ae89fdf2720e69aeeef4c673d3c"
+  integrity sha512-UtCCiHSHHjyapF0M3iPyVpj6aP60UNEJQs1lLStCz/Zhgs99SrDurhC9TxhsZC81EnV0aT5PmcXu/GTY8tcftg==
   dependencies:
     invariant "^2.2.4"
 
@@ -3450,6 +3450,13 @@ expo-font@~12.0.4:
   version "12.0.4"
   resolved "https://registry.yarnpkg.com/expo-font/-/expo-font-12.0.4.tgz#c3d9b7fc152286c1e2beae80f97b94ca4622db34"
   integrity sha512-VtOQB7MEeFMVwo46/9/ntqzrgraTE7gAsnfi2NukFcCpDmyAU3G1R7m287LUXltE46SmGkMgAvM6+fflXFjaJA==
+  dependencies:
+    fontfaceobserver "^2.1.0"
+
+expo-font@~12.0.5:
+  version "12.0.5"
+  resolved "https://registry.yarnpkg.com/expo-font/-/expo-font-12.0.5.tgz#3451c2bd3f98859b127a6484d3474a292889b93f"
+  integrity sha512-h/VkN4jlHYDJ6T6pPgOYTVoDEfBY0CTKQe4pxnPDGQiE6H+DFdDgk+qWVABGpRMH0+zXoHB+AEi3OoQjXIynFA==
   dependencies:
     fontfaceobserver "^2.1.0"
 
