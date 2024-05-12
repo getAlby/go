@@ -52,10 +52,10 @@ function loadWallets(): Wallet[] {
   const oldNostrWalletConnectUrl = secureStorage.getItem(
     oldNostrWalletConnectUrlKey
   );
-  const oldLightningAddressKey = "lightningAddressKey";
+  const oldLightningAddressKey = "lightningAddress";
   const oldLightningAddress = secureStorage.getItem(oldLightningAddressKey);
 
-  const oldNwcCapabilitiesKey = "nwcCapabilitiesKey";
+  const oldNwcCapabilitiesKey = "nwcCapabilities";
   const oldNwcCapabilities = secureStorage.getItem(oldNwcCapabilitiesKey);
   if (oldNostrWalletConnectUrl) {
     const wallet: Wallet = {
