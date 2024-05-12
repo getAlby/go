@@ -2,7 +2,7 @@
   "expo": {
     "name": "Alby Mobile",
     "slug": "alby-mobile",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "scheme": ["bitcoin", "lightning", "alby"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
