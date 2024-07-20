@@ -2,7 +2,7 @@
   "expo": {
     "name": "Alby Mobile",
     "slug": "alby-mobile",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "scheme": ["bitcoin", "lightning", "alby"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +17,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "cameraPermission": "Allow Alby Mobile to use the camera to scan wallet connection and payment QR codes",
           "recordAudioAndroid": false
         }
       ],
