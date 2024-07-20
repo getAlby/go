@@ -20,11 +20,11 @@ export function PaymentSuccess() {
         }}
       />
       <View className="flex-1 justify-center items-center">
-        <Text className="text-muted-foreground text-sm max-w-sm text-center">
+        {/* <Text className="text-muted-foreground text-sm max-w-sm text-center">
           Successful payment to {originalText}
-        </Text>
+        </Text> */}
         <Paid />
-        <Pressable
+        {/* <Pressable
           onPress={() => {
             Clipboard.setStringAsync(preimage);
             Toast.show({
@@ -40,7 +40,7 @@ export function PaymentSuccess() {
               Preimage: {preimage}
             </Text>
           </View>
-        </Pressable>
+        </Pressable> */}
       </View>
       <View className="flex flex-col flex-shrink-0 gap-3 justify-center items-center px-3 pb-3">
         <Button
