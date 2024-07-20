@@ -69,6 +69,12 @@ export function Transaction() {
             title="Preimage"
             content={transaction.preimage}
           />
+          <TransactionDetailRow
+            title="Fee"
+            content={
+              Math.floor(transaction.fees_paid / 1000).toString() + " sats"
+            }
+          />
         </View>
       </View>
     </View>
