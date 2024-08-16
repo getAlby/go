@@ -19,7 +19,7 @@ export function NewWallet() {
       <View className="flex-1 flex flex-col p-3 gap-3">
         <Stack.Screen
           options={{
-            title: "New Wallet",
+            title: "Connect Wallet",
           }}
         />
         <Label nativeID="name" className="self-start justify-self-start">
@@ -31,7 +31,7 @@ export function NewWallet() {
           value={name}
           onChangeText={setName}
           aria-labelledbyledBy="name"
-          // aria-errormessage="inputError"
+        // aria-errormessage="inputError"
         />
 
         <Button
@@ -45,7 +45,7 @@ export function NewWallet() {
             router.dismissAll();
           }}
         >
-          <Text>Add Wallet</Text>
+          <Text>Continue</Text>
         </Button>
       </View>
     </TouchableWithoutFeedback>

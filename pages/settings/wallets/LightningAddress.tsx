@@ -27,12 +27,14 @@ export function LightningAddress() {
           }}
         />
         <Input
+          autoComplete="email"
+          keyboardType="email-address"
           autoFocus
           className="w-full text-center mt-6"
           placeholder="hello@getalby.com"
           value={lightningAddress}
           onChangeText={setLightningAddress}
-          // aria-errormessage="inputError"
+        // aria-errormessage="inputError"
         />
         <Button
           onPress={() => {

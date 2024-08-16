@@ -50,8 +50,8 @@ export default function RootLayout() {
   React.useEffect(() => {
     (async () => {
       await Font.loadAsync(
-        "Inter",
-        require("./../assets/fonts/Inter-Regular.otf")
+        "OpenRunde",
+        require("./../assets/fonts/OpenRunde-Regular.otf")
       );
 
       const theme = await AsyncStorage.getItem("theme");
@@ -84,7 +84,7 @@ export default function RootLayout() {
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full">
           <Stack />
-          <Toast config={toastConfig} position="top" />
+          <Toast config={toastConfig} position="bottom" />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>

@@ -134,16 +134,19 @@ export function Send() {
           {isScanning && (
             <>
               <FocusableCamera onScanned={handleScanned} />
-              <View className="absolute bottom-12 w-full z-10 flex flex-row items-center justify-center gap-3">
+              <View className="flex flex-row items-stretch justify-center gap-3 p-6">
                 <Button onPress={paste}>
                   <ClipboardPaste className="text-background" />
+                  <Text>Clipboard</Text>
                 </Button>
                 <Button onPress={openKeyboard}>
                   <KeyboardIcon className="text-background" />
+                  <Text>Manual</Text>
                 </Button>
                 <Link href="/send/address-book" asChild>
                   <Button>
                     <BookUser className="text-background" />
+                    <Text>Contacts</Text>
                   </Button>
                 </Link>
               </View>
@@ -161,7 +164,7 @@ export function Send() {
                   placeholder="hello@getalby.com"
                   value={keyboardText}
                   onChangeText={setKeyboardText}
-                  // aria-errormessage="inputError"
+                // aria-errormessage="inputError"
                 />
                 <Button onPress={submitKeyboardText}>
                   <Text>Next</Text>

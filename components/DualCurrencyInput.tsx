@@ -47,14 +47,14 @@ export function DualCurrencyInput({
   return (
     <View className="w-full flex flex-col items-center justify-center gap-5">
       <Input
-        className="w-full border-transparent text-center bg-muted mt-3"
+        className="w-full border-transparent text-center mt-3"
         placeholder="0"
         keyboardType="number-pad"
         value={inputMode === "sats" ? amount : fiatAmount}
         onChangeText={onChangeText}
         aria-labelledbyledBy="amount"
         style={styles.amountInput}
-        // aria-errormessage="inputError"
+      // aria-errormessage="inputError"
       />
       <Pressable onPress={toggleInputMode}>
         <View className="flex flex-row gap-2 items-center justify-center">

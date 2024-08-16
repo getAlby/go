@@ -1,6 +1,6 @@
 import { Link, Stack } from "expo-router";
 import { Pressable, View } from "react-native";
-import { ZapIcon, WalletIcon, Currency } from "~/components/Icons";
+import { ZapIcon, WalletIcon, Currency, Bitcoin, Wallet2 } from "~/components/Icons";
 
 import {
   Card,
@@ -10,39 +10,31 @@ import {
 } from "~/components/ui/card";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { Text } from "~/components/ui/text";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
+
   return (
-    <View className="flex-1 flex flex-col p-3 gap-3">
+    <View className="flex-1 flex flex-col p-5 gap-5">
       <Stack.Screen
         options={{
           title: "Settings",
         }}
       />
+
       <Link href="/settings/wallets" asChild>
-        <Pressable>
-          <Card className="w-full">
-            <CardHeader className="w-full">
-              <CardTitle className="flex flex-col">Wallet</CardTitle>
-              <CardDescription>
-                Current Wallet: {wallet.name || DEFAULT_WALLET_NAME}
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        <Pressable className="flex flex-row items-center gap-2">
+          <Wallet2 className="text-gray-600" />
+          <Text className="font-semibold text-xl">Wallets</Text>
+          <Text className="text-gray-400">({wallet.name || DEFAULT_WALLET_NAME})</Text>
         </Pressable>
       </Link>
 
       <Link href="/settings/fiat-currency" asChild>
-        <Pressable>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Fiat Currency</CardTitle>
-              <CardDescription>
-                Configure fiat currency conversion
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        <Pressable className="flex flex-row gap-2">
+          <Bitcoin className="text-gray-600" />
+          <Text className="font-semibold text-xl">Units & Currency</Text>
         </Pressable>
       </Link>
     </View>

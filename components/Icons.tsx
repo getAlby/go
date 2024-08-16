@@ -6,6 +6,8 @@ import {
   MoveUpRight,
   MoveDownRight,
   MoveDownLeft,
+  MoveUp,
+  MoveDown,
   Camera,
   Menu,
   ZapIcon,
@@ -19,6 +21,10 @@ import {
   ClipboardPaste,
   Keyboard,
   BookUser,
+  Wallet2,
+  ArrowDown,
+  ChevronDown,
+  Bitcoin
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -35,8 +41,13 @@ function interopIcon(icon: LucideIcon) {
 }
 
 interopIcon(AlertCircle);
+interopIcon(ArrowDown);
 interopIcon(CheckCircle);
+interopIcon(Bitcoin);
 interopIcon(XCircle);
+interopIcon(MoveUp);
+interopIcon(MoveDown);
+interopIcon(ChevronDown);
 interopIcon(MoveDownRight);
 interopIcon(MoveUpRight);
 interopIcon(MoveDownLeft);
@@ -53,12 +64,18 @@ interopIcon(Cog);
 interopIcon(ClipboardPaste);
 interopIcon(Keyboard);
 interopIcon(BookUser);
+interopIcon(Wallet2);
 
 export {
   AlertCircle,
+  ArrowDown,
+  Bitcoin,
   Camera,
   CheckCircle,
   XCircle,
+  ChevronDown,
+  MoveDown,
+  MoveUp,
   MoveDownRight,
   MoveUpRight,
   MoveDownLeft,
@@ -74,4 +91,5 @@ export {
   ClipboardPaste,
   Keyboard,
   BookUser,
+  Wallet2
 };
