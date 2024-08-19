@@ -24,7 +24,7 @@ export function NewAddressBookEntry() {
           }}
         />
         <Label nativeID="name" className="self-start justify-self-start">
-          Recipient name
+          Name
         </Label>
         <Input
           autoFocus
@@ -33,21 +33,21 @@ export function NewAddressBookEntry() {
           value={name}
           onChangeText={setName}
           aria-labelledbyledBy="name"
-          // aria-errormessage="inputError"
+        // aria-errormessage="inputError"
         />
         <Label
           nativeID="lightningAddress"
           className="self-start justify-self-start"
         >
-          Recipient lightning address
+          Lightning address
         </Label>
         <Input
           className="w-full"
           value={lightningAddress}
-          placeholder="satoshin@gmx.com"
+          placeholder="hello@getalby.com"
           onChangeText={setLightningAddress}
           aria-labelledbyledBy="lightningAddress"
-          // aria-errormessage="inputError"
+        // aria-errormessage="inputError"
         />
 
         <Button
@@ -61,6 +61,7 @@ export function NewAddressBookEntry() {
             });
             router.back();
           }}
+          size="lg"
         >
           <Text>Add Recipient</Text>
         </Button>

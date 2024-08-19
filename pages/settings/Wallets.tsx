@@ -3,6 +3,7 @@ import { Wallet2 } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { FlatList } from "react-native";
 import { PlusCircle, Settings2 } from "~/components/Icons";
+import { Button } from "~/components/ui/button";
 
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
@@ -26,58 +27,31 @@ export function Wallets() {
               const active = item.index === selectedWalletId;
 
               return (
-                <View className="flex flex-row justify-between items-center p-3">
-                  <View className="flex flex-row gap-3 items-center">
+                <Pressable onPress={() => {
+                  if (item.index !== selectedWalletId) {
+                    useAppStore.getState().setSelectedWalletId(item.index);
+                  }
+                }}
+                  className="flex flex-row justify-between w-full p-3">
+                  <View className="flex flex-row gap-2">
                     <Wallet2 className="w-4 h-4 text-primary" />
-                    <Text className="font-bold"
-                      onPress={() => {
-                        if (item.index !== selectedWalletId) {
-                          useAppStore.getState().setSelectedWalletId(item.index);
-                        }
-                      }}>
-                      {item.item.name}
+                    <Text className="text-xl">
+                      {item.item.name || DEFAULT_WALLET_NAME}
                     </Text>
                   </View>
                   {active && (
                     <Link href={`/settings/wallets/${selectedWalletId}`} asChild>
                       <Settings2 className="text-primary" />
                     </Link>)}
-                </View>);
+                </Pressable>);
             }}
           />
-
-          {/* {wallets.map((wallet, index) => (
-            <Pressable
-              key={index}
-              onPress={() => {
-                if (index !== selectedWalletId) {
-                  useAppStore.getState().setSelectedWalletId(index);
-                }
-              }}
-            >
-              <View
-              >
-                <View className="flex flex-row items-center justify-between">
-                  <Text className="font-bold">
-                    {wallet.name || DEFAULT_WALLET_NAME}
-                  </Text>
-                  {index === selectedWalletId && (
-                    <Link href={`/settings/wallets/${selectedWalletId}`} asChild>
-                      <Settings2 className="text-primary" />
-                    </Link>
-                  )}
-                </View>
-              </View>
-            </Pressable>
-          ))} */}
         </View >
         <Link href="/settings/wallets/new" asChild>
-          <Pressable>
-            <View className="flex flex-row items-center gap-2">
-              <PlusCircle className="text-primary" />
-              <Text className="font-bold">Connect a Wallet</Text>
-            </View>
-          </Pressable>
+          <Button className="flex flex-row justify-center items-center gap-2" size="lg">
+            <PlusCircle className="text-primary" width={16} height={16} />
+            <Text>Connect a Wallet</Text>
+          </Button>
         </Link>
       </View >
     </>

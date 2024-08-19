@@ -22,6 +22,7 @@ export function NewWallet() {
             title: "Connect Wallet",
           }}
         />
+
         <Label nativeID="name" className="self-start justify-self-start">
           Wallet name
         </Label>
@@ -33,7 +34,6 @@ export function NewWallet() {
           aria-labelledbyledBy="name"
         // aria-errormessage="inputError"
         />
-
         <Button
           onPress={() => {
             useAppStore.getState().addWallet({ name });

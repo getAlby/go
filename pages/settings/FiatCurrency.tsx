@@ -28,6 +28,7 @@ export function FiatCurrency() {
       // aria-errormessage="inputError"
       />
       <Button
+        size="lg"
         onPress={() => {
           useAppStore.getState().setFiatCurrency(fiatCurrency);
           Toast.show({

@@ -19,6 +19,7 @@ import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { LucideIcon } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "~/components/ui/button";
 
 dayjs.extend(relativeTime);
 

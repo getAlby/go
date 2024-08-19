@@ -47,8 +47,7 @@ export function LNURLPay() {
     <>
       <Stack.Screen
         options={{
-          title: "Enter Payment Details",
-          //title: "LNURL Payment",
+          title: "Send",
         }}
       />
       {isLoading && (
@@ -87,25 +86,17 @@ export function LNURLPay() {
                   placeholder="comment"
                   value={comment}
                   onChangeText={setComment}
-                  // aria-labelledbyledBy="comment"
-                  // aria-errormessage="inputError"
+                // aria-labelledbyledBy="comment"
+                // aria-errormessage="inputError"
                 />
               )}
             </View>
           </TouchableWithoutFeedback>
-          <View className="flex flex-row gap-3 justify-center items-center px-3 pb-3">
-            <Button
-              className="flex-1"
-              size="lg"
-              variant="ghost"
-              onPress={router.back}
-            >
-              <Text className="text-foreground">Back</Text>
-            </Button>
-            <Button className="flex-1" size="lg" onPress={requestInvoice}>
-              <Text className="text-background">Next</Text>
-            </Button>
-          </View>
+
+          <Button className="flex-1" size="lg" onPress={requestInvoice}>
+            <Text>Next</Text>
+          </Button>
+
         </>
       )}
     </>

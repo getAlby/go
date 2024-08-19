@@ -67,15 +67,10 @@ export function Receive() {
   }
 
   function copy() {
-    const text = invoice || lightningAddress;
-    if (!text) {
-      return;
-    }
-    Clipboard.setStringAsync(text);
+    Clipboard.setStringAsync(invoice ?? lightningAddress ?? "");
     Toast.show({
       type: "success",
       text1: "Copied to clipboard",
-      text2: text,
     });
   }
 
@@ -102,7 +97,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                  prevTransaction?.payment_hash
+                prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -192,18 +187,10 @@ export function Receive() {
           )}
           {!enterCustomAmount && (invoice.length || lightningAddress) && (
             <View className="flex-1 justify-center items-center gap-5">
-              <View className="flex flex-row justify-center items-center gap-3">
-                <Loading />
-                <Text>Waiting for payment</Text>
-              </View>
               <QRCode value={invoice || lightningAddress} size={300} />
-              <Pressable onPress={copy}>
+              <Pressable >
                 <View className="flex flex-row items-center justify-center gap-3">
-                  <Copy
-                    className="text-muted-foreground"
-                    width={16}
-                    height={16}
-                  />
+
                   <Text className="text-muted-foreground">
                     {invoice
                       ? new Intl.NumberFormat().format(+amount) + " sats"
@@ -211,6 +198,20 @@ export function Receive() {
                   </Text>
                 </View>
               </Pressable>
+              <View className="flex flex-row justify-center items-center gap-3">
+                <Loading />
+                <Text>Waiting for payment</Text>
+              </View>
+              <View className="flex flex-row gap-6">
+                <Button variant="secondary" onPress={copy} className="flex flex-row gap-2">
+                  <Copy
+                    className="text-muted-foreground"
+                    width={16}
+                    height={16}
+                  />
+                  <Text>Copy</Text>
+                </Button>
+              </View>
             </View>
           )}
           {/* TODO: move to one place - this is all copied from LNURL-Pay */}
@@ -238,20 +239,20 @@ export function Receive() {
                     placeholder="comment"
                     value={comment}
                     onChangeText={setComment}
-                    // aria-labelledbyledBy="comment"
-                    // aria-errormessage="inputError"
+                  // aria-labelledbyledBy="comment"
+                  // aria-errormessage="inputError"
                   />
                 )}
 
-                <Button onPress={() => generateInvoice(+amount)}>
-                  <Text>Generate</Text>
+                <Button onPress={() => generateInvoice(+amount)} size="lg">
+                  <Text>Create Invoice</Text>
                 </Button>
               </View>
             </TouchableWithoutFeedback>
           )}
 
           <View className="w-full flex flex-col items-center justify-center gap-3 mb-5">
-            {!enterCustomAmount && (
+            {!enterCustomAmount && !invoice && (
               <Button
                 variant="secondary"
                 onPress={() => setEnterCustomAmount(true)}

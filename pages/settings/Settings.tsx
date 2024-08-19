@@ -2,12 +2,6 @@ import { Link, Stack } from "expo-router";
 import { Pressable, View } from "react-native";
 import { ZapIcon, WalletIcon, Currency, Bitcoin, Wallet2 } from "~/components/Icons";
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { Text } from "~/components/ui/text";

@@ -150,7 +150,7 @@ export function Transactions() {
                     )}
                 />
             ) : (
-                <ScrollView>
+                <ScrollView className="mt-3">
                     {[...Array(20)].map((e, i) => (
                         <View
                             key={i}

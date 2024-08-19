@@ -1,18 +1,13 @@
 import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
-import { Camera as CameraIcon } from "~/components/Icons";
+import { Camera as CameraIcon, ClipboardPaste } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
-import { BarCodeScanningResult, Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
+import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { Stack } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
@@ -142,14 +137,15 @@ export function WalletConnection() {
                     <CameraIcon className="text-black w-32 h-32" />
                     <Text className="text-2xl">Camera Permissions Needed</Text>
                     <Button onPress={scan}>
-                      <Text className="text-background">Grant Permissions</Text>
+                      <Text>Grant Permissions</Text>
                     </Button>
                   </View>
                 </>
               )}
               <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
-                <Button onPress={paste}>
-                  <Text className="text-background">Paste from Clipboard</Text>
+                <Button onPress={paste} className="flex flex-row gap-2">
+                  <ClipboardPaste className="text-black" width={16} height={16} />
+                  <Text>Paste from Clipboard</Text>
                 </Button>
               </View>
             </>

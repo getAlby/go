@@ -135,16 +135,16 @@ export function Send() {
             <>
               <FocusableCamera onScanned={handleScanned} />
               <View className="flex flex-row items-stretch justify-center gap-3 p-6">
-                <Button onPress={paste}>
+                <Button onPress={paste} variant="secondary">
                   <ClipboardPaste className="text-background" />
                   <Text>Clipboard</Text>
                 </Button>
-                <Button onPress={openKeyboard}>
+                <Button onPress={openKeyboard} variant="secondary">
                   <KeyboardIcon className="text-background" />
                   <Text>Manual</Text>
                 </Button>
                 <Link href="/send/address-book" asChild>
-                  <Button>
+                  <Button variant="secondary">
                     <BookUser className="text-background" />
                     <Text>Contacts</Text>
                   </Button>
