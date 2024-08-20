@@ -63,40 +63,40 @@ export function LNURLPay() {
               Keyboard.dismiss();
             }}
           >
-            <View className="flex-1 justify-center items-center p-3">
-              <Text className="text-sm text-muted-foreground">Payment to</Text>
-              <Text className="text-sm max-w-sm text-muted-foreground">
-                {originalText}
-              </Text>
-
-              <DualCurrencyInput amount={amount} setAmount={setAmount} />
-
-              {!addComment && (
-                <Button
-                  variant="ghost"
-                  className="mt-3"
-                  onPress={() => setAddComment(true)}
-                >
-                  <Text className="text-muted-foreground">+ add comment</Text>
+            <>
+              <View className="flex-1 justify-center items-center p-6">
+                <DualCurrencyInput amount={amount} setAmount={setAmount} />
+                {!addComment && (
+                  <Button
+                    variant="ghost"
+                    className="mt-3"
+                    onPress={() => setAddComment(true)}
+                  >
+                    <Text className="text-muted-foreground">+ add comment</Text>
+                  </Button>
+                )}
+                {addComment && (
+                  <Input
+                    className="w-full text-center mt-6"
+                    placeholder="comment"
+                    value={comment}
+                    onChangeText={setComment}
+                  // aria-labelledbyledBy="comment"
+                  // aria-errormessage="inputError"
+                  />
+                )}
+                <Text className="text-sm text-muted-foreground">to</Text>
+                <Text className="text-foreground text-lg font-bold">
+                  {originalText}
+                </Text>
+              </View>
+              <View className="p-6">
+                <Button size="lg" onPress={requestInvoice}>
+                  <Text>Next</Text>
                 </Button>
-              )}
-              {addComment && (
-                <Input
-                  className="w-full text-center mt-6"
-                  placeholder="comment"
-                  value={comment}
-                  onChangeText={setComment}
-                // aria-labelledbyledBy="comment"
-                // aria-errormessage="inputError"
-                />
-              )}
-            </View>
+              </View>
+            </>
           </TouchableWithoutFeedback>
-
-          <Button className="flex-1" size="lg" onPress={requestInvoice}>
-            <Text>Next</Text>
-          </Button>
-
         </>
       )}
     </>

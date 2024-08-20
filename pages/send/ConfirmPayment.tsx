@@ -2,6 +2,7 @@ import { Invoice } from "@getalby/lightning-tools";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
+import { ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -60,33 +61,27 @@ export function ConfirmPayment() {
 
       {!isLoading && (
         <>
-          <View className="flex-1 justify-center items-center gap-3">
-            <Text className="">Confirm Payment</Text>
-            <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
-            {getFiatAmount && (
-              <Text>{getFiatAmount(decodedInvoice.satoshi)}</Text>
-            )}
-
+          <View className="flex-1 justify-center items-center gap-6">
+            <View className="flex flex-col gap-2">
+              <Text className="text-4xl font-bold text-center">{decodedInvoice.satoshi} sats</Text>
+              {getFiatAmount && (
+                <Text className="text-center text-muted-foreground">{getFiatAmount(decodedInvoice.satoshi)}</Text>
+              )}
+            </View>
             {decodedInvoice.description && (
-              <Text className="">{decodedInvoice.description}</Text>
+              <Text className="text-center">{decodedInvoice.description}</Text>
             )}
-
-            <Text className="text-sm text-muted-foreground">to</Text>
-            <Text className="text-sm max-w-sm text-muted-foreground">
-              {originalText}
-            </Text>
+            <View className="flex flex-col gap-2">
+              <Text className="text-sm text-muted-foreground text-center">to</Text>
+              <Text className="text-foreground font-bold text-xl text-center">
+                {originalText}
+              </Text>
+            </View>
           </View>
-          <View className="flex flex-row gap-3 justify-center items-center px-3 pb-3">
-            <Button
-              className="flex-1"
-              size="lg"
-              variant="ghost"
-              onPress={router.back}
-            >
-              <Text className="text-foreground">Cancel</Text>
-            </Button>
-            <Button className="flex-1" size="lg" onPress={pay}>
-              <Text className="text-background">Pay</Text>
+          <View className="p-6">
+            <Button size="lg" onPress={pay} className="flex flex-row gap-2">
+              <ZapIcon className="text-gray-600" />
+              <Text>Send</Text>
             </Button>
           </View>
         </>

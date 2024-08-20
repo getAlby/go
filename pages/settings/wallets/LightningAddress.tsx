@@ -20,37 +20,40 @@ export function LightningAddress() {
         Keyboard.dismiss();
       }}
     >
-      <View className="flex-1 flex flex-col p-3 gap-3">
-        <Stack.Screen
-          options={{
-            title: "Lightning Address",
-          }}
-        />
-        <Input
-          autoComplete="email"
-          keyboardType="email-address"
-          autoFocus
-          className="w-full text-center mt-6"
-          placeholder="hello@getalby.com"
-          value={lightningAddress}
-          onChangeText={setLightningAddress}
-        // aria-errormessage="inputError"
-        />
-        <Button
-          onPress={() => {
-            useAppStore.getState().updateCurrentWallet({ lightningAddress });
-            Toast.show({
-              type: "success",
-              text1: "Lightning address updated",
-              text2:
-                "You can now easily receive payments to " + lightningAddress,
-            });
-            router.back();
-          }}
-        >
-          <Text>Update Lightning Address</Text>
-        </Button>
-      </View>
+      <>
+        <View className="flex-1 flex flex-col p-3 gap-3">
+          <Stack.Screen
+            options={{
+              title: "Lightning Address",
+            }}
+          />
+          <Input
+            autoComplete="email"
+            keyboardType="email-address"
+            autoFocus
+            className="w-full text-center mt-6"
+            placeholder="hello@getalby.com"
+            value={lightningAddress}
+            onChangeText={setLightningAddress}
+          // aria-errormessage="inputError"
+          />
+        </View>
+        <View className="p-6">
+          <Button
+            size="lg"
+            onPress={() => {
+              useAppStore.getState().updateCurrentWallet({ lightningAddress });
+              Toast.show({
+                type: "success",
+                text1: "Lightning address updated",
+              });
+              router.back();
+            }}
+          >
+            <Text>Save</Text>
+          </Button>
+        </View>
+      </>
     </TouchableWithoutFeedback>
   );
 }

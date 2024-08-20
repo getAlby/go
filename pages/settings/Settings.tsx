@@ -16,19 +16,18 @@ export function Settings() {
           title: "Settings",
         }}
       />
-
       <Link href="/settings/wallets" asChild>
         <Pressable className="flex flex-row items-center gap-2">
-          <Wallet2 className="text-gray-600" />
-          <Text className="font-semibold text-xl">Wallets</Text>
-          <Text className="text-gray-400">({wallet.name || DEFAULT_WALLET_NAME})</Text>
+          <Wallet2 className="text-card-foreground bg-card" />
+          <Text className="font-semibold text-xl text-card-foreground">Wallets</Text>
+          <Text className="text-gray-400 text-card-foreground">({wallet.name || DEFAULT_WALLET_NAME})</Text>
         </Pressable>
       </Link>
 
       <Link href="/settings/fiat-currency" asChild>
         <Pressable className="flex flex-row gap-2">
-          <Bitcoin className="text-gray-600" />
-          <Text className="font-semibold text-xl">Units & Currency</Text>
+          <Bitcoin className="text-card-foreground" />
+          <Text className="text-card-foreground font-semibold text-xl">Units & Currency</Text>
         </Pressable>
       </Link>
     </View>

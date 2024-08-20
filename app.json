@@ -31,7 +31,10 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/OpenRunde-Regular.otf"
+            "./assets/fonts/OpenRunde-Regular.otf",
+            "./assets/fonts/OpenRunde-Medium.otf",
+            "./assets/fonts/OpenRunde-Semibold.otf",
+            "./assets/fonts/OpenRunde-Bold.otf"
           ]
         }
       ],

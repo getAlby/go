@@ -24,7 +24,8 @@ import {
   Wallet2,
   ArrowDown,
   ChevronDown,
-  Bitcoin
+  Bitcoin,
+  Share2
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -65,6 +66,7 @@ interopIcon(ClipboardPaste);
 interopIcon(Keyboard);
 interopIcon(BookUser);
 interopIcon(Wallet2);
+interopIcon(Share2);
 
 export {
   AlertCircle,
@@ -91,5 +93,6 @@ export {
   ClipboardPaste,
   Keyboard,
   BookUser,
-  Wallet2
+  Wallet2,
+  Share2
 };

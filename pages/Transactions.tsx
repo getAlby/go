@@ -13,7 +13,6 @@ import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
 import { cn } from "~/lib/utils";
 
 export function Transactions() {
-    const { mutate: reloadBalance } = useBalance();
     const [page, setPage] = React.useState(1);
     const { data: transactions, mutate: reloadTransactions } =
         useTransactions(page);
@@ -53,7 +52,7 @@ export function Transactions() {
         })();
     }, []);
 
-    useFocusEffect(onRefresh);
+    //useFocusEffect(onRefresh);
 
     return (
         <View className="flex-1 flex flex-col gap-3">

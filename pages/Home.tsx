@@ -46,7 +46,7 @@ export function Home() {
           headerRight: () => (
             <Link href="/settings">
               <View className="flex justify-center items-center">
-                <Settings2 className="text-primary" />
+                <Settings2 className="text-muted-foreground" />
               </View>
             </Link>
           ),
@@ -57,10 +57,10 @@ export function Home() {
           <View className="w-full pt-12 flex flex-row justify-center items-center gap-2">
             {balance ? (
               <>
-                <Text className="text-gray-600 text-5xl font-bold">
+                <Text className="text-gray-600 text-5xl font-bold2">
                   {new Intl.NumberFormat().format(Math.floor(balance.balance / 1000))}
                 </Text>
-                <Text className="text-gray-400 text-5xl font-bold">
+                <Text className="text-gray-400 text-5xl font-bold2">
                   sats
                 </Text>
               </>
@@ -70,7 +70,7 @@ export function Home() {
           </View>
           <View className="w-full pt-2 pb-8 flex justify-center items-center">
             {getFiatAmount && balance ? (
-              <Text className="text-center text-3xl text-muted-foreground font-bold text-gray-400">
+              <Text className="text-center text-3xl text-muted-foreground font-bold2 text-gray-400">
                 {getFiatAmount(Math.floor(balance.balance / 1000))}
               </Text>
             ) : (

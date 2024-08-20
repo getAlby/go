@@ -1,6 +1,6 @@
 import { BarCodeScanningResult, Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import React, { useEffect } from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, Pressable, TouchableWithoutFeedback, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
@@ -16,6 +16,7 @@ import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
 import { FocusableCamera } from "~/components/FocusableCamera";
+import { cn } from "~/lib/utils";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -135,17 +136,17 @@ export function Send() {
             <>
               <FocusableCamera onScanned={handleScanned} />
               <View className="flex flex-row items-stretch justify-center gap-3 p-6">
-                <Button onPress={paste} variant="secondary">
-                  <ClipboardPaste className="text-background" />
+                <Button onPress={paste} variant="secondary" className="flex flex-col gap-2 flex-1">
+                  <ClipboardPaste className="text-foreground" />
                   <Text>Clipboard</Text>
                 </Button>
-                <Button onPress={openKeyboard} variant="secondary">
-                  <KeyboardIcon className="text-background" />
+                <Button onPress={openKeyboard} variant="secondary" className="flex flex-col gap-2 flex-1">
+                  <KeyboardIcon className="text-foreground" />
                   <Text>Manual</Text>
                 </Button>
-                <Link href="/send/address-book" asChild>
-                  <Button variant="secondary">
-                    <BookUser className="text-background" />
+                <Link href="/send/address-book" asChild className="flex-1">
+                  <Button variant="secondary" className="flex flex-col gap-2">
+                    <BookUser className="text-foreground" />
                     <Text>Contacts</Text>
                   </Button>
                 </Link>
@@ -158,15 +159,20 @@ export function Send() {
                 Keyboard.dismiss();
               }}
             >
-              <View className="flex-1 h-full flex flex-col items-center justify-center gap-5 p-3">
-                <Input
-                  className="w-full text-center mt-6"
-                  placeholder="hello@getalby.com"
-                  value={keyboardText}
-                  onChangeText={setKeyboardText}
-                // aria-errormessage="inputError"
-                />
-                <Button onPress={submitKeyboardText}>
+              <View className="flex-1 h-full flex flex-col gap-5 p-6">
+                <View className="flex-1 flex items-center justify-center">
+                  <Text className="text-muted-foreground text-center">
+                    Type or paste Lightning Address, lightning invoice or LNURL.
+                  </Text>
+                  <Input
+                    className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
+                    placeholder="hello@getalby.com"
+                    value={keyboardText}
+                    onChangeText={setKeyboardText}
+                  // aria-errormessage="inputError"
+                  />
+                </View>
+                <Button onPress={submitKeyboardText} size="lg">
                   <Text>Next</Text>
                 </Button>
               </View>

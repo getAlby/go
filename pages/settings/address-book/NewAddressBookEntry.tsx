@@ -17,55 +17,59 @@ export function NewAddressBookEntry() {
         Keyboard.dismiss();
       }}
     >
-      <View className="flex-1 flex flex-col p-3 gap-3">
-        <Stack.Screen
-          options={{
-            title: "New Address Book Entry",
-          }}
-        />
-        <Label nativeID="name" className="self-start justify-self-start">
-          Name
-        </Label>
-        <Input
-          autoFocus
-          placeholder="Satoshi"
-          className="w-full"
-          value={name}
-          onChangeText={setName}
-          aria-labelledbyledBy="name"
-        // aria-errormessage="inputError"
-        />
-        <Label
-          nativeID="lightningAddress"
-          className="self-start justify-self-start"
-        >
-          Lightning address
-        </Label>
-        <Input
-          className="w-full"
-          value={lightningAddress}
-          placeholder="hello@getalby.com"
-          onChangeText={setLightningAddress}
-          aria-labelledbyledBy="lightningAddress"
-        // aria-errormessage="inputError"
-        />
-
-        <Button
-          onPress={() => {
-            useAppStore
-              .getState()
-              .addAddressBookEntry({ name, lightningAddress });
-            Toast.show({
-              type: "success",
-              text1: "New address book entry entry added",
-            });
-            router.back();
-          }}
-          size="lg"
-        >
-          <Text>Add Recipient</Text>
-        </Button>
-      </View>
+      <>
+        <View className="flex-1 flex flex-col p-3 gap-3">
+          <Stack.Screen
+            options={{
+              title: "New Address Book Entry",
+            }}
+          />
+          <Label nativeID="name" className="self-start justify-self-start">
+            Name
+          </Label>
+          <Input
+            autoFocus
+            placeholder="Satoshi"
+            keyboardType="email-address"
+            className="w-full"
+            value={name}
+            onChangeText={setName}
+            aria-labelledbyledBy="name"
+          // aria-errormessage="inputError"
+          />
+          <Label
+            nativeID="lightningAddress"
+            className="self-start justify-self-start"
+          >
+            Lightning address
+          </Label>
+          <Input
+            className="w-full"
+            value={lightningAddress}
+            placeholder="hello@getalby.com"
+            onChangeText={setLightningAddress}
+            aria-labelledbyledBy="lightningAddress"
+          // aria-errormessage="inputError"
+          />
+        </View>
+        <View className="p-6">
+          <Button
+            onPress={() => {
+              useAppStore
+                .getState()
+                .addAddressBookEntry({ name, lightningAddress });
+              Toast.show({
+                type: "success",
+                text1: "New address book entry entry added",
+              });
+              router.back();
+            }}
+            size="lg"
+          >
+            <Text>Save</Text>
+          </Button>
+        </View>
+      </>
     </TouchableWithoutFeedback>
   );
 }

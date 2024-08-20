@@ -49,10 +49,12 @@ export default function RootLayout() {
 
   React.useEffect(() => {
     (async () => {
-      await Font.loadAsync(
-        "OpenRunde",
-        require("./../assets/fonts/OpenRunde-Regular.otf")
-      );
+      await Font.loadAsync({
+        "OpenRunde": require("./../assets/fonts/OpenRunde-Regular.otf"),
+        "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
+        "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),
+        "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf")
+      });
 
       const theme = await AsyncStorage.getItem("theme");
       if (!theme) {
