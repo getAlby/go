@@ -206,7 +206,7 @@ export function Receive() {
                       <Text className="text-muted-foreground text-3xl font-semibold2"> sats</Text>
                     </View>
                     : lightningAddress &&
-                    <Text className="text-secondary-foreground text-xl font-medium">
+                    <Text className="text-secondary-foreground text-xl font-semibold2">
                       {lightningAddress}
                     </Text>
                   }
@@ -219,7 +219,7 @@ export function Receive() {
                 {invoice &&
                   <View className="flex flex-row justify-center items-center gap-3 mt-5">
                     <Loading />
-                    <Text className="text-xl">Waiting for payment</Text>
+                    <Text className="text-xl font-medium2">Waiting for payment</Text>
                   </View>}
               </View>
               <View className="flex flex-row gap-6 p-6">

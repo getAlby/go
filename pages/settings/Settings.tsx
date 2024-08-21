@@ -11,7 +11,7 @@ export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
 
   return (
-    <View className="flex-1 flex flex-col p-5 gap-6">
+    <View className="flex-1 flex flex-col p-6 gap-6">
       <Stack.Screen
         options={{
           title: "Settings",
@@ -19,7 +19,7 @@ export function Settings() {
       />
       <Link href="/settings/wallets" asChild>
         <Pressable className="flex flex-row items-center gap-4">
-          <Wallet2 className="text-foreground bg-card" />
+          <Wallet2 className="text-foreground" />
           <Text className="font-medium2 text-xl text-foreground">Wallets</Text>
           <Text className="text-muted-foreground text-xl">({wallet.name || DEFAULT_WALLET_NAME})</Text>
         </Pressable>

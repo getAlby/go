@@ -15,12 +15,12 @@ export function Wallets() {
   const wallets = useAppStore((store) => store.wallets);
   return (
     <>
-      <View className="flex-1 flex flex-col p-3 gap-3">
+      <View className="flex-1 flex flex-col">
         <Stack.Screen
           options={{
             title: "Select Wallet",
           }} />
-        <View className="flex-1">
+        <View className="flex-1 px-6 py-3">
           <FlatList
             className="flex flex-col"
             data={wallets}
@@ -33,7 +33,7 @@ export function Wallets() {
                     useAppStore.getState().setSelectedWalletId(item.index);
                   }
                 }}
-                  className="flex flex-row justify-between w-full p-3">
+                  className="flex flex-row justify-between py-3">
                   <View className="flex flex-row gap-2">
                     <Wallet2 className="w-4 h-4 text-primary" />
                     <Text className={cn("text-xl", active ? "font-semibold2" : " ")}>

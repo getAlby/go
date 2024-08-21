@@ -22,7 +22,7 @@ export function FiatCurrency() {
       <View className="flex-1">
         <Input
           autoFocus
-          className="w-full text-center mt-6"
+          className="w-full text-center"
           placeholder="USD"
           value={fiatCurrency}
           onChangeText={setFiatCurrency}
@@ -36,7 +36,6 @@ export function FiatCurrency() {
           Toast.show({
             type: "success",
             text1: "Fiat currency updated",
-            text2: "Your fiat currency is now " + fiatCurrency,
           });
           router.back();
         }}
