@@ -46,7 +46,7 @@ export function Home() {
           headerRight: () => (
             <Link href="/settings">
               <View className="flex justify-center items-center">
-                <Settings2 className="text-muted-foreground" />
+                <Settings2 className="text-foreground" />
               </View>
             </Link>
           ),
@@ -107,8 +107,8 @@ function MainButton({ title, href, Icon }: { title: string, href: string, Icon: 
             style={{ flex: 1, padding: 6, borderRadius: 15, elevation: 2, justifyContent: 'center', alignItems: 'center' }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
-              <Icon className="text-gray-600 w-24 h-24" />
-              <Text className="font-bold text-3xl text-gray-600">{title}</Text>
+              <Icon className="text-primary-foreground w-24 h-24" />
+              <Text className="font-bold2 text-3xl text-primary-foreground">{title}</Text>
             </View>
           </LinearGradient>
         </Pressable>
