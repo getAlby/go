@@ -29,7 +29,7 @@ export function LightningAddress() {
           />
           <Input
             autoComplete="email"
-            keyboardType="email-address"
+            inputMode="email"
             autoFocus
             className="w-full text-center mt-6"
             placeholder="hello@getalby.com"

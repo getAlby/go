@@ -6,11 +6,15 @@ import { Text } from "~/components/ui/text";
 import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-toast-message";
 import { Copy } from "~/components/Icons";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function PaymentSuccess() {
-  const { preimage, originalText } = useLocalSearchParams() as {
+  const getFiatAmount = useGetFiatAmount();
+  const { preimage, originalText, invoice, amount } = useLocalSearchParams() as {
     preimage: string;
     originalText: string;
+    invoice: string;
+    amount: string;
   };
   return (
     <View className="flex-1 flex flex-col">
@@ -19,11 +23,25 @@ export function PaymentSuccess() {
           title: "Success",
         }}
       />
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center gap-8">
         <Paid />
-        <Text className="text-muted-foreground text-center text-xl font-bold">
-          Sent to {originalText}
-        </Text>
+        <View className="flex flex-col items-center gap-2">
+          <View className="flex flex-row items-end justify-center">
+            <Text className="text-3xl text-secondary-foreground font-semibold2">{new Intl.NumberFormat().format(+amount)}{" "}</Text>
+            <Text className="text-2xl text-muted-foreground font-semibold2">sats</Text>
+          </View>
+          {getFiatAmount &&
+            <Text className="text-2xl text-muted-foreground font-semibold2">{getFiatAmount(+amount)}</Text>
+          }
+        </View>
+        {originalText !== invoice &&
+          <View><Text className="text-muted-foreground text-center text-xl font-bold2">
+            Sent to
+          </Text><Text className="text-secondary-foreground text-center text-xl font-bold2">
+              {originalText}
+            </Text>
+          </View>
+        }
       </View>
       <View className="p-6">
         <Button

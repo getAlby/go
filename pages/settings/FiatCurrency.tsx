@@ -40,7 +40,7 @@ export function FiatCurrency() {
           router.back();
         }}
       >
-        <Text>Update Fiat Currency</Text>
+        <Text>Save</Text>
       </Button>
     </View>
   );

@@ -140,7 +140,7 @@ export function Send() {
                   <KeyboardIcon className="text-foreground" />
                   <Text>Manual</Text>
                 </Button>
-                <Link href="/send/address-book" className="flex-1">
+                <Link href="/send/address-book" className="flex-1" asChild>
                   <Button variant="secondary" className="flex flex-col gap-2">
                     <BookUser className="text-foreground" />
                     <Text>Contacts</Text>
@@ -169,7 +169,7 @@ export function Send() {
                     placeholder="hello@getalby.com"
                     value={keyboardText}
                     onChangeText={setKeyboardText}
-                    keyboardType="email-address"
+                    inputMode="email"
                   // aria-errormessage="inputError"
                   />
                 </View>

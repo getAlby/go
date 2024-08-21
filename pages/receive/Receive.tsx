@@ -197,29 +197,31 @@ export function Receive() {
           )}
           {!enterCustomAmount && (invoice.length || lightningAddress) && (
             <>
-              <View className="flex-1 justify-center items-center gap-6">
+              <View className="flex-1 justify-center items-center gap-8">
                 <QRCode value={invoice || lightningAddress || ""} />
-                <View className="flex flex-col items-center justify-center gap-4">
+                <View className="flex flex-col items-center justify-center gap-2">
                   {invoice ?
-                    <View className="flex flex-row items-center">
-                      <Text className="text-secondary-foreground text-3xl font-semibold2">{new Intl.NumberFormat().format(+amount)}</Text>
-                      <Text className="text-muted-foreground text-3xl font-semibold2"> sats</Text>
+                    <View className="flex flex-row items-end">
+                      <Text className="text-secondary-foreground text-3xl font-semibold2">
+                        {new Intl.NumberFormat().format(+amount)}{" "}
+                      </Text>
+                      <Text className="text-muted-foreground text-2xl font-semibold2">sats</Text>
                     </View>
                     : lightningAddress &&
-                    <Text className="text-secondary-foreground text-xl font-semibold2">
+                    <Text className="text-secondary-foreground text-xl font-medium2">
                       {lightningAddress}
                     </Text>
                   }
                   {invoice && getFiatAmount &&
-                    <Text className="text-muted-foreground text-2xl font-semibold2">
+                    <Text className="text-muted-foreground text-2xl font-medium2">
                       {getFiatAmount(+amount)}
                     </Text>
                   }
                 </View>
                 {invoice &&
-                  <View className="flex flex-row justify-center items-center gap-3 mt-5">
+                  <View className="flex flex-row justify-center items-center gap-3">
                     <Loading />
-                    <Text className="text-xl font-medium2">Waiting for payment</Text>
+                    <Text className="text-xl">Waiting for payment</Text>
                   </View>}
               </View>
               <View className="flex flex-row gap-6 p-6">
@@ -249,7 +251,7 @@ export function Receive() {
                   <DualCurrencyInput amount={amount} setAmount={setAmount} />
                   <Text className="text-muted-foreground text-center mt-6">Description (optional)</Text>
                   <Input
-                    className="w-full text-center border-transparent"
+                    className="w-full text-center border-transparent native:text-2xl font-semibold2"
                     placeholder="No description"
                     value={comment}
                     onChangeText={setComment}

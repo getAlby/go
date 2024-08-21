@@ -64,31 +64,24 @@ export function LNURLPay() {
             }}
           >
             <>
-              <View className="flex-1 justify-center items-center p-6">
+              <View className="flex-1 justify-center items-center p-6 gap-6">
                 <DualCurrencyInput amount={amount} setAmount={setAmount} />
-                {!addComment && (
-                  <Button
-                    variant="ghost"
-                    className="mt-3"
-                    onPress={() => setAddComment(true)}
-                  >
-                    <Text className="text-muted-foreground">+ add comment</Text>
-                  </Button>
-                )}
-                {addComment && (
+
+                <View className="w-full">
+                  <Text className="text-muted-foreground text-center font-semibold2">Comment</Text>
                   <Input
-                    className="w-full text-center mt-6"
-                    placeholder="comment"
+                    className="w-full border-transparent text-center native:text-2xl font-semibold2 text-secondary-foregroundasdf"
+                    placeholder="Enter an optional comment"
+                    placeholderTextColor={"#ffc800"}
                     value={comment}
-                    onChangeText={setComment}
-                  // aria-labelledbyledBy="comment"
-                  // aria-errormessage="inputError"
-                  />
-                )}
-                <Text className="text-sm text-muted-foreground">to</Text>
-                <Text className="text-foreground text-lg font-bold">
-                  {originalText}
-                </Text>
+                    onChangeText={setComment} />
+                </View>
+                <View>
+                  <Text className="text-muted-foreground text-center font-semibold2">To</Text>
+                  <Text className="text-center text-secondary-foreground text-2xl font-medium2">
+                    {originalText}
+                  </Text>
+                </View>
               </View>
               <View className="p-6">
                 <Button size="lg" onPress={requestInvoice}>

@@ -34,7 +34,7 @@ export function ConfirmPayment() {
       router.dismissAll();
       router.replace({
         pathname: "/send/success",
-        params: { preimage: response.preimage, originalText },
+        params: { preimage: response.preimage, originalText, invoice, amount: decodedInvoice.satoshi },
       });
     } catch (error) {
       console.error(error);
@@ -61,27 +61,35 @@ export function ConfirmPayment() {
 
       {!isLoading && (
         <>
-          <View className="flex-1 justify-center items-center gap-6">
+          <View className="flex-1 justify-center items-center gap-8">
             <View className="flex flex-col gap-2">
-              <Text className="text-4xl font-bold text-center">{decodedInvoice.satoshi} sats</Text>
+              <View className="flex flex-row items-center justify-center gap-2">
+                <Text className="text-5xl font-bold2 text-secondary-foreground">{decodedInvoice.satoshi}</Text>
+                <Text className="text-3xl font-bold2 text-muted-foreground">sats</Text>
+              </View>
               {getFiatAmount && (
-                <Text className="text-center text-muted-foreground">{getFiatAmount(decodedInvoice.satoshi)}</Text>
+                <Text className="text-center text-muted-foreground text-3xl font-semibold2">{getFiatAmount(decodedInvoice.satoshi)}</Text>
               )}
             </View>
             {decodedInvoice.description && (
-              <Text className="text-center">{decodedInvoice.description}</Text>
+              <View className="flex flex-col gap-2 justify-center items-center">
+                <Text className="text-muted-foreground text-center font-semibold2">Description</Text>
+                <Text className="text-center text-secondary-foreground text-2xl font-medium2">{decodedInvoice.description}</Text>
+              </View>
             )}
-            <View className="flex flex-col gap-2">
-              <Text className="text-sm text-muted-foreground text-center">to</Text>
-              <Text className="text-foreground font-bold text-xl text-center">
-                {originalText}
-              </Text>
-            </View>
+            {originalText !== invoice &&
+              <View className="flex flex-col gap-2">
+                <Text className="text-muted-foreground text-center font-semibold2">To</Text>
+                <Text className="text-center text-secondary-foreground text-2xl font-medium2">
+                  {originalText}
+                </Text>
+              </View>
+            }
           </View>
           <View className="p-6">
             <Button size="lg" onPress={pay} className="flex flex-row gap-2">
               <ZapIcon className="text-gray-600" />
-              <Text>Send</Text>
+              <Text>Pay</Text>
             </Button>
           </View>
         </>

@@ -70,7 +70,7 @@ export function Home() {
           </View>
           <View className="flex justify-center items-center">
             {getFiatAmount && balance ? (
-              <Text className="text-center text-3xl text-muted-foreground font-bold2">
+              <Text className="text-center text-3xl text-muted-foreground font-semibold2">
                 {getFiatAmount(Math.floor(balance.balance / 1000))}
               </Text>
             ) : (
@@ -101,9 +101,9 @@ function MainButton({ title, href, Icon }: { title: string, href: string, Icon: 
         <Pressable className="flex-1 aspect-square rounded-xl flex items-center justify-center">
           <LinearGradient
             className="flex-1 w-full p-6 "
-            colors={['#FFC453', '#FFE951']}
-            start={[0, 1]}
-            end={[1, 0]}
+            colors={['#FFE951', '#FFC453']}
+            start={[0, 0]}
+            end={[1, 1]}
             style={{ flex: 1, padding: 6, borderRadius: 15, elevation: 2, justifyContent: 'center', alignItems: 'center' }}
           >
             <View className="flex flex-col justify-center items-center gap-4">

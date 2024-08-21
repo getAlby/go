@@ -15,13 +15,13 @@ import { useAppStore } from "~/lib/state/appStore";
 export function AddressBook() {
   const addressBookEntries = useAppStore((store) => store.addressBookEntries);
   return (
-    <View className="flex-1 flex flex-col p-3 gap-3">
+    <View className="flex-1 flex flex-col p-6 gap-3">
       <Stack.Screen
         options={{
           title: "Address Book",
         }}
       />
-      <View className="flex-1 p-6 flex flex-col gap-4">
+      <View className="flex-1 flex flex-col gap-4">
         {addressBookEntries.length > 0 ? addressBookEntries.map((addressBookEntry, index) => (
           <Pressable
             key={index}
@@ -50,14 +50,14 @@ export function AddressBook() {
           <Text className="text-lg">No entries yet.</Text>
         }
       </View>
-      <View className="p-6">
-        <Link href="/settings/address-book/new" asChild>
-          <Button size="lg" className="flex flex-row items-center gap-2">
-            <PlusCircle className="text-primary-foreground" />
-            <Text>Create Contact</Text>
-          </Button>
-        </Link>
-      </View>
+
+      <Link href="/settings/address-book/new" asChild>
+        <Button size="lg" className="flex flex-row items-center gap-2">
+          <PlusCircle className="text-primary-foreground" />
+          <Text>Create Contact</Text>
+        </Button>
+      </Link>
+
     </View>
   );
 }

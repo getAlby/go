@@ -30,7 +30,7 @@ export function NewAddressBookEntry() {
           <Input
             autoFocus
             placeholder="Satoshi"
-            keyboardType="email-address"
+            inputMode="email"
             className="w-full"
             value={name}
             onChangeText={setName}
@@ -45,7 +45,7 @@ export function NewAddressBookEntry() {
           </Label>
           <Input
             className="w-full"
-            keyboardType="email-address"
+            inputMode="email"
             value={lightningAddress}
             placeholder="hello@getalby.com"
             onChangeText={setLightningAddress}
