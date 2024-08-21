@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function Wallets() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -35,7 +36,7 @@ export function Wallets() {
                   className="flex flex-row justify-between w-full p-3">
                   <View className="flex flex-row gap-2">
                     <Wallet2 className="w-4 h-4 text-primary" />
-                    <Text className="text-xl">
+                    <Text className={cn("text-xl", active ? "font-semibold2" : " ")}>
                       {item.item.name || DEFAULT_WALLET_NAME}
                     </Text>
                   </View>

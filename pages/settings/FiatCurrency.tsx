@@ -13,20 +13,22 @@ export function FiatCurrency() {
     useAppStore.getState().fiatCurrency
   );
   return (
-    <View className="flex-1 flex flex-col p-3 gap-3">
+    <View className="flex-1 flex flex-col p-6 gap-3">
       <Stack.Screen
         options={{
           title: "Units & Currency",
         }}
       />
-      <Input
-        autoFocus
-        className="w-full text-center mt-6"
-        placeholder="USD"
-        value={fiatCurrency}
-        onChangeText={setFiatCurrency}
-      // aria-errormessage="inputError"
-      />
+      <View className="flex-1">
+        <Input
+          autoFocus
+          className="w-full text-center mt-6"
+          placeholder="USD"
+          value={fiatCurrency}
+          onChangeText={setFiatCurrency}
+        // aria-errormessage="inputError"
+        />
+      </View>
       <Button
         size="lg"
         onPress={() => {

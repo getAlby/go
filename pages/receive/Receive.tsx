@@ -199,22 +199,25 @@ export function Receive() {
             <>
               <View className="flex-1 justify-center items-center gap-6">
                 <QRCode value={invoice || lightningAddress || ""} />
-                <Pressable>
-                  <View className="flex flex-col items-center justify-center gap-3">
-                    <Text className="text-muted-foreground text-2xl font-bold2">
-                      {invoice
-                        ? new Intl.NumberFormat().format(+amount) + " sats"
-                        : lightningAddress}
+                <View className="flex flex-col items-center justify-center gap-4">
+                  {invoice ?
+                    <View className="flex flex-row items-center">
+                      <Text className="text-secondary-foreground text-3xl font-semibold2">{new Intl.NumberFormat().format(+amount)}</Text>
+                      <Text className="text-muted-foreground text-3xl font-semibold2"> sats</Text>
+                    </View>
+                    : lightningAddress &&
+                    <Text className="text-secondary-foreground text-xl font-medium">
+                      {lightningAddress}
                     </Text>
-                    {invoice && getFiatAmount &&
-                      <Text className="text-muted-foreground text-2xl font-medium2">
-                        {getFiatAmount(+amount)}
-                      </Text>
-                    }
-                  </View>
-                </Pressable>
+                  }
+                  {invoice && getFiatAmount &&
+                    <Text className="text-muted-foreground text-2xl font-semibold2">
+                      {getFiatAmount(+amount)}
+                    </Text>
+                  }
+                </View>
                 {invoice &&
-                  <View className="flex flex-row justify-center items-center gap-3">
+                  <View className="flex flex-row justify-center items-center gap-3 mt-5">
                     <Loading />
                     <Text className="text-xl">Waiting for payment</Text>
                   </View>}
@@ -244,7 +247,6 @@ export function Receive() {
               <>
                 <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
                   <DualCurrencyInput amount={amount} setAmount={setAmount} />
-
                   <Text className="text-muted-foreground text-center mt-6">Description (optional)</Text>
                   <Input
                     className="w-full text-center border-transparent"

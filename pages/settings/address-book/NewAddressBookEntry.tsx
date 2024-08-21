@@ -45,6 +45,7 @@ export function NewAddressBookEntry() {
           </Label>
           <Input
             className="w-full"
+            keyboardType="email-address"
             value={lightningAddress}
             placeholder="hello@getalby.com"
             onChangeText={setLightningAddress}

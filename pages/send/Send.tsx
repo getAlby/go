@@ -135,7 +135,7 @@ export function Send() {
           {isScanning && (
             <>
               <FocusableCamera onScanned={handleScanned} />
-              <View className="flex flex-row items-stretch justify-center gap-3 p-6">
+              <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button onPress={paste} variant="secondary" className="flex flex-col gap-2 flex-1">
                   <ClipboardPaste className="text-foreground" />
                   <Text>Clipboard</Text>
@@ -169,6 +169,7 @@ export function Send() {
                     placeholder="hello@getalby.com"
                     value={keyboardText}
                     onChangeText={setKeyboardText}
+                    keyboardType="email-address"
                   // aria-errormessage="inputError"
                   />
                 </View>

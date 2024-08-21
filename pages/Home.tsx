@@ -53,14 +53,14 @@ export function Home() {
         }}
       />
       <View className="h-full flex">
-        <View className="grow flex flex-col items-center justify-center">
-          <View className="w-full pt-12 flex flex-row justify-center items-center gap-2">
+        <View className="grow flex flex-col items-center justify-center gap-4">
+          <View className="w-full flex flex-row justify-center items-center gap-2">
             {balance ? (
               <>
-                <Text className="text-gray-600 text-5xl font-bold2">
+                <Text className="text-secondary-foreground text-5xl font-bold2">
                   {new Intl.NumberFormat().format(Math.floor(balance.balance / 1000))}
                 </Text>
-                <Text className="text-gray-400 text-5xl font-bold2">
+                <Text className="text-muted-foreground text-5xl font-bold2">
                   sats
                 </Text>
               </>
@@ -68,9 +68,9 @@ export function Home() {
               <Skeleton className="w-48 h-12" />
             )}
           </View>
-          <View className="w-full pt-2 pb-8 flex justify-center items-center">
+          <View className="flex justify-center items-center">
             {getFiatAmount && balance ? (
-              <Text className="text-center text-3xl text-muted-foreground font-bold2 text-gray-400">
+              <Text className="text-center text-3xl text-muted-foreground font-bold2">
                 {getFiatAmount(Math.floor(balance.balance / 1000))}
               </Text>
             ) : (
@@ -80,7 +80,7 @@ export function Home() {
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
-            <ChevronDown className="text-gray-400" />
+            <ChevronDown className="text-secondary-foreground" />
           </Link>
         </View>
         <View>

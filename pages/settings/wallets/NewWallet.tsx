@@ -16,25 +16,27 @@ export function NewWallet() {
         Keyboard.dismiss();
       }}
     >
-      <View className="flex-1 flex flex-col p-3 gap-3">
+      <View className="flex-1 p-6">
         <Stack.Screen
           options={{
             title: "Connect Wallet",
           }}
         />
-
-        <Label nativeID="name" className="self-start justify-self-start">
-          Wallet name
-        </Label>
-        <Input
-          autoFocus
-          className="w-full"
-          value={name}
-          onChangeText={setName}
-          aria-labelledbyledBy="name"
-        // aria-errormessage="inputError"
-        />
+        <View className="flex-1 flex flex-col gap-3">
+          <Label nativeID="name" className="self-start justify-self-start">
+            Wallet name
+          </Label>
+          <Input
+            autoFocus
+            className="w-full"
+            value={name}
+            onChangeText={setName}
+            aria-labelledbyledBy="name"
+          // aria-errormessage="inputError"
+          />
+        </View>
         <Button
+          size="lg"
           onPress={() => {
             useAppStore.getState().addWallet({ name });
             Toast.show({
