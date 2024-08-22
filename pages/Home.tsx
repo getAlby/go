@@ -16,6 +16,9 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { LucideIcon } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "~/components/ui/button";
+import LargeArrowUp from "~/components/icons/LargeArrowUp";
+import LargeArrowDown from "~/components/icons/LargeArrowDown";
+import { SvgProps } from "react-native-svg";
 
 dayjs.extend(relativeTime);
 
@@ -85,8 +88,8 @@ export function Home() {
         </View>
         <View>
           <View className="flex flex-row gap-6 p-6 pt-2">
-            <MainButton title="Receive" href="/receive" Icon={MoveDown} />
-            <MainButton title="Send" href="/send" Icon={MoveUp} />
+            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
           </View>
         </View>
       </View>
@@ -101,7 +104,7 @@ function MainButton({
 }: {
   title: string;
   href: string;
-  Icon: LucideIcon;
+  Icon: (props: SvgProps) => React.JSX.Element;
 }): JSX.Element {
   const [pressed, setPressed] = React.useState(false);
   return (
@@ -133,7 +136,7 @@ function MainButton({
             }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
-              <Icon className="text-primary-foreground w-24 h-24" />
+              <Icon />
               <Text className="font-bold2 text-3xl text-primary-foreground">
                 {title}
               </Text>
