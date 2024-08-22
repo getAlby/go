@@ -44,10 +44,10 @@ export function Home() {
             />
           ),
           headerRight: () => (
-            <Link href="/settings">
-              <View className="flex justify-center items-center">
+            <Link href="/settings" asChild>
+              <Button variant="link">
                 <Settings2 className="text-foreground" />
-              </View>
+              </Button>
             </Link>
           ),
         }}

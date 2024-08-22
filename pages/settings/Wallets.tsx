@@ -18,7 +18,7 @@ export function Wallets() {
       <View className="flex-1 flex flex-col">
         <Stack.Screen
           options={{
-            title: "Select Wallet",
+            title: "Manage Wallets",
           }} />
         <View className="flex-1 px-6 py-3">
           <FlatList
@@ -33,16 +33,19 @@ export function Wallets() {
                     useAppStore.getState().setSelectedWalletId(item.index);
                   }
                 }}
-                  className="flex flex-row justify-between py-3">
-                  <View className="flex flex-row gap-2">
-                    <Wallet2 className="w-4 h-4 text-primary" />
-                    <Text className={cn("text-xl", active ? "font-semibold2" : " ")}>
+                  className={cn(
+                    "flex flex-row items-center justify-between p-4 rounded-2xl border-2",
+                    active ? "border-primary" : "border-transparent"
+                  )}>
+                  <View className="flex flex-row gap-4">
+                    <Wallet2 className="w-4 h-4 text-foreground" />
+                    <Text className={cn("text-xl", active && "font-semibold2")}>
                       {item.item.name || DEFAULT_WALLET_NAME}
                     </Text>
                   </View>
                   {active && (
                     <Link href={`/settings/wallets/${selectedWalletId}`} asChild>
-                      <Settings2 className="text-primary" />
+                      <Settings2 className="text-foreground" />
                     </Link>)}
                 </Pressable>);
             }}
