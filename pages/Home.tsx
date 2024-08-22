@@ -55,7 +55,7 @@ export function Home() {
               <>
                 <Text className="text-secondary-foreground text-5xl font-bold2">
                   {new Intl.NumberFormat().format(
-                    Math.floor(balance.balance / 1000)
+                    Math.floor(balance.balance / 1000),
                   )}
                 </Text>
                 <Text className="text-muted-foreground text-3xl font-bold2">
@@ -103,12 +103,15 @@ function MainButton({
   href: string;
   Icon: LucideIcon;
 }): JSX.Element {
+  const [pressed, setPressed] = React.useState(false);
   return (
     <>
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
           className="flex-1 aspect-square rounded-xl flex"
           style={shadows.large}
+          onPressIn={() => setPressed(true)}
+          onPressOut={() => setPressed(false)}
         >
           <LinearGradient
             className="flex-1 p-6"
@@ -122,6 +125,11 @@ function MainButton({
               elevation: 2,
               justifyContent: "center",
               alignItems: "center",
+              ...(pressed
+                ? {
+                    transform: "scale(1.01)",
+                  }
+                : {}),
             }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
