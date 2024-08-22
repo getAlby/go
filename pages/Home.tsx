@@ -1,5 +1,5 @@
 import { View, Image, Pressable, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
@@ -19,10 +19,18 @@ import { Button } from "~/components/ui/button";
 
 dayjs.extend(relativeTime);
 
+enum BalanceState {
+  SATS = 1,
+  FIAT = 2,
+  HIDDEN = 3
+}
+
 export function Home() {
   const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
+  const [balanceState, setBalanceState] = useState<BalanceState>(BalanceState.SATS);
+  const [pressed, setPressed] = React.useState(false);
 
   useFocusEffect(() => {
     reloadBalance();
@@ -30,6 +38,18 @@ export function Home() {
 
   if (!nwcClient) {
     return <WalletConnection />;
+  }
+
+  function switchBalanceState(): void {
+    if (balanceState == BalanceState.SATS) {
+      setBalanceState(BalanceState.FIAT);
+    }
+    else if (balanceState == BalanceState.FIAT) {
+      setBalanceState(BalanceState.HIDDEN);
+    }
+    else {
+      setBalanceState(BalanceState.SATS);
+    }
   }
 
   return (
@@ -54,32 +74,48 @@ export function Home() {
       />
       <View className="h-full flex">
         <View className="grow flex flex-col items-center justify-center gap-4">
-          <View className="w-full flex flex-row justify-center items-center gap-2">
-            {balance ? (
-              <>
-                <Text className="text-foreground text-5xl font-bold2">
-                  {new Intl.NumberFormat().format(
+          <Pressable
+            onPressIn={() => setPressed(true)}
+            onPressOut={() => setPressed(false)}
+            style={{
+              ...(pressed
+                ? {
+                  transform: "scale(0.98)",
+                } : [])
+            }}
+            onPress={switchBalanceState} className="w-full flex flex-col items-center justify-center gap-4" >
+            <View className="w-full flex flex-row justify-center items-center gap-2">
+              {balance ? (
+                <>
+                  <Text className="text-foreground text-5xl font-bold2">
+                    {balanceState == BalanceState.SATS && new Intl.NumberFormat().format(
+                      Math.floor(balance.balance / 1000),
+                    )}
+                    {balanceState == BalanceState.FIAT &&
+                      getFiatAmount && getFiatAmount(Math.floor(balance.balance / 1000))}
+                    {balanceState == BalanceState.HIDDEN && "****"}
+                  </Text>
+                  <Text className="text-muted-foreground text-3xl font-bold2">
+                    {balanceState == BalanceState.SATS && "sats"}
+                  </Text>
+                </>
+              ) : (
+                <Skeleton className="w-48 h-12" />
+              )}
+            </View>
+            <View className="flex justify-center items-center">
+              {balance ? (
+                <Text className="text-center text-3xl text-muted-foreground font-semibold2">
+                  {balanceState == BalanceState.SATS &&
+                    getFiatAmount && getFiatAmount(Math.floor(balance.balance / 1000))}
+                  {balanceState == BalanceState.FIAT && new Intl.NumberFormat().format(
                     Math.floor(balance.balance / 1000),
-                  )}
+                  ) + " sats"}
                 </Text>
-                <Text className="text-muted-foreground text-3xl font-bold2">
-                  sats
-                </Text>
-              </>
-            ) : (
-              <Skeleton className="w-48 h-12" />
-            )}
-          </View>
-          <View className="flex justify-center items-center">
-            {getFiatAmount && balance ? (
-              <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                {getFiatAmount(Math.floor(balance.balance / 1000))}
-              </Text>
-            ) : (
-              <Skeleton className="w-32 h-10" />
-            )}
-          </View>
-        </View>
+              ) : <Skeleton className="w-32 h-10" />}
+            </View>
+          </Pressable>
+        </View >
         <View className="flex items-center justify-center my-5">
           <Link href="/transactions" asChild>
             <Button variant="ghost" className="p-10 rounded-full aspect-square">
@@ -93,7 +129,7 @@ export function Home() {
             <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
           </View>
         </View>
-      </View>
+      </View >
     </>
   );
 }
