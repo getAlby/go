@@ -24,14 +24,14 @@ export function ReceiveSuccess() {
         <View className="-mt-32">
           <Paid />
         </View>
-        <Text className="text-3xl font-bold text-muted-foreground -mt-32">
+        <Text className="text-3xl font-bold2 text-muted-foreground -mt-32">
           Received
         </Text>
         <View className="flex flex-row gap-2 mt-10">
-          <Text className="text-receive text-3xl font-bold">
+          <Text className="text-receive text-3xl font-semibold2">
             + {decodedInvoice.satoshi}
           </Text>
-          <Text className="text-3xl font-bold text-muted-foreground">
+          <Text className="text-3xl font-semibold2 text-muted-foreground">
             sats
           </Text>
         </View>

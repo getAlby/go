@@ -160,7 +160,7 @@ export function Send() {
               <View className="flex-1 h-full flex flex-col gap-5 p-6">
                 <View className="flex-1 flex items-center justify-center">
                   <Text className="text-muted-foreground text-center">
-                    Type or paste Lightning Address, lightning invoice or LNURL.
+                    Type or paste a Lightning Address, lightning invoice or LNURL.
                   </Text>
                   <Input
                     className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
@@ -168,6 +168,7 @@ export function Send() {
                     value={keyboardText}
                     onChangeText={setKeyboardText}
                     inputMode="email"
+                    autoFocus
                   // aria-errormessage="inputError"
                   />
                 </View>
