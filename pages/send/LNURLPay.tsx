@@ -19,7 +19,6 @@ export function LNURLPay() {
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
-  const [addComment, setAddComment] = React.useState(false);
 
   async function requestInvoice() {
     setLoading(true);
@@ -58,7 +57,6 @@ export function LNURLPay() {
         <View className="flex-1 flex flex-col">
           <View className="flex-1 justify-center items-center p-6 gap-6">
             <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
-
             <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
                 Comment
