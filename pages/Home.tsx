@@ -1,4 +1,4 @@
-import { View, Image, Pressable } from "react-native";
+import { View, Image, Pressable, StyleSheet } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -8,7 +8,7 @@ import { Link, Stack, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Text } from "~/components/ui/text";
-import { Settings2, MoveDown, MoveUp, ChevronDown } from "~/components/Icons";
+import { Settings2, MoveDown, MoveUp, ChevronUp } from "~/components/Icons";
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -58,7 +58,7 @@ export function Home() {
                     Math.floor(balance.balance / 1000)
                   )}
                 </Text>
-                <Text className="text-muted-foreground text-5xl font-bold2">
+                <Text className="text-muted-foreground text-3xl font-bold2">
                   sats
                 </Text>
               </>
@@ -79,7 +79,7 @@ export function Home() {
         <View className="flex items-center justify-center">
           <Link href="/transactions" className="">
             <View className="p-4 flex items-center justify-center">
-              <ChevronDown className="text-secondary-foreground" />
+              <ChevronUp className="text-secondary-foreground" size={32} />
             </View>
           </Link>
         </View>
@@ -108,15 +108,7 @@ function MainButton({
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
           className="flex-1 aspect-square rounded-xl flex"
-          style={{
-            shadowColor: "black",
-            shadowOpacity: 0.15,
-            shadowOffset: {
-              width: 5,
-              height: 5,
-            },
-            shadowRadius: 4,
-          }}
+          style={shadows.large}
         >
           <LinearGradient
             className="flex-1 p-6"
@@ -144,3 +136,17 @@ function MainButton({
     </>
   );
 }
+
+// NOTE: only applies on iOS
+const shadows = StyleSheet.create({
+  large: {
+    // TODO: check dark mode
+    shadowColor: "black",
+    shadowOpacity: 0.15,
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    shadowRadius: 4,
+  },
+});

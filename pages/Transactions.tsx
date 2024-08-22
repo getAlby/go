@@ -1,9 +1,9 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
-import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { Link, router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { FlatList, Pressable, RefreshControl, ScrollView, View } from "react-native";
-import { CheckCircle, MoveDownLeft, MoveUpRight } from "~/components/Icons";
+import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
 import { useBalance } from "~/hooks/useBalance";
@@ -59,6 +59,11 @@ export function Transactions() {
             <Stack.Screen
                 options={{
                     title: "Transactions",
+                    animation: "slide_from_bottom",
+                    headerLeft: () => <View/>,
+                    headerRight: () => <Pressable onPress={() => {
+                        router.back()
+                    }}><X/></Pressable>,
                 }}
             />
             {allTransactions && allTransactions.length ? (
