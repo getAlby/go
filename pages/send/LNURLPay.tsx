@@ -59,25 +59,31 @@ export function LNURLPay() {
       {!isLoading && (
         <>
           <TouchableWithoutFeedback
+            className="bg-red-500"
             onPress={() => {
               Keyboard.dismiss();
             }}
           >
-            <>
+            <View className="flex-1 flex flex-col">
               <View className="flex-1 justify-center items-center p-6 gap-6">
                 <DualCurrencyInput amount={amount} setAmount={setAmount} />
 
                 <View className="w-full">
-                  <Text className="text-muted-foreground text-center font-semibold2">Comment</Text>
+                  <Text className="text-muted-foreground text-center font-semibold2">
+                    Comment
+                  </Text>
                   <Input
                     className="w-full border-transparent text-center native:text-2xl font-semibold2 text-secondary-foregroundasdf"
                     placeholder="Enter an optional comment"
                     placeholderTextColor={"#ffc800"}
                     value={comment}
-                    onChangeText={setComment} />
+                    onChangeText={setComment}
+                  />
                 </View>
                 <View>
-                  <Text className="text-muted-foreground text-center font-semibold2">To</Text>
+                  <Text className="text-muted-foreground text-center font-semibold2">
+                    To
+                  </Text>
                   <Text className="text-center text-secondary-foreground text-2xl font-medium2">
                     {originalText}
                   </Text>
@@ -88,7 +94,7 @@ export function LNURLPay() {
                   <Text>Next</Text>
                 </Button>
               </View>
-            </>
+            </View>
           </TouchableWithoutFeedback>
         </>
       )}

@@ -1,8 +1,4 @@
-import {
-  View,
-  Image,
-  Pressable,
-} from "react-native";
+import { View, Image, Pressable, StyleSheet } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -12,7 +8,7 @@ import { Link, Stack, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Text } from "~/components/ui/text";
-import { Settings2, MoveDown, MoveUp, ChevronDown } from "~/components/Icons";
+import { Settings2, MoveDown, MoveUp, ChevronUp } from "~/components/Icons";
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -20,6 +16,9 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { LucideIcon } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "~/components/ui/button";
+import LargeArrowUp from "~/components/icons/LargeArrowUp";
+import LargeArrowDown from "~/components/icons/LargeArrowDown";
+import { SvgProps } from "react-native-svg";
 
 dayjs.extend(relativeTime);
 
@@ -58,9 +57,11 @@ export function Home() {
             {balance ? (
               <>
                 <Text className="text-secondary-foreground text-5xl font-bold2">
-                  {new Intl.NumberFormat().format(Math.floor(balance.balance / 1000))}
+                  {new Intl.NumberFormat().format(
+                    Math.floor(balance.balance / 1000),
+                  )}
                 </Text>
-                <Text className="text-muted-foreground text-5xl font-bold2">
+                <Text className="text-muted-foreground text-3xl font-bold2">
                   sats
                 </Text>
               </>
@@ -79,14 +80,16 @@ export function Home() {
           </View>
         </View>
         <View className="flex items-center justify-center">
-          <Link href="/transactions" asChild>
-            <ChevronDown className="text-secondary-foreground" />
+          <Link href="/transactions" className="">
+            <View className="p-4 flex items-center justify-center">
+              <ChevronUp className="text-secondary-foreground" size={32} />
+            </View>
           </Link>
         </View>
         <View>
-          <View className="flex flex-row gap-6 p-6">
-            <MainButton title="Receive" href="/receive" Icon={MoveDown} />
-            <MainButton title="Send" href="/send" Icon={MoveUp} />
+          <View className="flex flex-row gap-6 p-6 pt-2">
+            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
           </View>
         </View>
       </View>
@@ -94,25 +97,67 @@ export function Home() {
   );
 }
 
-function MainButton({ title, href, Icon }: { title: string, href: string, Icon: LucideIcon, }): JSX.Element {
+function MainButton({
+  title,
+  href,
+  Icon,
+}: {
+  title: string;
+  href: string;
+  Icon: (props: SvgProps) => React.JSX.Element;
+}): JSX.Element {
+  const [pressed, setPressed] = React.useState(false);
   return (
     <>
-      <Link href={href} className="flex-1" asChild>
-        <Pressable className="flex-1 aspect-square rounded-xl flex items-center justify-center">
+      <Link href={href} className="flex flex-1" asChild>
+        <Pressable
+          className="flex-1 aspect-square rounded-xl flex"
+          style={shadows.large}
+          onPressIn={() => setPressed(true)}
+          onPressOut={() => setPressed(false)}
+        >
           <LinearGradient
-            className="flex-1 w-full p-6 "
-            colors={['#FFE951', '#FFC453']}
+            className="flex-1 p-6"
+            colors={["#FFE951", "#FFC453"]}
             start={[0, 0]}
             end={[1, 1]}
-            style={{ flex: 1, padding: 6, borderRadius: 15, elevation: 2, justifyContent: 'center', alignItems: 'center' }}
+            style={{
+              flex: 1,
+              padding: 6,
+              borderRadius: 15,
+              elevation: 2,
+              justifyContent: "center",
+              alignItems: "center",
+              ...(pressed
+                ? {
+                    transform: "scale(1.01)",
+                  }
+                : {}),
+            }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
-              <Icon className="text-primary-foreground w-24 h-24" />
-              <Text className="font-bold2 text-3xl text-primary-foreground">{title}</Text>
+              <Icon />
+              <Text className="font-bold2 text-3xl text-primary-foreground">
+                {title}
+              </Text>
             </View>
           </LinearGradient>
         </Pressable>
       </Link>
-    </>);
+    </>
+  );
 }
 
+// NOTE: only applies on iOS
+const shadows = StyleSheet.create({
+  large: {
+    // TODO: check dark mode
+    shadowColor: "black",
+    shadowOpacity: 0.15,
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    shadowRadius: 4,
+  },
+});

@@ -17,7 +17,7 @@ export function NewAddressBookEntry() {
         Keyboard.dismiss();
       }}
     >
-      <>
+      <View className="flex-1 flex flex-col">
         <View className="flex-1 flex flex-col p-3 gap-3">
           <Stack.Screen
             options={{
@@ -35,7 +35,7 @@ export function NewAddressBookEntry() {
             value={name}
             onChangeText={setName}
             aria-labelledbyledBy="name"
-          // aria-errormessage="inputError"
+            // aria-errormessage="inputError"
           />
           <Label
             nativeID="lightningAddress"
@@ -50,7 +50,7 @@ export function NewAddressBookEntry() {
             placeholder="hello@getalby.com"
             onChangeText={setLightningAddress}
             aria-labelledbyledBy="lightningAddress"
-          // aria-errormessage="inputError"
+            // aria-errormessage="inputError"
           />
         </View>
         <View className="p-6">
@@ -70,7 +70,7 @@ export function NewAddressBookEntry() {
             <Text>Save</Text>
           </Button>
         </View>
-      </>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
