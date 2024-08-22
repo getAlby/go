@@ -1,6 +1,6 @@
 import { Stack, router } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { Bitcoin } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
@@ -10,7 +10,7 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function FiatCurrency() {
   const [fiatCurrency, setFiatCurrency] = React.useState(
-    useAppStore.getState().fiatCurrency
+    useAppStore.getState().fiatCurrency,
   );
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">
@@ -19,16 +19,22 @@ export function FiatCurrency() {
           title: "Units & Currency",
         }}
       />
-      <View className="flex-1">
-        <Input
-          autoFocus
-          className="w-full text-center"
-          placeholder="USD"
-          value={fiatCurrency}
-          onChangeText={setFiatCurrency}
-        // aria-errormessage="inputError"
-        />
-      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View className="flex-1">
+          <Input
+            autoFocus
+            className="w-full text-center"
+            placeholder="USD"
+            value={fiatCurrency}
+            onChangeText={setFiatCurrency}
+            // aria-errormessage="inputError"
+          />
+        </View>
+      </TouchableWithoutFeedback>
       <Button
         size="lg"
         onPress={() => {

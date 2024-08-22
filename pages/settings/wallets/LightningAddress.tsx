@@ -20,7 +20,7 @@ export function LightningAddress() {
         Keyboard.dismiss();
       }}
     >
-      <>
+      <View className="flex-1 flex flex-col">
         <View className="flex-1 flex flex-col p-3 gap-3">
           <Stack.Screen
             options={{
@@ -35,7 +35,7 @@ export function LightningAddress() {
             placeholder="hello@getalby.com"
             value={lightningAddress}
             onChangeText={setLightningAddress}
-          // aria-errormessage="inputError"
+            // aria-errormessage="inputError"
           />
         </View>
         <View className="p-6">
@@ -53,7 +53,7 @@ export function LightningAddress() {
             <Text>Save</Text>
           </Button>
         </View>
-      </>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
