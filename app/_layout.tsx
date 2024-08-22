@@ -56,7 +56,7 @@ export default function RootLayout() {
         "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf")
       });
 
-      const theme = "light";
+      const theme = await AsyncStorage.getItem("theme");
       if (!theme) {
         AsyncStorage.setItem("theme", colorScheme);
         setIsColorSchemeLoaded(true);

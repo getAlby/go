@@ -34,7 +34,7 @@ export function LNURLPay() {
       //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
-        params: { invoice: lnurlPayInfo.pr, originalText },
+        params: { invoice: lnurlPayInfo.pr, originalText, comment },
       });
     } catch (error) {
       console.error(error);
@@ -73,9 +73,8 @@ export function LNURLPay() {
                     Comment
                   </Text>
                   <Input
-                    className="w-full border-transparent text-center native:text-2xl font-semibold2 text-secondary-foregroundasdf"
+                    className="w-full border-transparent text-center native:text-2xl font-semibold2 text-foreground"
                     placeholder="Enter an optional comment"
-                    placeholderTextColor={"#ffc800"}
                     value={comment}
                     onChangeText={setComment}
                   />
@@ -84,7 +83,7 @@ export function LNURLPay() {
                   <Text className="text-muted-foreground text-center font-semibold2">
                     To
                   </Text>
-                  <Text className="text-center text-secondary-foreground text-2xl font-medium2">
+                  <Text className="text-center text-foreground text-2xl font-medium2">
                     {originalText}
                   </Text>
                 </View>

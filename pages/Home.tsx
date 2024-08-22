@@ -56,7 +56,7 @@ export function Home() {
           <View className="w-full flex flex-row justify-center items-center gap-2">
             {balance ? (
               <>
-                <Text className="text-secondary-foreground text-5xl font-bold2">
+                <Text className="text-foreground text-5xl font-bold2">
                   {new Intl.NumberFormat().format(
                     Math.floor(balance.balance / 1000),
                   )}
@@ -82,7 +82,7 @@ export function Home() {
         <View className="flex items-center justify-center">
           <Link href="/transactions" className="">
             <View className="p-4 flex items-center justify-center">
-              <ChevronUp className="text-secondary-foreground" size={32} />
+              <ChevronUp className="text-foreground" size={32} />
             </View>
           </Link>
         </View>
@@ -130,8 +130,8 @@ function MainButton({
               alignItems: "center",
               ...(pressed
                 ? {
-                    transform: "scale(1.01)",
-                  }
+                  transform: "scale(0.99)",
+                }
                 : {}),
             }}
           >

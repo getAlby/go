@@ -11,9 +11,10 @@ import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
-  const { invoice, originalText } = useLocalSearchParams() as {
+  const { invoice, originalText, comment } = useLocalSearchParams() as {
     invoice: string;
     originalText: string;
+    comment: string;
   };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
@@ -64,23 +65,28 @@ export function ConfirmPayment() {
           <View className="flex-1 justify-center items-center gap-8">
             <View className="flex flex-col gap-2">
               <View className="flex flex-row items-center justify-center gap-2">
-                <Text className="text-5xl font-bold2 text-secondary-foreground">{decodedInvoice.satoshi}</Text>
+                <Text className="text-5xl font-bold2 text-foreground">{decodedInvoice.satoshi}</Text>
                 <Text className="text-3xl font-bold2 text-muted-foreground">sats</Text>
               </View>
               {getFiatAmount && (
                 <Text className="text-center text-muted-foreground text-3xl font-semibold2">{getFiatAmount(decodedInvoice.satoshi)}</Text>
               )}
             </View>
-            {decodedInvoice.description && (
+            {decodedInvoice.description ? (
               <View className="flex flex-col gap-2 justify-center items-center">
                 <Text className="text-muted-foreground text-center font-semibold2">Description</Text>
-                <Text className="text-center text-secondary-foreground text-2xl font-medium2">{decodedInvoice.description}</Text>
+                <Text className="text-center text-foreground text-2xl font-medium2">{decodedInvoice.description}</Text>
               </View>
-            )}
+            ) : comment && <View className="flex flex-col gap-2">
+              <Text className="text-muted-foreground text-center font-semibold2">Comment</Text>
+              <Text className="text-center text-foreground text-2xl font-medium2">
+                {comment}
+              </Text>
+            </View>}
             {originalText !== invoice &&
               <View className="flex flex-col gap-2">
                 <Text className="text-muted-foreground text-center font-semibold2">To</Text>
-                <Text className="text-center text-secondary-foreground text-2xl font-medium2">
+                <Text className="text-center text-foreground text-2xl font-medium2">
                   {originalText}
                 </Text>
               </View>

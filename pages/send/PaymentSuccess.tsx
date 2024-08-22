@@ -27,7 +27,7 @@ export function PaymentSuccess() {
         <Paid />
         <View className="flex flex-col items-center gap-2">
           <View className="flex flex-row items-end justify-center">
-            <Text className="text-3xl text-secondary-foreground font-semibold2">{new Intl.NumberFormat().format(+amount)}{" "}</Text>
+            <Text className="text-3xl text-foreground font-semibold2">{new Intl.NumberFormat().format(+amount)}{" "}</Text>
             <Text className="text-2xl text-muted-foreground font-semibold2">sats</Text>
           </View>
           {getFiatAmount &&
@@ -35,9 +35,11 @@ export function PaymentSuccess() {
           }
         </View>
         {originalText !== invoice &&
-          <View><Text className="text-muted-foreground text-center text-xl font-bold2">
-            Sent to
-          </Text><Text className="text-secondary-foreground text-center text-xl font-bold2">
+          <View>
+            <Text className="text-muted-foreground text-center text-xl font-bold2">
+              Sent to
+            </Text>
+            <Text className="text-foreground text-center text-xl font-bold2">
               {originalText}
             </Text>
           </View>

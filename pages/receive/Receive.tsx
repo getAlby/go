@@ -99,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                  prevTransaction?.payment_hash
+                prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -206,7 +206,7 @@ export function Receive() {
                 <View className="flex flex-col items-center justify-center gap-2">
                   {invoice ? (
                     <View className="flex flex-row items-end">
-                      <Text className="text-secondary-foreground text-3xl font-semibold2">
+                      <Text className="text-foreground text-3xl font-semibold2">
                         {new Intl.NumberFormat().format(+amount)}{" "}
                       </Text>
                       <Text className="text-muted-foreground text-2xl font-semibold2">
@@ -215,7 +215,7 @@ export function Receive() {
                     </View>
                   ) : (
                     lightningAddress && (
-                      <Text className="text-secondary-foreground text-xl font-medium2">
+                      <Text className="text-foreground text-xl font-medium2">
                         {lightningAddress}
                       </Text>
                     )
@@ -265,15 +265,17 @@ export function Receive() {
               <View className="flex-1 flex flex-col">
                 <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
                   <DualCurrencyInput amount={amount} setAmount={setAmount} />
-                  <Text className="text-muted-foreground text-center mt-6">
-                    Description (optional)
-                  </Text>
-                  <Input
-                    className="w-full text-center border-transparent native:text-2xl font-semibold2"
-                    placeholder="No description"
-                    value={comment}
-                    onChangeText={setComment}
-                  />
+                  <View>
+                    <Text className="text-muted-foreground text-center mt-6">
+                      Description (optional)
+                    </Text>
+                    <Input
+                      className="w-full text-center border-transparent native:text-2xl font-semibold2"
+                      placeholder="No description"
+                      value={comment}
+                      onChangeText={setComment}
+                    />
+                  </View>
                 </View>
                 <View className="m-6">
                   <Button onPress={() => generateInvoice(+amount)} size="lg">
