@@ -50,8 +50,7 @@ export function Wallets() {
         </View >
         <View className="p-6">
           <Link href="/settings/wallets/new" asChild>
-            <Button className="flex flex-row justify-center items-center gap-2" size="lg">
-              <PlusCircle className="text-primary-foreground" />
+            <Button size="lg">
               <Text>Connect a Wallet</Text>
             </Button>
           </Link>

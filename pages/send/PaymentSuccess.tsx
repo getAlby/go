@@ -25,7 +25,7 @@ export function PaymentSuccess() {
       />
       <View className="flex-1 justify-center items-center gap-8">
         <Paid />
-        <View className="flex flex-col items-center gap-2">
+        <View className="flex flex-col items-center gap-2 -mt-24">
           <View className="flex flex-row items-end justify-center">
             <Text className="text-3xl text-foreground font-semibold2">{new Intl.NumberFormat().format(+amount)}{" "}</Text>
             <Text className="text-2xl text-muted-foreground font-semibold2">sats</Text>

@@ -50,53 +50,44 @@ export function LNURLPay() {
           title: "Send",
         }}
       />
-      {isLoading && (
-        <View className="flex-1 justify-center items-center">
-          <Loading />
-        </View>
-      )}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View className="flex-1 flex flex-col">
+          <View className="flex-1 justify-center items-center p-6 gap-6">
+            <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
 
-      {!isLoading && (
-        <>
-          <TouchableWithoutFeedback
-            className="bg-red-500"
-            onPress={() => {
-              Keyboard.dismiss();
-            }}
-          >
-            <View className="flex-1 flex flex-col">
-              <View className="flex-1 justify-center items-center p-6 gap-6">
-                <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
-
-                <View className="w-full">
-                  <Text className="text-muted-foreground text-center font-semibold2">
-                    Comment
-                  </Text>
-                  <Input
-                    className="w-full border-transparent text-center native:text-2xl font-semibold2 text-foreground"
-                    placeholder="Enter an optional comment"
-                    value={comment}
-                    onChangeText={setComment}
-                  />
-                </View>
-                <View>
-                  <Text className="text-muted-foreground text-center font-semibold2">
-                    To
-                  </Text>
-                  <Text className="text-center text-foreground text-2xl font-medium2">
-                    {originalText}
-                  </Text>
-                </View>
-              </View>
-              <View className="p-6">
-                <Button size="lg" onPress={requestInvoice}>
-                  <Text>Next</Text>
-                </Button>
-              </View>
+            <View className="w-full">
+              <Text className="text-muted-foreground text-center font-semibold2">
+                Comment
+              </Text>
+              <Input
+                className="w-full border-transparent text-center native:text-2xl font-semibold2 text-foreground"
+                placeholder="Enter an optional comment"
+                value={comment}
+                onChangeText={setComment}
+              />
             </View>
-          </TouchableWithoutFeedback>
-        </>
-      )}
+            <View>
+              <Text className="text-muted-foreground text-center font-semibold2">
+                To
+              </Text>
+              <Text className="text-center text-foreground text-2xl font-medium2">
+                {originalText}
+              </Text>
+            </View>
+          </View>
+          <View className="p-6">
+            <Button size="lg" onPress={requestInvoice} className="flex flex-row gap-2">
+              {isLoading && <Loading className="text-primary-foreground" />}
+              <Text>Next</Text>
+            </Button>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+
     </>
   );
 }

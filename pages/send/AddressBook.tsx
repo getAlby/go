@@ -52,8 +52,7 @@ export function AddressBook() {
       </View>
 
       <Link href="/settings/address-book/new" asChild>
-        <Button size="lg" className="flex flex-row items-center gap-2">
-          <PlusCircle className="text-primary-foreground" />
+        <Button size="lg">
           <Text>Create Contact</Text>
         </Button>
       </Link>
