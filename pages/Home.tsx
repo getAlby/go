@@ -104,7 +104,18 @@ function MainButton({
   return (
     <>
       <Link href={href} className="flex flex-1" asChild>
-        <Pressable className="flex-1 aspect-square rounded-xl flex">
+        <Pressable
+          className="flex-1 aspect-square rounded-xl flex"
+          style={{
+            shadowColor: "black",
+            shadowOpacity: 0.15,
+            shadowOffset: {
+              width: 5,
+              height: 5,
+            },
+            shadowRadius: 4,
+          }}
+        >
           <LinearGradient
             className="flex-1 p-6"
             colors={["#FFE951", "#FFC453"]}
