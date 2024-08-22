@@ -11,11 +11,13 @@ import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
 type DualCurrencyInputProps = {
   amount: string;
   setAmount(amount: string): void;
+  autoFocus?: boolean;
 };
 
 export function DualCurrencyInput({
   amount,
   setAmount,
+  autoFocus = false,
 }: DualCurrencyInputProps) {
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
@@ -55,6 +57,7 @@ export function DualCurrencyInput({
         onChangeText={onChangeText}
         aria-labelledbyledBy="amount"
         style={styles.amountInput}
+        autoFocus={autoFocus}
       // aria-errormessage="inputError"
       />
       <Pressable onPress={toggleInputMode}>

@@ -264,7 +264,7 @@ export function Receive() {
             >
               <View className="flex-1 flex flex-col">
                 <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
-                  <DualCurrencyInput amount={amount} setAmount={setAmount} />
+                  <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
                   <View>
                     <Text className="text-muted-foreground text-center mt-6">
                       Description (optional)
