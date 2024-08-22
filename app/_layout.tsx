@@ -43,8 +43,8 @@ SplashScreen.preventAutoHideAsync();
 // };
 
 export default function RootLayout() {
-  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
-  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+  const { isDarkColorScheme } = useColorScheme();
+  const [fontsLoaded, setFontsLoaded] = React.useState(false);
   useConnectionChecker();
 
   React.useEffect(() => {
@@ -56,26 +56,14 @@ export default function RootLayout() {
         "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf")
       });
 
-      const theme = await AsyncStorage.getItem("theme");
-      if (!theme) {
-        AsyncStorage.setItem("theme", colorScheme);
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      const colorTheme = theme === "dark" ? "dark" : "light";
-      if (colorTheme !== colorScheme) {
-        setColorScheme(colorTheme);
+      setFontsLoaded(true);
 
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      setIsColorSchemeLoaded(true);
     })().finally(() => {
       SplashScreen.hideAsync();
     });
   }, []);
 
-  if (!isColorSchemeLoaded) {
+  if (!fontsLoaded) {
     return null;
   }
 

@@ -79,7 +79,7 @@ export function Transactions() {
                 router.back();
               }}
             >
-              <X />
+              <X className="text-foreground" />
             </Pressable>
           ),
         }}

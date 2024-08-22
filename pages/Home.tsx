@@ -27,6 +27,10 @@ export function Home() {
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
 
+  useFocusEffect(() => {
+    reloadBalance();
+  });
+
   if (!nwcClient) {
     return <WalletConnection />;
   }
