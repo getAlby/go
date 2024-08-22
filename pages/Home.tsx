@@ -167,7 +167,7 @@ function MainButton({
               alignItems: "center",
               ...(pressed
                 ? {
-                  transform: "scale(0.99)",
+                  transform: "scale(0.98)",
                 }
                 : {}),
             }}
