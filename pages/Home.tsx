@@ -77,12 +77,14 @@ export function Home() {
           </View>
         </View>
         <View className="flex items-center justify-center">
-          <Link href="/transactions" asChild>
-            <ChevronDown className="text-secondary-foreground" />
+          <Link href="/transactions" className="">
+            <View className="p-4 flex items-center justify-center">
+              <ChevronDown className="text-secondary-foreground" />
+            </View>
           </Link>
         </View>
         <View>
-          <View className="flex flex-row gap-6 p-6">
+          <View className="flex flex-row gap-6 p-6 pt-2">
             <MainButton title="Receive" href="/receive" Icon={MoveDown} />
             <MainButton title="Send" href="/send" Icon={MoveUp} />
           </View>
