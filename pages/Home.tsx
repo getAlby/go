@@ -1,8 +1,4 @@
-import {
-  View,
-  Image,
-  Pressable,
-} from "react-native";
+import { View, Image, Pressable } from "react-native";
 import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -58,7 +54,9 @@ export function Home() {
             {balance ? (
               <>
                 <Text className="text-secondary-foreground text-5xl font-bold2">
-                  {new Intl.NumberFormat().format(Math.floor(balance.balance / 1000))}
+                  {new Intl.NumberFormat().format(
+                    Math.floor(balance.balance / 1000)
+                  )}
                 </Text>
                 <Text className="text-muted-foreground text-5xl font-bold2">
                   sats
@@ -94,25 +92,42 @@ export function Home() {
   );
 }
 
-function MainButton({ title, href, Icon }: { title: string, href: string, Icon: LucideIcon, }): JSX.Element {
+function MainButton({
+  title,
+  href,
+  Icon,
+}: {
+  title: string;
+  href: string;
+  Icon: LucideIcon;
+}): JSX.Element {
   return (
     <>
-      <Link href={href} className="flex-1" asChild>
-        <Pressable className="flex-1 aspect-square rounded-xl flex items-center justify-center">
+      <Link href={href} className="flex flex-1" asChild>
+        <Pressable className="flex-1 aspect-square rounded-xl flex">
           <LinearGradient
-            className="flex-1 w-full p-6 "
-            colors={['#FFE951', '#FFC453']}
+            className="flex-1 p-6"
+            colors={["#FFE951", "#FFC453"]}
             start={[0, 0]}
             end={[1, 1]}
-            style={{ flex: 1, padding: 6, borderRadius: 15, elevation: 2, justifyContent: 'center', alignItems: 'center' }}
+            style={{
+              flex: 1,
+              padding: 6,
+              borderRadius: 15,
+              elevation: 2,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
               <Icon className="text-primary-foreground w-24 h-24" />
-              <Text className="font-bold2 text-3xl text-primary-foreground">{title}</Text>
+              <Text className="font-bold2 text-3xl text-primary-foreground">
+                {title}
+              </Text>
             </View>
           </LinearGradient>
         </Pressable>
       </Link>
-    </>);
+    </>
+  );
 }
-
