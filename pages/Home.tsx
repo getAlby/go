@@ -3,22 +3,19 @@ import React from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
-import { useTransactions } from "hooks/useTransactions";
 import { Link, Stack, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Text } from "~/components/ui/text";
-import { Settings2, MoveDown, MoveUp, ChevronUp } from "~/components/Icons";
+import { Settings2, ChevronUp } from "~/components/Icons";
 
 import { Skeleton } from "~/components/ui/skeleton";
-import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { LucideIcon } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Button } from "~/components/ui/button";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
+import { Button } from "~/components/ui/button";
 
 dayjs.extend(relativeTime);
 
@@ -83,11 +80,11 @@ export function Home() {
             )}
           </View>
         </View>
-        <View className="flex items-center justify-center">
-          <Link href="/transactions" className="">
-            <View className="p-4 flex items-center justify-center">
+        <View className="flex items-center justify-center my-5">
+          <Link href="/transactions" asChild>
+            <Button variant="ghost" className="p-10 rounded-full aspect-square">
               <ChevronUp className="text-foreground" size={32} />
-            </View>
+            </Button>
           </Link>
         </View>
         <View>

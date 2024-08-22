@@ -23,7 +23,9 @@ export function Transaction() {
         }}
       />
       <View className="flex flex-col gap-5 justify-center items-center">
-        <View className="my-8 bg-card border-2 border-border rounded-full p-6" style={{ elevation: 5 }}>
+        <View
+          className="my-8 bg-muted border-2 rounded-full p-8"
+          style={{ elevation: 5 }}>
           {transaction.type === "incoming" && (
             <MoveDownLeft
               className="text-receive"
@@ -32,10 +34,10 @@ export function Transaction() {
             />
           )}
           {transaction.type === "outgoing" && (
-            <MoveUpRight className="text-send bg-white" width={100} height={100} />
+            <MoveUpRight className="text-send" width={100} height={100} />
           )}
         </View>
-        <Text className="text-3xl font-bold2 text-primary-foreground">
+        <Text className="text-3xl font-bold2 text-foreground">
           {transaction.type === "incoming" ? "Received" : "Sent"}
         </Text>
         <View className="flex flex-col items-center justify-center gap-2">
@@ -63,7 +65,7 @@ export function Transaction() {
           />
           <TransactionDetailRow
             title="Description"
-            content={transaction.description || "None"}
+            content={transaction.description || "-"}
           />
           <TransactionDetailRow
             title="Payment Hash"
