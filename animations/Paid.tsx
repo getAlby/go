@@ -1,4 +1,5 @@
 import LottieView from "lottie-react-native";
+import { View } from "react-native";
 
 export function Paid() {
   return (

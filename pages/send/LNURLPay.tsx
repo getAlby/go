@@ -19,7 +19,6 @@ export function LNURLPay() {
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
-  const [addComment, setAddComment] = React.useState(false);
 
   async function requestInvoice() {
     setLoading(true);
@@ -34,7 +33,7 @@ export function LNURLPay() {
       //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
-        params: { invoice: lnurlPayInfo.pr, originalText },
+        params: { invoice: lnurlPayInfo.pr, originalText, comment },
       });
     } catch (error) {
       console.error(error);
@@ -47,67 +46,46 @@ export function LNURLPay() {
     <>
       <Stack.Screen
         options={{
-          title: "Enter Payment Details",
-          //title: "LNURL Payment",
+          title: "Send",
         }}
       />
-      {isLoading && (
-        <View className="flex-1 justify-center items-center">
-          <Loading />
-        </View>
-      )}
-
-      {!isLoading && (
-        <>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss();
-            }}
-          >
-            <View className="flex-1 justify-center items-center p-3">
-              <Text className="text-sm text-muted-foreground">Payment to</Text>
-              <Text className="text-sm max-w-sm text-muted-foreground">
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View className="flex-1 flex flex-col">
+          <View className="flex-1 justify-center items-center p-6 gap-6">
+            <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
+            <View className="w-full">
+              <Text className="text-muted-foreground text-center font-semibold2">
+                Comment
+              </Text>
+              <Input
+                className="w-full border-transparent text-center native:text-2xl font-semibold2 text-foreground"
+                placeholder="Enter an optional comment"
+                value={comment}
+                onChangeText={setComment}
+              />
+            </View>
+            <View>
+              <Text className="text-muted-foreground text-center font-semibold2">
+                To
+              </Text>
+              <Text className="text-center text-foreground text-2xl font-medium2">
                 {originalText}
               </Text>
-
-              <DualCurrencyInput amount={amount} setAmount={setAmount} />
-
-              {!addComment && (
-                <Button
-                  variant="ghost"
-                  className="mt-3"
-                  onPress={() => setAddComment(true)}
-                >
-                  <Text className="text-muted-foreground">+ add comment</Text>
-                </Button>
-              )}
-              {addComment && (
-                <Input
-                  className="w-full text-center mt-6"
-                  placeholder="comment"
-                  value={comment}
-                  onChangeText={setComment}
-                  // aria-labelledbyledBy="comment"
-                  // aria-errormessage="inputError"
-                />
-              )}
             </View>
-          </TouchableWithoutFeedback>
-          <View className="flex flex-row gap-3 justify-center items-center px-3 pb-3">
-            <Button
-              className="flex-1"
-              size="lg"
-              variant="ghost"
-              onPress={router.back}
-            >
-              <Text className="text-foreground">Back</Text>
-            </Button>
-            <Button className="flex-1" size="lg" onPress={requestInvoice}>
-              <Text className="text-background">Next</Text>
+          </View>
+          <View className="p-6">
+            <Button size="lg" onPress={requestInvoice} className="flex flex-row gap-2">
+              {isLoading && <Loading className="text-primary-foreground" />}
+              <Text>Next</Text>
             </Button>
           </View>
-        </>
-      )}
+        </View>
+      </TouchableWithoutFeedback>
+
     </>
   );
 }

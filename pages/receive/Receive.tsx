@@ -10,16 +10,18 @@ import * as Clipboard from "expo-clipboard";
 import React from "react";
 import { useAppStore } from "~/lib/state/appStore";
 import { Input } from "~/components/ui/input";
-import QRCode from "react-native-qrcode-svg";
 import { Text } from "~/components/ui/text";
-import { Copy, ZapIcon } from "~/components/Icons";
+import { Copy, Share2, ZapIcon } from "~/components/Icons";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import QRCode from "~/components/QRCode";
 
 export function Receive() {
+  const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const [invoice, _setInvoice] = React.useState("");
   const invoiceRef = React.useRef("");
@@ -67,15 +69,10 @@ export function Receive() {
   }
 
   function copy() {
-    const text = invoice || lightningAddress;
-    if (!text) {
-      return;
-    }
-    Clipboard.setStringAsync(text);
+    Clipboard.setStringAsync(invoice ?? lightningAddress ?? "");
     Toast.show({
       type: "success",
       text1: "Copied to clipboard",
-      text2: text,
     });
   }
 
@@ -102,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                  prevTransaction?.payment_hash
+                prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -167,100 +164,120 @@ export function Receive() {
           title: "Receive",
         }}
       />
-      {isLoading && (
-        <View className="flex-1 justify-center items-center">
-          <Loading />
-        </View>
-      )}
-      {!isLoading && (
+      {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
-          {!enterCustomAmount && !invoice && !lightningAddress && (
-            <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-              <ZapIcon className="text-black w-32 h-32" />
-              <Text className="text-2xl max-w-64 text-center">
-                Receive Quickly with a Lightning Address
-              </Text>
-              <Link
-                href={`/settings/wallets/${selectedWalletId}/lightning-address`}
-                asChild
-              >
-                <Button className="touch-none">
-                  <Text className="text-background">Set Lightning Address</Text>
-                </Button>
-              </Link>
-            </View>
-          )}
-          {!enterCustomAmount && (invoice.length || lightningAddress) && (
-            <View className="flex-1 justify-center items-center gap-5">
-              <View className="flex flex-row justify-center items-center gap-3">
-                <Loading />
-                <Text>Waiting for payment</Text>
-              </View>
-              <QRCode value={invoice || lightningAddress} size={300} />
-              <Pressable onPress={copy}>
-                <View className="flex flex-row items-center justify-center gap-3">
-                  <Copy
-                    className="text-muted-foreground"
-                    width={16}
-                    height={16}
-                  />
-                  <Text className="text-muted-foreground">
-                    {invoice
-                      ? new Intl.NumberFormat().format(+amount) + " sats"
-                      : lightningAddress}
+          <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
+            <ZapIcon className="text-black w-32 h-32" />
+            <Text className="text-2xl max-w-64 text-center">
+              Receive quickly with a Lightning Address
+            </Text>
+            <Link
+              href={`/settings/wallets/${selectedWalletId}/lightning-address`}
+              asChild
+            >
+              <Button variant="secondary">
+                <Text>Set Lightning Address</Text>
+              </Button>
+            </Link>
+          </View>
+          <View className="p-6">
+            <Button
+              variant="secondary"
+              onPress={() => setEnterCustomAmount(true)}
+              className="flex flex-col gap-2"
+            >
+              <ZapIcon className="text-muted-foreground" />
+              <Text>Invoice</Text>
+            </Button>
+          </View>
+        </>
+      )}
+      {!enterCustomAmount && (invoice.length || lightningAddress) && (
+        <>
+          <View className="flex-1 justify-center items-center gap-8">
+            <QRCode value={invoice || lightningAddress || ""} />
+            <View className="flex flex-col items-center justify-center gap-2">
+              {invoice ? (
+                <View className="flex flex-row items-end">
+                  <Text className="text-foreground text-3xl font-semibold2">
+                    {new Intl.NumberFormat().format(+amount)}{" "}
+                  </Text>
+                  <Text className="text-muted-foreground text-2xl font-semibold2">
+                    sats
                   </Text>
                 </View>
-              </Pressable>
+              ) : (
+                lightningAddress && (
+                  <Text className="text-foreground text-xl font-medium2">
+                    {lightningAddress}
+                  </Text>
+                )
+              )}
+              {invoice && getFiatAmount && (
+                <Text className="text-muted-foreground text-2xl font-medium2">
+                  {getFiatAmount(+amount)}
+                </Text>
+              )}
             </View>
-          )}
-          {/* TODO: move to one place - this is all copied from LNURL-Pay */}
-          {!invoice && enterCustomAmount && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                Keyboard.dismiss();
-              }}
-            >
-              <View className="flex-1 h-full flex flex-col items-center justify-center gap-5 p-3">
-                <DualCurrencyInput amount={amount} setAmount={setAmount} />
-
-                {!addComment && (
-                  <Button
-                    variant="ghost"
-                    className="mt-3"
-                    onPress={() => setAddComment(true)}
-                  >
-                    <Text className="text-muted-foreground">+ add comment</Text>
-                  </Button>
-                )}
-                {addComment && (
-                  <Input
-                    className="w-full text-center mt-6"
-                    placeholder="comment"
-                    value={comment}
-                    onChangeText={setComment}
-                    // aria-labelledbyledBy="comment"
-                    // aria-errormessage="inputError"
-                  />
-                )}
-
-                <Button onPress={() => generateInvoice(+amount)}>
-                  <Text>Generate</Text>
-                </Button>
+            {invoice && (
+              <View className="flex flex-row justify-center items-center gap-3">
+                <Loading />
+                <Text className="text-xl">Waiting for payment</Text>
               </View>
-            </TouchableWithoutFeedback>
-          )}
-
-          <View className="w-full flex flex-col items-center justify-center gap-3 mb-5">
-            {!enterCustomAmount && (
+            )}
+          </View>
+          <View className="flex flex-row gap-6 p-6">
+            <Button
+              variant="secondary"
+              onPress={copy}
+              className="flex-1 flex flex-col gap-2"
+            >
+              <Copy className="text-muted-foreground" />
+              <Text>Copy</Text>
+            </Button>
+            {!enterCustomAmount && !invoice && (
               <Button
                 variant="secondary"
                 onPress={() => setEnterCustomAmount(true)}
+                className="flex-1 flex flex-col gap-2"
               >
-                <Text>Enter Custom Amount</Text>
+                <ZapIcon className="text-muted-foreground" />
+                <Text>Invoice</Text>
               </Button>
             )}
           </View>
         </>
+      )}
+      {/* TODO: move to one place - this is all copied from LNURL-Pay */}
+      {!invoice && enterCustomAmount && (
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View className="flex-1 flex flex-col">
+            <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
+              <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
+              <View>
+                <Text className="text-muted-foreground text-center mt-6">
+                  Description (optional)
+                </Text>
+                <Input
+                  className="w-full text-center border-transparent native:text-2xl font-semibold2"
+                  placeholder="No description"
+                  value={comment}
+                  onChangeText={setComment}
+                />
+              </View>
+            </View>
+            <View className="m-6">
+              <Button onPress={() => generateInvoice(+amount)} size="lg" className="flex flex-row gap-2">
+                {isLoading && <Loading className="text-primary-foreground" />}
+                <Text>Create Invoice</Text>
+              </Button>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       )}
     </>
   );

@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@getalby/lightning-tools": "^5.0.3",
-    "@getalby/sdk": "^3.5.0",
+    "@getalby/sdk": "^3.6.1",
     "@react-native-async-storage/async-storage": "1.23.1",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",
@@ -29,6 +29,7 @@
     "expo-clipboard": "~6.0.3",
     "expo-constants": "~16.0.2",
     "expo-font": "~12.0.7",
+    "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.16",
     "expo-secure-store": "~13.0.1",
@@ -57,6 +58,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.3",
     "typescript": "~5.3.3"
   },

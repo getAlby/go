@@ -4,9 +4,12 @@ import { View } from "react-native";
 import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function ReceiveSuccess() {
   const { invoice } = useLocalSearchParams() as { invoice: string };
+
+  const getFiatAmount = useGetFiatAmount();
   const decodedInvoice = new Invoice({
     pr: invoice,
   });
@@ -18,34 +21,37 @@ export function ReceiveSuccess() {
         }}
       />
       <View className="flex-1 justify-center items-center">
-        <Paid />
-        <Text className="text-lg -mt-24">
-          Received {decodedInvoice.satoshi} sats
+        <View className="-mt-32">
+          <Paid />
+        </View>
+        <Text className="text-3xl font-bold2 text-muted-foreground -mt-32">
+          Received
         </Text>
+        <View className="flex flex-row gap-2 mt-10">
+          <Text className="text-receive text-3xl font-semibold2">
+            + {decodedInvoice.satoshi}
+          </Text>
+          <Text className="text-3xl font-semibold2 text-muted-foreground">
+            sats
+          </Text>
+        </View>
+        {getFiatAmount &&
+          <Text className="text-muted-foreground text-2xl font-bold">
+            {getFiatAmount(123) ?? ""}
+          </Text>
+        }
         {decodedInvoice.description && (
           <Text className="mt-4">{decodedInvoice.description}</Text>
         )}
       </View>
-      <View className="flex flex-col flex-shrink-0 gap-3 justify-center items-center px-3 pb-3">
+      <View className="flex flex-col gap-3 m-6">
         <Button
           size="lg"
-          className="w-full"
-          onPress={() => {
-            router.replace("/");
-            router.push("/receive");
-          }}
-        >
-          <Text className="text-background">Receive Again</Text>
-        </Button>
-        <Button
-          size="lg"
-          variant="ghost"
-          className="w-full"
           onPress={() => {
             router.replace("/");
           }}
         >
-          <Text className="text-foreground">Home</Text>
+          <Text>Close</Text>
         </Button>
       </View>
     </View>

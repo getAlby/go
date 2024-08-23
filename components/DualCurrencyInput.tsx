@@ -5,17 +5,19 @@ import { Label } from "./ui/label";
 import { Text } from "./ui/text";
 import React from "react";
 import { useAppStore } from "~/lib/state/appStore";
-import { ArrowLeftRight } from "./Icons";
-import { DEFAULT_CURRENCY } from "~/lib/constants";
+import { ArrowLeftRight, RefreshCw } from "./Icons";
+import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
 
 type DualCurrencyInputProps = {
   amount: string;
   setAmount(amount: string): void;
+  autoFocus?: boolean;
 };
 
 export function DualCurrencyInput({
   amount,
   setAmount,
+  autoFocus = false,
 }: DualCurrencyInputProps) {
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
@@ -47,25 +49,27 @@ export function DualCurrencyInput({
   return (
     <View className="w-full flex flex-col items-center justify-center gap-5">
       <Input
-        className="w-full border-transparent text-center bg-muted mt-3"
+        className="w-full border-transparent text-center mt-3"
         placeholder="0"
         keyboardType="number-pad"
         value={inputMode === "sats" ? amount : fiatAmount}
+        cursorColor={CURSOR_COLOR}
         onChangeText={onChangeText}
         aria-labelledbyledBy="amount"
         style={styles.amountInput}
-        // aria-errormessage="inputError"
+        autoFocus={autoFocus}
+      // aria-errormessage="inputError"
       />
       <Pressable onPress={toggleInputMode}>
         <View className="flex flex-row gap-2 items-center justify-center">
-          <Label nativeID="amount" className="self-start justify-self-start">
+          <Text className="font-semibold2 text-2xl text-muted-foreground">
             {inputMode === "fiat" ? fiatCurrency : "sats"}
-          </Label>
-          <ArrowLeftRight className="text-primary" width={16} height={16} />
+          </Text>
+          <RefreshCw className="text-muted-foreground" width={16} height={16} />
         </View>
       </Pressable>
       {
-        <Text>
+        <Text className="text-muted-foreground text-2xl font-semibold2">
           {inputMode === "fiat"
             ? new Intl.NumberFormat().format(+amount) + " sats"
             : getFiatAmount?.(+amount) || ""}
@@ -78,6 +82,6 @@ export function DualCurrencyInput({
 const styles = StyleSheet.create({
   amountInput: {
     fontSize: 80,
-    height: 100,
+    height: 90,
   },
 });

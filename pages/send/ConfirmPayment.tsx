@@ -2,6 +2,7 @@ import { Invoice } from "@getalby/lightning-tools";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
+import { ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -10,9 +11,10 @@ import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
-  const { invoice, originalText } = useLocalSearchParams() as {
+  const { invoice, originalText, comment } = useLocalSearchParams() as {
     invoice: string;
     originalText: string;
+    comment: string;
   };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
@@ -33,7 +35,7 @@ export function ConfirmPayment() {
       router.dismissAll();
       router.replace({
         pathname: "/send/success",
-        params: { preimage: response.preimage, originalText },
+        params: { preimage: response.preimage, originalText, invoice, amount: decodedInvoice.satoshi },
       });
     } catch (error) {
       console.error(error);
@@ -52,45 +54,42 @@ export function ConfirmPayment() {
           title: "Confirm Payment",
         }}
       />
-      {isLoading && (
-        <View className="flex-1 justify-center items-center">
-          <Loading />
+      <View className="flex-1 justify-center items-center gap-8">
+        <View className="flex flex-col gap-2">
+          <View className="flex flex-row items-center justify-center gap-2">
+            <Text className="text-5xl font-bold2 text-foreground">{decodedInvoice.satoshi}</Text>
+            <Text className="text-3xl font-bold2 text-muted-foreground">sats</Text>
+          </View>
+          {getFiatAmount && (
+            <Text className="text-center text-muted-foreground text-3xl font-semibold2">{getFiatAmount(decodedInvoice.satoshi)}</Text>
+          )}
         </View>
-      )}
-
-      {!isLoading && (
-        <>
-          <View className="flex-1 justify-center items-center gap-3">
-            <Text className="">Confirm Payment</Text>
-            <Text className="text-4xl">{decodedInvoice.satoshi} sats</Text>
-            {getFiatAmount && (
-              <Text>{getFiatAmount(decodedInvoice.satoshi)}</Text>
-            )}
-
-            {decodedInvoice.description && (
-              <Text className="">{decodedInvoice.description}</Text>
-            )}
-
-            <Text className="text-sm text-muted-foreground">to</Text>
-            <Text className="text-sm max-w-sm text-muted-foreground">
+        {decodedInvoice.description ? (
+          <View className="flex flex-col gap-2 justify-center items-center">
+            <Text className="text-muted-foreground text-center font-semibold2">Description</Text>
+            <Text className="text-center text-foreground text-2xl font-medium2">{decodedInvoice.description}</Text>
+          </View>
+        ) : comment && <View className="flex flex-col gap-2">
+          <Text className="text-muted-foreground text-center font-semibold2">Comment</Text>
+          <Text className="text-center text-foreground text-2xl font-medium2">
+            {comment}
+          </Text>
+        </View>}
+        {originalText !== invoice &&
+          <View className="flex flex-col gap-2">
+            <Text className="text-muted-foreground text-center font-semibold2">To</Text>
+            <Text className="text-center text-foreground text-2xl font-medium2">
               {originalText}
             </Text>
           </View>
-          <View className="flex flex-row gap-3 justify-center items-center px-3 pb-3">
-            <Button
-              className="flex-1"
-              size="lg"
-              variant="ghost"
-              onPress={router.back}
-            >
-              <Text className="text-foreground">Cancel</Text>
-            </Button>
-            <Button className="flex-1" size="lg" onPress={pay}>
-              <Text className="text-background">Pay</Text>
-            </Button>
-          </View>
-        </>
-      )}
+        }
+      </View>
+      <View className="p-6">
+        <Button size="lg" onPress={pay} className="flex flex-row gap-2">
+          {isLoading ? <Loading className="text-primary-foreground" /> : <ZapIcon className="text-primary-foreground" />}
+          <Text>Pay</Text>
+        </Button>
+      </View>
     </>
   );
 }

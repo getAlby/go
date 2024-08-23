@@ -35,7 +35,7 @@ export function useGetFiatAmount() {
     (amount: number, displayCurrencySign = true) => {
       if (rate) {
         if (displayCurrencySign) {
-          return `~ ${new Intl.NumberFormat(undefined, {
+          return `${new Intl.NumberFormat(undefined, {
             style: "currency",
             currency: fiatCurrency,
           }).format(rate * amount)}`;

@@ -2,6 +2,7 @@ const { hairlineWidth } = require("nativewind/theme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,jsx,ts,tsx}",
     "./components/**/*.{js,jsx,ts,tsx}",
@@ -51,7 +52,14 @@ module.exports = {
         hairline: hairlineWidth(),
       },
       fontFamily: {
-        sans: ["Inter" /*, ...defaultTheme.fontFamily.sans*/],
+        sans: ["OpenRunde"],
+        /* For some (unknown) reason the font styles aren't applied
+         * if you use the tailwind native names
+         */
+        sans2: ["OpenRunde"],
+        medium2: ["OpenRunde-Medium"],
+        semibold2: ["OpenRunde-Semibold"],
+        bold2: ["OpenRunde-Bold"],
       },
     },
   },

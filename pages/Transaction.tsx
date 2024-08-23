@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { CheckCircle } from "~/components/Icons";
+import { CheckCircle, MoveDownLeft, MoveUpRight } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { cn } from "~/lib/utils";
@@ -16,38 +16,44 @@ export function Transaction() {
   const getFiatAmount = useGetFiatAmount();
 
   return (
-    <View className="flex-1 flex flex-col p-3 gap-3">
+    <View className="flex-1 flex flex-col p-6 gap-3">
       <Stack.Screen
         options={{
           title: "Transaction",
         }}
       />
       <View className="flex flex-col gap-5 justify-center items-center">
-        <CheckCircle
-          className={cn(
-            "mt-8",
-            transaction.type === "incoming" ? "text-receive" : "text-send"
+        <View
+          className="my-8 bg-muted border-2 rounded-full p-8"
+          style={{ elevation: 2 }}>
+          {transaction.type === "incoming" && (
+            <MoveDownLeft
+              className="text-receive"
+              width={100}
+              height={100}
+            />
           )}
-          width={100}
-          height={100}
-        />
-        <Text className="text-3xl font-bold">
+          {transaction.type === "outgoing" && (
+            <MoveUpRight className="text-send" width={100} height={100} />
+          )}
+        </View>
+        <Text className="text-3xl font-bold2 text-foreground">
           {transaction.type === "incoming" ? "Received" : "Sent"}
         </Text>
         <View className="flex flex-col items-center justify-center gap-2">
-          <View className="flex flex-row items-center mt-5">
+          <View className="flex flex-row items-end mt-5">
             <Text
               className={cn(
-                "text-4xl gap-2",
+                "text-4xl gap-2 font-semibold2",
                 transaction.type === "incoming" ? "text-receive" : "text-send"
               )}
             >
-              {Math.floor(transaction.amount / 1000)}
+              {transaction.type === "incoming" ? "+" : "-"} {Math.floor(transaction.amount / 1000)}
             </Text>
-            <Text className="text-4xl text-muted-foreground"> sats</Text>
+            <Text className="text-2xl font-semibold2 text-muted-foreground"> sats</Text>
           </View>
           {getFiatAmount && (
-            <Text className="text-xl text-muted-foreground">
+            <Text className="text-2xl font-semibold2 text-muted-foreground ">
               {getFiatAmount(Math.floor(transaction.amount / 1000))}
             </Text>
           )}
@@ -59,7 +65,7 @@ export function Transaction() {
           />
           <TransactionDetailRow
             title="Description"
-            content={transaction.description || "None"}
+            content={transaction.description || "-"}
           />
           <TransactionDetailRow
             title="Payment Hash"
@@ -72,7 +78,7 @@ export function Transaction() {
           <TransactionDetailRow
             title="Fee"
             content={
-              Math.floor(transaction.fees_paid / 1000).toString() + " sats"
+              Math.floor(transaction.fees_paid / 1000).toString() + " sats (" + (transaction.fees_paid / transaction.amount * 100).toFixed(2) + "%)"
             }
           />
         </View>
@@ -85,7 +91,7 @@ function TransactionDetailRow(props: { title: string; content: string }) {
   return (
     <View className="flex flex-row gap-3">
       <Text className="w-32 text-muted-foreground">{props.title}</Text>
-      <Text className="flex-1">{props.content}</Text>
+      <Text className="flex-1 text-foreground font-medium2">{props.content}</Text>
     </View>
   );
 }

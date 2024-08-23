@@ -20,29 +20,31 @@ export function RenameWallet() {
         Keyboard.dismiss();
       }}
     >
-      <View className="flex-1 flex flex-col p-3 gap-3">
+      <View className="flex-1 flex flex-col p-6 gap-3">
         <Stack.Screen
           options={{
             title: "Wallet Name",
           }}
         />
-        <Input
-          autoFocus
-          className="w-full text-center mt-6"
-          placeholder={DEFAULT_WALLET_NAME}
-          value={walletName}
-          onChangeText={setWalletName}
+        <View className="flex-1">
+          <Input
+            autoFocus
+            className="w-full text-center mt-6"
+            placeholder={DEFAULT_WALLET_NAME}
+            value={walletName}
+            onChangeText={setWalletName}
           // aria-errormessage="inputError"
-        />
+          />
+        </View>
         <Button
+          size="lg"
           onPress={() => {
             useAppStore.getState().updateCurrentWallet({
               name: walletName,
             });
             Toast.show({
               type: "success",
-              text1: "Wallet name updated",
-              text2: walletName || DEFAULT_WALLET_NAME,
+              text1: "Wallet name updated"
             });
             router.back();
           }}

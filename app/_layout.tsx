@@ -1,16 +1,12 @@
 import "../lib/applyGlobalPolyfills";
 
-// Import your global CSS file
-import "../global.css";
-
 import "~/global.css";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { Platform, SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import PolyfillCrypto from "react-native-webview-crypto";
@@ -43,37 +39,27 @@ SplashScreen.preventAutoHideAsync();
 // };
 
 export default function RootLayout() {
-  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
-  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+  const { isDarkColorScheme } = useColorScheme();
+  const [fontsLoaded, setFontsLoaded] = React.useState(false);
   useConnectionChecker();
 
   React.useEffect(() => {
     (async () => {
-      await Font.loadAsync(
-        "Inter",
-        require("./../assets/fonts/Inter-Regular.otf")
-      );
+      await Font.loadAsync({
+        "OpenRunde": require("./../assets/fonts/OpenRunde-Regular.otf"),
+        "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
+        "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),
+        "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf")
+      });
 
-      const theme = await AsyncStorage.getItem("theme");
-      if (!theme) {
-        AsyncStorage.setItem("theme", colorScheme);
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      const colorTheme = theme === "dark" ? "dark" : "light";
-      if (colorTheme !== colorScheme) {
-        setColorScheme(colorTheme);
+      setFontsLoaded(true);
 
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      setIsColorSchemeLoaded(true);
     })().finally(() => {
       SplashScreen.hideAsync();
     });
   }, []);
 
-  if (!isColorSchemeLoaded) {
+  if (!fontsLoaded) {
     return null;
   }
 
@@ -84,7 +70,7 @@ export default function RootLayout() {
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full">
           <Stack />
-          <Toast config={toastConfig} position="top" />
+          <Toast config={toastConfig} position="bottom" />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>

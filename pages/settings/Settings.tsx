@@ -1,48 +1,34 @@
 import { Link, Stack } from "expo-router";
 import { Pressable, View } from "react-native";
-import { ZapIcon, WalletIcon, Currency } from "~/components/Icons";
+import { ZapIcon, WalletIcon, Currency, Bitcoin, Wallet2 } from "~/components/Icons";
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { Text } from "~/components/ui/text";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
+
   return (
-    <View className="flex-1 flex flex-col p-3 gap-3">
+    <View className="flex-1 flex flex-col p-6 gap-6">
       <Stack.Screen
         options={{
           title: "Settings",
         }}
       />
       <Link href="/settings/wallets" asChild>
-        <Pressable>
-          <Card className="w-full">
-            <CardHeader className="w-full">
-              <CardTitle className="flex flex-col">Wallet</CardTitle>
-              <CardDescription>
-                Current Wallet: {wallet.name || DEFAULT_WALLET_NAME}
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        <Pressable className="flex flex-row items-center gap-4">
+          <Wallet2 className="text-foreground" />
+          <Text className="font-medium2 text-xl text-foreground">Wallets</Text>
+          <Text className="text-muted-foreground text-xl">({wallet.name || DEFAULT_WALLET_NAME})</Text>
         </Pressable>
       </Link>
 
       <Link href="/settings/fiat-currency" asChild>
-        <Pressable>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Fiat Currency</CardTitle>
-              <CardDescription>
-                Configure fiat currency conversion
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        <Pressable className="flex flex-row gap-4">
+          <Bitcoin className="text-foreground" />
+          <Text className="text-foreground font-medium2 text-xl">Units & Currency</Text>
         </Pressable>
       </Link>
     </View>

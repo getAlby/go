@@ -6,62 +6,54 @@ import { Text } from "~/components/ui/text";
 import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-toast-message";
 import { Copy } from "~/components/Icons";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function PaymentSuccess() {
-  const { preimage, originalText } = useLocalSearchParams() as {
+  const getFiatAmount = useGetFiatAmount();
+  const { preimage, originalText, invoice, amount } = useLocalSearchParams() as {
     preimage: string;
     originalText: string;
+    invoice: string;
+    amount: string;
   };
   return (
     <View className="flex-1 flex flex-col">
       <Stack.Screen
         options={{
-          title: "Payment Successful",
+          title: "Success",
         }}
       />
-      <View className="flex-1 justify-center items-center">
-        {/* <Text className="text-muted-foreground text-sm max-w-sm text-center">
-          Successful payment to {originalText}
-        </Text> */}
+      <View className="flex-1 justify-center items-center gap-8">
         <Paid />
-        {/* <Pressable
-          onPress={() => {
-            Clipboard.setStringAsync(preimage);
-            Toast.show({
-              type: "success",
-              text1: "Preimage copied",
-              text2: "You can use this to prove your payment",
-            });
-          }}
-        >
-          <View className="flex flex-row items-center justify-center gap-3">
-            <Copy className="text-muted-foreground" width={16} height={16} />
-            <Text className="text-muted-foreground text-sm max-w-sm">
-              Preimage: {preimage}
+        <View className="flex flex-col items-center gap-2 -mt-24">
+          <View className="flex flex-row items-end justify-center">
+            <Text className="text-3xl text-foreground font-semibold2">{new Intl.NumberFormat().format(+amount)}{" "}</Text>
+            <Text className="text-2xl text-muted-foreground font-semibold2">sats</Text>
+          </View>
+          {getFiatAmount &&
+            <Text className="text-2xl text-muted-foreground font-semibold2">{getFiatAmount(+amount)}</Text>
+          }
+        </View>
+        {originalText !== invoice &&
+          <View>
+            <Text className="text-muted-foreground text-center text-xl font-bold2">
+              Sent to
+            </Text>
+            <Text className="text-foreground text-center text-xl font-bold2">
+              {originalText}
             </Text>
           </View>
-        </Pressable> */}
+        }
       </View>
-      <View className="flex flex-col flex-shrink-0 gap-3 justify-center items-center px-3 pb-3">
+      <View className="p-6">
         <Button
           size="lg"
           className="w-full"
           onPress={() => {
             router.replace("/");
-            router.push("/send");
           }}
         >
-          <Text className="text-background">Do Another Payment</Text>
-        </Button>
-        <Button
-          size="lg"
-          variant="ghost"
-          className="w-full"
-          onPress={() => {
-            router.replace("/");
-          }}
-        >
-          <Text className="text-foreground">Home</Text>
+          <Text>Close</Text>
         </Button>
       </View>
     </View>
