@@ -64,8 +64,6 @@ export function Transactions() {
     })();
   }, []);
 
-  //useFocusEffect(onRefresh);
-
   return (
     <View className="flex-1 flex flex-col gap-3">
       <Stack.Screen
