@@ -1,7 +1,4 @@
-import {
-  Text,
-  View,
-} from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
@@ -64,10 +61,14 @@ export function WalletConnection() {
         nostrWalletConnectUrl,
       });
       const info = await nwcClient.getInfo();
+      const capabilities = [...info.methods] as Nip47Capability[];
+      if (info.notifications.length) {
+        capabilities.push("notifications");
+      }
       console.log("NWC connected", info);
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
       useAppStore.getState().updateCurrentWallet({
-        nwcCapabilities: info.methods as Nip47Capability[],
+        nwcCapabilities: capabilities,
       });
       useAppStore.getState().setNWCClient(nwcClient);
       Toast.show({
@@ -144,7 +145,11 @@ export function WalletConnection() {
               )}
               <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
                 <Button onPress={paste} className="flex flex-row gap-2">
-                  <ClipboardPaste className="text-black" width={16} height={16} />
+                  <ClipboardPaste
+                    className="text-black"
+                    width={16}
+                    height={16}
+                  />
                   <Text>Paste from Clipboard</Text>
                 </Button>
               </View>
