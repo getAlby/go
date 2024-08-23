@@ -3,7 +3,11 @@
     "name": "Alby Mobile",
     "slug": "alby-mobile",
     "version": "1.3.0",
-    "scheme": ["bitcoin", "lightning", "alby"],
+    "scheme": [
+      "bitcoin",
+      "lightning",
+      "alby"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -12,7 +16,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
       [
         "expo-camera",
@@ -48,7 +54,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.CAMERA"]
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "extra": {
       "eas": {
