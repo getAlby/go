@@ -27,16 +27,19 @@ export function LightningAddress() {
               title: "Lightning Address",
             }}
           />
-          <Input
-            autoComplete="email"
-            inputMode="email"
-            autoFocus
-            className="w-full text-center mt-6"
-            placeholder="hello@getalby.com"
-            value={lightningAddress}
-            onChangeText={setLightningAddress}
+          <View className="flex-1 flex flex-col items-center justify-center">
+            <Text className="text-muted-foreground text-center">Lightning Address</Text>
+            <Input
+              autoComplete="email"
+              inputMode="email"
+              autoFocus
+              className="w-full text-center border-transparent native:text-2xl"
+              placeholder="hello@getalby.com"
+              value={lightningAddress}
+              onChangeText={setLightningAddress}
             // aria-errormessage="inputError"
-          />
+            />
+          </View>
         </View>
         <View className="p-6">
           <Button

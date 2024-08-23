@@ -26,10 +26,11 @@ export function RenameWallet() {
             title: "Wallet Name",
           }}
         />
-        <View className="flex-1">
+        <View className="flex-1 flex flex-col items-center justify-center">
+          <Text className="text-muted-foreground text-center">Wallet Name</Text>
           <Input
             autoFocus
-            className="w-full text-center mt-6"
+            className="w-full text-center border-transparent native:text-2xl"
             placeholder={DEFAULT_WALLET_NAME}
             value={walletName}
             onChangeText={setWalletName}
@@ -49,7 +50,7 @@ export function RenameWallet() {
             router.back();
           }}
         >
-          <Text>Update Wallet Name</Text>
+          <Text>Save</Text>
         </Button>
       </View>
     </TouchableWithoutFeedback>
