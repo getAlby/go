@@ -165,7 +165,7 @@ export function Transactions() {
             </Pressable>
           )}
         />
-      ) : (
+      ) : !allTransactions ? (
         <ScrollView className="mt-3">
           {[...Array(20)].map((e, i) => (
             <View
@@ -183,7 +183,11 @@ export function Transactions() {
             </View>
           ))}
         </ScrollView>
-      )}
+      ) :
+        <View className="p-6">
+          <Text>No transactions yet.</Text>
+        </View>
+      }
     </View>
   );
 }
