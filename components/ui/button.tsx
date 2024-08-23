@@ -75,7 +75,7 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
             colors={['#FFE951', '#FFC453']}
             start={[0, 0]}
             end={[1, 1]}
-            style={{ borderRadius: 10, elevation: 2 }}
+            style={{ borderRadius: 16, elevation: 2 }}
           >
             <Pressable
               className={cn(

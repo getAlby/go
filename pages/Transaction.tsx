@@ -25,7 +25,7 @@ export function Transaction() {
       <View className="flex flex-col gap-5 justify-center items-center">
         <View
           className="my-8 bg-muted border-2 rounded-full p-8"
-          style={{ elevation: 5 }}>
+          style={{ elevation: 2 }}>
           {transaction.type === "incoming" && (
             <MoveDownLeft
               className="text-receive"
