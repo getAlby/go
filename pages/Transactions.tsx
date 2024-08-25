@@ -1,11 +1,8 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
 import {
-  Link,
   router,
-  Stack,
-  useFocusEffect,
-  useLocalSearchParams,
+  Stack
 } from "expo-router";
 import React from "react";
 import {
@@ -18,7 +15,6 @@ import {
 import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
-import { useBalance } from "~/hooks/useBalance";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useTransactions } from "~/hooks/useTransactions";
 import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
@@ -29,6 +25,7 @@ export function Transactions() {
   const { data: transactions, mutate: reloadTransactions } =
     useTransactions(page);
   const [loadingNextPage, setLoadingNextPage] = React.useState(false);
+  const [transactionsLoaded, setTransactionsLoaded] = React.useState(false);
   const [allTransactions, setAllTransactions] = React.useState<
     Nip47Transaction[]
   >([]);
@@ -48,6 +45,7 @@ export function Transactions() {
     ) {
       setAllTransactions([...allTransactions, ...transactions.transactions]);
       setLoadingNextPage(false);
+      setTransactionsLoaded(true);
     }
   }, [allTransactions, transactions, refreshingTransactions]);
 
@@ -99,7 +97,7 @@ export function Transactions() {
             ) : undefined
           }
           data={allTransactions}
-          onEndReachedThreshold={0.9}
+          onEndReachedThreshold={0.8}
           onEndReached={() => {
             if (
               !refreshingTransactions &&
@@ -165,7 +163,7 @@ export function Transactions() {
             </Pressable>
           )}
         />
-      ) : !allTransactions ? (
+      ) : !transactionsLoaded ? (
         <ScrollView className="mt-3">
           {[...Array(20)].map((e, i) => (
             <View
