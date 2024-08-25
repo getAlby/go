@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { NWCClient, Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import { nwc } from "@getalby/sdk";
 import { secureStorage } from "lib/secureStorage";
-import { NewAddressBookEntry } from "~/pages/settings/address-book/NewAddressBookEntry";
 
 interface AppState {
   readonly nwcClient: NWCClient | undefined;
@@ -14,6 +13,7 @@ interface AppState {
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
   removeNostrWalletConnectUrl(): void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
+  removeCurrentWallet(): void;
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   addWallet(wallet: Wallet): void;
@@ -50,7 +50,7 @@ function loadWallets(): Wallet[] {
   /////////////////////////////
   const oldNostrWalletConnectUrlKey = "nostrWalletConnectUrl";
   const oldNostrWalletConnectUrl = secureStorage.getItem(
-    oldNostrWalletConnectUrlKey
+    oldNostrWalletConnectUrlKey,
   );
   const oldLightningAddressKey = "lightningAddress";
   const oldLightningAddress = secureStorage.getItem(oldLightningAddressKey);
@@ -88,7 +88,7 @@ function loadAddressBookEntries(): AddressBookEntry[] {
   const addressBookEntries: AddressBookEntry[] = [];
   for (let i = 0; ; i++) {
     const addressBookEntryJSON = secureStorage.getItem(
-      getAddressBookEntryKey(i)
+      getAddressBookEntryKey(i),
     );
     if (!addressBookEntryJSON) {
       break;
@@ -109,11 +109,36 @@ export const useAppStore = create<AppState>()((set, get) => {
     };
     secureStorage.setItem(
       getWalletKey(selectedWalletId),
-      JSON.stringify(wallet)
+      JSON.stringify(wallet),
     );
     wallets[selectedWalletId] = wallet;
     set({
       wallets,
+    });
+  };
+
+  const removeCurrentWallet = () => {
+    const wallets = [...get().wallets];
+    if (wallets.length <= 1) {
+      // cannot delete last wallet
+      return;
+    }
+    const selectedWalletId = get().selectedWalletId;
+
+    // move existing wallets down one
+    for (let i = selectedWalletId; i < wallets.length - 1; i++) {
+      const nextWallet = secureStorage.getItem(getWalletKey(i + 1));
+      if (!nextWallet) {
+        throw new Error("Next wallet not found");
+      }
+      secureStorage.setItem(getWalletKey(i), nextWallet);
+    }
+
+    secureStorage.removeItem(getWalletKey(wallets.length - 1));
+
+    get().setSelectedWalletId(0);
+    set({
+      wallets: wallets.filter((_, i) => i !== selectedWalletId),
     });
   };
 
@@ -128,6 +153,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
+    removeCurrentWallet,
     setNWCClient: (nwcClient) => set({ nwcClient }),
     removeNostrWalletConnectUrl: () => {
       updateCurrentWallet({
@@ -167,7 +193,7 @@ export const useAppStore = create<AppState>()((set, get) => {
       const newAddressBookEntryId = currentAddressBookEntries.length;
       secureStorage.setItem(
         getAddressBookEntryKey(newAddressBookEntryId),
-        JSON.stringify(addressBookEntry)
+        JSON.stringify(addressBookEntry),
       );
       set({
         addressBookEntries: [...currentAddressBookEntries, addressBookEntry],

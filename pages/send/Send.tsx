@@ -1,6 +1,6 @@
-import { BarCodeScanningResult, Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
+import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import React, { useEffect } from "react";
-import { Keyboard, Pressable, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
@@ -10,13 +10,12 @@ import {
   ClipboardPaste,
   Keyboard as KeyboardIcon,
 } from "~/components/Icons";
-import { Link, Stack, router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
 import { FocusableCamera } from "~/components/FocusableCamera";
-import { cn } from "~/lib/utils";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -74,6 +73,11 @@ export function Send() {
   }
 
   async function loadPayment(text: string) {
+    if (!text) {
+      errorToast(new Error("clipboard is empty"));
+      return;
+    }
+    console.log("loading payment", text);
     const originalText = text;
     setLoading(true);
     try {
@@ -112,7 +116,7 @@ export function Send() {
         });
       }
     } catch (error) {
-      console.error(error);
+      console.error("failed to load payment", originalText, error);
       errorToast(error as Error);
       setLoading(false);
     }
@@ -136,15 +140,29 @@ export function Send() {
             <>
               <FocusableCamera onScanned={handleScanned} />
               <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-                <Button onPress={openKeyboard} variant="secondary" className="flex flex-col gap-2 flex-1">
+                <Button
+                  onPress={openKeyboard}
+                  variant="secondary"
+                  className="flex flex-col gap-2 flex-1"
+                >
                   <KeyboardIcon className="text-secondary-foreground" />
                   <Text>Manual</Text>
                 </Button>
-                <Button variant="secondary" className="flex flex-col gap-2" onPress={() => { router.push('/send/address-book') }}>
+                <Button
+                  variant="secondary"
+                  className="flex flex-col gap-2"
+                  onPress={() => {
+                    router.push("/send/address-book");
+                  }}
+                >
                   <BookUser className="text-secondary-foreground" />
                   <Text>Contacts</Text>
                 </Button>
-                <Button onPress={paste} variant="secondary" className="flex flex-col gap-2 flex-1">
+                <Button
+                  onPress={paste}
+                  variant="secondary"
+                  className="flex flex-col gap-2 flex-1"
+                >
                   <ClipboardPaste className="text-secondary-foreground" />
                   <Text>Paste</Text>
                 </Button>
@@ -160,7 +178,8 @@ export function Send() {
               <View className="flex-1 h-full flex flex-col gap-5 p-6">
                 <View className="flex-1 flex items-center justify-center">
                   <Text className="text-muted-foreground text-center">
-                    Type or paste a Lightning Address, lightning invoice or LNURL.
+                    Type or paste a Lightning Address, lightning invoice or
+                    LNURL.
                   </Text>
                   <Input
                     className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
@@ -169,7 +188,7 @@ export function Send() {
                     onChangeText={setKeyboardText}
                     inputMode="email"
                     autoFocus
-                  // aria-errormessage="inputError"
+                    // aria-errormessage="inputError"
                   />
                 </View>
                 <Button onPress={submitKeyboardText} size="lg">
