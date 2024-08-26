@@ -12,5 +12,9 @@ const fetcher = (...args: FetchArgs) => {
 
 export function useBalance() {
   const nwcClient = useAppStore((store) => store.nwcClient);
-  return useSWR(nwcClient && "getBalance", fetcher);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  return useSWR(
+    nwcClient && `getBalance?selectedWalletId=${selectedWalletId}`,
+    fetcher,
+  );
 }

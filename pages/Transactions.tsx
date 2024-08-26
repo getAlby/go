@@ -1,12 +1,6 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
-import {
-  Link,
-  router,
-  Stack,
-  useFocusEffect,
-  useLocalSearchParams,
-} from "expo-router";
+import { Link, router, Stack } from "expo-router";
 import React from "react";
 import {
   FlatList,
@@ -16,9 +10,9 @@ import {
   View,
 } from "react-native";
 import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
+import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
-import { useBalance } from "~/hooks/useBalance";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useTransactions } from "~/hooks/useTransactions";
 import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
@@ -29,6 +23,7 @@ export function Transactions() {
   const { data: transactions, mutate: reloadTransactions } =
     useTransactions(page);
   const [loadingNextPage, setLoadingNextPage] = React.useState(false);
+  const [transactionsLoaded, setTransactionsLoaded] = React.useState(false);
   const [allTransactions, setAllTransactions] = React.useState<
     Nip47Transaction[]
   >([]);
@@ -48,6 +43,10 @@ export function Transactions() {
     ) {
       setAllTransactions([...allTransactions, ...transactions.transactions]);
       setLoadingNextPage(false);
+    }
+
+    if (transactions) {
+      setTransactionsLoaded(true);
     }
   }, [allTransactions, transactions, refreshingTransactions]);
 
@@ -99,7 +98,7 @@ export function Transactions() {
             ) : undefined
           }
           data={allTransactions}
-          onEndReachedThreshold={0.9}
+          onEndReachedThreshold={0.8}
           onEndReached={() => {
             if (
               !refreshingTransactions &&
@@ -165,7 +164,7 @@ export function Transactions() {
             </Pressable>
           )}
         />
-      ) : !allTransactions ? (
+      ) : !transactionsLoaded ? (
         <ScrollView className="mt-3">
           {[...Array(20)].map((e, i) => (
             <View
@@ -183,11 +182,21 @@ export function Transactions() {
             </View>
           ))}
         </ScrollView>
-      ) :
-        <View className="p-6">
-          <Text>No transactions yet.</Text>
+      ) : (
+        <View className="p-6 flex-1 items-center justify-center gap-5">
+          <View className="flex flex-col items-center">
+            <Text className="text-2xl font-semibold2">No transactions yet</Text>
+            <Text className="text-muted-foreground text-xl text-center">
+              Top up your wallet to get started
+            </Text>
+          </View>
+          <Link href="/receive" asChild>
+            <Button size="lg">
+              <Text>Receive</Text>
+            </Button>
+          </Link>
         </View>
-      }
+      )}
     </View>
   );
 }
