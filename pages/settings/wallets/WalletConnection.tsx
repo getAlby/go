@@ -66,6 +66,7 @@ export function WalletConnection() {
   async function connect(
     nostrWalletConnectUrl: string,
     lightningAddress?: string,
+    isCustodial?: boolean,
   ) {
     try {
       setConnecting(true);
@@ -83,6 +84,7 @@ export function WalletConnection() {
       useAppStore.getState().updateCurrentWallet({
         nwcCapabilities: capabilities,
         ...(lightningAddress ? { lightningAddress } : {}),
+        isCustodial,
       });
       useAppStore.getState().setNWCClient(nwcClient);
       Toast.show({
@@ -158,12 +160,7 @@ export function WalletConnection() {
           </Button>
         </View>
       )}
-      {!hasConnection && showDemoWallets && (
-        <DemoWallets
-          connect={connect}
-          cancel={() => setShowDemoWallets(false)}
-        />
-      )}
+      {!hasConnection && showDemoWallets && <DemoWallets connect={connect} />}
       {!hasConnection && !showDemoWallets && (
         <>
           {isConnecting && (
