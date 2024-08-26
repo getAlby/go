@@ -1,9 +1,9 @@
 import "../lib/applyGlobalPolyfills";
 
 import "~/global.css";
-
+import { Text } from '~/components/ui/text';
 import { Theme, ThemeProvider } from "@react-navigation/native";
-import { SplashScreen, Stack } from "expo-router";
+import { router, SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
@@ -16,6 +16,8 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
 import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "~/components/ui/button";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -41,9 +43,22 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
+  const [showOnboarding, setShowOnboarding] = React.useState(false);
   useConnectionChecker();
 
   React.useEffect(() => {
+
+    const checkOnboardingStatus = async () => {
+      const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
+      if (!hasOnboarded) {
+        router.push({
+          pathname: "/onboarding",
+        });
+      }
+    };
+
+    checkOnboardingStatus();
+
     (async () => {
       await Font.loadAsync({
         "OpenRunde": require("./../assets/fonts/OpenRunde-Regular.otf"),
