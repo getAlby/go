@@ -74,7 +74,7 @@ export function Send() {
 
   async function loadPayment(text: string) {
     if (!text) {
-      errorToast(new Error("clipboard is empty"));
+      errorToast(new Error("Your clipboard is empty."));
       return;
     }
     console.log("loading payment", text);
