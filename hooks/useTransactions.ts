@@ -1,9 +1,5 @@
-import {
-  Nip47GetBalanceResponse,
-  Nip47ListTransactionsResponse,
-} from "@getalby/sdk/dist/NWCClient";
 import { useAppStore } from "lib/state/appStore";
-import useSWR, { BareFetcher } from "swr";
+import useSWR from "swr";
 import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
 
 type FetchArgs = Parameters<typeof fetch>;
@@ -25,5 +21,10 @@ const fetcher = (...args: FetchArgs) => {
 
 export function useTransactions(page = 1) {
   const nwcClient = useAppStore((store) => store.nwcClient);
-  return useSWR(nwcClient && `listTransactions?page=${page}`, fetcher);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  return useSWR(
+    nwcClient &&
+      `listTransactions?page=${page}&selectedWalletId=${selectedWalletId}`,
+    fetcher,
+  );
 }

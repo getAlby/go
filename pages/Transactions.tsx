@@ -1,10 +1,6 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
-import {
-  Link,
-  router,
-  Stack
-} from "expo-router";
+import { Link, router, Stack } from "expo-router";
 import React from "react";
 import {
   FlatList,
@@ -49,7 +45,9 @@ export function Transactions() {
       setLoadingNextPage(false);
     }
 
-    setTransactionsLoaded(true);
+    if (transactions) {
+      setTransactionsLoaded(true);
+    }
   }, [allTransactions, transactions, refreshingTransactions]);
 
   const onRefresh = React.useCallback(() => {
@@ -184,11 +182,13 @@ export function Transactions() {
             </View>
           ))}
         </ScrollView>
-      ) :
+      ) : (
         <View className="p-6 flex-1 items-center justify-center gap-5">
           <View className="flex flex-col items-center">
             <Text className="text-2xl font-semibold2">No transactions yet</Text>
-            <Text className="text-muted-foreground text-xl text-center">Top up your wallet to get started</Text>
+            <Text className="text-muted-foreground text-xl text-center">
+              Top up your wallet to get started
+            </Text>
           </View>
           <Link href="/receive" asChild>
             <Button size="lg">
@@ -196,7 +196,7 @@ export function Transactions() {
             </Button>
           </Link>
         </View>
-      }
+      )}
     </View>
   );
 }
