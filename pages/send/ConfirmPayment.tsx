@@ -1,7 +1,7 @@
 import { Invoice } from "@getalby/lightning-tools";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { ActivityIndicator, Pressable, View } from "react-native";
+import { View } from "react-native";
 import { ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Button } from "~/components/ui/button";
@@ -35,7 +35,12 @@ export function ConfirmPayment() {
       router.dismissAll();
       router.replace({
         pathname: "/send/success",
-        params: { preimage: response.preimage, originalText, invoice, amount: decodedInvoice.satoshi },
+        params: {
+          preimage: response.preimage,
+          originalText,
+          invoice,
+          amount: decodedInvoice.satoshi,
+        },
       });
     } catch (error) {
       console.error(error);
@@ -57,36 +62,65 @@ export function ConfirmPayment() {
       <View className="flex-1 justify-center items-center gap-8">
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
-            <Text className="text-5xl font-bold2 text-foreground">{decodedInvoice.satoshi}</Text>
-            <Text className="text-3xl font-bold2 text-muted-foreground">sats</Text>
+            <Text className="text-5xl font-bold2 text-foreground">
+              {decodedInvoice.satoshi}
+            </Text>
+            <Text className="text-3xl font-bold2 text-muted-foreground">
+              sats
+            </Text>
           </View>
           {getFiatAmount && (
-            <Text className="text-center text-muted-foreground text-3xl font-semibold2">{getFiatAmount(decodedInvoice.satoshi)}</Text>
+            <Text className="text-center text-muted-foreground text-3xl font-semibold2">
+              {getFiatAmount(decodedInvoice.satoshi)}
+            </Text>
           )}
         </View>
         {decodedInvoice.description ? (
           <View className="flex flex-col gap-2 justify-center items-center">
-            <Text className="text-muted-foreground text-center font-semibold2">Description</Text>
-            <Text className="text-center text-foreground text-2xl font-medium2">{decodedInvoice.description}</Text>
-          </View>
-        ) : comment && <View className="flex flex-col gap-2">
-          <Text className="text-muted-foreground text-center font-semibold2">Comment</Text>
-          <Text className="text-center text-foreground text-2xl font-medium2">
-            {comment}
-          </Text>
-        </View>}
-        {originalText !== invoice &&
-          <View className="flex flex-col gap-2">
-            <Text className="text-muted-foreground text-center font-semibold2">To</Text>
+            <Text className="text-muted-foreground text-center font-semibold2">
+              Description
+            </Text>
             <Text className="text-center text-foreground text-2xl font-medium2">
-              {originalText}
+              {decodedInvoice.description}
             </Text>
           </View>
+        ) : (
+          comment && (
+            <View className="flex flex-col gap-2">
+              <Text className="text-muted-foreground text-center font-semibold2">
+                Comment
+              </Text>
+              <Text className="text-center text-foreground text-2xl font-medium2">
+                {comment}
+              </Text>
+            </View>
+          )
+        )}
+        {
+          /* only show "To" for lightning addresses */ originalText !==
+            invoice &&
+            originalText
+              .toLowerCase()
+              .replace("lightning:", "")
+              .includes("@") && (
+              <View className="flex flex-col gap-2">
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  To
+                </Text>
+                <Text className="text-center text-foreground text-2xl font-medium2">
+                  {originalText.toLowerCase().replace("lightning:", "")}
+                </Text>
+              </View>
+            )
         }
       </View>
       <View className="p-6">
         <Button size="lg" onPress={pay} className="flex flex-row gap-2">
-          {isLoading ? <Loading className="text-primary-foreground" /> : <ZapIcon className="text-primary-foreground" />}
+          {isLoading ? (
+            <Loading className="text-primary-foreground" />
+          ) : (
+            <ZapIcon className="text-primary-foreground" />
+          )}
           <Text>Pay</Text>
         </Button>
       </View>

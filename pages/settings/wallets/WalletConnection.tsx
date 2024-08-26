@@ -1,8 +1,13 @@
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
-import { Camera as CameraIcon, ClipboardPaste } from "~/components/Icons";
+import {
+  Camera as CameraIcon,
+  ClipboardPaste,
+  Hotel,
+  X,
+} from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { Stack } from "expo-router";
@@ -14,11 +19,16 @@ import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
 import { FocusableCamera } from "~/components/FocusableCamera";
+import { DemoWallets } from "./DemoWallets";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
+  const walletIdWithConnection = useAppStore((store) =>
+    store.wallets.findIndex((wallet) => wallet.nostrWalletConnectUrl),
+  );
   const [isScanning, setScanning] = React.useState(false);
   const [isConnecting, setConnecting] = React.useState(false);
+  const [showDemoWallets, setShowDemoWallets] = React.useState(false);
   const { data: walletInfo } = useInfo();
   const { data: balance } = useBalance();
 
@@ -53,7 +63,10 @@ export function WalletConnection() {
     connect(nostrWalletConnectUrl);
   }
 
-  async function connect(nostrWalletConnectUrl: string) {
+  async function connect(
+    nostrWalletConnectUrl: string,
+    lightningAddress?: string,
+  ) {
     try {
       setConnecting(true);
       // make sure connection is valid
@@ -69,6 +82,7 @@ export function WalletConnection() {
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
       useAppStore.getState().updateCurrentWallet({
         nwcCapabilities: capabilities,
+        ...(lightningAddress ? { lightningAddress } : {}),
       });
       useAppStore.getState().setNWCClient(nwcClient);
       Toast.show({
@@ -87,7 +101,32 @@ export function WalletConnection() {
     <>
       <Stack.Screen
         options={{
-          title: "Setup Wallet Connection",
+          title: showDemoWallets
+            ? "Choose a Demo Wallet"
+            : "Setup Wallet Connection",
+          headerRight: showDemoWallets
+            ? () => (
+                <Pressable
+                  onPress={() => {
+                    setShowDemoWallets(false);
+                  }}
+                >
+                  <X className="text-foreground" />
+                </Pressable>
+              )
+            : walletIdWithConnection !== -1
+              ? () => (
+                  <Pressable
+                    onPress={() => {
+                      useAppStore
+                        .getState()
+                        .setSelectedWalletId(walletIdWithConnection);
+                    }}
+                  >
+                    <X className="text-foreground" />
+                  </Pressable>
+                )
+              : undefined,
         }}
       />
       {hasConnection && (
@@ -119,7 +158,13 @@ export function WalletConnection() {
           </Button>
         </View>
       )}
-      {!hasConnection && (
+      {!hasConnection && showDemoWallets && (
+        <DemoWallets
+          connect={connect}
+          cancel={() => setShowDemoWallets(false)}
+        />
+      )}
+      {!hasConnection && !showDemoWallets && (
         <>
           {isConnecting && (
             <>
@@ -151,6 +196,13 @@ export function WalletConnection() {
                     height={16}
                   />
                   <Text>Paste from Clipboard</Text>
+                </Button>
+                <Button
+                  onPress={() => setShowDemoWallets(true)}
+                  className="flex flex-row gap-2"
+                >
+                  <Hotel className="text-black" width={16} height={16} />
+                  <Text>Try a Demo Wallet</Text>
                 </Button>
               </View>
             </>

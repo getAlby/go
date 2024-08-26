@@ -2,7 +2,7 @@ import { Link, Stack } from "expo-router";
 import { Wallet2 } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { FlatList } from "react-native";
-import { PlusCircle, Settings2 } from "~/components/Icons";
+import { Settings2 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
 import { Text } from "~/components/ui/text";
@@ -19,7 +19,8 @@ export function Wallets() {
         <Stack.Screen
           options={{
             title: "Manage Wallets",
-          }} />
+          }}
+        />
         <View className="flex-1 px-6 py-3">
           <FlatList
             className="flex flex-col"
@@ -28,15 +29,17 @@ export function Wallets() {
               const active = item.index === selectedWalletId;
 
               return (
-                <Pressable onPress={() => {
-                  if (item.index !== selectedWalletId) {
-                    useAppStore.getState().setSelectedWalletId(item.index);
-                  }
-                }}
+                <Pressable
+                  onPress={() => {
+                    if (item.index !== selectedWalletId) {
+                      useAppStore.getState().setSelectedWalletId(item.index);
+                    }
+                  }}
                   className={cn(
                     "flex flex-row items-center justify-between p-4 rounded-2xl border-2",
-                    active ? "border-primary" : "border-transparent"
-                  )}>
+                    active ? "border-primary" : "border-transparent",
+                  )}
+                >
                   <View className="flex flex-row gap-4">
                     <Wallet2 className="w-4 h-4 text-foreground" />
                     <Text className={cn("text-xl", active && "font-semibold2")}>
@@ -44,13 +47,17 @@ export function Wallets() {
                     </Text>
                   </View>
                   {active && (
-                    <Link href={`/settings/wallets/${selectedWalletId}`} asChild>
-                      <Settings2 className="text-foreground" />
-                    </Link>)}
-                </Pressable>);
+                    <Link href={`/settings/wallets/${selectedWalletId}`}>
+                      <View className="p-4">
+                        <Settings2 className="text-foreground w-8 h-8" />
+                      </View>
+                    </Link>
+                  )}
+                </Pressable>
+              );
             }}
           />
-        </View >
+        </View>
         <View className="p-6">
           <Link href="/settings/wallets/new" asChild>
             <Button size="lg">
@@ -58,7 +65,7 @@ export function Wallets() {
             </Button>
           </Link>
         </View>
-      </View >
+      </View>
     </>
   );
 }

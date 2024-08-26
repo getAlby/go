@@ -28,7 +28,8 @@ import {
   Share2,
   RefreshCw,
   ChevronUp,
-  X
+  X,
+  Hotel,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -73,6 +74,7 @@ interopIcon(Wallet2);
 interopIcon(Share2);
 interopIcon(RefreshCw);
 interopIcon(X);
+interopIcon(Hotel);
 
 export {
   AlertCircle,
@@ -98,6 +100,7 @@ export {
   PlusCircle,
   Cog,
   ClipboardPaste,
+  Hotel,
   Keyboard,
   BookUser,
   Wallet2,

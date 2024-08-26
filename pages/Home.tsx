@@ -22,14 +22,16 @@ dayjs.extend(relativeTime);
 enum BalanceState {
   SATS = 1,
   FIAT = 2,
-  HIDDEN = 3
+  HIDDEN = 3,
 }
 
 export function Home() {
   const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
-  const [balanceState, setBalanceState] = useState<BalanceState>(BalanceState.SATS);
+  const [balanceState, setBalanceState] = useState<BalanceState>(
+    BalanceState.SATS,
+  );
   const [pressed, setPressed] = React.useState(false);
 
   useFocusEffect(() => {
@@ -43,11 +45,9 @@ export function Home() {
   function switchBalanceState(): void {
     if (balanceState == BalanceState.SATS) {
       setBalanceState(BalanceState.FIAT);
-    }
-    else if (balanceState == BalanceState.FIAT) {
+    } else if (balanceState == BalanceState.FIAT) {
       setBalanceState(BalanceState.HIDDEN);
-    }
-    else {
+    } else {
       setBalanceState(BalanceState.SATS);
     }
   }
@@ -80,19 +80,24 @@ export function Home() {
             style={{
               ...(pressed
                 ? {
-                  transform: "scale(0.98)",
-                } : [])
+                    transform: "scale(0.98)",
+                  }
+                : []),
             }}
-            onPress={switchBalanceState} className="w-full flex flex-col items-center justify-center gap-4" >
+            onPress={switchBalanceState}
+            className="w-full flex flex-col items-center justify-center gap-4"
+          >
             <View className="w-full flex flex-row justify-center items-center gap-2">
               {balance ? (
                 <>
                   <Text className="text-foreground text-5xl font-bold2">
-                    {balanceState == BalanceState.SATS && new Intl.NumberFormat().format(
-                      Math.floor(balance.balance / 1000),
-                    )}
+                    {balanceState == BalanceState.SATS &&
+                      new Intl.NumberFormat().format(
+                        Math.floor(balance.balance / 1000),
+                      )}
                     {balanceState == BalanceState.FIAT &&
-                      getFiatAmount && getFiatAmount(Math.floor(balance.balance / 1000))}
+                      getFiatAmount &&
+                      getFiatAmount(Math.floor(balance.balance / 1000))}
                     {balanceState == BalanceState.HIDDEN && "****"}
                   </Text>
                   <Text className="text-muted-foreground text-3xl font-bold2">
@@ -107,15 +112,19 @@ export function Home() {
               {balance ? (
                 <Text className="text-center text-3xl text-muted-foreground font-semibold2">
                   {balanceState == BalanceState.SATS &&
-                    getFiatAmount && getFiatAmount(Math.floor(balance.balance / 1000))}
-                  {balanceState == BalanceState.FIAT && new Intl.NumberFormat().format(
-                    Math.floor(balance.balance / 1000),
-                  ) + " sats"}
+                    getFiatAmount &&
+                    getFiatAmount(Math.floor(balance.balance / 1000))}
+                  {balanceState == BalanceState.FIAT &&
+                    new Intl.NumberFormat().format(
+                      Math.floor(balance.balance / 1000),
+                    ) + " sats"}
                 </Text>
-              ) : <Skeleton className="w-32 h-10" />}
+              ) : (
+                <Skeleton className="w-32 h-10" />
+              )}
             </View>
           </Pressable>
-        </View >
+        </View>
         <View className="flex items-center justify-center my-5">
           <Link href="/transactions" asChild>
             <Button variant="ghost" className="p-10 rounded-full aspect-square">
@@ -129,7 +138,7 @@ export function Home() {
             <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
           </View>
         </View>
-      </View >
+      </View>
     </>
   );
 }
@@ -167,8 +176,8 @@ function MainButton({
               alignItems: "center",
               ...(pressed
                 ? {
-                  transform: "scale(0.98)",
-                }
+                    transform: "scale(0.98)",
+                  }
                 : {}),
             }}
           >
