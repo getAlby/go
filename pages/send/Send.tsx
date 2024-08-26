@@ -16,6 +16,8 @@ import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
 import { FocusableCamera } from "~/components/FocusableCamera";
+import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
+import { Invoice } from "@getalby/lightning-tools";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -23,6 +25,7 @@ export function Send() {
   const [isLoading, setLoading] = React.useState(false);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
+  const [permissionStatus, setPermissionStatus] = React.useState(PermissionStatus.UNDETERMINED);
 
   useEffect(() => {
     if (url) {
@@ -40,6 +43,7 @@ export function Send() {
 
   async function scan() {
     const { status } = await Camera.requestCameraPermissionsAsync();
+    setPermissionStatus(status);
     setScanning(status === "granted");
   }
 
@@ -110,6 +114,12 @@ export function Send() {
           },
         });
       } else {
+
+        // Check if this is a valid invoice
+        new Invoice({
+          pr: text,
+        });
+
         router.replace({
           pathname: "/send/confirm",
           params: { invoice: text, originalText },
@@ -139,36 +149,15 @@ export function Send() {
           {isScanning && (
             <>
               <FocusableCamera onScanned={handleScanned} />
-              <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-                <Button
-                  onPress={openKeyboard}
-                  variant="secondary"
-                  className="flex flex-col gap-2 flex-1"
-                >
-                  <KeyboardIcon className="text-secondary-foreground" />
-                  <Text>Manual</Text>
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="flex flex-col gap-2"
-                  onPress={() => {
-                    router.push("/send/address-book");
-                  }}
-                >
-                  <BookUser className="text-secondary-foreground" />
-                  <Text>Contacts</Text>
-                </Button>
-                <Button
-                  onPress={paste}
-                  variant="secondary"
-                  className="flex flex-col gap-2 flex-1"
-                >
-                  <ClipboardPaste className="text-secondary-foreground" />
-                  <Text>Paste</Text>
-                </Button>
-              </View>
             </>
           )}
+          {!isScanning && !keyboardOpen && permissionStatus === PermissionStatus.DENIED &&
+            <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
+              <CameraIcon className="text-foreground" size={72} />
+              <Text className="text-2xl text-foreground text-center">Camera Permissions Denied</Text>
+              <Text className="text-muted-foreground text-xl text-center">It seems you denied permissions to use your camera. You might need to go to your operating system settings to allow access to your camera again.</Text>
+            </View>
+          }
           {keyboardOpen && (
             <TouchableWithoutFeedback
               onPress={() => {
@@ -188,7 +177,7 @@ export function Send() {
                     onChangeText={setKeyboardText}
                     inputMode="email"
                     autoFocus
-                    // aria-errormessage="inputError"
+                  // aria-errormessage="inputError"
                   />
                 </View>
                 <Button onPress={submitKeyboardText} size="lg">
@@ -197,17 +186,49 @@ export function Send() {
               </View>
             </TouchableWithoutFeedback>
           )}
-          {!isScanning && !keyboardOpen && (
+          {permissionStatus === PermissionStatus.UNDETERMINED && !keyboardOpen && (
             <>
               <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-                <CameraIcon className="text-black w-32 h-32" />
-                <Text className="text-2xl">Camera Permissions Needed</Text>
+                <View className="flex flex-col gap-2 items-center">
+                  <CameraIcon className="text-foreground" size={72} />
+                  <Text className="text-2xl text-foreground">Camera Permissions Needed</Text>
+                </View>
                 <Button onPress={scan}>
                   <Text className="text-background">Grant Permissions</Text>
                 </Button>
               </View>
             </>
           )}
+          {!keyboardOpen &&
+            <View className="flex flex-row items-stretch justify-center gap-4 p-6">
+              <Button
+                onPress={openKeyboard}
+                variant="secondary"
+                className="flex flex-col gap-2 flex-1"
+              >
+                <KeyboardIcon className="text-secondary-foreground" />
+                <Text>Manual</Text>
+              </Button>
+              <Button
+                variant="secondary"
+                className="flex flex-col gap-2"
+                onPress={() => {
+                  router.push("/send/address-book");
+                }}
+              >
+                <BookUser className="text-secondary-foreground" />
+                <Text>Contacts</Text>
+              </Button>
+              <Button
+                onPress={paste}
+                variant="secondary"
+                className="flex flex-col gap-2 flex-1"
+              >
+                <ClipboardPaste className="text-secondary-foreground" />
+                <Text>Paste</Text>
+              </Button>
+            </View>
+          }
         </>
       )}
     </>
