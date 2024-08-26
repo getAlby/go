@@ -1,17 +1,12 @@
 import { Link, Stack, router } from "expo-router";
-import {
-  Keyboard,
-  Pressable,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import * as Clipboard from "expo-clipboard";
 import React from "react";
 import { useAppStore } from "~/lib/state/appStore";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Copy, Share2, ZapIcon } from "~/components/Icons";
+import { Copy, ZapIcon } from "~/components/Icons";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -69,7 +64,12 @@ export function Receive() {
   }
 
   function copy() {
-    Clipboard.setStringAsync(invoice ?? lightningAddress ?? "");
+    const text = invoice || lightningAddress;
+    if (!text) {
+      errorToast(new Error("Nothing to copy"));
+      return;
+    }
+    Clipboard.setStringAsync(text);
     Toast.show({
       type: "success",
       text1: "Copied to clipboard",
@@ -99,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                prevTransaction?.payment_hash
+                  prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -257,7 +257,11 @@ export function Receive() {
         >
           <View className="flex-1 flex flex-col">
             <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
-              <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
+              <DualCurrencyInput
+                amount={amount}
+                setAmount={setAmount}
+                autoFocus
+              />
               <View>
                 <Text className="text-muted-foreground text-center mt-6">
                   Description (optional)
@@ -271,7 +275,11 @@ export function Receive() {
               </View>
             </View>
             <View className="m-6">
-              <Button onPress={() => generateInvoice(+amount)} size="lg" className="flex flex-row gap-2">
+              <Button
+                onPress={() => generateInvoice(+amount)}
+                size="lg"
+                className="flex flex-row gap-2"
+              >
                 {isLoading && <Loading className="text-primary-foreground" />}
                 <Text>Create Invoice</Text>
               </Button>

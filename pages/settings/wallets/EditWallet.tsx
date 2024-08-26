@@ -1,6 +1,5 @@
-import { Link, Stack } from "expo-router";
-import { Pressable, View } from "react-native";
-import { ZapIcon, WalletIcon, Currency } from "~/components/Icons";
+import { Link, router, Stack } from "expo-router";
+import { Alert, Pressable, View } from "react-native";
 
 import {
   Card,
@@ -23,14 +22,14 @@ export function EditWallet() {
         }}
       />
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-        "notifications"
+        "notifications",
       ) < 0 && (
         <Text>
           Warning: Your wallet does not support notifications capability.
         </Text>
       )}
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-        "list_transactions"
+        "list_transactions",
       ) < 0 && (
         <Text>
           Warning: Your wallet does not support list_transactions capability.
@@ -78,6 +77,36 @@ export function EditWallet() {
           </Card>
         </Pressable>
       </Link>
+      <Pressable
+        onPress={() => {
+          Alert.alert(
+            "Delete Wallet",
+            "Are you sure you want to delete your wallet? this cannot be undone.",
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "Confirm",
+                onPress: () => {
+                  router.back();
+                  useAppStore.getState().removeCurrentWallet();
+                },
+              },
+            ],
+          );
+        }}
+      >
+        <Card className="w-full">
+          <CardHeader className="w-full">
+            <CardTitle className="flex flex-col">Delete Wallet</CardTitle>
+            <CardDescription>
+              Remove this wallet from your list of wallets
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </Pressable>
     </View>
   );
 }
