@@ -3,7 +3,7 @@ import "../lib/applyGlobalPolyfills";
 import "~/global.css";
 import { Text } from '~/components/ui/text';
 import { Theme, ThemeProvider } from "@react-navigation/native";
-import { router, SplashScreen, Stack } from "expo-router";
+import { Link, router, SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
@@ -78,6 +78,11 @@ export default function RootLayout() {
     return null;
   }
 
+  async function reset() {
+    await AsyncStorage.removeItem("hasOnboarded");
+    router.navigate("/")
+  }
+
   return (
     <SWRConfig value={swrConfiguration}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
@@ -86,6 +91,9 @@ export default function RootLayout() {
         <SafeAreaView className="w-full h-full">
           <Stack />
           <Toast config={toastConfig} position="bottom" />
+          <Button size="lg" onPress={reset}>
+            <Text>Delete</Text>
+          </Button>
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>
