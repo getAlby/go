@@ -155,7 +155,7 @@ export function Send() {
             <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
               <CameraIcon className="text-foreground" size={72} />
               <Text className="text-2xl text-foreground text-center">Camera Permissions Denied</Text>
-              <Text className="text-muted-foreground text-xl text-center">It seems you denied permissions to use your camera. You might need to go to your operating system settings to allow access to your camera again.</Text>
+              <Text className="text-muted-foreground text-xl text-center">It seems you denied permissions to use your camera. You might need to go to your device settings to allow access to your camera again.</Text>
             </View>
           }
           {keyboardOpen && (
