@@ -36,19 +36,21 @@ export function Wallets() {
                     }
                   }}
                   className={cn(
-                    "flex flex-row items-center justify-between p-6 rounded-2xl border-2",
+                    "flex flex-row items-center justify-between p-4 rounded-2xl border-2",
                     active ? "border-primary" : "border-transparent",
                   )}
                 >
-                  <View className="flex flex-row gap-4 items-center">
-                    <Wallet2 className="text-foreground" />
+                  <View className="flex flex-row gap-4">
+                    <Wallet2 className="w-4 h-4 text-foreground" />
                     <Text className={cn("text-xl", active && "font-semibold2")}>
                       {item.item.name || DEFAULT_WALLET_NAME}
                     </Text>
                   </View>
                   {active && (
-                    <Link href={`/settings/wallets/${selectedWalletId}`} className="p-3 absolute right-2">
-                      <Settings2 className="text-foreground w-8 h-8" />
+                    <Link href={`/settings/wallets/${selectedWalletId}`}>
+                      <View className="p-4">
+                        <Settings2 className="text-foreground w-8 h-8" />
+                      </View>
                     </Link>
                   )}
                 </Pressable>
