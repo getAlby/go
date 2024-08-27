@@ -10,7 +10,7 @@ import {
 } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
 import { useBalance } from "~/hooks/useBalance";
@@ -87,6 +87,10 @@ export function WalletConnection() {
         isCustodial,
       });
       useAppStore.getState().setNWCClient(nwcClient);
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+      router.replace("/");
       Toast.show({
         type: "success",
         text1: "Wallet Connected",
@@ -123,6 +127,7 @@ export function WalletConnection() {
                       useAppStore
                         .getState()
                         .setSelectedWalletId(walletIdWithConnection);
+                      router.replace("/");
                     }}
                   >
                     <X className="text-foreground" />

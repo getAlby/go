@@ -18,6 +18,7 @@ interface AppState {
   setSelectedWalletId(walletId: number): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
+  reset(): void;
 }
 
 const walletKeyPrefix = "wallet";
@@ -47,30 +48,6 @@ const getAddressBookEntryKey = (addressBookEntryId: number) => {
 };
 
 function loadWallets(): Wallet[] {
-  // TODO: remove after a while - migrates from old single-wallet format
-  /////////////////////////////
-  const oldNostrWalletConnectUrlKey = "nostrWalletConnectUrl";
-  const oldNostrWalletConnectUrl = secureStorage.getItem(
-    oldNostrWalletConnectUrlKey,
-  );
-  const oldLightningAddressKey = "lightningAddress";
-  const oldLightningAddress = secureStorage.getItem(oldLightningAddressKey);
-
-  const oldNwcCapabilitiesKey = "nwcCapabilities";
-  const oldNwcCapabilities = secureStorage.getItem(oldNwcCapabilitiesKey);
-  if (oldNostrWalletConnectUrl) {
-    const wallet: Wallet = {
-      nostrWalletConnectUrl: oldNostrWalletConnectUrl,
-      lightningAddress: oldLightningAddress || undefined,
-      nwcCapabilities: JSON.parse(oldNwcCapabilities || "[]"),
-    };
-    secureStorage.setItem(getWalletKey(0), JSON.stringify(wallet));
-  }
-  secureStorage.removeItem(oldNostrWalletConnectUrlKey);
-  secureStorage.removeItem(oldLightningAddressKey);
-  secureStorage.removeItem(oldNwcCapabilitiesKey);
-  /////////////////////////////
-
   const wallets: Wallet[] = [];
   for (let i = 0; ; i++) {
     const walletJSON = secureStorage.getItem(getWalletKey(i));
@@ -198,6 +175,26 @@ export const useAppStore = create<AppState>()((set, get) => {
       );
       set({
         addressBookEntries: [...currentAddressBookEntries, addressBookEntry],
+      });
+    },
+    reset() {
+      // clear wallets
+      for (let i = 0; i < get().wallets.length; i++) {
+        secureStorage.removeItem(getWalletKey(i));
+      }
+      // clear address book
+      for (let i = 0; i < get().addressBookEntries.length; i++) {
+        secureStorage.removeItem(getAddressBookEntryKey(i));
+      }
+      // clear selected wallet ID
+      secureStorage.removeItem(selectedWalletIdKey);
+
+      set({
+        nwcClient: undefined,
+        fiatCurrency: undefined,
+        selectedWalletId: undefined,
+        wallets: [],
+        addressBookEntries: [],
       });
     },
   };
