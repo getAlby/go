@@ -1,4 +1,3 @@
-import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import React, { useEffect } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
@@ -12,39 +11,21 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
-import Loading from "~/components/Loading";
-import { FocusableCamera } from "~/components/FocusableCamera";
-import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
 import { Invoice } from "@getalby/lightning-tools";
-import { CameraOffIcon } from "lucide-react-native";
+import QRCodeScanner from "~/components/QRCodeScanner";
+import Loading from "~/components/Loading";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
-  const [isScanning, setScanning] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
-  const [permissionStatus, setPermissionStatus] = React.useState(PermissionStatus.UNDETERMINED);
 
   useEffect(() => {
     if (url) {
       loadPayment(url);
-    } else {
-      // Add some timeout to allow the screen transition to finish before
-      // starting the camera to avoid stutters
-      setLoading(true);
-      window.setTimeout(async () => {
-        await scan();
-        setLoading(false);
-      }, 200);
     }
   }, [url]);
-
-  async function scan() {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setPermissionStatus(status);
-    setScanning(status === "granted");
-  }
 
   async function paste() {
     let clipboardText;
@@ -58,17 +39,11 @@ export function Send() {
   }
 
   function openKeyboard() {
-    setScanning(false);
     setKeyboardOpen(true);
   }
 
   const handleScanned = (data: string) => {
-    setScanning((current) => {
-      if (current === true) {
-        loadPayment(data);
-      }
-      return false;
-    });
+    return loadPayment(data);
   };
 
   function submitKeyboardText() {
@@ -138,85 +113,68 @@ export function Send() {
           title: "Send",
         }}
       />
-      {isLoading && (
-        <View className="flex-1 justify-center items-center">
-          <Loading />
-        </View>
-      )}
-      {!isLoading && (
-        <>
-          {isScanning && (
-            <>
-              <FocusableCamera onScanned={handleScanned} />
-            </>
-          )}
-          {!isScanning && !keyboardOpen && permissionStatus === PermissionStatus.DENIED &&
-            <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
-              <CameraOffIcon className="text-foreground" size={64} />
-              <Text className="text-2xl text-foreground text-center">Camera Permission Denied</Text>
-              <Text className="text-muted-foreground text-xl text-center">It seems you denied permissions to use your camera. You might need to go to your device settings to allow access to your camera again.</Text>
-            </View>
-          }
-          {keyboardOpen && (
-            <TouchableWithoutFeedback
+      {isLoading && <><Loading /></>}
+      {!isLoading && <>
+        {!keyboardOpen && <>
+          <QRCodeScanner onScanned={handleScanned} />
+          <View className="flex flex-row items-stretch justify-center gap-4 p-6">
+            <Button
+              onPress={openKeyboard}
+              variant="secondary"
+              className="flex flex-col gap-2 flex-1"
+            >
+              <KeyboardIcon className="text-secondary-foreground" />
+              <Text>Manual</Text>
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex flex-col gap-2"
               onPress={() => {
-                Keyboard.dismiss();
+                router.push("/send/address-book");
               }}
             >
-              <View className="flex-1 h-full flex flex-col gap-5 p-6">
-                <View className="flex-1 flex items-center justify-center">
-                  <Text className="text-muted-foreground text-center">
-                    Type or paste a Lightning Address, lightning invoice or
-                    LNURL.
-                  </Text>
-                  <Input
-                    className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
-                    placeholder="hello@getalby.com"
-                    value={keyboardText}
-                    onChangeText={setKeyboardText}
-                    inputMode="email"
-                    autoFocus
-                  // aria-errormessage="inputError"
-                  />
-                </View>
-                <Button onPress={submitKeyboardText} size="lg">
-                  <Text>Next</Text>
-                </Button>
+              <BookUser className="text-secondary-foreground" />
+              <Text>Contacts</Text>
+            </Button>
+            <Button
+              onPress={paste}
+              variant="secondary"
+              className="flex flex-col gap-2 flex-1"
+            >
+              <ClipboardPaste className="text-secondary-foreground" />
+              <Text>Paste</Text>
+            </Button>
+          </View>
+        </>}
+        {keyboardOpen && (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+            }}
+          >
+            <View className="flex-1 h-full flex flex-col gap-5 p-6">
+              <View className="flex-1 flex items-center justify-center">
+                <Text className="text-muted-foreground text-center">
+                  Type or paste a Lightning Address, lightning invoice or
+                  LNURL.
+                </Text>
+                <Input
+                  className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
+                  placeholder="hello@getalby.com"
+                  value={keyboardText}
+                  onChangeText={setKeyboardText}
+                  inputMode="email"
+                  autoFocus
+                // aria-errormessage="inputError"
+                />
               </View>
-            </TouchableWithoutFeedback>
-          )}
-          {!keyboardOpen &&
-            <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-              <Button
-                onPress={openKeyboard}
-                variant="secondary"
-                className="flex flex-col gap-2 flex-1"
-              >
-                <KeyboardIcon className="text-secondary-foreground" />
-                <Text>Manual</Text>
-              </Button>
-              <Button
-                variant="secondary"
-                className="flex flex-col gap-2"
-                onPress={() => {
-                  router.push("/send/address-book");
-                }}
-              >
-                <BookUser className="text-secondary-foreground" />
-                <Text>Contacts</Text>
-              </Button>
-              <Button
-                onPress={paste}
-                variant="secondary"
-                className="flex flex-col gap-2 flex-1"
-              >
-                <ClipboardPaste className="text-secondary-foreground" />
-                <Text>Paste</Text>
+              <Button onPress={submitKeyboardText} size="lg">
+                <Text>Next</Text>
               </Button>
             </View>
-          }
-        </>
-      )}
+          </TouchableWithoutFeedback>
+        )}
+      </>}
     </>
   );
 }
