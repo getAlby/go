@@ -186,19 +186,6 @@ export function Send() {
               </View>
             </TouchableWithoutFeedback>
           )}
-          {permissionStatus === PermissionStatus.UNDETERMINED && !keyboardOpen && (
-            <>
-              <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-                <View className="flex flex-col gap-2 items-center">
-                  <CameraIcon className="text-foreground" size={72} />
-                  <Text className="text-2xl text-foreground">Camera Permissions Needed</Text>
-                </View>
-                <Button onPress={scan}>
-                  <Text className="text-background">Grant Permissions</Text>
-                </Button>
-              </View>
-            </>
-          )}
           {!keyboardOpen &&
             <View className="flex flex-row items-stretch justify-center gap-4 p-6">
               <Button
