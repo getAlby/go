@@ -83,12 +83,12 @@ export function Settings() {
           if (newCounter === 5) {
             setDeveloperMode(true);
             Toast.show({
-              text1: "You are now a developer.",
+              text1: "You are now a developer",
               position: "top",
             });
           } else if (newCounter > 1 && newCounter < 5) {
             Toast.show({
-              text1: `Tap ${5 - newCounter} more times.`,
+              text1: `Tap ${5 - newCounter} more times`,
               position: "top",
             });
           }
