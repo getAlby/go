@@ -68,7 +68,7 @@ export default function RootLayout() {
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? "dark" : "light"} />
         <PolyfillCrypto />
-        <SafeAreaView className="w-full h-full">
+        <SafeAreaView className="w-full h-full bg-background">
           <Stack />
           <Toast config={toastConfig} position="bottom" bottomOffset={140} />
         </SafeAreaView>
