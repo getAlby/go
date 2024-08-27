@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable } from 'react-native';
 import { TextClassContext } from '~/components/ui/text';
 import { cn } from '~/lib/utils';
 
@@ -75,7 +75,7 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
             colors={['#FFE951', '#FFC453']}
             start={[0, 0]}
             end={[1, 1]}
-            style={{ borderRadius: 16, elevation: 2 }}
+            style={{ borderRadius: size === "lg" ? 16 : 4, elevation: 2 }}
           >
             <Pressable
               className={cn(
