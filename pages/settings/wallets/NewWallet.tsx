@@ -22,16 +22,17 @@ export function NewWallet() {
             title: "Connect Wallet",
           }}
         />
-        <View className="flex-1 flex flex-col gap-3">
-          <Label nativeID="name" className="self-start justify-self-start">
+        <View className="flex-1 flex flex-col gap-3 items-center justify-center">
+          <Label nativeID="name" className="text-muted-foreground text-center">
             Wallet name
           </Label>
           <Input
             autoFocus
-            className="w-full"
+            className="w-full border-transparent native:text-2xl text-center"
             value={name}
             onChangeText={setName}
             aria-labelledbyledBy="name"
+            placeholder="Enter a name for your wallet"
           // aria-errormessage="inputError"
           />
         </View>
@@ -41,7 +42,7 @@ export function NewWallet() {
             useAppStore.getState().addWallet({ name });
             Toast.show({
               type: "success",
-              text1: "New wallet added",
+              text1: "New wallet created",
               text2: "Please configure your wallet connection",
             });
             router.dismissAll();

@@ -1,4 +1,4 @@
-import { Stack, router, useFocusEffect } from "expo-router";
+import { Stack, router } from "expo-router";
 import React from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
