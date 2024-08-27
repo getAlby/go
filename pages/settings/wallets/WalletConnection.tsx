@@ -87,6 +87,10 @@ export function WalletConnection() {
         isCustodial,
       });
       useAppStore.getState().setNWCClient(nwcClient);
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+      router.replace("/");
       Toast.show({
         type: "success",
         text1: "Wallet Connected",

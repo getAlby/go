@@ -3,7 +3,13 @@ import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
-import { Link, router, Stack, useFocusEffect } from "expo-router";
+import {
+  Link,
+  router,
+  Stack,
+  useFocusEffect,
+  useRootNavigationState,
+} from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Text } from "~/components/ui/text";
@@ -34,17 +40,19 @@ export function Home() {
     BalanceState.SATS,
   );
   const [pressed, setPressed] = React.useState(false);
+  const rootNavigationState = useRootNavigationState();
 
   useFocusEffect(() => {
     reloadBalance();
   });
 
+  let hasNavigationState = !!rootNavigationState?.key;
   const hasNwcClient = !!nwcClient;
   React.useEffect(() => {
-    if (!hasNwcClient) {
+    if (hasNavigationState && !hasNwcClient) {
       router.replace(`/settings/wallets/${selectedWalletId}/wallet-connection`);
     }
-  }, [hasNwcClient]);
+  }, [hasNwcClient, hasNavigationState]);
   if (!nwcClient) {
     return <WalletConnection />;
   }
