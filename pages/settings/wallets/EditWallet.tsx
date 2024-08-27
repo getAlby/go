@@ -1,5 +1,6 @@
 import { Link, router, Stack } from "expo-router";
 import { Alert, Pressable, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import {
   Card,
@@ -10,6 +11,8 @@ import {
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import * as Clipboard from "expo-clipboard";
+import { AlertCircle } from "~/components/Icons";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -34,6 +37,37 @@ export function EditWallet() {
         <Text>
           Warning: Your wallet does not support list_transactions capability.
         </Text>
+      )}
+      {wallets[selectedWalletId].isCustodial && (
+        <>
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <View className="flex flex-row gap-2">
+                  <AlertCircle className="text-primary-foreground w-4 h-4" />
+                  <Text>Demo Wallet</Text>
+                </View>
+              </CardTitle>
+              <CardDescription>
+                You don't own the keys to your bitcoin and using a trusted
+                third-party. Limit the amount of sats you store in this wallet.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Link className="" href="https://albyhub.com" asChild>
+            <Pressable>
+              <Card className="w-full">
+                <CardHeader>
+                  <CardTitle>Try Alby Hub</CardTitle>
+                  <CardDescription>
+                    Your Own Center for Internet Money
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Pressable>
+          </Link>
+        </>
       )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
@@ -77,6 +111,47 @@ export function EditWallet() {
           </Card>
         </Pressable>
       </Link>
+      <Pressable
+        onPress={() => {
+          Alert.alert(
+            "Export Wallet",
+            "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "Confirm",
+                onPress: () => {
+                  const nwcUrl =
+                    useAppStore.getState().wallets[
+                      useAppStore.getState().selectedWalletId
+                    ].nostrWalletConnectUrl;
+                  if (!nwcUrl) {
+                    return;
+                  }
+                  Clipboard.setStringAsync(nwcUrl);
+                  Toast.show({
+                    type: "success",
+                    text1: "Connection Secret copied to clipboard",
+                  });
+                },
+              },
+            ],
+          );
+        }}
+      >
+        <Card className="w-full">
+          <CardHeader className="w-full">
+            <CardTitle className="flex flex-col">Export Wallet</CardTitle>
+            <CardDescription>
+              Copy your wallet's Connection Secret which can be imported into
+              another app
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </Pressable>
       <Pressable
         onPress={() => {
           Alert.alert(

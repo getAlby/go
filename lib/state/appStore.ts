@@ -30,6 +30,7 @@ type Wallet = {
   nostrWalletConnectUrl?: string;
   lightningAddress?: string;
   nwcCapabilities?: Nip47Capability[];
+  isCustodial?: boolean;
 };
 
 type AddressBookEntry = {

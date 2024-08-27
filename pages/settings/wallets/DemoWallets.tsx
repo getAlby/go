@@ -23,8 +23,11 @@ let relays = [
 ];
 
 type DemoWalletsProps = {
-  connect(nwcUrl: string, lightningAddress?: string): void;
-  cancel(): void;
+  connect(
+    nwcUrl: string,
+    lightningAddress?: string,
+    isCustodial?: boolean,
+  ): void;
 };
 
 type Jim = {
@@ -47,7 +50,7 @@ type Jim = {
   };
 };
 
-export function DemoWallets({ connect, cancel }: DemoWalletsProps) {
+export function DemoWallets({ connect }: DemoWalletsProps) {
   const [jims, setJims] = React.useState<Jim[]>([]);
   const [creatingWalletForJim, setCreatingWalletForJim] = React.useState("");
   const [loadingEvents, setLoadingEvents] = React.useState(false);
@@ -139,7 +142,7 @@ export function DemoWallets({ connect, cancel }: DemoWalletsProps) {
                 }
                 const { connectionSecret, lightningAddress } =
                   await response.json();
-                await connect(connectionSecret, lightningAddress);
+                await connect(connectionSecret, lightningAddress, true);
               } catch (error) {
                 console.error("failed to create wallet", error);
                 return;
