@@ -6,6 +6,7 @@ import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { Text } from "~/components/ui/text";
 import React from "react";
+import Constants from "expo-constants";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
@@ -89,6 +90,9 @@ export function Settings() {
             </Pressable>
           </>
         )}
+        <View className="flex-1 flex-col items-center justify-end">
+          <Text>Alby Mobile v{Constants.expoConfig?.version}</Text>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
