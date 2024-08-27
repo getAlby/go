@@ -47,8 +47,14 @@ export function Wallets() {
                     </Text>
                   </View>
                   {active && (
-                    <Link href={`/settings/wallets/${selectedWalletId}`} className="p-3 absolute right-2">
-                      <Settings2 className="text-foreground w-8 h-8" />
+                    <Link
+                      href={`/settings/wallets/${selectedWalletId}`}
+                      className="absolute right-2"
+                      asChild
+                    >
+                      <Button variant="link">
+                        <Settings2 className="text-foreground w-32 h-32" />
+                      </Button>
                     </Link>
                   )}
                 </Pressable>

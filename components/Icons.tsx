@@ -30,6 +30,7 @@ import {
   ChevronUp,
   X,
   Hotel,
+  Power,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -75,6 +76,7 @@ interopIcon(Share2);
 interopIcon(RefreshCw);
 interopIcon(X);
 interopIcon(Hotel);
+interopIcon(Power);
 
 export {
   AlertCircle,
@@ -107,4 +109,5 @@ export {
   Share2,
   RefreshCw,
   X,
+  Power,
 };

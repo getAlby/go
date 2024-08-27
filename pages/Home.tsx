@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
-import { Link, Stack, useFocusEffect } from "expo-router";
+import { Link, router, Stack, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Text } from "~/components/ui/text";
@@ -26,6 +26,7 @@ enum BalanceState {
 }
 
 export function Home() {
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
@@ -38,6 +39,12 @@ export function Home() {
     reloadBalance();
   });
 
+  const hasNwcClient = !!nwcClient;
+  React.useEffect(() => {
+    if (!hasNwcClient) {
+      router.replace(`/settings/wallets/${selectedWalletId}/wallet-connection`);
+    }
+  }, [hasNwcClient]);
   if (!nwcClient) {
     return <WalletConnection />;
   }
@@ -64,7 +71,7 @@ export function Home() {
             />
           ),
           headerRight: () => (
-            <Link href="/settings" asChild>
+            <Link href="/settings" asChild className="absolute -right-4">
               <Button variant="link">
                 <Settings2 className="text-foreground" />
               </Button>
