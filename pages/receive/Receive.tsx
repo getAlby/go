@@ -99,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                  prevTransaction?.payment_hash
+                prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -276,9 +276,10 @@ export function Receive() {
             </View>
             <View className="m-6">
               <Button
-                onPress={() => generateInvoice(+amount)}
                 size="lg"
                 className="flex flex-row gap-2"
+                onPress={() => generateInvoice(+amount)}
+                disabled={isLoading}
               >
                 {isLoading && <Loading className="text-primary-foreground" />}
                 <Text>Create Invoice</Text>
