@@ -31,6 +31,7 @@ import {
   X,
   Hotel,
   Power,
+  CameraOff,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -77,12 +78,14 @@ interopIcon(RefreshCw);
 interopIcon(X);
 interopIcon(Hotel);
 interopIcon(Power);
+interopIcon(CameraOff);
 
 export {
   AlertCircle,
   ArrowDown,
   Bitcoin,
   Camera,
+  CameraOff,
   CheckCircle,
   XCircle,
   ChevronDown,

@@ -5,10 +5,8 @@ import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
 import {
-  BookUser,
-  Camera as CameraIcon,
-  ClipboardPaste,
-  Keyboard as KeyboardIcon,
+  BookUser, ClipboardPaste,
+  Keyboard as KeyboardIcon
 } from "~/components/Icons";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
@@ -18,6 +16,7 @@ import Loading from "~/components/Loading";
 import { FocusableCamera } from "~/components/FocusableCamera";
 import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
 import { Invoice } from "@getalby/lightning-tools";
+import { CameraOffIcon } from "lucide-react-native";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -153,8 +152,8 @@ export function Send() {
           )}
           {!isScanning && !keyboardOpen && permissionStatus === PermissionStatus.DENIED &&
             <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
-              <CameraIcon className="text-foreground" size={72} />
-              <Text className="text-2xl text-foreground text-center">Camera Permissions Denied</Text>
+              <CameraOffIcon className="text-foreground" size={64} />
+              <Text className="text-2xl text-foreground text-center">Camera Permission Denied</Text>
               <Text className="text-muted-foreground text-xl text-center">It seems you denied permissions to use your camera. You might need to go to your device settings to allow access to your camera again.</Text>
             </View>
           }

@@ -182,30 +182,33 @@ export function WalletConnection() {
               {!isScanning && (
                 <>
                   <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-                    <CameraIcon className="text-black w-32 h-32" />
-                    <Text className="text-2xl">Camera Permissions Needed</Text>
+                    <CameraIcon className="text-foreground" size={64} />
+                    <Text className="text-2xl text-foreground">Camera Permissions Needed</Text>
                     <Button onPress={scan}>
                       <Text>Grant Permissions</Text>
                     </Button>
                   </View>
                 </>
               )}
-              <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-5">
-                <Button onPress={paste} className="flex flex-row gap-2">
-                  <ClipboardPaste
-                    className="text-black"
-                    width={16}
-                    height={16}
-                  />
-                  <Text>Paste from Clipboard</Text>
-                </Button>
+
+              <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button
                   variant="secondary"
-                  onPress={() => setShowDemoWallets(true)}
-                  className="flex flex-row gap-2"
+                  className="w-1/2 flex flex-col gap-2"
+                  onPress={() => {
+                    setShowDemoWallets(true);
+                  }}
                 >
-                  <Hotel className="text-secondary-foreground" width={16} height={16} />
+                  <Hotel className="text-secondary-foreground" />
                   <Text className="text-secondary-foreground">Try a Demo Wallet</Text>
+                </Button>
+                <Button
+                  onPress={paste}
+                  variant="secondary"
+                  className="w-1/2 flex flex-col gap-2"
+                >
+                  <ClipboardPaste className="text-secondary-foreground" />
+                  <Text className="text-secondary-foreground">Paste</Text>
                 </Button>
               </View>
             </>

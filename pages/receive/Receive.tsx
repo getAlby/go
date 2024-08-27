@@ -167,7 +167,7 @@ export function Receive() {
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-            <ZapIcon className="text-black w-32 h-32" />
+            <ZapIcon className="text-foreground" size={64} />
             <Text className="text-2xl max-w-64 text-center">
               Receive quickly with a Lightning Address
             </Text>
