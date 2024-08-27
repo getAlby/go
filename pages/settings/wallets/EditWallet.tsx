@@ -27,17 +27,17 @@ export function EditWallet() {
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
         "notifications",
       ) < 0 && (
-        <Text>
-          Warning: Your wallet does not support notifications capability.
-        </Text>
-      )}
+          <Text>
+            Warning: Your wallet does not support notifications capability.
+          </Text>
+        )}
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
         "list_transactions",
       ) < 0 && (
-        <Text>
-          Warning: Your wallet does not support list_transactions capability.
-        </Text>
-      )}
+          <Text>
+            Warning: Your wallet does not support list_transactions capability.
+          </Text>
+        )}
       {wallets[selectedWalletId].isCustodial && (
         <>
           <Card className="w-full">
@@ -156,7 +156,7 @@ export function EditWallet() {
         onPress={() => {
           Alert.alert(
             "Delete Wallet",
-            "Are you sure you want to delete your wallet? this cannot be undone.",
+            "Are you sure you want to delete your wallet? This cannot be undone.",
             [
               {
                 text: "Cancel",
