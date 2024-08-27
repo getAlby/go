@@ -46,7 +46,7 @@ const fromInternetIdentifier = (address: string) => {
   // modified to allow _ in subdomains
   if (
     address.match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-_0-9]+\.)+[a-zA-Z]{2,}))$/
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-_0-9]+\.)+[a-zA-Z]{2,}))$/,
     )
   ) {
     let [name, host] = address.split("@");
@@ -59,18 +59,18 @@ const fromInternetIdentifier = (address: string) => {
 };
 
 const normalizeLnurl = (lnurlString: string) => {
+  // maybe it's a lightning address?
+  const urlFromAddress = fromInternetIdentifier(lnurlString);
+  if (urlFromAddress) {
+    return new URL(urlFromAddress);
+  }
+
   // maybe it's bech32 encoded?
   try {
     const url = bech32Decode(lnurlString);
     return new URL(url);
   } catch (e) {
     console.info("ignoring bech32 parsing error", e);
-  }
-
-  // maybe it's a lightning address?
-  const urlFromAddress = fromInternetIdentifier(lnurlString);
-  if (urlFromAddress) {
-    return new URL(urlFromAddress);
   }
 
   //maybe it's already a URL?
@@ -82,13 +82,17 @@ export const lnurl = {
     return Boolean(fromInternetIdentifier(address));
   },
   isLNURLDetailsError(
-    res: LNURLError | LNURLDetails | LNURLPaymentInfo
+    res: LNURLError | LNURLDetails | LNURLPaymentInfo,
   ): res is LNURLError {
     return "status" in res && res.status.toUpperCase() === "ERROR";
   },
   findLnurl(text: string) {
     const stringToText = text.trim().toLowerCase();
     let match;
+
+    if (this.isLightningAddress(stringToText)) {
+      return stringToText;
+    }
 
     // look for a LNURL with protocol scheme
     if ((match = stringToText.match(/lnurl[pwc]:(\S+)/i))) {
@@ -98,10 +102,6 @@ export const lnurl = {
     // look for LNURL bech32 in the string
     if ((match = stringToText.match(/(lnurl[a-z0-9]+)/i))) {
       return match[1];
-    }
-
-    if (this.isLightningAddress(stringToText)) {
-      return stringToText;
     }
 
     return null;
@@ -115,7 +115,7 @@ export const lnurl = {
 
       if (!response.ok) {
         throw new Error(
-          "Non-OK response from request to " + url + ": " + response.status
+          "Non-OK response from request to " + url + ": " + response.status,
         );
       }
 
@@ -137,7 +137,7 @@ export const lnurl = {
       throw new Error(
         `Connection problem or invalid lnurl / lightning address: ${
           e instanceof Error ? e.message : ""
-        }`
+        }`,
       );
     }
   },
@@ -148,7 +148,7 @@ export const lnurl = {
 
       if (!response.ok) {
         throw new Error(
-          "Non-OK response from request to " + url + ": " + response.status
+          "Non-OK response from request to " + url + ": " + response.status,
         );
       }
 
@@ -173,7 +173,7 @@ export const lnurl = {
       throw new Error(
         `Connection problem or invalid lnurl / lightning address: ${
           e instanceof Error ? e.message : ""
-        }`
+        }`,
       );
     }
   },
