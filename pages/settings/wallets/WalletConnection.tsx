@@ -112,27 +112,27 @@ export function WalletConnection() {
             : "Setup Wallet Connection",
           headerRight: showDemoWallets
             ? () => (
+              <Pressable
+                onPress={() => {
+                  setShowDemoWallets(false);
+                }}
+              >
+                <X className="text-foreground" />
+              </Pressable>
+            )
+            : walletIdWithConnection !== -1
+              ? () => (
                 <Pressable
                   onPress={() => {
-                    setShowDemoWallets(false);
+                    useAppStore
+                      .getState()
+                      .setSelectedWalletId(walletIdWithConnection);
+                    router.replace("/");
                   }}
                 >
                   <X className="text-foreground" />
                 </Pressable>
               )
-            : walletIdWithConnection !== -1
-              ? () => (
-                  <Pressable
-                    onPress={() => {
-                      useAppStore
-                        .getState()
-                        .setSelectedWalletId(walletIdWithConnection);
-                      router.replace("/");
-                    }}
-                  >
-                    <X className="text-foreground" />
-                  </Pressable>
-                )
               : undefined,
         }}
       />
@@ -190,7 +190,7 @@ export function WalletConnection() {
                   </View>
                 </>
               )}
-              <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
+              <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-5">
                 <Button onPress={paste} className="flex flex-row gap-2">
                   <ClipboardPaste
                     className="text-black"
@@ -200,11 +200,12 @@ export function WalletConnection() {
                   <Text>Paste from Clipboard</Text>
                 </Button>
                 <Button
+                  variant="secondary"
                   onPress={() => setShowDemoWallets(true)}
                   className="flex flex-row gap-2"
                 >
-                  <Hotel className="text-black" width={16} height={16} />
-                  <Text>Try a Demo Wallet</Text>
+                  <Hotel className="text-secondary-foreground" width={16} height={16} />
+                  <Text className="text-secondary-foreground">Try a Demo Wallet</Text>
                 </Button>
               </View>
             </>
