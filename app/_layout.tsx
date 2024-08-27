@@ -91,9 +91,6 @@ export default function RootLayout() {
         <SafeAreaView className="w-full h-full">
           <Stack />
           <Toast config={toastConfig} position="bottom" />
-          <Button size="lg" onPress={reset}>
-            <Text>Delete</Text>
-          </Button>
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>
