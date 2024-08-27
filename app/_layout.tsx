@@ -1,9 +1,8 @@
 import "../lib/applyGlobalPolyfills";
 
 import "~/global.css";
-import { Text } from '~/components/ui/text';
 import { Theme, ThemeProvider } from "@react-navigation/native";
-import { Link, router, SplashScreen, Stack } from "expo-router";
+import { router, SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
@@ -17,7 +16,7 @@ import { toastConfig } from "~/components/ToastConfig";
 import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "~/components/ui/button";
+import { secureStorage } from "~/lib/secureStorage";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -49,7 +48,7 @@ export default function RootLayout() {
   React.useEffect(() => {
 
     const checkOnboardingStatus = async () => {
-      const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
+      const hasOnboarded = await secureStorage.getItem("hasOnboarded");
       if (!hasOnboarded) {
         router.push({
           pathname: "/onboarding",
