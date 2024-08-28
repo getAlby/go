@@ -4,8 +4,9 @@ import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
 import {
-  BookUser, ClipboardPaste,
-  Keyboard as KeyboardIcon
+  BookUser,
+  ClipboardPaste,
+  Keyboard as KeyboardIcon,
 } from "~/components/Icons";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
@@ -88,7 +89,6 @@ export function Send() {
           },
         });
       } else {
-
         // Check if this is a valid invoice
         new Invoice({
           pr: text,
@@ -113,68 +113,76 @@ export function Send() {
           title: "Send",
         }}
       />
-      {isLoading && <><Loading /></>}
-      {!isLoading && <>
-        {!keyboardOpen && <>
-          <QRCodeScanner onScanned={handleScanned} />
-          <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-            <Button
-              onPress={openKeyboard}
-              variant="secondary"
-              className="flex flex-col gap-2 flex-1"
-            >
-              <KeyboardIcon className="text-secondary-foreground" />
-              <Text>Manual</Text>
-            </Button>
-            <Button
-              variant="secondary"
-              className="flex flex-col gap-2"
+      {isLoading && (
+        <View className="flex-1 flex flex-col items-center justify-center">
+          <Loading className="text-primary-foreground" />
+        </View>
+      )}
+      {!isLoading && (
+        <>
+          {!keyboardOpen && (
+            <>
+              <QRCodeScanner onScanned={handleScanned} />
+              <View className="flex flex-row items-stretch justify-center gap-4 p-6">
+                <Button
+                  onPress={openKeyboard}
+                  variant="secondary"
+                  className="flex flex-col gap-2 flex-1"
+                >
+                  <KeyboardIcon className="text-secondary-foreground" />
+                  <Text>Manual</Text>
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="flex flex-col gap-2"
+                  onPress={() => {
+                    router.push("/send/address-book");
+                  }}
+                >
+                  <BookUser className="text-secondary-foreground" />
+                  <Text>Contacts</Text>
+                </Button>
+                <Button
+                  onPress={paste}
+                  variant="secondary"
+                  className="flex flex-col gap-2 flex-1"
+                >
+                  <ClipboardPaste className="text-secondary-foreground" />
+                  <Text>Paste</Text>
+                </Button>
+              </View>
+            </>
+          )}
+          {keyboardOpen && (
+            <TouchableWithoutFeedback
               onPress={() => {
-                router.push("/send/address-book");
+                Keyboard.dismiss();
               }}
             >
-              <BookUser className="text-secondary-foreground" />
-              <Text>Contacts</Text>
-            </Button>
-            <Button
-              onPress={paste}
-              variant="secondary"
-              className="flex flex-col gap-2 flex-1"
-            >
-              <ClipboardPaste className="text-secondary-foreground" />
-              <Text>Paste</Text>
-            </Button>
-          </View>
-        </>}
-        {keyboardOpen && (
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss();
-            }}
-          >
-            <View className="flex-1 h-full flex flex-col gap-5 p-6">
-              <View className="flex-1 flex items-center justify-center">
-                <Text className="text-muted-foreground text-center">
-                  Type or paste a Lightning Address, lightning invoice or
-                  LNURL.
-                </Text>
-                <Input
-                  className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
-                  placeholder="hello@getalby.com"
-                  value={keyboardText}
-                  onChangeText={setKeyboardText}
-                  inputMode="email"
-                  autoFocus
-                // aria-errormessage="inputError"
-                />
+              <View className="flex-1 h-full flex flex-col gap-5 p-6">
+                <View className="flex-1 flex items-center justify-center">
+                  <Text className="text-muted-foreground text-center">
+                    Type or paste a Lightning Address, lightning invoice or
+                    LNURL.
+                  </Text>
+                  <Input
+                    className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
+                    placeholder="hello@getalby.com"
+                    value={keyboardText}
+                    onChangeText={setKeyboardText}
+                    inputMode="email"
+                    autoFocus
+                    // aria-errormessage="inputError"
+                  />
+                </View>
+                <Button onPress={submitKeyboardText} size="lg">
+                  <Text>Next</Text>
+                </Button>
               </View>
-              <Button onPress={submitKeyboardText} size="lg">
-                <Text>Next</Text>
-              </Button>
-            </View>
-          </TouchableWithoutFeedback>
-        )}
-      </>}
+            </TouchableWithoutFeedback>
+          )}
+        </>
+      )}
     </>
   );
 }
