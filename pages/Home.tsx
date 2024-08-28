@@ -39,7 +39,6 @@ export function Home() {
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
-  const [pressed, setPressed] = React.useState(false);
   const rootNavigationState = useRootNavigationState();
 
   useFocusEffect(() => {
@@ -90,9 +89,6 @@ export function Home() {
       <View className="h-full flex">
         <View className="grow flex flex-col items-center justify-center gap-4">
           <TouchableOpacity
-            onPressIn={() => setPressed(true)}
-            onPressOut={() => setPressed(false)}
-
             onPress={switchBalanceState}
             className="w-full flex flex-col items-center justify-center gap-4"
           >
