@@ -1,3 +1,29 @@
+import { StyleSheet } from "react-native";
+
+// TODO: check dark mode shadows in ios
+export const SHADOWS = StyleSheet.create({
+  medium: {
+    elevation: 2,
+    shadowColor: "black",
+    shadowOpacity: 0.15,
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowRadius: 2,
+  },
+  large: {
+    elevation: 2,
+    shadowColor: "black",
+    shadowOpacity: 0.15,
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowRadius: 4,
+  },
+});
+
 export const NAV_THEME = {
   light: {
     background: "hsl(0 0% 100%)", // background
