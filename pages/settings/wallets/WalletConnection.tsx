@@ -175,7 +175,7 @@ export function WalletConnection() {
               <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button
                   variant="secondary"
-                  className="w-1/2 flex flex-col gap-2"
+                  className="flex flex-col gap-2 flex-1"
                   onPress={() => {
                     setShowDemoWallets(true);
                   }}
@@ -186,7 +186,7 @@ export function WalletConnection() {
                 <Button
                   onPress={paste}
                   variant="secondary"
-                  className="w-1/2 flex flex-col gap-2"
+                  className="flex flex-col gap-2 flex-1"
                 >
                   <ClipboardPaste className="text-secondary-foreground" />
                   <Text className="text-secondary-foreground">Paste</Text>
