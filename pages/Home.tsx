@@ -1,4 +1,4 @@
-import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Image, Pressable, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -22,7 +22,6 @@ import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
-import AppIcon from "~/components/icons/AppIcon";
 
 dayjs.extend(relativeTime);
 
@@ -40,6 +39,7 @@ export function Home() {
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
+  const [pressed, setPressed] = React.useState(false);
   const rootNavigationState = useRootNavigationState();
 
   useFocusEffect(() => {
@@ -73,20 +73,32 @@ export function Home() {
         options={{
           title: "Home",
           headerTitle: () => (
-            <AppIcon width={28} height={28} />
+            <Image
+              className="w-12 h-12"
+              source={require("../assets/adaptive-icon.png")}
+            />
           ),
           headerRight: () => (
-            <Link href="/settings" asChild>
-              <TouchableOpacity>
+            <Link href="/settings" asChild className="absolute -right-4">
+              <Button variant="link">
                 <Settings2 className="text-foreground" />
-              </TouchableOpacity>
+              </Button>
             </Link>
           ),
         }}
       />
       <View className="h-full flex">
         <View className="grow flex flex-col items-center justify-center gap-4">
-          <TouchableOpacity
+          <Pressable
+            onPressIn={() => setPressed(true)}
+            onPressOut={() => setPressed(false)}
+            style={{
+              ...(pressed
+                ? {
+                    transform: "scale(0.98)",
+                  }
+                : []),
+            }}
             onPress={switchBalanceState}
             className="w-full flex flex-col items-center justify-center gap-4"
           >
@@ -126,7 +138,7 @@ export function Home() {
                 <Skeleton className="w-32 h-10" />
               )}
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <View className="flex items-center justify-center my-5">
           <Link href="/transactions" asChild>
@@ -179,8 +191,8 @@ function MainButton({
               alignItems: "center",
               ...(pressed
                 ? {
-                  transform: "scale(0.98)",
-                }
+                    transform: "scale(0.98)",
+                  }
                 : {}),
             }}
           >
