@@ -1,4 +1,3 @@
-
 import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
@@ -77,10 +76,10 @@ export function Home() {
             <AppIcon width={28} height={28} />
           ),
           headerRight: () => (
-            <Link href="/settings" asChild className="absolute -right-4">
-              <Button variant="link">
+            <Link href="/settings" asChild>
+              <TouchableOpacity>
                 <Settings2 className="text-foreground" />
-              </Button>
+              </TouchableOpacity>
             </Link>
           ),
         }}
