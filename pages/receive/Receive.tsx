@@ -99,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                prevTransaction?.payment_hash
+                  prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -158,12 +158,16 @@ export function Receive() {
   }, []);
 
   async function share() {
+    const message = invoice || lightningAddress;
     try {
+      if (!message) {
+        throw new Error("no invoice or lightning address set");
+      }
       await Share.share({
-        message: invoice
+        message,
       });
     } catch (error) {
-      console.error('Error sharing:', error);
+      console.error("Error sharing:", error);
       errorToast(error as Error);
     }
   }
