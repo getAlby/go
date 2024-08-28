@@ -2,11 +2,7 @@ import { Pressable, Text, View } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
-import {
-  ClipboardPaste,
-  Hotel,
-  X
-} from "~/components/Icons";
+import { ClipboardPaste, Hotel, X } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { router, Stack } from "expo-router";
@@ -105,27 +101,27 @@ export function WalletConnection() {
             : "Setup Wallet Connection",
           headerRight: showDemoWallets
             ? () => (
-              <Pressable
-                onPress={() => {
-                  setShowDemoWallets(false);
-                }}
-              >
-                <X className="text-foreground" />
-              </Pressable>
-            )
-            : walletIdWithConnection !== -1
-              ? () => (
                 <Pressable
                   onPress={() => {
-                    useAppStore
-                      .getState()
-                      .setSelectedWalletId(walletIdWithConnection);
-                    router.replace("/");
+                    setShowDemoWallets(false);
                   }}
                 >
                   <X className="text-foreground" />
                 </Pressable>
               )
+            : walletIdWithConnection !== -1
+              ? () => (
+                  <Pressable
+                    onPress={() => {
+                      useAppStore
+                        .getState()
+                        .setSelectedWalletId(walletIdWithConnection);
+                      router.replace("/");
+                    }}
+                  >
+                    <X className="text-foreground" />
+                  </Pressable>
+                )
               : undefined,
         }}
       />
@@ -175,18 +171,20 @@ export function WalletConnection() {
               <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button
                   variant="secondary"
-                  className="flex flex-col gap-2 flex-1"
+                  className="flex-1 flex flex-col gap-2"
                   onPress={() => {
                     setShowDemoWallets(true);
                   }}
                 >
                   <Hotel className="text-secondary-foreground" />
-                  <Text className="text-secondary-foreground">Try a Demo Wallet</Text>
+                  <Text className="text-secondary-foreground">
+                    Try a Demo Wallet
+                  </Text>
                 </Button>
                 <Button
                   onPress={paste}
                   variant="secondary"
-                  className="flex flex-col gap-2 flex-1"
+                  className="flex-1 flex flex-col gap-2"
                 >
                   <ClipboardPaste className="text-secondary-foreground" />
                   <Text className="text-secondary-foreground">Paste</Text>

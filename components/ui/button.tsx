@@ -24,7 +24,7 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 const buttonSizeVariants = cva("", {
@@ -73,7 +73,7 @@ const buttonTextVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> &
