@@ -128,7 +128,7 @@ export function Send() {
             </Button>
             <Button
               variant="secondary"
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-2 flex-1"
               onPress={() => {
                 router.push("/send/address-book");
               }}
