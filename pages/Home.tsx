@@ -1,8 +1,6 @@
-import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { useBalance } from "hooks/useBalance";
-import { useAppStore } from "lib/state/appStore";
-import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   Link,
   router,
@@ -10,19 +8,22 @@ import {
   useFocusEffect,
   useRootNavigationState,
 } from "expo-router";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { Text } from "~/components/ui/text";
-import { Settings2, ChevronUp } from "~/components/Icons";
-
-import { Skeleton } from "~/components/ui/skeleton";
-import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { LinearGradient } from "expo-linear-gradient";
-import LargeArrowUp from "~/components/icons/LargeArrowUp";
-import LargeArrowDown from "~/components/icons/LargeArrowDown";
+import { useBalance } from "hooks/useBalance";
+import { useAppStore } from "lib/state/appStore";
+import React, { useState } from "react";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { SvgProps } from "react-native-svg";
-import { Button } from "~/components/ui/button";
+import { ChevronUp, Settings2 } from "~/components/Icons";
 import AppIcon from "~/components/icons/AppIcon";
+import LargeArrowDown from "~/components/icons/LargeArrowDown";
+import LargeArrowUp from "~/components/icons/LargeArrowUp";
+import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Text } from "~/components/ui/text";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { SHADOWS } from "~/lib/constants";
+import { cn } from "~/lib/utils";
+import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 
 dayjs.extend(relativeTime);
 
@@ -38,7 +39,7 @@ export function Home() {
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
   const [balanceState, setBalanceState] = useState<BalanceState>(
-    BalanceState.SATS,
+    BalanceState.SATS
   );
   const rootNavigationState = useRootNavigationState();
 
@@ -72,9 +73,7 @@ export function Home() {
       <Stack.Screen
         options={{
           title: "Home",
-          headerTitle: () => (
-            <AppIcon width={28} height={28} />
-          ),
+          headerTitle: () => <AppIcon width={28} height={28} />,
           headerRight: () => (
             <Link href="/settings" asChild>
               <TouchableOpacity>
@@ -96,7 +95,7 @@ export function Home() {
                   <Text className="text-foreground text-5xl font-bold2">
                     {balanceState == BalanceState.SATS &&
                       new Intl.NumberFormat().format(
-                        Math.floor(balance.balance / 1000),
+                        Math.floor(balance.balance / 1000)
                       )}
                     {balanceState == BalanceState.FIAT &&
                       getFiatAmount &&
@@ -119,7 +118,7 @@ export function Home() {
                     getFiatAmount(Math.floor(balance.balance / 1000))}
                   {balanceState == BalanceState.FIAT &&
                     new Intl.NumberFormat().format(
-                      Math.floor(balance.balance / 1000),
+                      Math.floor(balance.balance / 1000)
                     ) + " sats"}
                 </Text>
               ) : (
@@ -160,29 +159,21 @@ function MainButton({
     <>
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
-          className="flex-1 aspect-square rounded-xl flex"
-          style={shadows.large}
+          className="flex-1 aspect-square rounded-2xl flex"
+          style={SHADOWS.large}
           onPressIn={() => setPressed(true)}
           onPressOut={() => setPressed(false)}
         >
           <LinearGradient
-            className="flex-1 p-6"
+            className={cn("flex-1 rounded-2xl items-center justify-center")}
             colors={["#FFE951", "#FFC453"]}
             start={[0, 0]}
             end={[1, 1]}
-            style={{
-              flex: 1,
-              padding: 6,
-              borderRadius: 15,
-              elevation: 2,
-              justifyContent: "center",
-              alignItems: "center",
-              ...(pressed
-                ? {
-                  transform: "scale(0.98)",
-                }
-                : {}),
-            }}
+            style={
+              pressed && {
+                transform: "scale(0.98)",
+              }
+            }
           >
             <View className="flex flex-col justify-center items-center gap-4">
               <Icon />
@@ -196,17 +187,3 @@ function MainButton({
     </>
   );
 }
-
-// NOTE: only applies on iOS
-const shadows = StyleSheet.create({
-  large: {
-    // TODO: check dark mode
-    shadowColor: "black",
-    shadowOpacity: 0.15,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowRadius: 4,
-  },
-});
