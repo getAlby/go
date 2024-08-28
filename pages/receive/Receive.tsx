@@ -1,12 +1,12 @@
 import { Link, Stack, router } from "expo-router";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, Share, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import * as Clipboard from "expo-clipboard";
 import React from "react";
 import { useAppStore } from "~/lib/state/appStore";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Copy, ZapIcon } from "~/components/Icons";
+import { Copy, Share2, ZapIcon } from "~/components/Icons";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -99,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                  prevTransaction?.payment_hash
+                prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -156,6 +156,17 @@ export function Receive() {
       unsub?.();
     };
   }, []);
+
+  async function share() {
+    try {
+      await Share.share({
+        message: invoice
+      });
+    } catch (error) {
+      console.error('Error sharing:', error);
+      errorToast(error as Error);
+    }
+  }
 
   return (
     <>
@@ -226,7 +237,12 @@ export function Receive() {
               </View>
             )}
           </View>
-          <View className="flex flex-row gap-6 p-6">
+
+          <View className="flex flex-row gap-3 p-6">
+            <Button onTouchStart={share} variant="secondary" className="flex-1">
+              <Share2 className="text-muted-foreground" />
+              <Text>Share</Text>
+            </Button>
             <Button
               variant="secondary"
               onPress={copy}
