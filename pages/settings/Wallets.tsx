@@ -1,8 +1,7 @@
 import { Link, Stack } from "expo-router";
-import { Wallet2 } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { FlatList } from "react-native";
-import { Settings2 } from "~/components/Icons";
+import { Settings2, Wallet2 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
 import { Text } from "~/components/ui/text";

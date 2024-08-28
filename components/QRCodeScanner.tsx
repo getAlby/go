@@ -4,8 +4,8 @@ import { FocusableCamera } from "./FocusableCamera";
 import React, { useEffect } from "react";
 import Loading from "./Loading";
 import { Camera } from "expo-camera";
-import { CameraOffIcon } from "lucide-react-native";
 import { Text } from "~/components/ui/text";
+import { CameraOff } from "./Icons";
 
 type QRCodeScannerProps = {
     onScanned: (data: string) => void;
@@ -24,7 +24,6 @@ function QRCodeScanner({ onScanned }: QRCodeScannerProps) {
             await scan();
             setLoading(false);
         }, 200);
-
     }, []);
 
     async function scan() {
@@ -54,7 +53,7 @@ function QRCodeScanner({ onScanned }: QRCodeScannerProps) {
             {!isLoading && <>
                 {!isScanning && permissionStatus === PermissionStatus.DENIED &&
                     <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
-                        <CameraOffIcon className="text-foreground" size={64} />
+                        <CameraOff className="text-foreground" size={64} />
                         <Text className="text-2xl text-foreground text-center">Camera Permission Denied</Text>
                         <Text className="text-muted-foreground text-xl text-center">It seems you denied permissions to use your camera. You might need to go to your device settings to allow access to your camera again.</Text>
                     </View>
