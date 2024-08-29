@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { TextClassContext } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
 
@@ -75,25 +75,29 @@ const Button = React.forwardRef<
       )}
     >
       {!variant || variant === "default" ? (
-        <LinearGradient
-          colors={["#FFE951", "#FFC453"]}
-          start={[0, 0]}
-          end={[1, 1]}
+        <View
           style={[
             { borderRadius: size === "lg" ? 16 : 4, elevation: 2 },
             shadows.small,
           ]}
         >
-          <Pressable
-            className={cn(
-              props.disabled && "opacity-50 web:pointer-events-none",
-              buttonVariants({ variant, size, className }),
-            )}
-            ref={ref}
-            role="button"
-            {...props}
-          />
-        </LinearGradient>
+          <LinearGradient
+            colors={["#FFE951", "#FFC453"]}
+            start={[0, 0]}
+            end={[1, 1]}
+            style={{ borderRadius: size === "lg" ? 16 : 4 }}
+          >
+            <Pressable
+              className={cn(
+                props.disabled && "opacity-50 web:pointer-events-none",
+                buttonVariants({ variant, size, className }),
+              )}
+              ref={ref}
+              role="button"
+              {...props}
+            />
+          </LinearGradient>
+        </View>
       ) : (
         <Pressable
           className={cn(
