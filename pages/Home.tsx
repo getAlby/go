@@ -106,7 +106,7 @@ export function Home() {
                       getFiatAmount(Math.floor(balance.balance / 1000))}
                     {balanceState == BalanceState.HIDDEN && "****"}
                   </Text>
-                  <Text className="text-muted-foreground text-3xl font-bold2">
+                  <Text className="text-muted-foreground text-3xl font-semibold2">
                     {balanceState == BalanceState.SATS && "sats"}
                   </Text>
                 </>
@@ -131,10 +131,10 @@ export function Home() {
             </View>
           </Pressable>
         </View>
-        <View className="flex items-center justify-center my-5">
+        <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
             <Button variant="ghost" className="p-10 rounded-full aspect-square">
-              <ChevronUp className="text-foreground" size={32} />
+              <ChevronUp className="text-muted-foreground" size={32} />
             </Button>
           </Link>
         </View>

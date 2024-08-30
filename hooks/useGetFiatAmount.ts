@@ -38,8 +38,10 @@ export function useGetFiatAmount() {
           return `${new Intl.NumberFormat(undefined, {
             style: "currency",
             currency: fiatCurrency,
+            currencyDisplay: "narrowSymbol",
           }).format(rate * amount)}`;
         }
+
         const amountWithCurrencyCode = new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: fiatCurrency,
@@ -47,13 +49,13 @@ export function useGetFiatAmount() {
         }).format(rate * amount);
 
         return amountWithCurrencyCode.substring(
-          amountWithCurrencyCode.search(/\s/) + 1
+          amountWithCurrencyCode.search(/\s/) + 1,
         );
       }
       return undefined;
     },
 
-    [rate, fiatCurrency]
+    [rate, fiatCurrency],
   );
 
   return rate ? getFiatAmount : undefined;
@@ -65,7 +67,7 @@ export function useGetSatsAmount() {
 
   const getSatsAmount = React.useCallback(
     (fiatAmount: number) => (rate ? Math.round(fiatAmount / rate) : undefined),
-    [rate, fiatCurrency]
+    [rate, fiatCurrency],
   );
 
   return rate ? getSatsAmount : undefined;
