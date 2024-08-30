@@ -2,7 +2,7 @@ import { Pressable, Text, View } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
-import { ClipboardPaste, Hotel, X } from "~/components/Icons";
+import { ClipboardPaste, X } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { router, Stack } from "expo-router";
@@ -13,7 +13,6 @@ import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
-import { DemoWallets } from "./DemoWallets";
 import QRCodeScanner from "~/components/QRCodeScanner";
 
 export function WalletConnection() {
@@ -23,7 +22,6 @@ export function WalletConnection() {
   );
   const [isScanning, setScanning] = React.useState(false);
   const [isConnecting, setConnecting] = React.useState(false);
-  const [showDemoWallets, setShowDemoWallets] = React.useState(false);
   const { data: walletInfo } = useInfo();
   const { data: balance } = useBalance();
 
@@ -55,7 +53,6 @@ export function WalletConnection() {
   async function connect(
     nostrWalletConnectUrl: string,
     lightningAddress?: string,
-    isCustodial?: boolean,
   ) {
     try {
       setConnecting(true);
@@ -73,7 +70,6 @@ export function WalletConnection() {
       useAppStore.getState().updateCurrentWallet({
         nwcCapabilities: capabilities,
         ...(lightningAddress ? { lightningAddress } : {}),
-        isCustodial,
       });
       useAppStore.getState().setNWCClient(nwcClient);
       if (router.canDismiss()) {
@@ -96,20 +92,9 @@ export function WalletConnection() {
     <>
       <Stack.Screen
         options={{
-          title: showDemoWallets
-            ? "Choose a Demo Wallet"
-            : "Setup Wallet Connection",
-          headerRight: showDemoWallets
-            ? () => (
-                <Pressable
-                  onPress={() => {
-                    setShowDemoWallets(false);
-                  }}
-                >
-                  <X className="text-foreground" />
-                </Pressable>
-              )
-            : walletIdWithConnection !== -1
+          title: "Setup Wallet Connection",
+          headerRight:
+            walletIdWithConnection !== -1
               ? () => (
                   <Pressable
                     onPress={() => {
@@ -154,8 +139,7 @@ export function WalletConnection() {
           </Button>
         </View>
       )}
-      {!hasConnection && showDemoWallets && <DemoWallets connect={connect} />}
-      {!hasConnection && !showDemoWallets && (
+      {!hasConnection && (
         <>
           {isConnecting && (
             <>
@@ -169,18 +153,6 @@ export function WalletConnection() {
             <>
               <QRCodeScanner onScanned={handleScanned} />
               <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-                <Button
-                  variant="secondary"
-                  className="flex-1 flex flex-col gap-2"
-                  onPress={() => {
-                    setShowDemoWallets(true);
-                  }}
-                >
-                  <Hotel className="text-secondary-foreground" />
-                  <Text className="text-secondary-foreground">
-                    Try a Demo Wallet
-                  </Text>
-                </Button>
                 <Button
                   onPress={paste}
                   variant="secondary"

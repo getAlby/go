@@ -12,7 +12,6 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import * as Clipboard from "expo-clipboard";
-import { AlertCircle } from "~/components/Icons";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -27,47 +26,16 @@ export function EditWallet() {
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
         "notifications",
       ) < 0 && (
-          <Text>
-            Warning: Your wallet does not support notifications capability.
-          </Text>
-        )}
+        <Text>
+          Warning: Your wallet does not support notifications capability.
+        </Text>
+      )}
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
         "list_transactions",
       ) < 0 && (
-          <Text>
-            Warning: Your wallet does not support list_transactions capability.
-          </Text>
-        )}
-      {wallets[selectedWalletId].isCustodial && (
-        <>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <View className="flex flex-row gap-2">
-                  <AlertCircle className="text-primary-foreground w-4 h-4" />
-                  <Text>Demo Wallet</Text>
-                </View>
-              </CardTitle>
-              <CardDescription>
-                You don't own the keys to your bitcoin and using a trusted
-                third-party. Limit the amount of sats you store in this wallet.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Link className="" href="https://albyhub.com" asChild>
-            <Pressable>
-              <Card className="w-full">
-                <CardHeader>
-                  <CardTitle>Try Alby Hub</CardTitle>
-                  <CardDescription>
-                    Your Own Center for Internet Money
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Pressable>
-          </Link>
-        </>
+        <Text>
+          Warning: Your wallet does not support list_transactions capability.
+        </Text>
       )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
