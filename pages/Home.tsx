@@ -5,10 +5,8 @@ import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 import {
   Link,
-  router,
-  Stack,
-  useFocusEffect,
-  useRootNavigationState,
+  router, useFocusEffect,
+  useRootNavigationState
 } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -22,6 +20,7 @@ import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
+import Screen from "~/components/Screen";
 
 dayjs.extend(relativeTime);
 
@@ -69,17 +68,15 @@ export function Home() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "",
-          headerRight: () => (
-            <Link href="/settings" asChild className="absolute -right-4">
-              <Button variant="link">
-                <Settings2 className="text-foreground" />
-              </Button>
-            </Link>
-          ),
-        }}
+      <Screen
+        title=""
+        right={() =>
+          <Link href="/settings" asChild className="absolute -right-4">
+            <Button variant="link">
+              <Settings2 className="text-foreground" />
+            </Button>
+          </Link>
+        }
       />
       <View className="h-full flex">
         <View className="grow flex flex-col items-center justify-center gap-4">

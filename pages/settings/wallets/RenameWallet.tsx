@@ -1,4 +1,4 @@
-import { Stack, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -7,6 +7,7 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import Screen from "~/components/Screen";
 
 export function RenameWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -21,10 +22,8 @@ export function RenameWallet() {
       }}
     >
       <View className="flex-1 flex flex-col p-6 gap-3">
-        <Stack.Screen
-          options={{
-            title: "Wallet Name",
-          }}
+        <Screen
+          title="Wallet Name"
         />
         <View className="flex-1 flex flex-col items-center justify-center">
           <Text className="text-muted-foreground text-center">Wallet Name</Text>

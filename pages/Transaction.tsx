@@ -1,8 +1,9 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
+import Screen from "~/components/Screen";
 import { MoveDownLeft, MoveUpRight } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
@@ -17,10 +18,8 @@ export function Transaction() {
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">
-      <Stack.Screen
-        options={{
-          title: "Transaction",
-        }}
+      <Screen
+        title="Transaction"
       />
       <View className="flex flex-col gap-5 justify-center items-center">
         <View

@@ -1,4 +1,6 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
+
+import Screen from "~/components/Screen";
+import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
@@ -44,10 +46,8 @@ export function LNURLPay() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Send",
-        }}
+      <Screen
+        title="Send"
       />
       <TouchableWithoutFeedback
         onPress={() => {

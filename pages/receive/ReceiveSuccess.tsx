@@ -1,7 +1,8 @@
 import { Invoice } from "@getalby/lightning-tools";
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { View } from "react-native";
 import { Paid } from "~/animations/Paid";
+import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
@@ -15,10 +16,8 @@ export function ReceiveSuccess() {
   });
   return (
     <View className="flex-1 flex flex-col">
-      <Stack.Screen
-        options={{
-          title: "Payment Successful",
-        }}
+      <Screen
+        title="Payment Successful"
       />
       <View className="flex-1 justify-center items-center gap-2">
         <View className="-mt-32">

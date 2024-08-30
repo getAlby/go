@@ -1,4 +1,4 @@
-import { Stack, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -7,6 +7,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
+import Screen from "~/components/Screen";
 
 export function NewWallet() {
   const [name, setName] = React.useState("");
@@ -17,10 +18,8 @@ export function NewWallet() {
       }}
     >
       <View className="flex-1 p-6">
-        <Stack.Screen
-          options={{
-            title: "Connect Wallet",
-          }}
+        <Screen
+          title="Connect Wallet"
         />
         <View className="flex-1 flex flex-col gap-3 items-center justify-center">
           <Label nativeID="name" className="text-muted-foreground text-center">

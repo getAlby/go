@@ -1,4 +1,4 @@
-import { Stack, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
+import Screen from "~/components/Screen";
 
 export function LightningAddress() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -22,10 +23,8 @@ export function LightningAddress() {
     >
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex flex-col p-3 gap-3">
-          <Stack.Screen
-            options={{
-              title: "Lightning Address",
-            }}
+          <Screen
+            title="Lightning Address"
           />
           <View className="flex-1 flex flex-col items-center justify-center">
             <Text className="text-muted-foreground text-center">Lightning Address</Text>

@@ -1,6 +1,6 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
-import { Link, router, Stack } from "expo-router";
+import { Link, router } from "expo-router";
 import React from "react";
 import {
   FlatList,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   View,
 } from "react-native";
+import Screen from "~/components/Screen";
 import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -65,21 +66,16 @@ export function Transactions() {
 
   return (
     <View className="flex-1 flex flex-col gap-3">
-      <Stack.Screen
-        options={{
-          title: "Transactions",
-          animation: "slide_from_bottom",
-          headerLeft: () => <View />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <X className="text-foreground" />
-            </Pressable>
-          ),
-        }}
+      <Screen
+        title="Transactions"
+        animation="slide_from_bottom"
+        right={() => (<Pressable
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <X className="text-foreground" />
+        </Pressable>)}
       />
       {allTransactions && allTransactions.length ? (
         <FlatList

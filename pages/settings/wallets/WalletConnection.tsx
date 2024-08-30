@@ -5,7 +5,7 @@ import { nwc } from "@getalby/sdk";
 import { ClipboardPaste, X } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
-import { router, Stack } from "expo-router";
+import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
 import { useBalance } from "~/hooks/useBalance";
@@ -14,6 +14,7 @@ import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
+import Screen from "~/components/Screen";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -90,24 +91,26 @@ export function WalletConnection() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Setup Wallet Connection",
-          headerRight:
-            walletIdWithConnection !== -1
+      <Screen
+        title="Setup Wallet Connection"
+        right={() => {
+          return (<>
+            {(walletIdWithConnection !== -1
               ? () => (
-                  <Pressable
-                    onPress={() => {
-                      useAppStore
-                        .getState()
-                        .setSelectedWalletId(walletIdWithConnection);
-                      router.replace("/");
-                    }}
-                  >
-                    <X className="text-foreground" />
-                  </Pressable>
-                )
-              : undefined,
+                <Pressable
+                  onPress={() => {
+                    useAppStore
+                      .getState()
+                      .setSelectedWalletId(walletIdWithConnection);
+                    router.replace("/");
+                  }}
+                >
+                  <X className="text-foreground" />
+                </Pressable>
+              )
+              : undefined)};
+
+          </>)
         }}
       />
       {hasConnection && (
