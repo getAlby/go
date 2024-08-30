@@ -19,6 +19,7 @@ interface AppState {
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
+  showOnboarding(): void;
 }
 
 const walletKeyPrefix = "wallet";
@@ -176,6 +177,10 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({
         addressBookEntries: [...currentAddressBookEntries, addressBookEntry],
       });
+    },
+    showOnboarding() {
+      // clear onboarding status
+      secureStorage.removeItem(hasOnboardedKey);
     },
     reset() {
       // clear wallets

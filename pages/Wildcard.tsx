@@ -1,4 +1,4 @@
-import { usePathname } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import { View } from "react-native";
 import Loading from "~/components/Loading";
 import { Text } from "~/components/ui/text";
@@ -10,6 +10,12 @@ export function Wildcard() {
 
   return (
     <View className="flex-1 justify-center items-center flex flex-col gap-3">
+      <Stack.Screen
+        options={{
+          title: "",
+          header: () => null, // hide header completely
+        }}
+      />
       <Loading />
       <Text>Loading {pathname}</Text>
     </View>

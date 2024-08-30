@@ -56,9 +56,7 @@ export default function RootLayout() {
     const checkOnboardingStatus = async () => {
       const hasOnboarded = await secureStorage.getItem("hasOnboarded");
       if (!hasOnboarded && hasNavigationState) {
-        router.push({
-          pathname: "/onboarding",
-        });
+        router.replace("/onboarding");
       }
     };
 
