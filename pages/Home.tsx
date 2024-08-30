@@ -95,8 +95,8 @@ export function Home() {
             style={{
               ...(pressed
                 ? {
-                    transform: "scale(0.98)",
-                  }
+                  transform: "scale(0.98)",
+                }
                 : []),
             }}
             onPress={switchBalanceState}
@@ -140,10 +140,10 @@ export function Home() {
             </View>
           </Pressable>
         </View>
-        <View className="flex items-center justify-center my-5">
+        <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
             <Button variant="ghost" className="p-10 rounded-full aspect-square">
-              <ChevronUp className="text-foreground" size={32} />
+              <ChevronUp className="text-muted-foreground" size={32} />
             </Button>
           </Link>
         </View>
@@ -191,8 +191,8 @@ function MainButton({
               alignItems: "center",
               ...(pressed
                 ? {
-                    transform: "scale(0.98)",
-                  }
+                  transform: "scale(0.98)",
+                }
                 : {}),
             }}
           >
