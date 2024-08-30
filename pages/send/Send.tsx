@@ -1,3 +1,5 @@
+
+import Screen from "~/components/Screen";
 import React, { useEffect } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
@@ -8,7 +10,7 @@ import {
   ClipboardPaste,
   Keyboard as KeyboardIcon,
 } from "~/components/Icons";
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
@@ -108,10 +110,8 @@ export function Send() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Send",
-        }}
+      <Screen
+        title="Send"
       />
       {isLoading && (
         <View className="flex-1 flex flex-col items-center justify-center">

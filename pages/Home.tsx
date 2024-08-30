@@ -1,14 +1,12 @@
-import { View, Image, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 import {
   Link,
-  router,
-  Stack,
-  useFocusEffect,
-  useRootNavigationState,
+  router, useFocusEffect,
+  useRootNavigationState
 } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -22,6 +20,7 @@ import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
+import Screen from "~/components/Screen";
 
 dayjs.extend(relativeTime);
 
@@ -69,23 +68,15 @@ export function Home() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Home",
-          headerTitle: () => (
-            <Image
-              className="w-12 h-12"
-              source={require("../assets/adaptive-icon.png")}
-            />
-          ),
-          headerRight: () => (
-            <Link href="/settings" asChild className="absolute -right-4">
-              <Button variant="link">
-                <Settings2 className="text-muted-foreground" />
-              </Button>
-            </Link>
-          ),
-        }}
+      <Screen
+        title=""
+        right={() =>
+          <Link href="/settings" asChild className="absolute -right-4">
+            <Button variant="link">
+              <Settings2 className="text-foreground" />
+            </Button>
+          </Link>
+        }
       />
       <View className="h-full flex">
         <View className="grow flex flex-col items-center justify-center gap-4">
@@ -185,7 +176,7 @@ function MainButton({
             style={{
               flex: 1,
               padding: 6,
-              borderRadius: 15,
+              borderRadius: 24,
               elevation: 2,
               justifyContent: "center",
               alignItems: "center",

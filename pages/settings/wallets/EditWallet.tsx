@@ -1,4 +1,4 @@
-import { Link, router, Stack } from "expo-router";
+import { Link, router } from "expo-router";
 import { Alert, Pressable, View } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -12,31 +12,30 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import * as Clipboard from "expo-clipboard";
+import Screen from "~/components/Screen";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
-      <Stack.Screen
-        options={{
-          title: "Edit Wallet",
-        }}
+      <Screen
+        title="Edit Wallet"
       />
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
         "notifications",
       ) < 0 && (
-        <Text>
-          Warning: Your wallet does not support notifications capability.
-        </Text>
-      )}
+          <Text>
+            Warning: Your wallet does not support notifications capability.
+          </Text>
+        )}
       {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
         "list_transactions",
       ) < 0 && (
-        <Text>
-          Warning: Your wallet does not support list_transactions capability.
-        </Text>
-      )}
+          <Text>
+            Warning: Your wallet does not support list_transactions capability.
+          </Text>
+        )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">

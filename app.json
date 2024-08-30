@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Alby Mobile",
-    "slug": "alby-mobile",
+    "name": "Alby Go",
+    "slug": "alby-go",
     "version": "1.3.0",
     "scheme": [
       "bitcoin",
@@ -23,7 +23,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Alby Mobile to use the camera to scan wallet connection and payment QR codes",
+          "cameraPermission": "Allow Alby Go to use the camera to scan wallet connection and payment QR codes",
           "recordAudioAndroid": false
         }
       ],
@@ -43,13 +43,13 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.getalby.mobile",
+      "bundleIdentifier": "com.getalby.go",
       "config": {
         "usesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.getalby.mobile",
+      "package": "com.getalby.go",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

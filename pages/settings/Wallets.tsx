@@ -1,4 +1,4 @@
-import { Link, Stack } from "expo-router";
+import { Link } from "expo-router";
 import { Pressable, View } from "react-native";
 import { FlatList } from "react-native";
 import { Settings2, Wallet2 } from "~/components/Icons";
@@ -8,6 +8,7 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
+import Screen from "~/components/Screen";
 
 export function Wallets() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -15,10 +16,8 @@ export function Wallets() {
   return (
     <>
       <View className="flex-1 flex flex-col">
-        <Stack.Screen
-          options={{
-            title: "Manage Wallets",
-          }}
+        <Screen
+          title="Manage Wallets"
         />
         <View className="flex-1 px-6 py-3">
           <FlatList

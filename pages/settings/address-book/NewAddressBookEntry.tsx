@@ -1,4 +1,4 @@
-import { Stack, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -7,6 +7,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
+import Screen from "~/components/Screen";
 
 export function NewAddressBookEntry() {
   const [name, setName] = React.useState("");
@@ -19,10 +20,8 @@ export function NewAddressBookEntry() {
     >
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex flex-col p-3 gap-3">
-          <Stack.Screen
-            options={{
-              title: "New Address Book Entry",
-            }}
+          <Screen
+            title="New Address Book Entry"
           />
           <Label nativeID="name" className="self-start justify-self-start">
             Name
@@ -35,7 +34,7 @@ export function NewAddressBookEntry() {
             value={name}
             onChangeText={setName}
             aria-labelledbyledBy="name"
-            // aria-errormessage="inputError"
+          // aria-errormessage="inputError"
           />
           <Label
             nativeID="lightningAddress"
@@ -50,7 +49,7 @@ export function NewAddressBookEntry() {
             placeholder="hello@getalby.com"
             onChangeText={setLightningAddress}
             aria-labelledbyledBy="lightningAddress"
-            // aria-errormessage="inputError"
+          // aria-errormessage="inputError"
           />
         </View>
         <View className="p-6">
