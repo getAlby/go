@@ -69,7 +69,7 @@ export default function RootLayout() {
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
           <Stack />
-          <Toast config={toastConfig} position="bottom" />
+          <Toast config={toastConfig} position="bottom" bottomOffset={140} />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>

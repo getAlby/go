@@ -123,12 +123,11 @@ export function Transactions() {
                   {transaction.type === "incoming" && (
                     <MoveDownLeft
                       className="text-receive"
-                      width={20}
-                      height={20}
+                      size={20}
                     />
                   )}
                   {transaction.type === "outgoing" && (
-                    <MoveUpRight className="text-send" width={20} height={20} />
+                    <MoveUpRight className="text-send" size={20} />
                   )}
                 </View>
                 <View className="flex flex-col flex-1">

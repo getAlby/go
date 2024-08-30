@@ -78,7 +78,12 @@ export function LNURLPay() {
             </View>
           </View>
           <View className="p-6">
-            <Button size="lg" onPress={requestInvoice} className="flex flex-row gap-2">
+            <Button
+              size="lg"
+              className="flex flex-row gap-2"
+              onPress={requestInvoice}
+              disabled={isLoading}
+            >
               {isLoading && <Loading className="text-primary-foreground" />}
               <Text>Next</Text>
             </Button>

@@ -99,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                  prevTransaction?.payment_hash
+                prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -182,7 +182,7 @@ export function Receive() {
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-            <ZapIcon className="text-black w-32 h-32" />
+            <ZapIcon className="text-foreground" size={64} />
             <Text className="text-2xl max-w-64 text-center">
               Receive quickly with a Lightning Address
             </Text>
@@ -296,9 +296,10 @@ export function Receive() {
             </View>
             <View className="m-6">
               <Button
-                onPress={() => generateInvoice(+amount)}
                 size="lg"
                 className="flex flex-row gap-2"
+                onPress={() => generateInvoice(+amount)}
+                disabled={isLoading}
               >
                 {isLoading && <Loading className="text-primary-foreground" />}
                 <Text>Create Invoice</Text>

@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { CheckCircle, MoveDownLeft, MoveUpRight } from "~/components/Icons";
+import { MoveDownLeft, MoveUpRight } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { cn } from "~/lib/utils";
@@ -24,7 +24,7 @@ export function Transaction() {
       />
       <View className="flex flex-col gap-5 justify-center items-center">
         <View
-          className="my-8 bg-muted border-2 rounded-full p-8"
+          className="my-8 bg-muted rounded-full p-8"
           style={{ elevation: 2 }}>
           {transaction.type === "incoming" && (
             <MoveDownLeft
