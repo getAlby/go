@@ -166,13 +166,13 @@ export function Send() {
                     LNURL.
                   </Text>
                   <Input
-                    className="w-full text-center mt-6 border-transparent !text-4xl font-bold text-muted-foreground"
+                    className="w-full text-center mt-6 border-transparent !text-4xl font-bold2 text-muted-foreground"
                     placeholder="hello@getalby.com"
                     value={keyboardText}
                     onChangeText={setKeyboardText}
                     inputMode="email"
                     autoFocus
-                    // aria-errormessage="inputError"
+                  // aria-errormessage="inputError"
                   />
                 </View>
                 <Button onPress={submitKeyboardText} size="lg">

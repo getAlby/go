@@ -81,7 +81,7 @@ export function Home() {
           headerRight: () => (
             <Link href="/settings" asChild className="absolute -right-4">
               <Button variant="link">
-                <Settings2 className="text-foreground" />
+                <Settings2 className="text-muted-foreground" />
               </Button>
             </Link>
           ),
@@ -115,7 +115,7 @@ export function Home() {
                       getFiatAmount(Math.floor(balance.balance / 1000))}
                     {balanceState == BalanceState.HIDDEN && "****"}
                   </Text>
-                  <Text className="text-muted-foreground text-3xl font-bold2">
+                  <Text className="text-muted-foreground text-3xl font-semibold2">
                     {balanceState == BalanceState.SATS && "sats"}
                   </Text>
                 </>
