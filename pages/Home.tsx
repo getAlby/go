@@ -1,4 +1,4 @@
-import { View, Image, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -72,12 +72,6 @@ export function Home() {
       <Stack.Screen
         options={{
           title: "Home",
-          headerTitle: () => (
-            <Image
-              className="w-12 h-12"
-              source={require("../assets/adaptive-icon.png")}
-            />
-          ),
           headerRight: () => (
             <Link href="/settings" asChild className="absolute -right-4">
               <Button variant="link">
@@ -95,8 +89,8 @@ export function Home() {
             style={{
               ...(pressed
                 ? {
-                    transform: "scale(0.98)",
-                  }
+                  transform: "scale(0.98)",
+                }
                 : []),
             }}
             onPress={switchBalanceState}
@@ -191,8 +185,8 @@ function MainButton({
               alignItems: "center",
               ...(pressed
                 ? {
-                    transform: "scale(0.98)",
-                  }
+                  transform: "scale(0.98)",
+                }
                 : {}),
             }}
           >
