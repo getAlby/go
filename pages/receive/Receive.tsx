@@ -1,12 +1,12 @@
 import { Link, Stack, router } from "expo-router";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, Share, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import * as Clipboard from "expo-clipboard";
 import React from "react";
 import { useAppStore } from "~/lib/state/appStore";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Copy, ZapIcon } from "~/components/Icons";
+import { Copy, Share2, ZapIcon } from "~/components/Icons";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -99,7 +99,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                  prevTransaction?.payment_hash
+                prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -157,6 +157,21 @@ export function Receive() {
     };
   }, []);
 
+  async function share() {
+    const message = invoice || lightningAddress;
+    try {
+      if (!message) {
+        throw new Error("no invoice or lightning address set");
+      }
+      await Share.share({
+        message,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+      errorToast(error as Error);
+    }
+  }
+
   return (
     <>
       <Stack.Screen
@@ -167,7 +182,7 @@ export function Receive() {
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-            <ZapIcon className="text-black w-32 h-32" />
+            <ZapIcon className="text-foreground" size={64} />
             <Text className="text-2xl max-w-64 text-center">
               Receive quickly with a Lightning Address
             </Text>
@@ -226,7 +241,12 @@ export function Receive() {
               </View>
             )}
           </View>
-          <View className="flex flex-row gap-6 p-6">
+
+          <View className="flex flex-row gap-3 p-6">
+            <Button onTouchStart={share} variant="secondary" className="flex-1">
+              <Share2 className="text-muted-foreground" />
+              <Text>Share</Text>
+            </Button>
             <Button
               variant="secondary"
               onPress={copy}
@@ -276,9 +296,10 @@ export function Receive() {
             </View>
             <View className="m-6">
               <Button
-                onPress={() => generateInvoice(+amount)}
                 size="lg"
                 className="flex flex-row gap-2"
+                onPress={() => generateInvoice(+amount)}
+                disabled={isLoading}
               >
                 {isLoading && <Loading className="text-primary-foreground" />}
                 <Text>Create Invoice</Text>

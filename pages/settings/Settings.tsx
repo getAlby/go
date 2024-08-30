@@ -1,6 +1,6 @@
 import { Link, router, Stack } from "expo-router";
 import { Alert, Pressable, TouchableOpacity, View } from "react-native";
-import { Bitcoin, Power, Wallet2 } from "~/components/Icons";
+import { Bitcoin, Palette, Power, Wallet2 } from "~/components/Icons";
 
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -8,13 +8,15 @@ import { Text } from "~/components/ui/text";
 import React from "react";
 import Constants from "expo-constants";
 import Toast from "react-native-toast-message";
+import { useColorScheme } from "~/lib/useColorScheme";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(false);
-  return (
+  const { colorScheme, toggleColorScheme } = useColorScheme();
 
+  return (
     <View className="flex-1 flex flex-col p-6 gap-6">
       <Stack.Screen
         options={{
@@ -22,7 +24,7 @@ export function Settings() {
         }}
       />
       <Link href="/settings/wallets" asChild>
-        <Pressable className="flex flex-row items-center gap-4">
+        <TouchableOpacity className="flex flex-row items-center gap-4">
           <Wallet2 className="text-foreground" />
           <Text className="font-medium2 text-xl text-foreground">
             Wallets
@@ -30,17 +32,27 @@ export function Settings() {
           <Text className="text-muted-foreground text-xl">
             ({wallet.name || DEFAULT_WALLET_NAME})
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </Link>
 
       <Link href="/settings/fiat-currency" asChild>
-        <Pressable className="flex flex-row gap-4">
+        <TouchableOpacity className="flex flex-row gap-4">
           <Bitcoin className="text-foreground" />
           <Text className="text-foreground font-medium2 text-xl">
             Units & Currency
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </Link>
+
+      <TouchableOpacity className="flex flex-row gap-4" onPress={toggleColorScheme}>
+        <Palette className="text-foreground" />
+        <Text className="text-foreground font-medium2 text-xl">
+          Theme
+        </Text>
+        <Text className="text-muted-foreground text-xl">
+          ({colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)})
+        </Text>
+      </TouchableOpacity>
 
       {developerMode && (
         <View className="mt-5 flex flex-col gap-4">
@@ -84,12 +96,11 @@ export function Settings() {
             setDeveloperMode(true);
             Toast.show({
               text1: "You are now a developer",
-              position: "top",
+
             });
           } else if (newCounter > 1 && newCounter < 5) {
             Toast.show({
               text1: `Tap ${5 - newCounter} more times`,
-              position: "top",
             });
           }
         }}

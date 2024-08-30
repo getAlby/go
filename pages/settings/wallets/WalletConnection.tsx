@@ -2,12 +2,7 @@ import { Pressable, Text, View } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
-import {
-  Camera as CameraIcon,
-  ClipboardPaste,
-  Hotel,
-  X,
-} from "~/components/Icons";
+import { ClipboardPaste, X } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { router, Stack } from "expo-router";
@@ -18,8 +13,7 @@ import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
-import { FocusableCamera } from "~/components/FocusableCamera";
-import { DemoWallets } from "./DemoWallets";
+import QRCodeScanner from "~/components/QRCodeScanner";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -28,7 +22,6 @@ export function WalletConnection() {
   );
   const [isScanning, setScanning] = React.useState(false);
   const [isConnecting, setConnecting] = React.useState(false);
-  const [showDemoWallets, setShowDemoWallets] = React.useState(false);
   const { data: walletInfo } = useInfo();
   const { data: balance } = useBalance();
 
@@ -38,13 +31,7 @@ export function WalletConnection() {
   }
 
   const handleScanned = (data: string) => {
-    setScanning((current) => {
-      if (current === true) {
-        // console.log(`Bar code with data ${data} has been scanned!`);
-        connect(data);
-      }
-      return false;
-    });
+    return connect(data);
   };
 
   React.useEffect(() => {
@@ -66,7 +53,6 @@ export function WalletConnection() {
   async function connect(
     nostrWalletConnectUrl: string,
     lightningAddress?: string,
-    isCustodial?: boolean,
   ) {
     try {
       setConnecting(true);
@@ -84,7 +70,6 @@ export function WalletConnection() {
       useAppStore.getState().updateCurrentWallet({
         nwcCapabilities: capabilities,
         ...(lightningAddress ? { lightningAddress } : {}),
-        isCustodial,
       });
       useAppStore.getState().setNWCClient(nwcClient);
       if (router.canDismiss()) {
@@ -107,20 +92,9 @@ export function WalletConnection() {
     <>
       <Stack.Screen
         options={{
-          title: showDemoWallets
-            ? "Choose a Demo Wallet"
-            : "Setup Wallet Connection",
-          headerRight: showDemoWallets
-            ? () => (
-                <Pressable
-                  onPress={() => {
-                    setShowDemoWallets(false);
-                  }}
-                >
-                  <X className="text-foreground" />
-                </Pressable>
-              )
-            : walletIdWithConnection !== -1
+          title: "Setup Wallet Connection",
+          headerRight:
+            walletIdWithConnection !== -1
               ? () => (
                   <Pressable
                     onPress={() => {
@@ -165,8 +139,7 @@ export function WalletConnection() {
           </Button>
         </View>
       )}
-      {!hasConnection && showDemoWallets && <DemoWallets connect={connect} />}
-      {!hasConnection && !showDemoWallets && (
+      {!hasConnection && (
         <>
           {isConnecting && (
             <>
@@ -178,33 +151,15 @@ export function WalletConnection() {
           )}
           {!isConnecting && (
             <>
-              {isScanning && <FocusableCamera onScanned={handleScanned} />}
-              {!isScanning && (
-                <>
-                  <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-                    <CameraIcon className="text-black w-32 h-32" />
-                    <Text className="text-2xl">Camera Permissions Needed</Text>
-                    <Button onPress={scan}>
-                      <Text>Grant Permissions</Text>
-                    </Button>
-                  </View>
-                </>
-              )}
-              <View className="absolute bottom-12 w-full z-10 flex flex-col items-center justify-center gap-3">
-                <Button onPress={paste} className="flex flex-row gap-2">
-                  <ClipboardPaste
-                    className="text-black"
-                    width={16}
-                    height={16}
-                  />
-                  <Text>Paste from Clipboard</Text>
-                </Button>
+              <QRCodeScanner onScanned={handleScanned} />
+              <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button
-                  onPress={() => setShowDemoWallets(true)}
-                  className="flex flex-row gap-2"
+                  onPress={paste}
+                  variant="secondary"
+                  className="flex-1 flex flex-col gap-2"
                 >
-                  <Hotel className="text-black" width={16} height={16} />
-                  <Text>Try a Demo Wallet</Text>
+                  <ClipboardPaste className="text-secondary-foreground" />
+                  <Text className="text-secondary-foreground">Paste</Text>
                 </Button>
               </View>
             </>

@@ -20,7 +20,7 @@ export function ReceiveSuccess() {
           title: "Payment Successful",
         }}
       />
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center gap-2">
         <View className="-mt-32">
           <Paid />
         </View>
@@ -36,8 +36,8 @@ export function ReceiveSuccess() {
           </Text>
         </View>
         {getFiatAmount &&
-          <Text className="text-muted-foreground text-2xl font-bold">
-            {getFiatAmount(123) ?? ""}
+          <Text className="text-muted-foreground text-2xl font-semibold2">
+            {getFiatAmount(decodedInvoice.satoshi) ?? ""}
           </Text>
         }
         {decodedInvoice.description && (

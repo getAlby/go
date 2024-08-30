@@ -60,14 +60,13 @@ export default function RootLayout() {
 
     (async () => {
       await Font.loadAsync({
-        "OpenRunde": require("./../assets/fonts/OpenRunde-Regular.otf"),
+        OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
         "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
         "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),
-        "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf")
+        "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf"),
       });
 
       setFontsLoaded(true);
-
     })().finally(() => {
       SplashScreen.hideAsync();
     });
@@ -85,11 +84,11 @@ export default function RootLayout() {
   return (
     <SWRConfig value={swrConfiguration}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? "dark" : "light"} />
+        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <PolyfillCrypto />
-        <SafeAreaView className="w-full h-full">
+        <SafeAreaView className="w-full h-full bg-background">
           <Stack />
-          <Toast config={toastConfig} position="bottom" />
+          <Toast config={toastConfig} position="bottom" bottomOffset={140} />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>

@@ -1,4 +1,3 @@
-import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import React, { useEffect } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
@@ -6,7 +5,6 @@ import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
 import {
   BookUser,
-  Camera as CameraIcon,
   ClipboardPaste,
   Keyboard as KeyboardIcon,
 } from "~/components/Icons";
@@ -14,38 +12,21 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
-import Loading from "~/components/Loading";
-import { FocusableCamera } from "~/components/FocusableCamera";
-import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
 import { Invoice } from "@getalby/lightning-tools";
+import QRCodeScanner from "~/components/QRCodeScanner";
+import Loading from "~/components/Loading";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
-  const [isScanning, setScanning] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
-  const [permissionStatus, setPermissionStatus] = React.useState(PermissionStatus.UNDETERMINED);
 
   useEffect(() => {
     if (url) {
       loadPayment(url);
-    } else {
-      // Add some timeout to allow the screen transition to finish before
-      // starting the camera to avoid stutters
-      setLoading(true);
-      window.setTimeout(async () => {
-        await scan();
-        setLoading(false);
-      }, 200);
     }
   }, [url]);
-
-  async function scan() {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setPermissionStatus(status);
-    setScanning(status === "granted");
-  }
 
   async function paste() {
     let clipboardText;
@@ -59,17 +40,11 @@ export function Send() {
   }
 
   function openKeyboard() {
-    setScanning(false);
     setKeyboardOpen(true);
   }
 
   const handleScanned = (data: string) => {
-    setScanning((current) => {
-      if (current === true) {
-        loadPayment(data);
-      }
-      return false;
-    });
+    return loadPayment(data);
   };
 
   function submitKeyboardText() {
@@ -114,7 +89,6 @@ export function Send() {
           },
         });
       } else {
-
         // Check if this is a valid invoice
         new Invoice({
           pr: text,
@@ -140,24 +114,45 @@ export function Send() {
         }}
       />
       {isLoading && (
-        <View className="flex-1 justify-center items-center">
-          <Loading />
+        <View className="flex-1 flex flex-col items-center justify-center">
+          <Loading className="text-primary-foreground" />
         </View>
       )}
       {!isLoading && (
         <>
-          {isScanning && (
+          {!keyboardOpen && (
             <>
-              <FocusableCamera onScanned={handleScanned} />
+              <QRCodeScanner onScanned={handleScanned} />
+              <View className="flex flex-row items-stretch justify-center gap-4 p-6">
+                <Button
+                  onPress={openKeyboard}
+                  variant="secondary"
+                  className="flex flex-col gap-2 flex-1"
+                >
+                  <KeyboardIcon className="text-secondary-foreground" />
+                  <Text>Manual</Text>
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="flex flex-col gap-2 flex-1"
+                  onPress={() => {
+                    router.push("/send/address-book");
+                  }}
+                >
+                  <BookUser className="text-secondary-foreground" />
+                  <Text>Contacts</Text>
+                </Button>
+                <Button
+                  onPress={paste}
+                  variant="secondary"
+                  className="flex flex-col gap-2 flex-1"
+                >
+                  <ClipboardPaste className="text-secondary-foreground" />
+                  <Text>Paste</Text>
+                </Button>
+              </View>
             </>
           )}
-          {!isScanning && !keyboardOpen && permissionStatus === PermissionStatus.DENIED &&
-            <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
-              <CameraIcon className="text-foreground" size={72} />
-              <Text className="text-2xl text-foreground text-center">Camera Permissions Denied</Text>
-              <Text className="text-muted-foreground text-xl text-center">It seems you denied permissions to use your camera. You might need to go to your device settings to allow access to your camera again.</Text>
-            </View>
-          }
           {keyboardOpen && (
             <TouchableWithoutFeedback
               onPress={() => {
@@ -177,7 +172,7 @@ export function Send() {
                     onChangeText={setKeyboardText}
                     inputMode="email"
                     autoFocus
-                  // aria-errormessage="inputError"
+                    // aria-errormessage="inputError"
                   />
                 </View>
                 <Button onPress={submitKeyboardText} size="lg">
@@ -186,36 +181,6 @@ export function Send() {
               </View>
             </TouchableWithoutFeedback>
           )}
-          {!keyboardOpen &&
-            <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-              <Button
-                onPress={openKeyboard}
-                variant="secondary"
-                className="flex flex-col gap-2 flex-1"
-              >
-                <KeyboardIcon className="text-secondary-foreground" />
-                <Text>Manual</Text>
-              </Button>
-              <Button
-                variant="secondary"
-                className="flex flex-col gap-2"
-                onPress={() => {
-                  router.push("/send/address-book");
-                }}
-              >
-                <BookUser className="text-secondary-foreground" />
-                <Text>Contacts</Text>
-              </Button>
-              <Button
-                onPress={paste}
-                variant="secondary"
-                className="flex flex-col gap-2 flex-1"
-              >
-                <ClipboardPaste className="text-secondary-foreground" />
-                <Text>Paste</Text>
-              </Button>
-            </View>
-          }
         </>
       )}
     </>
