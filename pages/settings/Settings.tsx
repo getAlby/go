@@ -106,7 +106,7 @@ export function Settings() {
         }}
       >
         <View className="flex-1 flex-col items-center justify-end">
-          <Text className="text-foreground">Alby Mobile v{Constants.expoConfig?.version}</Text>
+          <Text className="text-foreground">Alby Go v{Constants.expoConfig?.version}</Text>
         </View>
       </TouchableOpacity>
     </View>
