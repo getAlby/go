@@ -1,0 +1,12 @@
+albygo:
+  cli:
+    identifier: alby-go
+    name: Alby Go
+    summary: TBD
+    repository: https://github.com/getAlby/go
+    builder: npub1getal6ykt05fsz5nqu4uld09nfj3y3qxmv8crys4aeut53unfvlqr80nfm
+    artifacts:
+      nak-v%v-darwin-arm64:
+        platform: darwin-arm64
+      nak-v%v-linux-amd64:
+        platform: linux-x86_64
