@@ -1,5 +1,5 @@
 {
-  "name": "alby-mobile",
+  "name": "alby-go",
   "version": "1.3.0",
   "main": "expo-router/entry",
   "scripts": {
