@@ -45,7 +45,7 @@ export function Transaction() {
             <Text
               className={cn(
                 "text-4xl gap-2 font-semibold2",
-                transaction.type === "incoming" ? "text-receive" : "text-send"
+                transaction.type === "incoming" ? "text-receive" : "text-foreground"
               )}
             >
               {transaction.type === "incoming" ? "+" : "-"} {Math.floor(transaction.amount / 1000)}
