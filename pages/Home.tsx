@@ -176,7 +176,7 @@ function MainButton({
             style={{
               flex: 1,
               padding: 6,
-              borderRadius: 15,
+              borderRadius: 24,
               elevation: 2,
               justifyContent: "center",
               alignItems: "center",
