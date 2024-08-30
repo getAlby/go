@@ -71,7 +71,7 @@ export function Home() {
     <>
       <Stack.Screen
         options={{
-          title: "Home",
+          title: "",
           headerRight: () => (
             <Link href="/settings" asChild className="absolute -right-4">
               <Button variant="link">
