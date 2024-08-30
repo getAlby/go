@@ -2,7 +2,12 @@ import "../lib/applyGlobalPolyfills";
 
 import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
-import { router, SplashScreen, Stack } from "expo-router";
+import {
+  router,
+  SplashScreen,
+  Stack,
+  useRootNavigationState,
+} from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
@@ -15,7 +20,6 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
 import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { secureStorage } from "~/lib/secureStorage";
 
 const LIGHT_THEME: Theme = {
@@ -45,11 +49,13 @@ export default function RootLayout() {
   const [showOnboarding, setShowOnboarding] = React.useState(false);
   useConnectionChecker();
 
-  React.useEffect(() => {
+  const rootNavigationState = useRootNavigationState();
+  const hasNavigationState = !!rootNavigationState?.key;
 
+  React.useEffect(() => {
     const checkOnboardingStatus = async () => {
       const hasOnboarded = await secureStorage.getItem("hasOnboarded");
-      if (!hasOnboarded) {
+      if (!hasOnboarded && hasNavigationState) {
         router.push({
           pathname: "/onboarding",
         });
@@ -70,15 +76,10 @@ export default function RootLayout() {
     })().finally(() => {
       SplashScreen.hideAsync();
     });
-  }, []);
+  }, [hasNavigationState]);
 
   if (!fontsLoaded) {
     return null;
-  }
-
-  async function reset() {
-    await AsyncStorage.removeItem("hasOnboarded");
-    router.navigate("/")
   }
 
   return (
