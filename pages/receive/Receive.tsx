@@ -1,4 +1,4 @@
-import { Link, Stack, router } from "expo-router";
+import { Link, router } from "expo-router";
 import { Keyboard, Share, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import * as Clipboard from "expo-clipboard";
@@ -14,6 +14,7 @@ import Loading from "~/components/Loading";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import QRCode from "~/components/QRCode";
+import Screen from "~/components/Screen";
 
 export function Receive() {
   const getFiatAmount = useGetFiatAmount();
@@ -174,10 +175,8 @@ export function Receive() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Receive",
-        }}
+      <Screen
+        title="Receive"
       />
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
@@ -243,7 +242,7 @@ export function Receive() {
           </View>
 
           <View className="flex flex-row gap-3 p-6">
-            <Button onTouchStart={share} variant="secondary" className="flex-1">
+            <Button onPress={share} variant="secondary" className="flex-1 flex flex-col gap-2">
               <Share2 className="text-muted-foreground" />
               <Text>Share</Text>
             </Button>
@@ -311,3 +310,5 @@ export function Receive() {
     </>
   );
 }
+
+

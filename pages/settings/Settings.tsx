@@ -1,4 +1,4 @@
-import { Link, router, Stack } from "expo-router";
+import { Link, router } from "expo-router";
 import { Alert, Pressable, TouchableOpacity, View } from "react-native";
 import { Bitcoin, Palette, Power, Wallet2 } from "~/components/Icons";
 
@@ -9,6 +9,7 @@ import React from "react";
 import Constants from "expo-constants";
 import Toast from "react-native-toast-message";
 import { useColorScheme } from "~/lib/useColorScheme";
+import Screen from "~/components/Screen";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
@@ -18,10 +19,8 @@ export function Settings() {
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-6">
-      <Stack.Screen
-        options={{
-          title: "Settings",
-        }}
+      <Screen
+        title="Settings"
       />
       <Link href="/settings/wallets" asChild>
         <TouchableOpacity className="flex flex-row items-center gap-4">

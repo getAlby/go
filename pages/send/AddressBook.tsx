@@ -1,8 +1,7 @@
-import { Link, Stack, router } from "expo-router";
+import { Link, router } from "expo-router";
 import { Pressable, View } from "react-native";
-import { PlusCircle } from "~/components/Icons";
+import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-
 import {
   Card,
   CardDescription,
@@ -16,10 +15,8 @@ export function AddressBook() {
   const addressBookEntries = useAppStore((store) => store.addressBookEntries);
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">
-      <Stack.Screen
-        options={{
-          title: "Address Book",
-        }}
+      <Screen
+        title="Address Book"
       />
       <View className="flex-1 flex flex-col gap-4">
         {addressBookEntries.length > 0 ? addressBookEntries.map((addressBookEntry, index) => (
