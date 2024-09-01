@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@getalby/lightning-tools": "^5.0.3",
-    "@getalby/sdk": "^3.6.1",
+    "@getalby/sdk": "^3.7.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",

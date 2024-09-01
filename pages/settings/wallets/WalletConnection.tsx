@@ -51,10 +51,7 @@ export function WalletConnection() {
     connect(nostrWalletConnectUrl);
   }
 
-  async function connect(
-    nostrWalletConnectUrl: string,
-    lightningAddress?: string,
-  ) {
+  async function connect(nostrWalletConnectUrl: string) {
     try {
       setConnecting(true);
       // make sure connection is valid
@@ -70,7 +67,7 @@ export function WalletConnection() {
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
       useAppStore.getState().updateCurrentWallet({
         nwcCapabilities: capabilities,
-        ...(lightningAddress ? { lightningAddress } : {}),
+        ...(nwcClient.lud16 ? { lightningAddress: nwcClient.lud16 } : {}),
       });
       useAppStore.getState().setNWCClient(nwcClient);
       if (router.canDismiss()) {
