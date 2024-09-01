@@ -6,6 +6,12 @@ jobs:
       - name: 🏗 Setup repo
         uses: actions/checkout@v3
 
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: "temurin"
+
       - name: 🏗 Setup Node
         uses: actions/setup-node@v3
         with:
