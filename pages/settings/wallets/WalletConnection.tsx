@@ -93,25 +93,20 @@ export function WalletConnection() {
     <>
       <Screen
         title="Setup Wallet Connection"
-        right={() => {
-          return (<>
-            {(walletIdWithConnection !== -1
-              ? () => (
-                <Pressable
-                  onPress={() => {
-                    useAppStore
-                      .getState()
-                      .setSelectedWalletId(walletIdWithConnection);
-                    router.replace("/");
-                  }}
-                >
-                  <X className="text-foreground" />
-                </Pressable>
-              )
-              : undefined)};
-
-          </>)
-        }}
+        right={() =>
+          walletIdWithConnection !== -1 ? (
+            <Pressable
+              onPress={() => {
+                useAppStore
+                  .getState()
+                  .setSelectedWalletId(walletIdWithConnection);
+                router.replace("/");
+              }}
+            >
+              <X className="text-foreground" />
+            </Pressable>
+          ) : null
+        }
       />
       {hasConnection && (
         <View className="flex-1 p-3">
