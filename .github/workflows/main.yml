@@ -33,7 +33,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: alby-go-${{ github.ref_name }}-android.apk
+          name: alby-go-android.apk
           path: ./app-release.apk
 
 #      - name: Create Release
