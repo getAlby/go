@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import { Alert, Pressable, TouchableOpacity, View } from "react-native";
-import { Bitcoin, Palette, Power, Wallet2 } from "~/components/Icons";
+import { Bitcoin, Egg, Palette, Power, Wallet2 } from "~/components/Icons";
 
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -25,9 +25,7 @@ export function Settings() {
       <Link href="/settings/wallets" asChild>
         <TouchableOpacity className="flex flex-row items-center gap-4">
           <Wallet2 className="text-foreground" />
-          <Text className="font-medium2 text-xl text-foreground">
-            Wallets
-          </Text>
+          <Text className="font-medium2 text-xl text-foreground">Wallets</Text>
           <Text className="text-muted-foreground text-xl">
             ({wallet.name || DEFAULT_WALLET_NAME})
           </Text>
@@ -43,47 +41,63 @@ export function Settings() {
         </TouchableOpacity>
       </Link>
 
-      <TouchableOpacity className="flex flex-row gap-4" onPress={toggleColorScheme}>
+      <TouchableOpacity
+        className="flex flex-row gap-4"
+        onPress={toggleColorScheme}
+      >
         <Palette className="text-foreground" />
-        <Text className="text-foreground font-medium2 text-xl">
-          Theme
-        </Text>
+        <Text className="text-foreground font-medium2 text-xl">Theme</Text>
         <Text className="text-muted-foreground text-xl">
           ({colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)})
         </Text>
       </TouchableOpacity>
 
       {developerMode && (
-        <View className="mt-5 flex flex-col gap-4">
-          <Text className="text-muted-foreground uppercase">Developer mode</Text>
-          <Pressable
-            className="flex flex-row gap-4"
-            onPress={() => {
-              Alert.alert(
-                "Reset",
-                "Are you sure you want to reset? You will be signed out of all your wallets. Your connection secrets and address book will be lost.",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Confirm",
-                    onPress: () => {
-                      router.dismissAll();
-                      useAppStore.getState().reset();
-                    },
-                  },
-                ],
-              );
-            }}
-          >
-            <Power className="text-destructive" />
-            <Text className="text-destructive font-medium2 text-xl">
-              Reset Wallet
+        <>
+          <View className="mt-5 flex flex-col gap-6">
+            <Text className="text-muted-foreground uppercase">
+              Developer mode
             </Text>
-          </Pressable>
-        </View>
+            <Pressable
+              className="flex flex-row gap-4"
+              onPress={() => {
+                router.dismissAll();
+                useAppStore.getState().showOnboarding();
+                router.replace("/onboarding");
+              }}
+            >
+              <Egg className="text-primary-foreground" />
+              <Text className="font-medium2 text-xl">Open Onboarding</Text>
+            </Pressable>
+            <Pressable
+              className="flex flex-row gap-4"
+              onPress={() => {
+                Alert.alert(
+                  "Reset",
+                  "Are you sure you want to reset? You will be signed out of all your wallets. Your connection secrets and address book will be lost.",
+                  [
+                    {
+                      text: "Cancel",
+                      style: "cancel",
+                    },
+                    {
+                      text: "Confirm",
+                      onPress: () => {
+                        router.dismissAll();
+                        useAppStore.getState().reset();
+                      },
+                    },
+                  ],
+                );
+              }}
+            >
+              <Power className="text-destructive" />
+              <Text className="text-destructive font-medium2 text-xl">
+                Reset Wallet
+              </Text>
+            </Pressable>
+          </View>
+        </>
       )}
       <TouchableOpacity
         className="flex-1"
@@ -95,7 +109,6 @@ export function Settings() {
             setDeveloperMode(true);
             Toast.show({
               text1: "You are now a developer",
-
             });
           } else if (newCounter > 1 && newCounter < 5) {
             Toast.show({

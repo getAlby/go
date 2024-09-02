@@ -22,7 +22,7 @@ const buttonVariants = cva(
       size: {
         default: "min-h-10 px-4 py-2 native:min-h-12 native:px-5 native:py-3",
         sm: "min-h-9 rounded-md px-3",
-        lg: "min-h-11 rounded-lg px-8 native:min-h-16",
+        lg: "min-h-11 rounded-2xl px-8 native:min-h-16",
         icon: "min-h-10 min-w-10",
       },
     },
@@ -42,14 +42,14 @@ const buttonTextVariants = cva(
         destructive: "text-destructive-foreground",
         outline: "group-active:text-accent-foreground",
         secondary:
-          "text-secondary-foreground group-active:text-secondary-foreground font-medium2",
+          "text-secondary-foreground group-active:text-secondary-foreground",
         ghost: "group-active:text-accent-foreground",
         link: "text-primary group-active:underline",
       },
       size: {
-        default: "",
+        default: "font-medium2",
         sm: "",
-        lg: "native:text-2xl",
+        lg: "native:text-2xl font-bold2",
         icon: "",
       },
     },

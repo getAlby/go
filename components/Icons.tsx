@@ -33,6 +33,7 @@ import {
   Power,
   CameraOff,
   Palette,
+  Egg,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -81,6 +82,7 @@ interopIcon(Hotel);
 interopIcon(Power);
 interopIcon(CameraOff);
 interopIcon(Palette);
+interopIcon(Egg);
 
 export {
   AlertCircle,
@@ -116,4 +118,5 @@ export {
   X,
   Power,
   Palette,
+  Egg,
 };

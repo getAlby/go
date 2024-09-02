@@ -19,12 +19,14 @@ interface AppState {
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
+  showOnboarding(): void;
 }
 
 const walletKeyPrefix = "wallet";
 const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
+const hasOnboardedKey = "hasOnboarded";
 
 type Wallet = {
   name?: string;
@@ -176,6 +178,10 @@ export const useAppStore = create<AppState>()((set, get) => {
         addressBookEntries: [...currentAddressBookEntries, addressBookEntry],
       });
     },
+    showOnboarding() {
+      // clear onboarding status
+      secureStorage.removeItem(hasOnboardedKey);
+    },
     reset() {
       // clear wallets
       for (let i = 0; i < get().wallets.length; i++) {
@@ -187,6 +193,9 @@ export const useAppStore = create<AppState>()((set, get) => {
       }
       // clear selected wallet ID
       secureStorage.removeItem(selectedWalletIdKey);
+
+      // clear onboarding status
+      secureStorage.removeItem(hasOnboardedKey);
 
       set({
         nwcClient: undefined,
