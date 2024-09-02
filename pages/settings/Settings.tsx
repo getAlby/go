@@ -54,7 +54,7 @@ export function Settings() {
 
       {developerMode && (
         <>
-          <View className="mt-5 flex flex-col gap-4">
+          <View className="mt-5 flex flex-col gap-6">
             <Text className="text-muted-foreground uppercase">
               Developer mode
             </Text>
