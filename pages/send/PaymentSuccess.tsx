@@ -1,11 +1,9 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
-import { Pressable, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { View } from "react-native";
 import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import * as Clipboard from "expo-clipboard";
-import Toast from "react-native-toast-message";
-import { Copy } from "~/components/Icons";
+import Screen from "~/components/Screen";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function PaymentSuccess() {
@@ -18,10 +16,8 @@ export function PaymentSuccess() {
   };
   return (
     <View className="flex-1 flex flex-col">
-      <Stack.Screen
-        options={{
-          title: "Success",
-        }}
+      <Screen
+        title="Success"
       />
       <View className="flex-1 justify-center items-center gap-8">
         <Paid />

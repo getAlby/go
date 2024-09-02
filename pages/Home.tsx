@@ -1,14 +1,12 @@
-import { View, Image, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 import {
   Link,
-  router,
-  Stack,
-  useFocusEffect,
-  useRootNavigationState,
+  router, useFocusEffect,
+  useRootNavigationState
 } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -22,6 +20,7 @@ import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
+import Screen from "~/components/Screen";
 
 dayjs.extend(relativeTime);
 
@@ -69,23 +68,15 @@ export function Home() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Home",
-          headerTitle: () => (
-            <Image
-              className="w-12 h-12"
-              source={require("../assets/adaptive-icon.png")}
-            />
-          ),
-          headerRight: () => (
-            <Link href="/settings" asChild className="absolute -right-4">
-              <Button variant="link">
-                <Settings2 className="text-foreground" />
-              </Button>
-            </Link>
-          ),
-        }}
+      <Screen
+        title=""
+        right={() =>
+          <Link href="/settings" asChild className="absolute -right-4">
+            <Button variant="link">
+              <Settings2 className="text-foreground" />
+            </Button>
+          </Link>
+        }
       />
       <View className="h-full flex">
         <View className="grow flex flex-col items-center justify-center gap-4">
@@ -95,8 +86,8 @@ export function Home() {
             style={{
               ...(pressed
                 ? {
-                    transform: "scale(0.98)",
-                  }
+                  transform: "scale(0.98)",
+                }
                 : []),
             }}
             onPress={switchBalanceState}
@@ -115,7 +106,7 @@ export function Home() {
                       getFiatAmount(Math.floor(balance.balance / 1000))}
                     {balanceState == BalanceState.HIDDEN && "****"}
                   </Text>
-                  <Text className="text-muted-foreground text-3xl font-bold2">
+                  <Text className="text-muted-foreground text-3xl font-semibold2">
                     {balanceState == BalanceState.SATS && "sats"}
                   </Text>
                 </>
@@ -140,10 +131,10 @@ export function Home() {
             </View>
           </Pressable>
         </View>
-        <View className="flex items-center justify-center my-5">
+        <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
             <Button variant="ghost" className="p-10 rounded-full aspect-square">
-              <ChevronUp className="text-foreground" size={32} />
+              <ChevronUp className="text-muted-foreground" size={32} />
             </Button>
           </Link>
         </View>
@@ -185,14 +176,14 @@ function MainButton({
             style={{
               flex: 1,
               padding: 6,
-              borderRadius: 15,
+              borderRadius: 24,
               elevation: 2,
               justifyContent: "center",
               alignItems: "center",
               ...(pressed
                 ? {
-                    transform: "scale(0.98)",
-                  }
+                  transform: "scale(0.98)",
+                }
                 : {}),
             }}
           >

@@ -5,7 +5,7 @@ import { nwc } from "@getalby/sdk";
 import { ClipboardPaste, X } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
-import { router, Stack } from "expo-router";
+import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
 import { useBalance } from "~/hooks/useBalance";
@@ -14,6 +14,7 @@ import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
+import Screen from "~/components/Screen";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -50,10 +51,7 @@ export function WalletConnection() {
     connect(nostrWalletConnectUrl);
   }
 
-  async function connect(
-    nostrWalletConnectUrl: string,
-    lightningAddress?: string,
-  ) {
+  async function connect(nostrWalletConnectUrl: string) {
     try {
       setConnecting(true);
       // make sure connection is valid
@@ -69,7 +67,7 @@ export function WalletConnection() {
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
       useAppStore.getState().updateCurrentWallet({
         nwcCapabilities: capabilities,
-        ...(lightningAddress ? { lightningAddress } : {}),
+        ...(nwcClient.lud16 ? { lightningAddress: nwcClient.lud16 } : {}),
       });
       useAppStore.getState().setNWCClient(nwcClient);
       if (router.canDismiss()) {
@@ -90,25 +88,22 @@ export function WalletConnection() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Setup Wallet Connection",
-          headerRight:
-            walletIdWithConnection !== -1
-              ? () => (
-                  <Pressable
-                    onPress={() => {
-                      useAppStore
-                        .getState()
-                        .setSelectedWalletId(walletIdWithConnection);
-                      router.replace("/");
-                    }}
-                  >
-                    <X className="text-foreground" />
-                  </Pressable>
-                )
-              : undefined,
-        }}
+      <Screen
+        title="Setup Wallet Connection"
+        right={() =>
+          walletIdWithConnection !== -1 ? (
+            <Pressable
+              onPress={() => {
+                useAppStore
+                  .getState()
+                  .setSelectedWalletId(walletIdWithConnection);
+                router.replace("/");
+              }}
+            >
+              <X className="text-foreground" />
+            </Pressable>
+          ) : null
+        }
       />
       {hasConnection && (
         <View className="flex-1 p-3">

@@ -1,6 +1,6 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
-import { Link, router, Stack } from "expo-router";
+import { Link, router } from "expo-router";
 import React from "react";
 import {
   FlatList,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   View,
 } from "react-native";
+import Screen from "~/components/Screen";
 import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -65,21 +66,16 @@ export function Transactions() {
 
   return (
     <View className="flex-1 flex flex-col gap-3">
-      <Stack.Screen
-        options={{
-          title: "Transactions",
-          animation: "slide_from_bottom",
-          headerLeft: () => <View />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <X className="text-foreground" />
-            </Pressable>
-          ),
-        }}
+      <Screen
+        title="Transactions"
+        animation="slide_from_bottom"
+        right={() => (<Pressable
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <X className="text-foreground" />
+        </Pressable>)}
       />
       {allTransactions && allTransactions.length ? (
         <FlatList
@@ -118,7 +114,7 @@ export function Transactions() {
                 })
               }
             >
-              <View className="flex flex-row items-center gap-x-6 px-4 mb-5">
+              <View className="flex flex-row items-center gap-3 px-4 py-3">
                 <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
                   {transaction.type === "incoming" && (
                     <MoveDownLeft
@@ -131,7 +127,7 @@ export function Transactions() {
                   )}
                 </View>
                 <View className="flex flex-col flex-1">
-                  <Text numberOfLines={1}>
+                  <Text numberOfLines={1} className="font-medium2">
                     {transaction.description
                       ? transaction.description
                       : transaction.type === "incoming"
@@ -145,16 +141,18 @@ export function Transactions() {
                 <View>
                   <Text
                     className={cn(
-                      "text-right font-medium",
+                      "text-right font-medium2",
                       transaction.type === "incoming"
                         ? "text-receive"
-                        : "text-send",
+                        : "text-foreground",
                     )}
                   >
+                    {transaction.type === "incoming" ? "+" : "-"}
+                    {" "}
                     {Math.floor(transaction.amount / 1000)}
                     <Text className="text-muted-foreground"> sats</Text>
                   </Text>
-                  <Text className="text-right text-sm text-muted-foreground">
+                  <Text className="text-right text-sm text-muted-foreground font-medium2">
                     {getFiatAmount &&
                       getFiatAmount(Math.floor(transaction.amount / 1000))}
                   </Text>

@@ -1,9 +1,11 @@
 import { Invoice } from "@getalby/lightning-tools";
-import { Stack, router, useLocalSearchParams } from "expo-router";
+
+import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import { ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
@@ -54,11 +56,10 @@ export function ConfirmPayment() {
   });
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Confirm Payment",
-        }}
+      <Screen
+        title="Confirm Payment"
       />
+
       <View className="flex-1 justify-center items-center gap-8">
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
