@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Alby Go",
-    "slug": "alby-go",
+    "slug": "alby-mobile",
     "version": "1.3.0",
     "scheme": [
       "bitcoin",
@@ -43,13 +43,13 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.getalby.go",
+      "bundleIdentifier": "com.getalby.mobile",
       "config": {
         "usesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.getalby.go",
+      "package": "com.getalby.mobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
