@@ -60,10 +60,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "aa81591a-4297-4aa0-b8d0-c4fd0a7d49ca"
-      },
-      "router": {
-        "origin": false
+        "projectId": "294965ec-3a67-4994-8794-5cc1117ef155"
       }
     },
     "owner": "roland_alby"
