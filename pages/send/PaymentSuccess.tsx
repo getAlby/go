@@ -46,7 +46,7 @@ export function PaymentSuccess() {
           size="lg"
           className="w-full"
           onPress={() => {
-            router.replace("/");
+            router.replace("/home");
           }}
         >
           <Text>Close</Text>
