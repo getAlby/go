@@ -1,4 +1,4 @@
-import { View, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
@@ -74,25 +74,16 @@ export function Home() {
       <Screen
         title=""
         right={() =>
-          <Link href="/settings" asChild className="absolute -right-4">
-            <Button variant="link">
+          <Link href="/settings" asChild>
+            <TouchableOpacity>
               <Settings2 className="text-foreground" />
-            </Button>
+            </TouchableOpacity>
           </Link>
         }
       />
       <View className="h-full flex">
         <View className="grow flex flex-col items-center justify-center gap-4">
-          <Pressable
-            onPressIn={() => setPressed(true)}
-            onPressOut={() => setPressed(false)}
-            style={{
-              ...(pressed
-                ? {
-                  transform: "scale(0.98)",
-                }
-                : []),
-            }}
+          <TouchableOpacity
             onPress={switchBalanceState}
             className="w-full flex flex-col items-center justify-center gap-4"
           >
@@ -132,7 +123,7 @@ export function Home() {
                 <Skeleton className="w-32 h-10" />
               )}
             </View>
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>

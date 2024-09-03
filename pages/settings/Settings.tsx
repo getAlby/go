@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Alert, Pressable, TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import { Bitcoin, Egg, Palette, Power, Wallet2 } from "~/components/Icons";
 
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
@@ -58,7 +58,7 @@ export function Settings() {
             <Text className="text-muted-foreground uppercase">
               Developer mode
             </Text>
-            <Pressable
+            <TouchableOpacity
               className="flex flex-row gap-4"
               onPress={() => {
                 router.dismissAll();
@@ -68,8 +68,8 @@ export function Settings() {
             >
               <Egg className="text-foreground" />
               <Text className="font-medium2 text-xl">Open Onboarding</Text>
-            </Pressable>
-            <Pressable
+            </TouchableOpacity>
+            <TouchableOpacity
               className="flex flex-row gap-4"
               onPress={() => {
                 Alert.alert(
@@ -96,7 +96,7 @@ export function Settings() {
               <Text className="text-destructive font-medium2 text-xl">
                 Reset Wallet
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </>
       )}
