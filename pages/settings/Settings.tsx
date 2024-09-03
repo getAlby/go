@@ -85,6 +85,7 @@ export function Settings() {
                       onPress: () => {
                         router.dismissAll();
                         useAppStore.getState().reset();
+                        router.replace("/");
                       },
                     },
                   ],

@@ -1,5 +1,5 @@
-import { Index } from "../pages/Index";
+import { Home } from "../pages/Home";
 
 export default function Page() {
-  return <Index />;
+  return <Home />;
 }

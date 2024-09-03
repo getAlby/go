@@ -47,7 +47,7 @@ export function ReceiveSuccess() {
         <Button
           size="lg"
           onPress={() => {
-            router.replace("/home");
+            router.replace("/");
           }}
         >
           <Text>Close</Text>

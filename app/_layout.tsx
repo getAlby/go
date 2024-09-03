@@ -47,22 +47,23 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
+  const [checkedOnboarding, setCheckedOnboarding] = React.useState(false);
   useConnectionChecker();
 
   const rootNavigationState = useRootNavigationState();
   const hasNavigationState = !!rootNavigationState?.key;
 
-  React.useEffect(() => {
-    const checkOnboardingStatus = async () => {
-      const hasOnboarded = await secureStorage.getItem(hasOnboardedKey);
-      if (!hasOnboarded && hasNavigationState) {
-        router.replace("/onboarding");
-      }
-    };
+  async function  checkOnboardingStatus() {
+    const hasOnboarded = await secureStorage.getItem(hasOnboardedKey);
+    if (!hasOnboarded && hasNavigationState) {
+      router.replace("/onboarding");
+    }
 
-    checkOnboardingStatus();
+    setCheckedOnboarding(true);
+  };
 
-    (async () => {
+  async function loadFonts() {
+
       await Font.loadAsync({
         OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
         "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
@@ -71,12 +72,27 @@ export default function RootLayout() {
       });
 
       setFontsLoaded(true);
-    })().finally(() => {
-      SplashScreen.hideAsync();
-    });
+  }
+
+  React.useEffect(() => {
+    const init = async () => {
+      try {
+        await Promise.all([
+          checkOnboardingStatus(),
+          loadFonts(),
+        ]);
+      }
+      finally {
+
+        SplashScreen.hideAsync();
+      }
+    };
+
+    init();
+
   }, [hasNavigationState]);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !checkedOnboarding) {
     return null;
   }
 

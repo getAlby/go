@@ -73,7 +73,7 @@ export function WalletConnection() {
       if (router.canDismiss()) {
         router.dismissAll();
       }
-      router.replace("/home");
+      router.replace("/");
       Toast.show({
         type: "success",
         text1: "Wallet Connected",
@@ -97,7 +97,7 @@ export function WalletConnection() {
                 useAppStore
                   .getState()
                   .setSelectedWalletId(walletIdWithConnection);
-                router.replace("/home");
+                router.replace("/");
               }}
             >
               <X className="text-foreground" />
