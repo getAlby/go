@@ -130,7 +130,7 @@ export function Send() {
                   className="flex flex-col gap-2 flex-1"
                 >
                   <KeyboardIcon className="text-secondary-foreground" />
-                  <Text>Manual</Text>
+                  <Text numberOfLines={1}>Manual</Text>
                 </Button>
                 <Button
                   variant="secondary"
@@ -148,7 +148,7 @@ export function Send() {
                   className="flex flex-col gap-2 flex-1"
                 >
                   <ClipboardPaste className="text-secondary-foreground" />
-                  <Text>Paste</Text>
+                  <Text numberOfLines={1}>Paste</Text>
                 </Button>
               </View>
             </>
