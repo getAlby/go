@@ -140,7 +140,7 @@ export function Send() {
                   }}
                 >
                   <BookUser className="text-secondary-foreground" />
-                  <Text>Contacts</Text>
+                  <Text numberOfLines={1}>Contacts</Text>
                 </Button>
                 <Button
                   onPress={paste}
