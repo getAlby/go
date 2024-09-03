@@ -7,7 +7,6 @@ export function useOnboarding() {
     const [onboarded, setOnboarded] = React.useState(false);
     useEffect(() => {
         async function checkOnboardingStatus() {
-            await secureStorage.removeItem(hasOnboardedKey);
             const hasOnboarded = await secureStorage.getItem(hasOnboardedKey);
             setOnboarded(!!hasOnboarded);
         };
