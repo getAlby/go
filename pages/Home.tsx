@@ -21,6 +21,7 @@ import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
 import Screen from "~/components/Screen";
+import { useOnboarding } from "~/hooks/useOnboarding";
 
 dayjs.extend(relativeTime);
 
@@ -40,6 +41,7 @@ export function Home() {
   );
   const [pressed, setPressed] = React.useState(false);
   const rootNavigationState = useRootNavigationState();
+  const isOnboarded = useOnboarding();
 
   useFocusEffect(() => {
     reloadBalance();
@@ -48,10 +50,11 @@ export function Home() {
   let hasNavigationState = !!rootNavigationState?.key;
   const hasNwcClient = !!nwcClient;
   React.useEffect(() => {
-    if (hasNavigationState && !hasNwcClient) {
+    if (hasNavigationState && !hasNwcClient && isOnboarded) {
       router.replace(`/settings/wallets/${selectedWalletId}/wallet-connection`);
     }
-  }, [hasNwcClient, hasNavigationState]);
+  }, [hasNwcClient, hasNavigationState, isOnboarded]);
+
   if (!nwcClient) {
     return <WalletConnection />;
   }

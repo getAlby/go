@@ -9,7 +9,7 @@ import { hasOnboardedKey } from "~/lib/state/appStore";
 
 export function Onboarding() {
   async function finish() {
-    secureStorage.setItem(hasOnboardedKey, "true");
+    secureStorage.setItem(hasOnboardedKey, "true");    
     router.replace("/");
   }
 
