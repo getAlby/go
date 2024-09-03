@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { Pressable, View } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native";
 import { Settings2, Wallet2 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
@@ -47,12 +47,12 @@ export function Wallets() {
                   {active && (
                     <Link
                       href={`/settings/wallets/${selectedWalletId}`}
-                      className="absolute right-2"
+                      className="absolute right-4"
                       asChild
                     >
-                      <Button variant="link">
+                      <TouchableOpacity>
                         <Settings2 className="text-foreground w-32 h-32" />
-                      </Button>
+                      </TouchableOpacity>
                     </Link>
                   )}
                 </Pressable>
