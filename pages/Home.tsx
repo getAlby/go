@@ -39,7 +39,6 @@ export function Home() {
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
-  const [pressed, setPressed] = React.useState(false);
   const rootNavigationState = useRootNavigationState();
   const isOnboarded = useOnboarding();
 
@@ -55,7 +54,7 @@ export function Home() {
     }
   }, [hasNwcClient, hasNavigationState, isOnboarded]);
 
-  if (!nwcClient) {
+  if (!nwcClient && isOnboarded) {
     return <WalletConnection />;
   }
 

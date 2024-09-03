@@ -53,7 +53,7 @@ export default function RootLayout() {
   const rootNavigationState = useRootNavigationState();
   const hasNavigationState = !!rootNavigationState?.key;
 
-  async function  checkOnboardingStatus() {
+  async function checkOnboardingStatus() {
     const hasOnboarded = await secureStorage.getItem(hasOnboardedKey);
     if (!hasOnboarded && hasNavigationState) {
       router.replace("/onboarding");
@@ -64,14 +64,14 @@ export default function RootLayout() {
 
   async function loadFonts() {
 
-      await Font.loadAsync({
-        OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
-        "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
-        "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),
-        "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf"),
-      });
+    await Font.loadAsync({
+      OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
+      "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
+      "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),
+      "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf"),
+    });
 
-      setFontsLoaded(true);
+    setFontsLoaded(true);
   }
 
   React.useEffect(() => {
@@ -83,7 +83,6 @@ export default function RootLayout() {
         ]);
       }
       finally {
-
         SplashScreen.hideAsync();
       }
     };
