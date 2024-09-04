@@ -1,0 +1,9 @@
+albygo:
+  android:
+    identifier: com.getalby.mobile
+    name: Alby Go
+    description: A simple lightning mobile wallet interface that works great with Alby Hub.
+    builder: npub1getal6ykt05fsz5nqu4uld09nfj3y3qxmv8crys4aeut53unfvlqr80nfm
+    repository: https://github.com/getAlby/go
+    artifacts:
+      - alby-go-v%v-android.apk
