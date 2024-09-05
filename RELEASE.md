@@ -21,5 +21,5 @@ Pre-requirements to have installed:
 
 1. Make sure you have the apk file locally, either by building it with `eas --local --profile production_apk --output=./alby-go-<version>-android.apk` or downloading it from expo.dev or github release.
 2. `zapstore publish albygo -a alby-go-<version>-android.apk -r <version>`
-3. use Alby nsec to sign during zapstore publish
+3. Use nsec to sign during zapstore publish
 
