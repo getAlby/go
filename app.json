@@ -50,10 +50,6 @@
     },
     "android": {
       "package": "com.getalby.mobile",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0F0C40"
-      },
       "permissions": [
         "android.permission.CAMERA"
       ]
