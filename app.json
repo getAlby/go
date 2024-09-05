@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0F0C40"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -52,7 +52,7 @@
       "package": "com.getalby.mobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0F0C40"
       },
       "permissions": [
         "android.permission.CAMERA"
