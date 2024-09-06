@@ -36,6 +36,7 @@ export function LightningAddress() {
               placeholder="hello@getalby.com"
               value={lightningAddress}
               onChangeText={setLightningAddress}
+              returnKeyType="done"
             // aria-errormessage="inputError"
             />
           </View>

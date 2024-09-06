@@ -33,6 +33,7 @@ export function RenameWallet() {
             placeholder={DEFAULT_WALLET_NAME}
             value={walletName}
             onChangeText={setWalletName}
+            returnKeyType="done"
           // aria-errormessage="inputError"
           />
         </View>

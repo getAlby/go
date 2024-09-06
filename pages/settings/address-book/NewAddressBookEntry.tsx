@@ -34,6 +34,7 @@ export function NewAddressBookEntry() {
             value={name}
             onChangeText={setName}
             aria-labelledbyledBy="name"
+            returnKeyType="done"
           // aria-errormessage="inputError"
           />
           <Label
@@ -49,6 +50,7 @@ export function NewAddressBookEntry() {
             placeholder="hello@getalby.com"
             onChangeText={setLightningAddress}
             aria-labelledbyledBy="lightningAddress"
+            returnKeyType="done"
           // aria-errormessage="inputError"
           />
         </View>
