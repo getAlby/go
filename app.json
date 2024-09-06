@@ -2,7 +2,7 @@
   "expo": {
     "name": "Alby Go",
     "slug": "alby-mobile",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "scheme": [
       "bitcoin",
       "lightning",
@@ -46,7 +46,8 @@
       "bundleIdentifier": "com.getalby.mobile",
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "buildNumber":
     },
     "android": {
       "package": "com.getalby.mobile",
