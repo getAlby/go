@@ -66,6 +66,7 @@ export function LNURLPay() {
                 placeholder="Enter an optional comment"
                 value={comment}
                 onChangeText={setComment}
+                returnKeyType="done"
               />
             </View>
             <View>

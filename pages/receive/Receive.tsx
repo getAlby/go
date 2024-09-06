@@ -290,6 +290,7 @@ export function Receive() {
                   placeholder="No description"
                   value={comment}
                   onChangeText={setComment}
+                  returnKeyType="done"
                 />
               </View>
             </View>

@@ -172,6 +172,7 @@ export function Send() {
                     onChangeText={setKeyboardText}
                     inputMode="email"
                     autoFocus
+                    returnKeyType="done"
                   // aria-errormessage="inputError"
                   />
                 </View>

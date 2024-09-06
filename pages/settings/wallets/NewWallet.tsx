@@ -32,6 +32,7 @@ export function NewWallet() {
             onChangeText={setName}
             aria-labelledbyledBy="name"
             placeholder="Enter a name for your wallet"
+            returnKeyType="done"
           // aria-errormessage="inputError"
           />
         </View>

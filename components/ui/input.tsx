@@ -16,7 +16,7 @@ const Input = React.forwardRef<
         props.editable === false && 'opacity-50 web:cursor-not-allowed',
         className
       )}
-      cursorColor={CURSOR_COLOR}
+      selectionColor={CURSOR_COLOR}
       placeholderClassName={cn('text-muted-foreground', placeholderClassName)}
       {...props}
     />

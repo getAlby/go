@@ -29,6 +29,7 @@ export function FiatCurrency() {
             placeholder="USD"
             value={fiatCurrency}
             onChangeText={setFiatCurrency}
+            returnKeyType="done"
           // aria-errormessage="inputError"
           />
         </View>
