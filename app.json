@@ -46,8 +46,7 @@
       "bundleIdentifier": "com.getalby.mobile",
       "config": {
         "usesNonExemptEncryption": false
-      },
-      "buildNumber":
+      }
     },
     "android": {
       "package": "com.getalby.mobile",
