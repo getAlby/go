@@ -52,11 +52,12 @@ export function DualCurrencyInput({
         placeholder="0"
         keyboardType="number-pad"
         value={inputMode === "sats" ? amount : fiatAmount}
-        cursorColor={CURSOR_COLOR}
+        selectionColor={CURSOR_COLOR}
         onChangeText={onChangeText}
         aria-labelledbyledBy="amount"
         style={styles.amountInput}
         autoFocus={autoFocus}
+        returnKeyType="done"
       // aria-errormessage="inputError"
       />
       <Pressable onPress={toggleInputMode}>
