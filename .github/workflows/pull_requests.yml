@@ -33,7 +33,7 @@ jobs:
         run: eas build --non-interactive --platform android --local --profile production_apk --output=./app-release.apk
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: alby-go-android.apk
           path: ./app-release.apk
