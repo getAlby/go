@@ -1,4 +1,3 @@
-
 import Screen from "~/components/Screen";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
@@ -39,16 +38,14 @@ export function LNURLPay() {
       });
     } catch (error) {
       console.error(error);
-      errorToast(error as Error);
+      errorToast(error);
     }
     setLoading(false);
   }
 
   return (
     <>
-      <Screen
-        title="Send"
-      />
+      <Screen title="Send" />
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();
@@ -56,7 +53,11 @@ export function LNURLPay() {
       >
         <View className="flex-1 flex flex-col">
           <View className="flex-1 justify-center items-center p-6 gap-6">
-            <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
+            <DualCurrencyInput
+              amount={amount}
+              setAmount={setAmount}
+              autoFocus
+            />
             <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
                 Comment
@@ -91,7 +92,6 @@ export function LNURLPay() {
           </View>
         </View>
       </TouchableWithoutFeedback>
-
     </>
   );
 }

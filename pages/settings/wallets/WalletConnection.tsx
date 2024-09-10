@@ -45,7 +45,7 @@ export function WalletConnection() {
       nostrWalletConnectUrl = await Clipboard.getStringAsync();
     } catch (error) {
       console.error("Failed to read clipboard", error);
-      errorToast(error as Error);
+      errorToast(error);
       return;
     }
     connect(nostrWalletConnectUrl);
@@ -81,7 +81,7 @@ export function WalletConnection() {
       });
     } catch (error) {
       console.error(error);
-      errorToast(error as Error);
+      errorToast(error);
     }
     setConnecting(false);
   }

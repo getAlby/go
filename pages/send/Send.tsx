@@ -1,4 +1,3 @@
-
 import Screen from "~/components/Screen";
 import React, { useEffect } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
@@ -103,16 +102,14 @@ export function Send() {
       }
     } catch (error) {
       console.error("failed to load payment", originalText, error);
-      errorToast(error as Error);
+      errorToast(error);
       setLoading(false);
     }
   }
 
   return (
     <>
-      <Screen
-        title="Send"
-      />
+      <Screen title="Send" />
       {isLoading && (
         <View className="flex-1 flex flex-col items-center justify-center">
           <Loading className="text-primary-foreground" />
@@ -173,7 +170,7 @@ export function Send() {
                     inputMode="email"
                     autoFocus
                     returnKeyType="done"
-                  // aria-errormessage="inputError"
+                    // aria-errormessage="inputError"
                   />
                 </View>
                 <Button onPress={submitKeyboardText} size="lg">

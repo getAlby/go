@@ -58,7 +58,7 @@ export function Receive() {
         setEnterCustomAmount(false);
       } catch (error) {
         console.error(error);
-        errorToast(error as Error);
+        errorToast(error);
       }
       setLoading(false);
     })();
@@ -100,7 +100,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                prevTransaction?.payment_hash
+                  prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -169,15 +169,13 @@ export function Receive() {
       });
     } catch (error) {
       console.error("Error sharing:", error);
-      errorToast(error as Error);
+      errorToast(error);
     }
   }
 
   return (
     <>
-      <Screen
-        title="Receive"
-      />
+      <Screen title="Receive" />
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
@@ -242,7 +240,11 @@ export function Receive() {
           </View>
 
           <View className="flex flex-row gap-3 p-6">
-            <Button onPress={share} variant="secondary" className="flex-1 flex flex-col gap-2">
+            <Button
+              onPress={share}
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+            >
               <Share2 className="text-muted-foreground" />
               <Text>Share</Text>
             </Button>
@@ -311,5 +313,3 @@ export function Receive() {
     </>
   );
 }
-
-
