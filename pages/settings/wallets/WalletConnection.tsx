@@ -60,7 +60,7 @@ export function WalletConnection() {
       });
       const info = await nwcClient.getInfo();
       const capabilities = [...info.methods] as Nip47Capability[];
-      if (info.notifications.length) {
+      if (info.notifications?.length) {
         capabilities.push("notifications");
       }
       console.log("NWC connected", info);
