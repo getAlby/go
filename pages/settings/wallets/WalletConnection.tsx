@@ -1,10 +1,9 @@
 import { Pressable, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
 import { ClipboardPaste, X } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
-import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
@@ -15,29 +14,27 @@ import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "~/components/ui/dialog";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
   const walletIdWithConnection = useAppStore((store) =>
     store.wallets.findIndex((wallet) => wallet.nostrWalletConnectUrl),
   );
-  const [isScanning, setScanning] = React.useState(false);
-  const [isConnecting, setConnecting] = React.useState(false);
+  const isFirstConnection = useAppStore((store) => !store.wallets.length)
   const { data: walletInfo } = useInfo();
   const { data: balance } = useBalance();
-
-  async function scan() {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setScanning(status === "granted");
-  }
+  const [isScanning, setScanning] = React.useState(false);
+  const [isConnecting, setConnecting] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = React.useState(isFirstConnection);
 
   const handleScanned = (data: string) => {
     return connect(data);
   };
 
-  React.useEffect(() => {
-    scan();
-  }, []);
+  useEffect(() => {
+    setScanning(!dialogOpen);
+  }, [dialogOpen]);
 
   async function paste() {
     let nostrWalletConnectUrl;
@@ -127,7 +124,7 @@ export function WalletConnection() {
             variant="destructive"
             onPress={() => {
               useAppStore.getState().removeNostrWalletConnectUrl();
-              scan();
+              setScanning(true);
             }}
           >
             <Text>Disconnect Wallet</Text>
@@ -144,9 +141,31 @@ export function WalletConnection() {
               </View>
             </>
           )}
+
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogContent className="sm:max-w-[425px] ">
+              <DialogHeader>
+                <DialogTitle>Connect Your Wallet</DialogTitle>
+                <View className="flex flex-col gap-2">
+                  <Text className="text-muted-foreground">Follow these steps to connect Alby Go to your Hub:</Text>
+                  <Text className="text-muted-foreground">1. Open your Alby Hub</Text>
+                  <Text className="text-muted-foreground">2. Go to App Store &raquo; Alby Go</Text>
+                  <Text className="text-muted-foreground">3. Scan the QR code with this app</Text>
+                </View>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="secondary">
+                    <Text>OK</Text>
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
           {!isConnecting && (
             <>
-              <QRCodeScanner onScanned={handleScanned} />
+              <QRCodeScanner onScanned={handleScanned} scanning={isScanning} />
               <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button
                   onPress={paste}
