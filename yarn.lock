@@ -1280,10 +1280,10 @@
   resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.0.3.tgz#4cc6ef1253a30fb4913af89b842645e0c04994bf"
   integrity sha512-QG3/SBI5n2py5IgsjP3K+c8eq55eiI3PQB12yo9Pot0b5hcN7TNNoTKn0fgLJjO1iEVCUkF513kDOpjjXwK0hQ==
 
-"@getalby/sdk@^3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-3.7.0.tgz#bff8ce2b2138a5860f24d48323c1219ecb6dbf5d"
-  integrity sha512-GorSxIErXm5nbM819Ib3aOyjqH0N4YyUqcD7yAQAgm/ejPpV8vTV0btp2cYl1XtYyHzZEcffDMt8luCOYCekJw==
+"@getalby/sdk@^3.7.1":
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-3.7.1.tgz#b4560bfbfad8cac243b18cfdefccbbd643473574"
+  integrity sha512-fn/JrnH7NvD4Hu9REXQ8TLQVPN/BYnv0QcCO7L5M6gQg2Clndoj7JHn7CY/fX5BQq7d9jvfujeNrXgBJkEklnw==
   dependencies:
     eventemitter3 "^5.0.1"
     nostr-tools "^1.17.0"
