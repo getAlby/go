@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/518a09e1-8260-436f-83c8-df17b9119931)
+![image](https://github.com/user-attachments/assets/c41c4ae2-ab4f-4fd8-8012-c6d3fbd8ca87)
 
 
 # Alby Go
