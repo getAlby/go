@@ -109,7 +109,7 @@ export function WalletConnection() {
                 Toast.show({
                   type: "info",
                   visibilityTime: 8000,
-                  text1: "Connect a Wallet",
+                  text1: "Connect to Hub",
                   text2:
                     "Go to your 'Alby Hub' -> 'Connections' -> 'Add Connection' -> Scan QR Code",
                 });
