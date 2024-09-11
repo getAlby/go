@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Keyboard, Share, TouchableWithoutFeedback, View } from "react-native";
+import { Platform, KeyboardAvoidingView, Keyboard, Share, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import * as Clipboard from "expo-clipboard";
 import React from "react";
@@ -271,44 +271,46 @@ export function Receive() {
       )}
       {/* TODO: move to one place - this is all copied from LNURL-Pay */}
       {!invoice && enterCustomAmount && (
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-          }}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+          className="flex-1"
         >
-          <View className="flex-1 flex flex-col">
-            <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
-              <DualCurrencyInput
-                amount={amount}
-                setAmount={setAmount}
-                autoFocus
-              />
-              <View>
-                <Text className="text-muted-foreground text-center mt-6">
-                  Description (optional)
-                </Text>
-                <Input
-                  className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
-                  placeholder="No description"
-                  value={comment}
-                  onChangeText={setComment}
-                  returnKeyType="done"
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View className="flex-1 flex flex-col">
+              <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
+                <DualCurrencyInput
+                  amount={amount}
+                  setAmount={setAmount}
+                  autoFocus
                 />
+                <View>
+                  <Text className="text-muted-foreground text-center mt-6">
+                    Description (optional)
+                  </Text>
+                  <Input
+                    className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+                    placeholder="No description"
+                    value={comment}
+                    onChangeText={setComment}
+                    returnKeyType="done"
+                  />
+                </View>
+              </View>
+              <View className="m-6">
+                <Button
+                  size="lg"
+                  className="flex flex-row gap-2"
+                  onPress={() => generateInvoice(+amount)}
+                  disabled={isLoading}
+                >
+                  {isLoading && <Loading className="text-primary-foreground" />}
+                  <Text>Create Invoice</Text>
+                </Button>
               </View>
             </View>
-            <View className="m-6">
-              <Button
-                size="lg"
-                className="flex flex-row gap-2"
-                onPress={() => generateInvoice(+amount)}
-                disabled={isLoading}
-              >
-                {isLoading && <Loading className="text-primary-foreground" />}
-                <Text>Create Invoice</Text>
-              </Button>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       )}
     </>
   );

@@ -1,7 +1,7 @@
 import Screen from "~/components/Screen";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
@@ -46,52 +46,54 @@ export function LNURLPay() {
   return (
     <>
       <Screen title="Send" />
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+        className="flex-1"
       >
-        <View className="flex-1 flex flex-col">
-          <View className="flex-1 justify-center items-center p-6 gap-6">
-            <DualCurrencyInput
-              amount={amount}
-              setAmount={setAmount}
-              autoFocus
-            />
-            <View className="w-full">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                Comment
-              </Text>
-              <Input
-                className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
-                placeholder="Enter an optional comment"
-                value={comment}
-                onChangeText={setComment}
-                returnKeyType="done"
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View className="flex-1 flex flex-col">
+            <View className="flex-1 justify-center items-center p-6 gap-6">
+              <DualCurrencyInput
+                amount={amount}
+                setAmount={setAmount}
+                autoFocus
               />
+              <View className="w-full">
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  Comment
+                </Text>
+                <Input
+                  className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
+                  placeholder="Enter an optional comment"
+                  value={comment}
+                  onChangeText={setComment}
+                  returnKeyType="done"
+                />
+              </View>
+              <View>
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  To
+                </Text>
+                <Text className="text-center text-foreground text-2xl font-medium2">
+                  {originalText}
+                </Text>
+              </View>
             </View>
-            <View>
-              <Text className="text-muted-foreground text-center font-semibold2">
-                To
-              </Text>
-              <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText}
-              </Text>
+            <View className="p-6">
+              <Button
+                size="lg"
+                className="flex flex-row gap-2"
+                onPress={requestInvoice}
+                disabled={isLoading}
+              >
+                {isLoading && <Loading className="text-primary-foreground" />}
+                <Text>Next</Text>
+              </Button>
             </View>
           </View>
-          <View className="p-6">
-            <Button
-              size="lg"
-              className="flex flex-row gap-2"
-              onPress={requestInvoice}
-              disabled={isLoading}
-            >
-              {isLoading && <Loading className="text-primary-foreground" />}
-              <Text>Next</Text>
-            </Button>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </>
   );
 }

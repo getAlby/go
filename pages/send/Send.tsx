@@ -1,6 +1,6 @@
 import Screen from "~/components/Screen";
 import React, { useEffect } from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
@@ -151,33 +151,35 @@ export function Send() {
             </>
           )}
           {keyboardOpen && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                Keyboard.dismiss();
-              }}
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+              className="flex-1"
             >
-              <View className="flex-1 h-full flex flex-col gap-5 p-6">
-                <View className="flex-1 flex items-center justify-center">
-                  <Text className="text-muted-foreground text-center">
-                    Type or paste a Lightning Address, lightning invoice or
-                    LNURL.
-                  </Text>
-                  <Input
-                    className="w-full text-center mt-6 border-transparent bg-transparent !text-4xl font-semibold2 "
-                    placeholder="hello@getalby.com"
-                    value={keyboardText}
-                    onChangeText={setKeyboardText}
-                    inputMode="email"
-                    autoFocus
-                    returnKeyType="done"
-                    // aria-errormessage="inputError"
-                  />
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View className="flex-1 h-full flex flex-col gap-5 p-6">
+                  <View className="flex-1 flex items-center justify-center">
+                    <Text className="text-muted-foreground text-center">
+                      Type or paste a Lightning Address, lightning invoice or
+                      LNURL.
+                    </Text>
+                    <Input
+                      className="w-full text-center mt-6 border-transparent bg-transparent !text-4xl font-semibold2 "
+                      placeholder="hello@getalby.com"
+                      value={keyboardText}
+                      onChangeText={setKeyboardText}
+                      inputMode="email"
+                      autoFocus
+                      returnKeyType="done"
+                      // aria-errormessage="inputError"
+                    />
+                  </View>
+                  <Button onPress={submitKeyboardText} size="lg">
+                    <Text>Next</Text>
+                  </Button>
                 </View>
-                <Button onPress={submitKeyboardText} size="lg">
-                  <Text>Next</Text>
-                </Button>
-              </View>
-            </TouchableWithoutFeedback>
+              </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
           )}
         </>
       )}
