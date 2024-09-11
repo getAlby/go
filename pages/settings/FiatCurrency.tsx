@@ -1,39 +1,43 @@
 import { router } from "expo-router";
 import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { View, FlatList, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 import Screen from "~/components/Screen";
+import { cn } from "~/lib/utils";
+import { currencies } from "../../lib/currencies";
+
 
 export function FiatCurrency() {
   const [fiatCurrency, setFiatCurrency] = React.useState(
     useAppStore.getState().fiatCurrency,
   );
+
+  const renderCurrencyItem = ({ item }: { item: [string, string] }) => (
+    <TouchableOpacity
+      className={cn("p-4 flex flex-row gap-2 border-b border-input", item[0] === fiatCurrency && "bg-muted")}
+      onPress={() => setFiatCurrency(item[0])}
+    >
+      <Text className={cn("text-lg", item[0] === fiatCurrency && "font-bold2")}>
+        {item[1]}
+      </Text>
+      <Text className="text-lg text-muted-foreground">
+        ({item[0]})
+      </Text>
+    </TouchableOpacity >
+  );
+
   return (
-    <View className="flex-1 flex flex-col p-6 gap-3">
-      <Screen
-        title="Units & Currency"
+    <View className="flex-1 flex flex-col p-6">
+      <Screen title="Fiat Currency" />
+      <FlatList
+        data={currencies}
+        renderItem={renderCurrencyItem}
+        keyExtractor={(item) => item[0]}
+        className="flex-1 mb-4"
       />
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <View className="flex-1">
-          <Input
-            autoFocus
-            className="w-full text-center"
-            placeholder="USD"
-            value={fiatCurrency}
-            onChangeText={setFiatCurrency}
-            returnKeyType="done"
-          // aria-errormessage="inputError"
-          />
-        </View>
-      </TouchableWithoutFeedback>
       <Button
         size="lg"
         onPress={() => {
