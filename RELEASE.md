@@ -20,7 +20,7 @@
 # Zapstore
 
 Pre-requirements to have installed:
-- `sudo apt install apksigner`
+- `sudo apt install apksigner apktool`
 - https://github.com/sibprogrammer/xq \
 - https://github.com/zapstore/zapstore-cli \
 
