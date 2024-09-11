@@ -1,34 +1,35 @@
-import { Pressable, Text, View } from "react-native";
-import React from "react";
-import * as Clipboard from "expo-clipboard";
-import { nwc } from "@getalby/sdk";
-import { ClipboardPaste, X } from "~/components/Icons";
-import { useAppStore } from "lib/state/appStore";
 import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
+import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
-import { Button } from "~/components/ui/button";
-import { useInfo } from "~/hooks/useInfo";
-import { useBalance } from "~/hooks/useBalance";
+import { useAppStore } from "lib/state/appStore";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { errorToast } from "~/lib/errorToast";
-import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import { CircleHelp, ClipboardPaste, X } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
+import { useBalance } from "~/hooks/useBalance";
+import { useInfo } from "~/hooks/useInfo";
+import { errorToast } from "~/lib/errorToast";
+
+import { nwc } from "@getalby/sdk";
+import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
   const walletIdWithConnection = useAppStore((store) =>
     store.wallets.findIndex((wallet) => wallet.nostrWalletConnectUrl),
   );
-  const [isScanning, setScanning] = React.useState(false);
-  const [isConnecting, setConnecting] = React.useState(false);
+  const [isScanning, setIsScanning] = React.useState(false);
+  const [isConnecting, setIsConnecting] = React.useState(false);
   const { data: walletInfo } = useInfo();
   const { data: balance } = useBalance();
 
   async function scan() {
     const { status } = await Camera.requestCameraPermissionsAsync();
-    setScanning(status === "granted");
+    setIsScanning(status === "granted");
   }
 
   const handleScanned = (data: string) => {
@@ -53,7 +54,7 @@ export function WalletConnection() {
 
   async function connect(nostrWalletConnectUrl: string) {
     try {
-      setConnecting(true);
+      setIsConnecting(true);
       // make sure connection is valid
       const nwcClient = new nwc.NWCClient({
         nostrWalletConnectUrl,
@@ -83,7 +84,7 @@ export function WalletConnection() {
       console.error(error);
       errorToast(error);
     }
-    setConnecting(false);
+    setIsConnecting(false);
   }
 
   return (
@@ -102,7 +103,21 @@ export function WalletConnection() {
             >
               <X className="text-foreground" />
             </Pressable>
-          ) : null
+          ) : (
+            <Pressable
+              onPress={() => {
+                Toast.show({
+                  type: "info",
+                  visibilityTime: 8000,
+                  text1: "Connect a Wallet",
+                  text2:
+                    "Go to your 'Alby Hub' -> 'Connections' -> 'Add Connection' -> Scan QR Code",
+                });
+              }}
+            >
+              <CircleHelp className="text-foreground" />
+            </Pressable>
+          )
         }
       />
       {hasConnection && (
