@@ -2,7 +2,7 @@ import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import { Bitcoin, Egg, Palette, Power, Wallet2 } from "~/components/Icons";
 
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { Text } from "~/components/ui/text";
 import React from "react";
@@ -16,6 +16,7 @@ export function Settings() {
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(false);
   const { colorScheme, toggleColorScheme } = useColorScheme();
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-6">
@@ -34,7 +35,10 @@ export function Settings() {
         <TouchableOpacity className="flex flex-row gap-4">
           <Bitcoin className="text-foreground" />
           <Text className="text-foreground font-medium2 text-xl">
-            Units & Currency
+            Fiat Currency
+          </Text>
+          <Text className="text-muted-foreground text-xl">
+            ({fiatCurrency || DEFAULT_CURRENCY})
           </Text>
         </TouchableOpacity>
       </Link>
