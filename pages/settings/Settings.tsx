@@ -19,9 +19,7 @@ export function Settings() {
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-6">
-      <Screen
-        title="Settings"
-      />
+      <Screen title="Settings" />
       <Link href="/settings/wallets" asChild>
         <TouchableOpacity className="flex flex-row items-center gap-4">
           <Wallet2 className="text-foreground" />
@@ -85,7 +83,7 @@ export function Settings() {
                       onPress: () => {
                         router.dismissAll();
                         useAppStore.getState().reset();
-                        router.replace("/");
+                        router.replace("/onboarding");
                       },
                     },
                   ],
@@ -119,7 +117,9 @@ export function Settings() {
         }}
       >
         <View className="flex-1 flex-col items-center justify-end">
-          <Text className="text-foreground">Alby Go v{Constants.expoConfig?.version}</Text>
+          <Text className="text-foreground">
+            Alby Go v{Constants.expoConfig?.version}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
