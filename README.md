@@ -3,7 +3,7 @@
 
 # Alby Go
 
-A simple lightning mobile wallet interface that works great with [Alby Hub](https://albyhub.com)
+A simple lightning mobile wallet interface that works great with [Alby Hub](https://albyhub.com) or any other [NWC](https://nwc.dev) wallet service.
 
 ## Development
 
