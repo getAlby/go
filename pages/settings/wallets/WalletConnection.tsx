@@ -79,6 +79,7 @@ export function WalletConnection() {
         type: "success",
         text1: "Wallet Connected",
         text2: "Your lightning wallet is ready to use",
+        position: "top"
       });
     } catch (error) {
       console.error(error);

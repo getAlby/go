@@ -1,7 +1,7 @@
 import { ToastConfig } from "react-native-toast-message";
 import { Text } from "./ui/text";
 import { View } from "react-native";
-import { CheckCircle, XCircle } from "./Icons";
+import { CircleCheck, XCircle } from "./Icons";
 import { Link } from "expo-router";
 import { Button } from "./ui/button";
 import { useAppStore } from "~/lib/state/appStore";
@@ -10,7 +10,7 @@ export const toastConfig: ToastConfig = {
   success: ({ text1, text2 }) => (
     <View className="bg-foreground rounded-full px-6 py-3 mx-6">
       <View className="flex flex-row gap-2 justify-center items-center">
-        <CheckCircle className="text-background" width={16} height={16} />
+        <CircleCheck className="text-background" width={16} height={16} />
         <Text className="text-background font-semibold2">{text1}</Text>
       </View>
       {text2 && <Text className="text-background text-center">{text2}</Text>}

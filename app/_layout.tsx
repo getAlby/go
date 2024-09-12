@@ -103,7 +103,7 @@ export default function RootLayout() {
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
           <Stack />
-          <Toast config={toastConfig} position="bottom" bottomOffset={140} />
+          <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
           <PortalHost />
         </SafeAreaView>
       </ThemeProvider>
