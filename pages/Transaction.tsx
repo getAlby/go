@@ -100,7 +100,7 @@ function TransactionDetailRow(props: {
       <Text className="w-32 text-muted-foreground">{props.title}</Text>
       {props.copy ? (
         <TouchableOpacity
-          className="flex-1 flex-row items-center"
+          className="flex-1"
           onPress={() => {
             Clipboard.setStringAsync(props.content);
             Toast.show({
@@ -109,7 +109,7 @@ function TransactionDetailRow(props: {
             });
           }}
         >
-          <Text className="flex-1 text-foreground font-medium2">{props.content}</Text>
+          <Text className="text-foreground font-medium2">{props.content}</Text>
         </TouchableOpacity>
       ) : (
         <Text className="flex-1 text-foreground font-medium2">{props.content}</Text>
