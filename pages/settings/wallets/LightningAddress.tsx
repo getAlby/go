@@ -1,12 +1,13 @@
 import { router } from "expo-router";
 import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 import Screen from "~/components/Screen";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function LightningAddress() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -16,11 +17,7 @@ export function LightningAddress() {
     setLightningAddress(wallets[selectedWalletId].lightningAddress || "");
   }, [wallets, selectedWalletId]);
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
+    <DismissableKeyboardView>
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex flex-col p-3 gap-3">
           <Screen
@@ -57,6 +54,6 @@ export function LightningAddress() {
           </Button>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </DismissableKeyboardView>
   );
 }

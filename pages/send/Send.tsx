@@ -1,6 +1,6 @@
 import Screen from "~/components/Screen";
 import React, { useEffect } from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { lnurl } from "lib/lnurl";
 import { Button } from "~/components/ui/button";
@@ -16,6 +16,7 @@ import { errorToast } from "~/lib/errorToast";
 import { Invoice } from "@getalby/lightning-tools";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Loading from "~/components/Loading";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function Send() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -151,11 +152,7 @@ export function Send() {
             </>
           )}
           {keyboardOpen && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                Keyboard.dismiss();
-              }}
-            >
+            <DismissableKeyboardView>
               <View className="flex-1 h-full flex flex-col gap-5 p-6">
                 <View className="flex-1 flex items-center justify-center">
                   <Text className="text-muted-foreground text-center">
@@ -177,7 +174,7 @@ export function Send() {
                   <Text>Next</Text>
                 </Button>
               </View>
-            </TouchableWithoutFeedback>
+            </DismissableKeyboardView>
           )}
         </>
       )}
