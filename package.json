@@ -19,6 +19,8 @@
     "@getalby/lightning-tools": "^5.0.3",
     "@getalby/sdk": "^3.7.1",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@rn-primitives/dialog": "^1.0.3",
+    "@rn-primitives/portal": "^1.0.3",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",

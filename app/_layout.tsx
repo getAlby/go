@@ -22,6 +22,7 @@ import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
 import { secureStorage } from "~/lib/secureStorage";
 import { hasOnboardedKey } from "~/lib/state/appStore";
+import { PortalHost } from '@rn-primitives/portal';
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -103,6 +104,7 @@ export default function RootLayout() {
         <SafeAreaView className="w-full h-full bg-background">
           <Stack />
           <Toast config={toastConfig} position="bottom" bottomOffset={140} />
+          <PortalHost />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>
