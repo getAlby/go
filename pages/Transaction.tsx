@@ -2,12 +2,14 @@ import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import dayjs from "dayjs";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import Screen from "~/components/Screen";
 import { MoveDownLeft, MoveUpRight } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { cn } from "~/lib/utils";
+import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-toast-message";
 
 export function Transaction() {
   const { transactionJSON } = useLocalSearchParams() as unknown as {
@@ -69,10 +71,12 @@ export function Transaction() {
           <TransactionDetailRow
             title="Payment Hash"
             content={transaction.payment_hash}
+            copy
           />
           <TransactionDetailRow
             title="Preimage"
             content={transaction.preimage}
+            copy
           />
           <TransactionDetailRow
             title="Fee"
@@ -86,11 +90,30 @@ export function Transaction() {
   );
 }
 
-function TransactionDetailRow(props: { title: string; content: string }) {
+function TransactionDetailRow(props: {
+  title: string;
+  content: string;
+  copy?: boolean;
+}) {
   return (
     <View className="flex flex-row gap-3">
       <Text className="w-32 text-muted-foreground">{props.title}</Text>
-      <Text className="flex-1 text-foreground font-medium2">{props.content}</Text>
+      {props.copy ? (
+        <TouchableOpacity
+          className="flex-1"
+          onPress={() => {
+            Clipboard.setStringAsync(props.content);
+            Toast.show({
+              type: "success",
+              text1: "Copied to clipboard",
+            });
+          }}
+        >
+          <Text className="text-foreground font-medium2">{props.content}</Text>
+        </TouchableOpacity>
+      ) : (
+        <Text className="flex-1 text-foreground font-medium2">{props.content}</Text>
+      )}
     </View>
   );
 }
