@@ -7,8 +7,9 @@ import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 import Screen from "~/components/Screen";
 import { cn } from "~/lib/utils";
-import { currencies } from "../../lib/currencies";
+import CurrencyList from 'currency-list';
 
+const currencies: [string, string][] = Object.entries(CurrencyList.getAll("en_US")).map(([code, details]) => [code, details.name]);
 
 export function FiatCurrency() {
   const [fiatCurrency, setFiatCurrency] = React.useState(
@@ -26,7 +27,7 @@ export function FiatCurrency() {
       <Text className="text-lg text-muted-foreground">
         ({item[0]})
       </Text>
-    </TouchableOpacity >
+    </TouchableOpacity>
   );
 
   return (
