@@ -17,7 +17,7 @@ export function FiatCurrency() {
 
   function select(iso: string) {
     setFiatCurrency(iso);
-    useAppStore.getState().setFiatCurrency(fiatCurrency);
+    useAppStore.getState().setFiatCurrency(iso);
     Toast.show({
       type: "success",
       text1: "Fiat currency updated",
