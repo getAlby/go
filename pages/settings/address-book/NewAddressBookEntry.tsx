@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -8,16 +8,13 @@ import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 import Screen from "~/components/Screen";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function NewAddressBookEntry() {
   const [name, setName] = React.useState("");
   const [lightningAddress, setLightningAddress] = React.useState("");
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
+    <DismissableKeyboardView>
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex flex-col p-3 gap-3">
           <Screen
@@ -72,6 +69,6 @@ export function NewAddressBookEntry() {
           </Button>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </DismissableKeyboardView>
   );
 }

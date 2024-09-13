@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -8,6 +8,7 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import Screen from "~/components/Screen";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function RenameWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -16,11 +17,7 @@ export function RenameWallet() {
     wallets[selectedWalletId].name || ""
   );
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
+    <DismissableKeyboardView>
       <View className="flex-1 flex flex-col p-6 gap-3">
         <Screen
           title="Wallet Name"
@@ -53,6 +50,6 @@ export function RenameWallet() {
           <Text>Save</Text>
         </Button>
       </View>
-    </TouchableWithoutFeedback>
+    </DismissableKeyboardView>
   );
 }

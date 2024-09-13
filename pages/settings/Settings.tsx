@@ -2,7 +2,7 @@ import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import { Bitcoin, Egg, Fingerprint, Palette, Power, Wallet2 } from "~/components/Icons";
 
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { Text } from "~/components/ui/text";
 import React from "react";
@@ -17,12 +17,11 @@ export function Settings() {
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(false);
   const { colorScheme, toggleColorScheme } = useColorScheme();
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-6">
-      <Screen
-        title="Settings"
-      />
+      <Screen title="Settings" />
       <Link href="/settings/wallets" asChild>
         <TouchableOpacity className="flex flex-row items-center gap-4">
           <Wallet2 className="text-foreground" />
@@ -37,7 +36,10 @@ export function Settings() {
         <TouchableOpacity className="flex flex-row gap-4">
           <Bitcoin className="text-foreground" />
           <Text className="text-foreground font-medium2 text-xl">
-            Units & Currency
+            Fiat Currency
+          </Text>
+          <Text className="text-muted-foreground text-xl">
+            ({fiatCurrency || DEFAULT_CURRENCY})
           </Text>
         </TouchableOpacity>
       </Link>
@@ -97,7 +99,7 @@ export function Settings() {
                       onPress: () => {
                         router.dismissAll();
                         useAppStore.getState().reset();
-                        router.replace("/");
+                        router.replace("/onboarding");
                       },
                     },
                   ],
@@ -131,7 +133,9 @@ export function Settings() {
         }}
       >
         <View className="flex-1 flex-col items-center justify-end">
-          <Text className="text-foreground">Alby Go v{Constants.expoConfig?.version}</Text>
+          <Text className="text-foreground">
+            Alby Go v{Constants.expoConfig?.version}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>

@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Keyboard, Share, TouchableWithoutFeedback, View } from "react-native";
+import { Share, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import * as Clipboard from "expo-clipboard";
 import React from "react";
@@ -15,6 +15,7 @@ import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function Receive() {
   const getFiatAmount = useGetFiatAmount();
@@ -271,11 +272,7 @@ export function Receive() {
       )}
       {/* TODO: move to one place - this is all copied from LNURL-Pay */}
       {!invoice && enterCustomAmount && (
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-          }}
-        >
+        <DismissableKeyboardView>
           <View className="flex-1 flex flex-col">
             <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
               <DualCurrencyInput
@@ -308,7 +305,7 @@ export function Receive() {
               </Button>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </DismissableKeyboardView>
       )}
     </>
   );

@@ -25,6 +25,7 @@ import { secureStorage } from "~/lib/secureStorage";
 import { hasOnboardedKey, useAppStore } from "~/lib/state/appStore";
 import { usePathname } from "expo-router";
 import { UserInactivityProvider } from "~/context/UserInactivity";
+import { PortalHost } from '@rn-primitives/portal';
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -126,7 +127,8 @@ export default function RootLayout() {
           <UserInactivityProvider>
             <Stack />
           </UserInactivityProvider>
-          <Toast config={toastConfig} position="bottom" bottomOffset={140} />
+          <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
+          <PortalHost />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>

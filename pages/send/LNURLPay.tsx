@@ -1,7 +1,7 @@
 import Screen from "~/components/Screen";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
@@ -9,6 +9,7 @@ import { Input } from "~/components/ui/input";
 import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function LNURLPay() {
   const { lnurlDetailsJSON, originalText } =
@@ -46,11 +47,7 @@ export function LNURLPay() {
   return (
     <>
       <Screen title="Send" />
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
+      <DismissableKeyboardView>
         <View className="flex-1 flex flex-col">
           <View className="flex-1 justify-center items-center p-6 gap-6">
             <DualCurrencyInput
@@ -91,7 +88,7 @@ export function LNURLPay() {
             </Button>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </DismissableKeyboardView>
     </>
   );
 }

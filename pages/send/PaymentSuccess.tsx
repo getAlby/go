@@ -32,10 +32,10 @@ export function PaymentSuccess() {
         </View>
         {originalText !== invoice &&
           <View>
-            <Text className="text-muted-foreground text-center text-xl font-bold2">
+            <Text className="text-muted-foreground text-center font-semibold2">
               Sent to
             </Text>
-            <Text className="text-foreground text-center text-xl font-bold2">
+            <Text className="text-foreground text-center text-2xl font-medium2">
               {originalText}
             </Text>
           </View>

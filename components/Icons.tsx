@@ -35,6 +35,8 @@ import {
   Palette,
   Egg,
   Fingerprint,
+  HelpCircle,
+  CircleCheck,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -85,6 +87,8 @@ interopIcon(CameraOff);
 interopIcon(Palette);
 interopIcon(Egg);
 interopIcon(Fingerprint);
+interopIcon(HelpCircle);
+interopIcon(CircleCheck);
 
 export {
   AlertCircle,
@@ -122,4 +126,6 @@ export {
   Palette,
   Egg,
   Fingerprint,
+  HelpCircle,
+  CircleCheck,
 };
