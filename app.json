@@ -15,6 +15,12 @@
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Alby Go to use Face ID."
+        }
+      ],
+      [
         "expo-camera",
         {
           "cameraPermission": "Allow Alby Go to use the camera to scan wallet connection and payment QR codes",

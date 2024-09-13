@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
-import { Bitcoin, Egg, Palette, Power, Wallet2 } from "~/components/Icons";
+import { Bitcoin, Egg, Fingerprint, Palette, Power, Wallet2 } from "~/components/Icons";
 
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -13,6 +13,7 @@ import Screen from "~/components/Screen";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
+  const isBiometricSupported = useAppStore((store) => store.isBiometricSupported);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(false);
   const { colorScheme, toggleColorScheme } = useColorScheme();
@@ -40,6 +41,17 @@ export function Settings() {
           </Text>
         </TouchableOpacity>
       </Link>
+
+      {isBiometricSupported && (
+        <Link href="/settings/security" asChild>
+          <TouchableOpacity className="flex flex-row gap-4">
+            <Fingerprint className="text-foreground" />
+            <Text className="text-foreground font-medium2 text-xl">
+              Security
+            </Text>
+          </TouchableOpacity>
+        </Link>
+      )}
 
       <TouchableOpacity
         className="flex flex-row gap-4"
