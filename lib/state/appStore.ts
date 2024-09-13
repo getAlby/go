@@ -99,7 +99,15 @@ export const useAppStore = create<AppState>()((set, get) => {
   const removeCurrentWallet = () => {
     const wallets = [...get().wallets];
     if (wallets.length <= 1) {
-      // cannot delete last wallet
+      // set to initial wallet status
+      secureStorage.removeItem(hasOnboardedKey);
+      secureStorage.setItem(selectedWalletIdKey, "0");
+      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
+      set({
+        nwcClient: undefined,
+        selectedWalletId: 0,
+        wallets: [{}],
+      });
       return;
     }
     const selectedWalletId = get().selectedWalletId;
@@ -191,17 +199,22 @@ export const useAppStore = create<AppState>()((set, get) => {
       for (let i = 0; i < get().addressBookEntries.length; i++) {
         secureStorage.removeItem(getAddressBookEntryKey(i));
       }
-      // clear selected wallet ID
-      secureStorage.removeItem(selectedWalletIdKey);
+
+      // clear fiat currency
+      secureStorage.removeItem(fiatCurrencyKey);
 
       // clear onboarding status
       secureStorage.removeItem(hasOnboardedKey);
 
+      // set to initial wallet status
+      secureStorage.setItem(selectedWalletIdKey, "0");
+      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
+
       set({
         nwcClient: undefined,
         fiatCurrency: undefined,
-        selectedWalletId: undefined,
-        wallets: [],
+        selectedWalletId: 0,
+        wallets: [{}],
         addressBookEntries: [],
       });
     },
