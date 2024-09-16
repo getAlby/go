@@ -1,5 +1,5 @@
 import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
@@ -22,6 +22,7 @@ import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
 import Screen from "~/components/Screen";
 import { useOnboarding } from "~/hooks/useOnboarding";
+import { GestureDetector, Gesture, Directions } from "react-native-gesture-handler";
 
 dayjs.extend(relativeTime);
 
@@ -68,77 +69,96 @@ export function Home() {
     }
   }
 
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const handleSwipeUp = useCallback(() => {
+    setShouldNavigate(true);
+  }, []);
+
+  useEffect(() => {
+    if (shouldNavigate) {
+      router.push("/transactions");
+      setShouldNavigate(false);
+    }
+  }, [shouldNavigate]);
+
+  const swipeUpGesture = Gesture.Fling()
+    .direction(Directions.UP)
+    .onEnd(handleSwipeUp);
+
   return (
-    <>
-      <Screen
-        title=""
-        right={() =>
-          <Link href="/settings" asChild>
-            <TouchableOpacity>
-              <Settings2 className="text-foreground" />
-            </TouchableOpacity>
-          </Link>
-        }
-      />
-      <View className="h-full flex">
-        <View className="grow flex flex-col items-center justify-center gap-4">
-          <TouchableOpacity
-            onPress={switchBalanceState}
-            className="w-full flex flex-col items-center justify-center gap-4"
-          >
-            <View className="w-full flex flex-row justify-center items-center gap-2">
-              {balance ? (
-                <>
-                  <Text className="text-foreground text-5xl font-bold2">
+    <GestureDetector gesture={swipeUpGesture}>
+      <View>
+        <Screen
+          title=""
+          right={() =>
+            <Link href="/settings" asChild>
+              <TouchableOpacity>
+                <Settings2 className="text-foreground" />
+              </TouchableOpacity>
+            </Link>
+          }
+        />
+        <View className="h-full flex">
+          <View className="grow flex flex-col items-center justify-center gap-4">
+            <TouchableOpacity
+              onPress={switchBalanceState}
+              className="w-full flex flex-col items-center justify-center gap-4"
+            >
+              <View className="w-full flex flex-row justify-center items-center gap-2">
+                {balance ? (
+                  <>
+                    <Text className="text-foreground text-5xl font-bold2">
+                      {balanceState == BalanceState.SATS &&
+                        new Intl.NumberFormat().format(
+                          Math.floor(balance.balance / 1000),
+                        )}
+                      {balanceState == BalanceState.FIAT &&
+                        getFiatAmount &&
+                        getFiatAmount(Math.floor(balance.balance / 1000))}
+                      {balanceState == BalanceState.HIDDEN && "****"}
+                    </Text>
+                    <Text className="text-muted-foreground text-3xl font-semibold2">
+                      {balanceState == BalanceState.SATS && "sats"}
+                    </Text>
+                  </>
+                ) : (
+                  <Skeleton className="w-48 h-12" />
+                )}
+              </View>
+              <View className="flex justify-center items-center">
+                {balance ? (
+                  <Text className="text-center text-3xl text-muted-foreground font-semibold2">
                     {balanceState == BalanceState.SATS &&
-                      new Intl.NumberFormat().format(
-                        Math.floor(balance.balance / 1000),
-                      )}
-                    {balanceState == BalanceState.FIAT &&
                       getFiatAmount &&
                       getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceState == BalanceState.HIDDEN && "****"}
+                    {balanceState == BalanceState.FIAT &&
+                      new Intl.NumberFormat().format(
+                        Math.floor(balance.balance / 1000),
+                      ) + " sats"}
                   </Text>
-                  <Text className="text-muted-foreground text-3xl font-semibold2">
-                    {balanceState == BalanceState.SATS && "sats"}
-                  </Text>
-                </>
-              ) : (
-                <Skeleton className="w-48 h-12" />
-              )}
+                ) : (
+                  <Skeleton className="w-32 h-10" />
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View className="flex items-center justify-center">
+            <Link href="/transactions" asChild>
+              <Button variant="ghost" className="p-10 rounded-full aspect-square">
+                <ChevronUp className="text-muted-foreground" size={32} />
+              </Button>
+            </Link>
+          </View>
+          <View>
+            <View className="flex flex-row gap-6 p-6 pt-2">
+              <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+              <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
             </View>
-            <View className="flex justify-center items-center">
-              {balance ? (
-                <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                  {balanceState == BalanceState.SATS &&
-                    getFiatAmount &&
-                    getFiatAmount(Math.floor(balance.balance / 1000))}
-                  {balanceState == BalanceState.FIAT &&
-                    new Intl.NumberFormat().format(
-                      Math.floor(balance.balance / 1000),
-                    ) + " sats"}
-                </Text>
-              ) : (
-                <Skeleton className="w-32 h-10" />
-              )}
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View className="flex items-center justify-center">
-          <Link href="/transactions" asChild>
-            <Button variant="ghost" className="p-10 rounded-full aspect-square">
-              <ChevronUp className="text-muted-foreground" size={32} />
-            </Button>
-          </Link>
-        </View>
-        <View>
-          <View className="flex flex-row gap-6 p-6 pt-2">
-            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
-            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
           </View>
         </View>
       </View>
-    </>
+    </GestureDetector>
   );
 }
 

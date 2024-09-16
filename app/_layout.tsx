@@ -23,6 +23,7 @@ import { useInfo } from "~/hooks/useInfo";
 import { secureStorage } from "~/lib/secureStorage";
 import { hasOnboardedKey } from "~/lib/state/appStore";
 import { PortalHost } from '@rn-primitives/portal';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -102,9 +103,11 @@ export default function RootLayout() {
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
-          <Stack />
-          <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
-          <PortalHost />
+          <GestureHandlerRootView>
+            <Stack />
+            <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
+            <PortalHost />
+          </GestureHandlerRootView>
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>
