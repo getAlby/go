@@ -2,7 +2,7 @@ import * as React from "react";
 import { AppState, AppStateStatus, NativeEventSubscription } from 'react-native';
 import { secureStorage } from "~/lib/secureStorage";
 import { INACTIVITY_THRESHOLD } from "~/lib/constants";
-import { useAppStore } from "~/lib/state/appStore";
+import { lastActiveTimeKey, useAppStore } from "~/lib/state/appStore";
 
 export const UserInactivityProvider = ({ children }: any) => {
   const [appState, setAppState] = React.useState<AppStateStatus>(AppState.currentState);
@@ -11,16 +11,16 @@ export const UserInactivityProvider = ({ children }: any) => {
   const handleAppStateChange = async (nextState: AppStateStatus) => {
     if (appState === "active" && nextState.match(/inactive|background/)) {
       const now = Date.now();
-      secureStorage.setItem("lastActiveTime", now.toString());
+      secureStorage.setItem(lastActiveTimeKey, now.toString());
     } else if (appState.match(/inactive|background/) && nextState === "active") {
-      const lastActiveTime = secureStorage.getItem("lastActiveTime");
+      const lastActiveTime = secureStorage.getItem(lastActiveTimeKey);
       if (lastActiveTime) {
         const timeElapsed = Date.now() - parseInt(lastActiveTime, 10);
         if (timeElapsed >= INACTIVITY_THRESHOLD) {
           useAppStore.getState().setUnlocked(false)
         }
       }
-      await secureStorage.removeItem("lastActiveTime");
+      await secureStorage.removeItem(lastActiveTimeKey);
     }
     setAppState(nextState);
   };
