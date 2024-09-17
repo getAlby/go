@@ -36,7 +36,7 @@ export function PaymentSuccess() {
               Sent to
             </Text>
             <Text className="text-foreground text-center text-2xl font-medium2">
-              {originalText}
+              {originalText.toLowerCase().replace("lightning:", "")}
             </Text>
           </View>
         }

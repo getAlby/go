@@ -2,33 +2,34 @@ import * as Linking from "expo-linking";
 import { router, useRootNavigationState } from "expo-router";
 import React from "react";
 
-const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
+const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:", "exp:"];
 
 export function useHandleLinking() {
   const rootNavigationState = useRootNavigationState();
-  let url = Linking.useURL();
-  let hasNavigationState = !!rootNavigationState?.key;
+  const url = Linking.useURL();
+  const hasNavigationState = !!rootNavigationState?.key;
 
   React.useEffect(() => {
-    if (!hasNavigationState) {
+    if (!hasNavigationState || !url) {
       return;
     }
-    console.log("Received linking URL", url);
+
+    console.log("useHandleLinking", url);
 
     for (const scheme of SUPPORTED_SCHEMES) {
-      if (url?.startsWith(scheme)) {
-        console.log("Linking URL matched scheme", url, scheme);
-        if (url.startsWith(scheme + "//")) {
-          url = url.replace(scheme + "//", scheme);
-        }
+      if (url.startsWith(scheme)) {
+        let currentUrl = url.startsWith(scheme + "//")
+          ? url.replace(scheme + "//", scheme)
+          : url;
+        currentUrl = currentUrl.replace("exp:127.0.0.1:8081/--/", "lightning:");
 
-        // TODO: it should not always navigate to send,
-        // but that's the only linking functionality supported right now
-        router.dismissAll();
-        router.navigate({
+        console.log("navigating to send screen", currentUrl);
+
+        // Instead of dismissing all screens, we'll use replace to avoid navigation stack issues
+        router.replace({
           pathname: "/send",
           params: {
-            url,
+            url: currentUrl,
           },
         });
         break;

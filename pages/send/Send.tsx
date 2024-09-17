@@ -53,6 +53,8 @@ export function Send() {
     loadPayment(keyboardText);
   }
 
+  // TODO: Add a property for the human readable version of the url
+  // and use it across different send / receive screens (e.g. without "lightning:")
   async function loadPayment(text: string) {
     if (!text) {
       errorToast(new Error("Your clipboard is empty."));

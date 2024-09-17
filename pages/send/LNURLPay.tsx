@@ -85,7 +85,7 @@ export function LNURLPay() {
                 To
               </Text>
               <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText}
+                {originalText.toLowerCase().replace("lightning:", "")}
               </Text>
             </View>
           </View>
