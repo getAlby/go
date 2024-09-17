@@ -7,7 +7,6 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { SWITCH_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { cn } from '~/lib/utils';
 
@@ -36,6 +35,17 @@ const SwitchWeb = React.forwardRef<
 
 SwitchWeb.displayName = 'SwitchWeb';
 
+const RGB_COLORS = {
+  light: {
+    primary: 'rgb(255, 224, 112)',
+    input: 'rgb(228, 228, 231)',
+  },
+  dark: {
+    primary: 'rgb(255, 224, 112)',
+    input: 'rgb(228, 228, 231)',
+  },
+} as const;
+
 const SwitchNative = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
@@ -47,7 +57,7 @@ const SwitchNative = React.forwardRef<
       backgroundColor: interpolateColor(
         Number(props.checked),
         [0, 1],
-        [SWITCH_THEME[colorScheme].input, SWITCH_THEME[colorScheme].primary]
+        [RGB_COLORS[colorScheme].input, RGB_COLORS[colorScheme].primary]
       ),
     };
   });

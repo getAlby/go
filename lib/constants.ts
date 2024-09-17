@@ -17,17 +17,6 @@ export const NAV_THEME = {
   },
 };
 
-export const SWITCH_THEME = {
-  light: {
-    primary: 'rgb(255, 224, 112)',
-    input: 'rgb(228, 228, 231)',
-  },
-  dark: {
-    primary: 'rgb(255, 224, 112)',
-    input: 'rgb(39, 39, 42)',
-  },
-};
-
 export const INACTIVITY_THRESHOLD = 5 * 1000 // 5 * 60 * 1000;
 
 export const CURSOR_COLOR = "hsl(47 100% 72%)";
