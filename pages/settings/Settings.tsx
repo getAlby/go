@@ -44,16 +44,14 @@ export function Settings() {
         </TouchableOpacity>
       </Link>
 
-      {isBiometricSupported && (
-        <Link href="/settings/security" asChild>
-          <TouchableOpacity className="flex flex-row gap-4">
-            <Fingerprint className="text-foreground" />
-            <Text className="text-foreground font-medium2 text-xl">
-              Security
-            </Text>
-          </TouchableOpacity>
-        </Link>
-      )}
+      <Link href="/settings/security" asChild>
+        <TouchableOpacity className="flex flex-row gap-4">
+          <Fingerprint className="text-foreground" />
+          <Text className="text-foreground font-medium2 text-xl">
+            Security
+          </Text>
+        </TouchableOpacity>
+      </Link>
 
       <TouchableOpacity
         className="flex flex-row gap-4"

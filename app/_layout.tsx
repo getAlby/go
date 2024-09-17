@@ -81,8 +81,8 @@ export default function RootLayout() {
 
   async function checkBiometricStatus() {
     const compatible = await LocalAuthentication.hasHardwareAsync();
-    const enrolled = await LocalAuthentication.isEnrolledAsync();
-    if (compatible && enrolled) {
+    const securityLevel = await LocalAuthentication.getEnrolledLevelAsync();
+    if (compatible && securityLevel > 0) {
       useAppStore.getState().setBiometricSupported(true);
     } else {
       useAppStore.getState().setBiometricSupported(false);

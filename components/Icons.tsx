@@ -37,6 +37,7 @@ import {
   Fingerprint,
   HelpCircle,
   CircleCheck,
+  TriangleAlert,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -89,6 +90,7 @@ interopIcon(Egg);
 interopIcon(Fingerprint);
 interopIcon(HelpCircle);
 interopIcon(CircleCheck);
+interopIcon(TriangleAlert);
 
 export {
   AlertCircle,
@@ -128,4 +130,5 @@ export {
   Fingerprint,
   HelpCircle,
   CircleCheck,
+  TriangleAlert,
 };
