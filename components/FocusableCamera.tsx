@@ -19,7 +19,6 @@ export function FocusableCamera({ onScanned }: FocusableCameraProps) {
   const handleBarCodeScanned = ({ data }: BarcodeScanningResult) => {
     onScanned(data);
   };
-
   return (
     <CameraView
       onBarcodeScanned={handleBarCodeScanned}

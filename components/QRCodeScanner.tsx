@@ -7,24 +7,27 @@ import { Camera } from "expo-camera";
 import { Text } from "~/components/ui/text";
 import { CameraOff } from "./Icons";
 
-type QRCodeScannerProps = {
+interface QRCodeScannerProps {
     onScanned: (data: string) => void;
-};
+    startScanning: boolean;
+}
 
-function QRCodeScanner({ onScanned }: QRCodeScannerProps) {
-    const [isScanning, setScanning] = React.useState(false);
+function QRCodeScanner({ onScanned, startScanning = true }: QRCodeScannerProps) {
+    const [isScanning, setScanning] = React.useState(startScanning);
     const [isLoading, setLoading] = React.useState(false);
     const [permissionStatus, setPermissionStatus] = React.useState(PermissionStatus.UNDETERMINED);
 
     useEffect(() => {
         // Add some timeout to allow the screen transition to finish before
         // starting the camera to avoid stutters
-        setLoading(true);
-        window.setTimeout(async () => {
-            await scan();
-            setLoading(false);
-        }, 200);
-    }, []);
+        if (startScanning) {
+            setLoading(true);
+            window.setTimeout(async () => {
+                await scan();
+                setLoading(false);
+            }, 200);
+        }
+    }, [startScanning]);
 
     async function scan() {
         const { status } = await Camera.requestCameraPermissionsAsync();
@@ -59,9 +62,7 @@ function QRCodeScanner({ onScanned }: QRCodeScannerProps) {
                     </View>
                 }
                 {isScanning && (
-                    <>
-                        <FocusableCamera onScanned={handleScanned} />
-                    </>
+                    <FocusableCamera onScanned={handleScanned} />
                 )}
             </>
             }

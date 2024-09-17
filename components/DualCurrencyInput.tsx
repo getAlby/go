@@ -85,6 +85,6 @@ export function DualCurrencyInput({
 const styles = StyleSheet.create({
   amountInput: {
     fontSize: 80,
-    height: 90,
+    height: 100,
   },
 });

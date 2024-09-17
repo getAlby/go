@@ -36,10 +36,6 @@ export function WalletConnection() {
     return connect(data);
   };
 
-  React.useEffect(() => {
-    scan();
-  }, []);
-
   async function paste() {
     let nostrWalletConnectUrl;
     try {
