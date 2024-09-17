@@ -4,7 +4,6 @@ import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
 import { ClipboardPaste, HelpCircle, X } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
-import { Camera } from "expo-camera/legacy"; // TODO: check if Android camera detach bug is fixed and update camera
 import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { useInfo } from "~/hooks/useInfo";
@@ -22,15 +21,10 @@ export function WalletConnection() {
   const walletIdWithConnection = useAppStore((store) =>
     store.wallets.findIndex((wallet) => wallet.nostrWalletConnectUrl),
   );
-  const [isScanning, setScanning] = React.useState(false);
   const [isConnecting, setConnecting] = React.useState(false);
+  const [isScanning, setScanning] = React.useState(true);
   const { data: walletInfo } = useInfo();
   const { data: balance } = useBalance();
-
-  async function scan() {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setScanning(status === "granted");
-  }
 
   const handleScanned = (data: string) => {
     return connect(data);
@@ -152,7 +146,7 @@ export function WalletConnection() {
               variant="destructive"
               onPress={() => {
                 useAppStore.getState().removeNostrWalletConnectUrl();
-                scan();
+                setScanning(true);
               }}
             >
               <Text>Disconnect Wallet</Text>
@@ -173,7 +167,7 @@ export function WalletConnection() {
             )}
             {!isConnecting && (
               <>
-                <QRCodeScanner onScanned={handleScanned} />
+                <QRCodeScanner onScanned={handleScanned} startScanning={isScanning} />
                 <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                   <Button
                     onPress={paste}

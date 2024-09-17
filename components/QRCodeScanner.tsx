@@ -48,7 +48,7 @@ function QRCodeScanner({ onScanned, startScanning = true }: QRCodeScannerProps) 
 
     return (
         <>
-            {isLoading && (
+            {isLoading || !isScanning && (
                 <View className="flex-1 justify-center items-center">
                     <Loading />
                 </View>
