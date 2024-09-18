@@ -166,11 +166,11 @@ export const useAppStore = create<AppState>()((set, get) => {
       });
     },
     setSecurityEnabled: (isEnabled) => {
-      secureStorage.setItem(isSecurityEnabledKey, isEnabled ? "true" : "false");
+      secureStorage.setItem(isSecurityEnabledKey, isEnabled.toString());
       set({ isSecurityEnabled: isEnabled });
     },
     setBiometricSupported: (isSupported) => {
-      secureStorage.setItem(isBiometricSupportedKey, isSupported ? "true" : "false");
+      secureStorage.setItem(isBiometricSupportedKey, isSupported.toString());
       set({ isBiometricSupported: isSupported });
       if (!isSupported) {
         secureStorage.setItem(isSecurityEnabledKey, "false");
