@@ -13,7 +13,7 @@ import * as React from "react";
 import { SafeAreaView } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
-import PolyfillCrypto from "~/polyfill";
+import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { swrConfiguration } from "lib/swr";
 import Toast from "react-native-toast-message";
