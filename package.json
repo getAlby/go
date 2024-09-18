@@ -52,7 +52,7 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-webview": "13.8.6",
-    "webview-crypto": "^0.1.13",
+    "react-native-webview-crypto": "^0.0.26",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0",
     "text-encoding": "^0.7.0",
