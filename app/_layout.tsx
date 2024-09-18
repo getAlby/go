@@ -11,7 +11,6 @@ import {
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
-import * as LocalAuthentication from "expo-local-authentication";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import PolyfillCrypto from "react-native-webview-crypto";
@@ -26,6 +25,7 @@ import { hasOnboardedKey, useAppStore } from "~/lib/state/appStore";
 import { usePathname } from "expo-router";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import { PortalHost } from '@rn-primitives/portal';
+import { isBiometricSupported } from "~/lib/isBiometricSupported";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -80,12 +80,9 @@ export default function RootLayout() {
   }
 
   async function checkBiometricStatus() {
-    const compatible = await LocalAuthentication.hasHardwareAsync();
-    const securityLevel = await LocalAuthentication.getEnrolledLevelAsync();
-    if (compatible && securityLevel > 0) {
-      useAppStore.getState().setBiometricSupported(true);
-    } else {
-      useAppStore.getState().setBiometricSupported(false);
+    const isSupported = await isBiometricSupported()
+    if (!isSupported) {
+      useAppStore.getState().setSecurityEnabled(false);
     }
   }
 

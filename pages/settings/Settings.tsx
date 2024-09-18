@@ -13,7 +13,6 @@ import Screen from "~/components/Screen";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
-  const isBiometricSupported = useAppStore((store) => store.isBiometricSupported);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(false);
   const { colorScheme, toggleColorScheme } = useColorScheme();

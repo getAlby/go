@@ -11,7 +11,6 @@ interface AppState {
   readonly wallets: Wallet[];
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
-  readonly isBiometricSupported: boolean;
   setUnlocked: (unlocked: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
@@ -21,7 +20,6 @@ interface AppState {
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
-  setBiometricSupported(isSupported: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
@@ -33,7 +31,6 @@ const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
 export const isSecurityEnabledKey = "isSecurityEnabled";
-export const isBiometricSupportedKey = "isBiometricSupported";
 export const hasOnboardedKey = "hasOnboarded";
 export const lastActiveTimeKey = "lastActiveTime";
 
@@ -134,8 +131,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     secureStorage.getItem(selectedWalletIdKey) || "0"
   );
 
-  const isBiometricSupported = secureStorage.getItem(isBiometricSupportedKey) === "true";
-  const iSecurityEnabled = isBiometricSupported && secureStorage.getItem(isSecurityEnabledKey) === "true";
+  const iSecurityEnabled = secureStorage.getItem(isSecurityEnabledKey) === "true";
 
   const initialWallets = loadWallets();
   return {
@@ -145,7 +141,6 @@ export const useAppStore = create<AppState>()((set, get) => {
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     isSecurityEnabled: iSecurityEnabled,
-    isBiometricSupported: isBiometricSupported,
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
     removeCurrentWallet,
@@ -167,15 +162,10 @@ export const useAppStore = create<AppState>()((set, get) => {
     },
     setSecurityEnabled: (isEnabled) => {
       secureStorage.setItem(isSecurityEnabledKey, isEnabled.toString());
-      set({ isSecurityEnabled: isEnabled });
-    },
-    setBiometricSupported: (isSupported) => {
-      secureStorage.setItem(isBiometricSupportedKey, isSupported.toString());
-      set({ isBiometricSupported: isSupported });
-      if (!isSupported) {
-        secureStorage.setItem(isSecurityEnabledKey, "false");
-        set({ isSecurityEnabled: false, unlocked: true });
-      }
+      set({
+        isSecurityEnabled: isEnabled,
+        ...(!isEnabled ? { unlocked: true } : {}),
+      });
     },
     setFiatCurrency: (fiatCurrency) => {
       secureStorage.setItem(fiatCurrencyKey, fiatCurrency);
