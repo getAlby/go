@@ -31,8 +31,13 @@ export function useHandleLinking() {
             url: currentUrl,
           },
         });
-        break;
+        return;
       }
     }
+
+    // Code below here is only executed if the link could not be handled
+    router.replace({
+      pathname: "/",
+    });
   }, [url, hasNavigationState]);
 }

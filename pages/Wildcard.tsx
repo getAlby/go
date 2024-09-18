@@ -18,7 +18,6 @@ export function Wildcard() {
       />
       <Loading />
       <Text>Loading</Text>
-      <Text className="text-muted-foreground">{pathname}</Text>
     </View>
   );
 }

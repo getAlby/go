@@ -12,10 +12,11 @@ import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function LNURLPay() {
-  const { lnurlDetailsJSON, originalText } =
+  const { lnurlDetailsJSON, originalText, humanReadablePaymentInfo } =
     useLocalSearchParams() as unknown as {
       lnurlDetailsJSON: string;
       originalText: string;
+      humanReadablePaymentInfo: string;
     };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
@@ -85,7 +86,7 @@ export function LNURLPay() {
                 To
               </Text>
               <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText.toLowerCase().replace("lightning:", "")}
+                {humanReadablePaymentInfo}
               </Text>
             </View>
           </View>

@@ -74,6 +74,7 @@ export function Send() {
     }
     console.log("loading payment", text);
     const originalText = text;
+    let humanReadablePaymentInfo = text;
     setLoading(true);
     try {
       if (text.startsWith("bitcoin:")) {
@@ -88,6 +89,7 @@ export function Send() {
       if (text.startsWith("lightning:")) {
         text = text.substring("lightning:".length);
       }
+
       const lnurlValue = lnurl.findLnurl(text);
       console.log("Checked lnurl value", text, lnurlValue);
       if (lnurlValue) {
@@ -96,6 +98,8 @@ export function Send() {
         if (lnurlDetails.tag !== "payRequest") {
           throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
         }
+
+        humanReadablePaymentInfo = lnurlValue;
 
         // Handle fixed amount LNURLs
         if (lnurlDetails.minSendable === lnurlDetails.maxSendable && !lnurlDetails.commentAllowed) {
@@ -117,12 +121,15 @@ export function Send() {
             params: {
               lnurlDetailsJSON: JSON.stringify(lnurlDetails),
               originalText,
+              humanReadablePaymentInfo
             },
           });
         }
 
         return true;
       } else {
+        humanReadablePaymentInfo = text;
+
         // Check if this is a valid invoice
         new Invoice({
           pr: text,
@@ -130,7 +137,7 @@ export function Send() {
 
         router.replace({
           pathname: "/send/confirm",
-          params: { invoice: text, originalText },
+          params: { invoice: text, originalText, humanReadablePaymentInfo },
         });
 
         return true;
