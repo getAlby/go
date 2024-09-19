@@ -21,8 +21,11 @@ import { toastConfig } from "~/components/ToastConfig";
 import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
 import { secureStorage } from "~/lib/secureStorage";
-import { hasOnboardedKey } from "~/lib/state/appStore";
+import { hasOnboardedKey, useAppStore } from "~/lib/state/appStore";
+import { usePathname } from "expo-router";
+import { UserInactivityProvider } from "~/context/UserInactivity";
 import { PortalHost } from '@rn-primitives/portal';
+import { isBiometricSupported } from "~/lib/isBiometricSupported";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -49,6 +52,8 @@ export default function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
   const [checkedOnboarding, setCheckedOnboarding] = React.useState(false);
+  const isUnlocked = useAppStore((store) => store.unlocked);
+  const pathname = usePathname();
   useConnectionChecker();
 
   const rootNavigationState = useRootNavigationState();
@@ -64,7 +69,6 @@ export default function RootLayout() {
   };
 
   async function loadFonts() {
-
     await Font.loadAsync({
       OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
       "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
@@ -75,12 +79,20 @@ export default function RootLayout() {
     setFontsLoaded(true);
   }
 
+  async function checkBiometricStatus() {
+    const isSupported = await isBiometricSupported()
+    if (!isSupported) {
+      useAppStore.getState().setSecurityEnabled(false);
+    }
+  }
+
   React.useEffect(() => {
     const init = async () => {
       try {
         await Promise.all([
           checkOnboardingStatus(),
           loadFonts(),
+          checkBiometricStatus(),
         ]);
       }
       finally {
@@ -89,8 +101,15 @@ export default function RootLayout() {
     };
 
     init();
-
   }, [hasNavigationState]);
+
+  React.useEffect(() => {
+    if (hasNavigationState && !isUnlocked) {
+      if (pathname !== "/unlock") {
+        router.push("/unlock");
+      }
+    }
+  }, [isUnlocked, hasNavigationState]);
 
   if (!fontsLoaded || !checkedOnboarding) {
     return null;
@@ -102,7 +121,9 @@ export default function RootLayout() {
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
-          <Stack />
+          <UserInactivityProvider>
+            <Stack />
+          </UserInactivityProvider>
           <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
           <PortalHost />
         </SafeAreaView>
