@@ -31,7 +31,7 @@ export function LNURLPay() {
       // Allow users to enter a comment if the LNURL allows it,
       // otherwise go to the confirmation step directly
       if (lnurlDetails.commentAllowed) {
-        setAmountReadOnly(false);
+        setAmountReadOnly(true);
       } else {
         requestInvoice();
       }
@@ -70,7 +70,7 @@ export function LNURLPay() {
               amount={amount}
               setAmount={setAmount}
               readOnly={isAmountReadOnly}
-              autoFocus
+              autoFocus={!isAmountReadOnly}
             />
             <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
