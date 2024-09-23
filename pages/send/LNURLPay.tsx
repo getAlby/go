@@ -1,6 +1,6 @@
 import Screen from "~/components/Screen";
 import { router, useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -21,6 +21,22 @@ export function LNURLPay() {
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
+  const [isAmountReadOnly, setAmountReadOnly] = React.useState(true);
+
+  useEffect(() => {
+
+    if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
+      setAmount((lnurlDetails.minSendable / 1000).toString());
+
+      // Allow users to enter a comment if the LNURL allows it,
+      // otherwise go to the confirmation step directly
+      if (lnurlDetails.commentAllowed) {
+        setAmountReadOnly(false);
+      } else {
+        requestInvoice();
+      }
+    }
+  }, [lnurlDetails]);
 
   async function requestInvoice() {
     setLoading(true);
@@ -53,6 +69,7 @@ export function LNURLPay() {
             <DualCurrencyInput
               amount={amount}
               setAmount={setAmount}
+              readOnly={!isAmountReadOnly}
               autoFocus
             />
             <View className="w-full">

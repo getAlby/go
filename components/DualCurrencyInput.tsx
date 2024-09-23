@@ -11,12 +11,14 @@ type DualCurrencyInputProps = {
   amount: string;
   setAmount(amount: string): void;
   autoFocus?: boolean;
+  readOnly?: boolean;
 };
 
 export function DualCurrencyInput({
   amount,
   setAmount,
   autoFocus = false,
+  readOnly = false,
 }: DualCurrencyInputProps) {
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
@@ -58,6 +60,7 @@ export function DualCurrencyInput({
         style={styles.amountInput}
         autoFocus={autoFocus}
         returnKeyType="done"
+        readOnly={readOnly}
       // aria-errormessage="inputError"
       />
       <Pressable onPress={toggleInputMode}>
