@@ -25,6 +25,7 @@ export function LNURLPay() {
 
   useEffect(() => {
 
+    // Handle fixed amount LNURLs
     if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
       setAmount((lnurlDetails.minSendable / 1000).toString());
 
