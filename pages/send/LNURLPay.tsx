@@ -21,7 +21,7 @@ export function LNURLPay() {
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
-  const [isAmountReadOnly, setAmountReadOnly] = React.useState(true);
+  const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
 
   useEffect(() => {
 
@@ -69,7 +69,7 @@ export function LNURLPay() {
             <DualCurrencyInput
               amount={amount}
               setAmount={setAmount}
-              readOnly={!isAmountReadOnly}
+              readOnly={isAmountReadOnly}
               autoFocus
             />
             <View className="w-full">
