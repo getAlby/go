@@ -47,10 +47,10 @@ function QRCodeScanner({ onScanned, startScanning = true }: QRCodeScannerProps) 
     };
 
     return (
-        <>
-            {isLoading || !isScanning && (
+        <View className="flex-1">
+            {(isLoading || (!isScanning && permissionStatus === PermissionStatus.UNDETERMINED)) && (
                 <View className="flex-1 justify-center items-center">
-                    <Loading />
+                    <Loading className="text-primary-foreground" />
                 </View>
             )}
             {!isLoading && <>
@@ -66,7 +66,7 @@ function QRCodeScanner({ onScanned, startScanning = true }: QRCodeScannerProps) 
                 )}
             </>
             }
-        </>
+        </View>
     );
 }
 
