@@ -27,23 +27,24 @@ export function LNURLPay() {
 
     // Handle fixed amount LNURLs
     if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
-      setAmount((lnurlDetails.minSendable / 1000).toString());
-
       // Allow users to enter a comment if the LNURL allows it,
       // otherwise go to the confirmation step directly
+      setAmount((lnurlDetails.minSendable / 1000).toString());
+
       if (lnurlDetails.commentAllowed) {
         setAmountReadOnly(true);
       } else {
-        requestInvoice();
+        requestInvoice(lnurlDetails.minSendable / 1000);
       }
     }
-  }, [lnurlDetails]);
+  }, [lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
-  async function requestInvoice() {
+  async function requestInvoice(_amount: number = 0) {
     setLoading(true);
     try {
       const callback = new URL(lnurlDetails.callback);
-      callback.searchParams.append("amount", (+amount * 1000).toString());
+      console.log("requesting invoice for ", +amount)
+      callback.searchParams.append("amount", (amount ? +amount * 1000 : _amount * 1000).toString());
       if (comment) {
         callback.searchParams.append("comment", comment);
       }
@@ -100,7 +101,7 @@ export function LNURLPay() {
             <Button
               size="lg"
               className="flex flex-row gap-2"
-              onPress={requestInvoice}
+              onPress={() => requestInvoice()}
               disabled={isLoading}
             >
               {isLoading && <Loading className="text-primary-foreground" />}
