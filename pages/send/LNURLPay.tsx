@@ -73,18 +73,20 @@ export function LNURLPay() {
               readOnly={isAmountReadOnly}
               autoFocus={!isAmountReadOnly}
             />
-            <View className="w-full">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                Comment
-              </Text>
-              <Input
-                className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
-                placeholder="Enter an optional comment"
-                value={comment}
-                onChangeText={setComment}
-                returnKeyType="done"
-              />
-            </View>
+            {lnurlDetails.commentAllowed &&
+              <View className="w-full">
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  Comment
+                </Text>
+                <Input
+                  className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
+                  placeholder="Enter an optional comment"
+                  value={comment}
+                  onChangeText={setComment}
+                  returnKeyType="done"
+                />
+              </View>
+            }
             <View>
               <Text className="text-muted-foreground text-center font-semibold2">
                 To
