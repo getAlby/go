@@ -24,18 +24,10 @@ export function LNURLPay() {
   const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
 
   useEffect(() => {
-
     // Handle fixed amount LNURLs
     if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
-      // Allow users to enter a comment if the LNURL allows it,
-      // otherwise go to the confirmation step directly
       setAmount((lnurlDetails.minSendable / 1000).toString());
-
-      if (lnurlDetails.commentAllowed) {
-        setAmountReadOnly(true);
-      } else {
-        requestInvoice(lnurlDetails.minSendable / 1000);
-      }
+      setAmountReadOnly(true);
     }
   }, [lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
@@ -85,6 +77,7 @@ export function LNURLPay() {
                   value={comment}
                   onChangeText={setComment}
                   returnKeyType="done"
+                  maxLength={lnurlDetails.commentAllowed}
                 />
               </View>
             }
