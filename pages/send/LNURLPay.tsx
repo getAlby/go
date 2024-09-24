@@ -31,12 +31,11 @@ export function LNURLPay() {
     }
   }, [lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
-  async function requestInvoice(_amount: number = 0) {
+  async function requestInvoice() {
     setLoading(true);
     try {
       const callback = new URL(lnurlDetails.callback);
-      console.log("requesting invoice for ", +amount)
-      callback.searchParams.append("amount", (amount ? +amount * 1000 : _amount * 1000).toString());
+      callback.searchParams.append("amount", (+amount * 1000).toString());
       if (comment) {
         callback.searchParams.append("comment", comment);
       }
@@ -94,7 +93,7 @@ export function LNURLPay() {
             <Button
               size="lg"
               className="flex flex-row gap-2"
-              onPress={() => requestInvoice()}
+              onPress={requestInvoice}
               disabled={isLoading}
             >
               {isLoading && <Loading className="text-primary-foreground" />}
