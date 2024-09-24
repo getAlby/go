@@ -74,7 +74,6 @@ export function Send() {
     }
     console.log("loading payment", text);
     const originalText = text;
-    let humanReadablePaymentInfo = text;
     setLoading(true);
     try {
       if (text.startsWith("bitcoin:")) {
@@ -99,8 +98,6 @@ export function Send() {
           throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
         }
 
-        humanReadablePaymentInfo = lnurlValue;
-
         // Handle fixed amount LNURLs
         if (lnurlDetails.minSendable === lnurlDetails.maxSendable && !lnurlDetails.commentAllowed) {
           try {
@@ -121,15 +118,12 @@ export function Send() {
             params: {
               lnurlDetailsJSON: JSON.stringify(lnurlDetails),
               originalText,
-              humanReadablePaymentInfo
             },
           });
         }
 
         return true;
       } else {
-        humanReadablePaymentInfo = text;
-
         // Check if this is a valid invoice
         new Invoice({
           pr: text,
@@ -137,7 +131,7 @@ export function Send() {
 
         router.replace({
           pathname: "/send/confirm",
-          params: { invoice: text, originalText, humanReadablePaymentInfo },
+          params: { invoice: text, originalText },
         });
 
         return true;

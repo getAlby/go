@@ -5,6 +5,7 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import Screen from "~/components/Screen";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { Receiver } from "~/components/Receiver";
 
 export function PaymentSuccess() {
   const getFiatAmount = useGetFiatAmount();
@@ -30,16 +31,7 @@ export function PaymentSuccess() {
             <Text className="text-2xl text-muted-foreground font-semibold2">{getFiatAmount(+amount)}</Text>
           }
         </View>
-        {originalText !== invoice &&
-          <View>
-            <Text className="text-muted-foreground text-center font-semibold2">
-              Sent to
-            </Text>
-            <Text className="text-foreground text-center text-2xl font-medium2">
-              {originalText.toLowerCase().replace("lightning:", "")}
-            </Text>
-          </View>
-        }
+        <Receiver originalText={originalText} invoice={invoice} />
       </View>
       <View className="p-6">
         <Button
