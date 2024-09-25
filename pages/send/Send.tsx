@@ -83,13 +83,29 @@ export function Send() {
           throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
         }
 
-        router.replace({
-          pathname: "/send/lnurl-pay",
-          params: {
-            lnurlDetailsJSON: JSON.stringify(lnurlDetails),
-            originalText,
-          },
-        });
+        // Handle fixed amount LNURLs
+        if (lnurlDetails.minSendable === lnurlDetails.maxSendable && !lnurlDetails.commentAllowed) {
+          try {
+            const callback = new URL(lnurlDetails.callback);
+            callback.searchParams.append("amount", (lnurlDetails.minSendable).toString());
+            const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
+            router.push({
+              pathname: "/send/confirm",
+              params: { invoice: lnurlPayInfo.pr, originalText },
+            });
+          } catch (error) {
+            console.error(error);
+            errorToast(error);
+          }
+        } else {
+          router.replace({
+            pathname: "/send/lnurl-pay",
+            params: {
+              lnurlDetailsJSON: JSON.stringify(lnurlDetails),
+              originalText,
+            },
+          });
+        }
       } else {
         // Check if this is a valid invoice
         new Invoice({

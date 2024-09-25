@@ -19,7 +19,7 @@ export function PaymentSuccess() {
       <Screen
         title="Success"
       />
-      <View className="flex-1 justify-center items-center gap-8">
+      <View className="flex-1 justify-center items-center gap-8 p-6">
         <Paid />
         <View className="flex flex-col items-center gap-2 -mt-24">
           <View className="flex flex-row items-end justify-center">
