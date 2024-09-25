@@ -80,7 +80,7 @@ export function Home() {
           </Link>
         }
       />
-      <View className="h-full flex">
+      <View className="h-full flex p-6">
         <View className="grow flex flex-col items-center justify-center gap-4">
           <TouchableOpacity
             onPress={switchBalanceState}
@@ -123,6 +123,31 @@ export function Home() {
               )}
             </View>
           </TouchableOpacity>
+          {/* <TouchableOpacity className="w-full" onPress={() => {
+            router.navigate({
+              pathname: "/send",
+              params: {
+                url: "hello@getalby.com"
+              },
+            });
+          }}>
+            <Button variant="secondary" size="sm"><Text>✨Support Alby Go</Text></Button>
+            <Card className="w-full mt-5">
+              <CardHeader>
+                <CardTitle>✨ Like Alby Go?</CardTitle>
+                <CardDescription>Help us grow and improve by supporting our development</CardDescription>
+              </CardHeader>
+            </Card>
+          </TouchableOpacity> */}
+          <View className="border bg-card border-muted rounded mt-5 flex flex-col gap-3 p-3 ">
+            <Text className="font-semibold2 text-center">✨ Enjoying Alby Go?</Text>
+            <Text className="text-muted-foreground text-center">Help us grow and improve by supporting our development</Text>
+            <View className="flex flex-row gap-3 mt-3">
+              <Button variant="secondary" size="sm"><Text>🧡 1000</Text></Button>
+              <Button variant="secondary" size="sm"><Text>🚀 5000</Text></Button>
+              <Button variant="secondary" size="sm"><Text>🔥 10000</Text></Button>
+            </View>
+          </View>
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
@@ -131,11 +156,9 @@ export function Home() {
             </Button>
           </Link>
         </View>
-        <View>
-          <View className="flex flex-row gap-6 p-6 pt-2">
-            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
-            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
-          </View>
+        <View className="flex flex-row gap-6 pt-2">
+          <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+          <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
         </View>
       </View>
     </>
