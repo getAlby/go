@@ -1,6 +1,6 @@
 import Screen from "~/components/Screen";
 import { router, useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -21,6 +21,15 @@ export function LNURLPay() {
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
+  const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
+
+  useEffect(() => {
+    // Handle fixed amount LNURLs
+    if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
+      setAmount((lnurlDetails.minSendable / 1000).toString());
+      setAmountReadOnly(true);
+    }
+  }, [lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
   async function requestInvoice() {
     setLoading(true);
@@ -53,20 +62,24 @@ export function LNURLPay() {
             <DualCurrencyInput
               amount={amount}
               setAmount={setAmount}
-              autoFocus
+              readOnly={isAmountReadOnly}
+              autoFocus={!isAmountReadOnly}
             />
-            <View className="w-full">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                Comment
-              </Text>
-              <Input
-                className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
-                placeholder="Enter an optional comment"
-                value={comment}
-                onChangeText={setComment}
-                returnKeyType="done"
-              />
-            </View>
+            {lnurlDetails.commentAllowed &&
+              <View className="w-full">
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  Comment
+                </Text>
+                <Input
+                  className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
+                  placeholder="Enter an optional comment"
+                  value={comment}
+                  onChangeText={setComment}
+                  returnKeyType="done"
+                  maxLength={lnurlDetails.commentAllowed}
+                />
+              </View>
+            }
             <View>
               <Text className="text-muted-foreground text-center font-semibold2">
                 To

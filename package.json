@@ -1,6 +1,6 @@
 {
   "name": "alby-go",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -21,6 +21,7 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@rn-primitives/dialog": "^1.0.3",
     "@rn-primitives/portal": "^1.0.3",
+    "@rn-primitives/switch": "^1.0.3",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
@@ -34,6 +35,7 @@
     "expo-font": "^12.0.9",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
+    "expo-local-authentication": "~14.0.1",
     "expo-router": "^3.5.23",
     "expo-secure-store": "^13.0.2",
     "expo-status-bar": "~1.12.1",
@@ -53,7 +55,7 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-webview": "13.8.6",
-    "react-native-webview-crypto": "^0.0.25",
+    "react-native-webview-crypto": "^0.0.26",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0",
     "text-encoding": "^0.7.0",

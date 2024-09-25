@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
-import { Bitcoin, Egg, Palette, Power, Wallet2 } from "~/components/Icons";
+import { Bitcoin, Egg, Fingerprint, Palette, Power, Wallet2 } from "~/components/Icons";
 
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -39,6 +39,15 @@ export function Settings() {
           </Text>
           <Text className="text-muted-foreground text-xl">
             ({fiatCurrency || DEFAULT_CURRENCY})
+          </Text>
+        </TouchableOpacity>
+      </Link>
+
+      <Link href="/settings/security" asChild>
+        <TouchableOpacity className="flex flex-row gap-4">
+          <Fingerprint className="text-foreground" />
+          <Text className="text-foreground font-medium2 text-xl">
+            Security
           </Text>
         </TouchableOpacity>
       </Link>

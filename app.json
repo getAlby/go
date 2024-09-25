@@ -2,8 +2,12 @@
   "expo": {
     "name": "Alby Go",
     "slug": "alby-mobile",
-    "version": "1.4.2",
-    "scheme": ["bitcoin", "lightning", "alby"],
+    "version": "1.5.0",
+    "scheme": [
+      "bitcoin",
+      "lightning",
+      "alby"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -12,8 +16,16 @@
       "resizeMode": "cover",
       "backgroundColor": "#0F0C40"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Alby Go to use Face ID."
+        }
+      ],
       [
         "expo-camera",
         {
@@ -49,7 +61,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundImage": "./assets/adaptive-icon-bg.png"
       },
-      "permissions": ["android.permission.CAMERA"]
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "extra": {
       "eas": {

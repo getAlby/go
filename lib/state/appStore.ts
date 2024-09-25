@@ -4,11 +4,14 @@ import { nwc } from "@getalby/sdk";
 import { secureStorage } from "lib/secureStorage";
 
 interface AppState {
+  readonly unlocked: boolean;
   readonly nwcClient: NWCClient | undefined;
   readonly fiatCurrency: string;
   readonly selectedWalletId: number;
   readonly wallets: Wallet[];
   readonly addressBookEntries: AddressBookEntry[];
+  readonly isSecurityEnabled: boolean;
+  setUnlocked: (unlocked: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
   removeNostrWalletConnectUrl(): void;
@@ -16,6 +19,7 @@ interface AppState {
   removeCurrentWallet(): void;
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
+  setSecurityEnabled(securityEnabled: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
@@ -26,7 +30,9 @@ const walletKeyPrefix = "wallet";
 const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
+export const isSecurityEnabledKey = "isSecurityEnabled";
 export const hasOnboardedKey = "hasOnboarded";
+export const lastActiveTimeKey = "lastActiveTime";
 
 type Wallet = {
   name?: string;
@@ -99,7 +105,15 @@ export const useAppStore = create<AppState>()((set, get) => {
   const removeCurrentWallet = () => {
     const wallets = [...get().wallets];
     if (wallets.length <= 1) {
-      // cannot delete last wallet
+      // set to initial wallet status
+      secureStorage.removeItem(hasOnboardedKey);
+      secureStorage.setItem(selectedWalletIdKey, "0");
+      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
+      set({
+        nwcClient: undefined,
+        selectedWalletId: 0,
+        wallets: [{}],
+      });
       return;
     }
     const selectedWalletId = get().selectedWalletId;
@@ -124,15 +138,23 @@ export const useAppStore = create<AppState>()((set, get) => {
   const initialSelectedWalletId = +(
     secureStorage.getItem(selectedWalletIdKey) || "0"
   );
+
+  const iSecurityEnabled = secureStorage.getItem(isSecurityEnabledKey) === "true";
+
   const initialWallets = loadWallets();
   return {
+    unlocked: !iSecurityEnabled,
     addressBookEntries: loadAddressBookEntries(),
     wallets: initialWallets,
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
+    isSecurityEnabled: iSecurityEnabled,
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
     removeCurrentWallet,
+    setUnlocked: (unlocked) => {
+      set({ unlocked });
+    },
     setNWCClient: (nwcClient) => set({ nwcClient }),
     removeNostrWalletConnectUrl: () => {
       updateCurrentWallet({
@@ -144,6 +166,13 @@ export const useAppStore = create<AppState>()((set, get) => {
     setNostrWalletConnectUrl: (nostrWalletConnectUrl) => {
       updateCurrentWallet({
         nostrWalletConnectUrl,
+      });
+    },
+    setSecurityEnabled: (isEnabled) => {
+      secureStorage.setItem(isSecurityEnabledKey, isEnabled.toString());
+      set({
+        isSecurityEnabled: isEnabled,
+        ...(!isEnabled ? { unlocked: true } : {}),
       });
     },
     setFiatCurrency: (fiatCurrency) => {
@@ -191,18 +220,27 @@ export const useAppStore = create<AppState>()((set, get) => {
       for (let i = 0; i < get().addressBookEntries.length; i++) {
         secureStorage.removeItem(getAddressBookEntryKey(i));
       }
-      // clear selected wallet ID
-      secureStorage.removeItem(selectedWalletIdKey);
+
+      // clear fiat currency
+      secureStorage.removeItem(fiatCurrencyKey);
+
+      // clear security enabled status
+      secureStorage.removeItem(isSecurityEnabledKey);
 
       // clear onboarding status
       secureStorage.removeItem(hasOnboardedKey);
 
+      // set to initial wallet status
+      secureStorage.setItem(selectedWalletIdKey, "0");
+      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
+
       set({
         nwcClient: undefined,
         fiatCurrency: undefined,
-        selectedWalletId: undefined,
-        wallets: [],
+        selectedWalletId: 0,
+        wallets: [{}],
         addressBookEntries: [],
+        isSecurityEnabled: false,
       });
     },
   };
