@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { View } from "react-native";
 import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
@@ -6,6 +6,7 @@ import { Text } from "~/components/ui/text";
 import Screen from "~/components/Screen";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { LNURLPaymentSuccessAction } from "lib/lnurl";
+import { openURL } from "expo-linking";
 import { Receiver } from "~/components/Receiver";
 
 export function PaymentSuccess() {
@@ -49,15 +50,15 @@ export function PaymentSuccess() {
             }
             {lnurlSuccessAction.tag == "url" &&
               <>
-                <Text className="text-foreground text-center text-2xl font-medium2">
-                  {lnurlSuccessAction.description}
-                </Text>
+                {lnurlSuccessAction.description &&
+                  <Text className="text-foreground text-center text-2xl font-medium2">
+                    {lnurlSuccessAction.description}
+                  </Text>
+                }
                 {lnurlSuccessAction.url &&
-                  <Link href={lnurlSuccessAction.url}>
-                    <Button variant="secondary">
-                      <Text>Open Link</Text>
-                    </Button>
-                  </Link>
+                  <Button variant="secondary" onPress={() => openURL(lnurlSuccessAction.url ?? "")}>
+                    <Text>Open Link</Text>
+                  </Button>
                 }
               </>
             }
