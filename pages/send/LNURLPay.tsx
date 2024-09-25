@@ -13,17 +13,18 @@ import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { Receiver } from "~/components/Receiver";
 
 export function LNURLPay() {
-  const { lnurlDetailsJSON, originalText } =
+  const { lnurlDetailsJSON, originalText, amount: amountParam } =
     useLocalSearchParams() as unknown as {
       lnurlDetailsJSON: string;
       originalText: string;
+      amount: string;
     };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
-  const [amount, setAmount] = React.useState("");
+  const [amount, setAmount] = React.useState(amountParam);
   const [comment, setComment] = React.useState("");
   const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
-
+  console.log(amountParam, amount)
   useEffect(() => {
     // Handle fixed amount LNURLs
     if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {

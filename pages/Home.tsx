@@ -22,6 +22,7 @@ import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
 import Screen from "~/components/Screen";
 import { useOnboarding } from "~/hooks/useOnboarding";
+import AlbyBanner from "~/components/AlbyBanner";
 
 dayjs.extend(relativeTime);
 
@@ -123,31 +124,7 @@ export function Home() {
               )}
             </View>
           </TouchableOpacity>
-          {/* <TouchableOpacity className="w-full" onPress={() => {
-            router.navigate({
-              pathname: "/send",
-              params: {
-                url: "hello@getalby.com"
-              },
-            });
-          }}>
-            <Button variant="secondary" size="sm"><Text>✨Support Alby Go</Text></Button>
-            <Card className="w-full mt-5">
-              <CardHeader>
-                <CardTitle>✨ Like Alby Go?</CardTitle>
-                <CardDescription>Help us grow and improve by supporting our development</CardDescription>
-              </CardHeader>
-            </Card>
-          </TouchableOpacity> */}
-          <View className="border bg-card border-muted rounded mt-5 flex flex-col gap-3 p-3 ">
-            <Text className="font-semibold2 text-center">✨ Enjoying Alby Go?</Text>
-            <Text className="text-muted-foreground text-center">Help us grow and improve by supporting our development</Text>
-            <View className="flex flex-row gap-3 mt-3">
-              <Button variant="secondary" size="sm"><Text>🧡 1000</Text></Button>
-              <Button variant="secondary" size="sm"><Text>🚀 5000</Text></Button>
-              <Button variant="secondary" size="sm"><Text>🔥 10000</Text></Button>
-            </View>
-          </View>
+          <AlbyBanner />
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
