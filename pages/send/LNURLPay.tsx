@@ -46,7 +46,12 @@ export function LNURLPay() {
       //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
-        params: { invoice: lnurlPayInfo.pr, originalText, comment },
+        params: {
+          invoice: lnurlPayInfo.pr,
+          originalText,
+          comment,
+          successAction: lnurlPayInfo.successAction ? JSON.stringify(lnurlPayInfo.successAction) : undefined,
+        },
       });
     } catch (error) {
       console.error(error);
