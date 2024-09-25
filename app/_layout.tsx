@@ -25,6 +25,7 @@ import { hasOnboardedKey, useAppStore } from "~/lib/state/appStore";
 import { usePathname } from "expo-router";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import { PortalHost } from '@rn-primitives/portal';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 
 const LIGHT_THEME: Theme = {
@@ -121,11 +122,13 @@ export default function RootLayout() {
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
-          <UserInactivityProvider>
-            <Stack />
-          </UserInactivityProvider>
-          <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
-          <PortalHost />
+          <GestureHandlerRootView>
+            <UserInactivityProvider>
+              <Stack />
+            </UserInactivityProvider>
+            <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
+            <PortalHost />
+          </GestureHandlerRootView>
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>
