@@ -1,12 +1,15 @@
+import { StackActions } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import { getInitialURL } from "expo-linking";
-import { router } from "expo-router";
+import { router, useNavigationContainerRef } from "expo-router";
 import { useEffect } from "react";
 
 // TESTING: ["lightning:", "bitcoin:", "alby:", "exp:"]
 const SUPPORTED_SCHEMES = ["lightning", "bitcoin", "alby", "exp"];
 
 export function useHandleLinking() {
+  const rootNavigation = useNavigationContainerRef();
+
   useEffect(() => {
     getInitialURL().then((url) => handleLink(url ?? ""));
     const subscription = Linking.addEventListener(
@@ -33,6 +36,9 @@ export function useHandleLinking() {
         ).toString();
         fullUrl += `?${queryString}`;
       }
+
+      // Remove all items from the navigation stack
+      rootNavigation.dispatch(StackActions.popToTop());
 
       router.push({
         pathname: "/send",
