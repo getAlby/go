@@ -26,6 +26,7 @@ import { usePathname } from "expo-router";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import { PortalHost } from '@rn-primitives/portal';
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
+import { useHandleLinking } from "~/hooks/useHandleLinking";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -54,6 +55,8 @@ export default function RootLayout() {
   const [checkedOnboarding, setCheckedOnboarding] = React.useState(false);
   const isUnlocked = useAppStore((store) => store.unlocked);
   const pathname = usePathname();
+
+  useHandleLinking();
   useConnectionChecker();
 
   const rootNavigationState = useRootNavigationState();

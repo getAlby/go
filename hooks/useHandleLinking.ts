@@ -1,38 +1,46 @@
 import * as Linking from "expo-linking";
-import { router, useRootNavigationState } from "expo-router";
-import React from "react";
+import { getInitialURL } from "expo-linking";
+import { router } from "expo-router";
+import { useEffect } from "react";
 
 // TESTING: ["lightning:", "bitcoin:", "alby:", "exp:"]
-const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
+const SUPPORTED_SCHEMES = ["lightning", "bitcoin", "alby", "exp"];
 
 export function useHandleLinking() {
-  const rootNavigationState = useRootNavigationState();
-  const url = Linking.useURL();
-  const hasNavigationState = !!rootNavigationState?.key;
+  useEffect(() => {
+    getInitialURL().then((url) => handleLink(url ?? ""));
+    const subscription = Linking.addEventListener(
+      "url",
+      (event: { url: string }) => handleLink(event.url),
+    );
+    return () => subscription.remove();
+  }, []);
 
-  React.useEffect(() => {
-    if (!hasNavigationState || !url) {
-      return;
-    }
+  function handleLink(url: string) {
+    if (!url) return;
 
-    for (const scheme of SUPPORTED_SCHEMES) {
-      if (url.startsWith(scheme)) {
-        let currentUrl = url.startsWith(scheme + "//")
-          ? url.replace(scheme + "//", scheme)
-          : url;
+    const { hostname, path, queryParams, scheme } = Linking.parse(url);
 
-        // TESTING:
-        // currentUrl = currentUrl.replace("exp:127.0.0.1:8081/--/", "lightning:");
+    if (!scheme) return;
 
-        // Instead of dismissing all screens, we'll use replace to avoid navigation stack issues
-        router.replace({
-          pathname: "/send",
-          params: {
-            url: currentUrl,
-          },
-        });
-        return;
+    if (SUPPORTED_SCHEMES.indexOf(scheme) > -1) {
+      let fullUrl = scheme === "exp" ? path : `${scheme}:${hostname}`;
+
+      // Add query parameters to the URL if they exist
+      if (queryParams && Object.keys(queryParams).length > 0) {
+        const queryString = new URLSearchParams(
+          queryParams as Record<string, string>,
+        ).toString();
+        fullUrl += `?${queryString}`;
       }
+
+      router.push({
+        pathname: "/send",
+        params: {
+          url: fullUrl,
+        },
+      });
+      return;
     }
 
     // Redirect the user to the home screen
@@ -40,5 +48,5 @@ export function useHandleLinking() {
     router.replace({
       pathname: "/",
     });
-  }, [url, hasNavigationState]);
+  }
 }
