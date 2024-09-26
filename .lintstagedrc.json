@@ -1,0 +1,5 @@
+{
+  "*.ts": "tsc --noEmit",
+  "*.{js,jsx,ts,tsx}": ["prettier --write"],
+  "*.{css,md,json}": ["prettier --write"]
+}
