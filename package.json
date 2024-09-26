@@ -16,7 +16,8 @@
     "format": "prettier --check '**/*.{js,ts,tsx,md,json}'",
     "format:fix": "prettier --loglevel silent --write '**/*.{js,ts,tsx,md,json}'",
     "ts:check": "tsc",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@getalby/lightning-tools": "^5.0.3",
@@ -66,6 +67,10 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "^7.1.2",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
