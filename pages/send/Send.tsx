@@ -65,13 +65,15 @@ export function Send() {
     loadPayment(keyboardText);
   }
 
-  // TODO: Add a property for the human readable version of the url
-  // and use it across different send / receive screens (e.g. without "lightning:")
   async function loadPayment(text: string): Promise<boolean> {
     if (!text) {
       errorToast(new Error("Your clipboard is empty."));
       return false;
     }
+
+    // Some apps use uppercased LIGHTNING: prefixes
+    text = text.toLowerCase();
+
     console.log("loading payment", text);
     const originalText = text;
     setLoading(true);
