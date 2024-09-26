@@ -13,6 +13,8 @@
     "eas:build:android": "eas build --platform android",
     "eas:build:ios": "eas build --platform ios",
     "eas:submit:ios": "eas submit -p ios --latest",
+    "format": "prettier --check '**/*.{js,ts,tsx,md,json}'",
+    "format:fix": "prettier --loglevel silent --write '**/*.{js,ts,tsx,md,json}'",
     "ts:check": "tsc",
     "prepare": "husky"
   },
