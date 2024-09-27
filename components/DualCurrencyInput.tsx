@@ -52,7 +52,7 @@ export function DualCurrencyInput({
       <Input
         className="w-full border-transparent bg-transparent text-center mt-3"
         placeholder="0"
-        keyboardType="number-pad"
+        keyboardType={inputMode === "sats" ? "number-pad" : "decimal-pad"}
         value={inputMode === "sats" ? amount : fiatAmount}
         selectionColor={CURSOR_COLOR}
         onChangeText={onChangeText}
