@@ -13,7 +13,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export function useHandleLinking() {
-  console.log(process.env.NODE_ENV);
   const navigationState = useRootNavigationState();
   const pendingLinkRef = useRef<string | null>(null);
 
