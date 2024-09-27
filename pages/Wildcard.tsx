@@ -1,12 +1,17 @@
-import { Stack, usePathname } from "expo-router";
+import { router, Stack, useFocusEffect, usePathname } from "expo-router";
 import { View } from "react-native";
 import Loading from "~/components/Loading";
 import { Text } from "~/components/ui/text";
-import { useHandleLinking } from "~/hooks/useHandleLinking";
 
 export function Wildcard() {
   const pathname = usePathname();
-  useHandleLinking();
+
+  // Should a user ever land on this page, redirect them to home
+  useFocusEffect(() => {
+    router.replace({
+      pathname: "/"
+    });
+  });
 
   return (
     <View className="flex-1 justify-center items-center flex flex-col gap-3">
@@ -17,7 +22,7 @@ export function Wildcard() {
         }}
       />
       <Loading />
-      <Text>Loading {pathname}</Text>
+      <Text>Loading</Text>
     </View>
   );
 }

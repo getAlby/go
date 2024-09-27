@@ -10,6 +10,7 @@ import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import { Receiver } from "~/components/Receiver";
 
 export function LNURLPay() {
   const { lnurlDetailsJSON, originalText } =
@@ -65,29 +66,19 @@ export function LNURLPay() {
               readOnly={isAmountReadOnly}
               autoFocus={!isAmountReadOnly}
             />
-            {lnurlDetails.commentAllowed &&
-              <View className="w-full">
-                <Text className="text-muted-foreground text-center font-semibold2">
-                  Comment
-                </Text>
-                <Input
-                  className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
-                  placeholder="Enter an optional comment"
-                  value={comment}
-                  onChangeText={setComment}
-                  returnKeyType="done"
-                  maxLength={lnurlDetails.commentAllowed}
-                />
-              </View>
-            }
-            <View>
+            <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
-                To
+                Comment
               </Text>
-              <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText}
-              </Text>
+              <Input
+                className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
+                placeholder="Enter an optional comment"
+                value={comment}
+                onChangeText={setComment}
+                returnKeyType="done"
+              />
             </View>
+            <Receiver originalText={originalText} />
           </View>
           <View className="p-6">
             <Button
