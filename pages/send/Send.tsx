@@ -25,7 +25,7 @@ export function Send() {
   const [keyboardText, setKeyboardText] = React.useState("");
   const [startScanning, setStartScanning] = React.useState(false);
 
-  // Delay starting the QR scanner if url has no valid payment info
+  // Delay starting the QR scanner if url has valid payment info
   useEffect(() => {
     if (url) {
       (async () => {
