@@ -4,9 +4,16 @@ import { router, useRootNavigationState } from "expo-router";
 import { useEffect, useCallback, useRef } from "react";
 
 // TESTING: ["lightning:", "bitcoin:", "alby:", "exp:"]
-const SUPPORTED_SCHEMES = ["lightning", "bitcoin", "alby", "exp"];
+const SUPPORTED_SCHEMES = ["lightning", "bitcoin", "alby"];
+
+// Register exp scheme for testing during development
+// https://docs.expo.dev/guides/linking/#creating-urls
+if (process.env.NODE_ENV === "development") {
+  SUPPORTED_SCHEMES.push("exp");
+}
 
 export function useHandleLinking() {
+  console.log(process.env.NODE_ENV);
   const navigationState = useRootNavigationState();
   const pendingLinkRef = useRef<string | null>(null);
 
