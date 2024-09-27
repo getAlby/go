@@ -24,7 +24,7 @@ export function LNURLPay() {
   const [amount, setAmount] = React.useState(amountParam);
   const [comment, setComment] = React.useState("");
   const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
-  console.log(amountParam, amount)
+
   useEffect(() => {
     // Handle fixed amount LNURLs
     if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
