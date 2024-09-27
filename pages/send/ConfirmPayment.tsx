@@ -10,6 +10,7 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -35,6 +36,12 @@ export function ConfirmPayment() {
       });
 
       console.log("payInvoice Response", response);
+
+      if (originalText === ALBY_LIGHTNING_ADDRESS) {
+        useAppStore
+          .getState()
+          .updateLastAlbyPayment();
+      }
 
       router.dismissAll();
       router.replace({

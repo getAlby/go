@@ -70,7 +70,7 @@ export function LNURLPay() {
               amount={amount}
               setAmount={setAmount}
               readOnly={isAmountReadOnly}
-              autoFocus={!isAmountReadOnly}
+              autoFocus={!isAmountReadOnly && !amount}
             />
             <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">

@@ -2,14 +2,28 @@ import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Button } from "./ui/button";
 import { router } from "expo-router";
+import { useAppStore } from "~/lib/state/appStore";
+import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 
 function AlbyBanner() {
-    const showAlbyBanner = new Date().getDate() === 21;
+    const lastPayment = useAppStore
+        .getState()
+        .getLastAlbyPayment();
+    const showAlbyBanner = new Date().getDate() === 21 && isPaymentOlderThan24Hours(lastPayment);
     const amounts = [
         { value: 1000, emoji: '🧡' },
         { value: 5000, emoji: '🔥' },
         { value: 10000, emoji: '🚀' }
     ];
+
+    function isPaymentOlderThan24Hours(paymentDate: Date | undefined) {
+        if (!paymentDate) return true;
+
+        const currentDate = new Date();
+        const millisecondsIn24Hours = 24 * 60 * 60 * 1000; // 24 hours 
+
+        return (currentDate.getTime() - paymentDate.getTime()) > millisecondsIn24Hours;
+    }
 
     if (!showAlbyBanner) {
         return null;
@@ -29,7 +43,7 @@ function AlbyBanner() {
                             router.navigate({
                                 pathname: "/send",
                                 params: {
-                                    url: "hello@getalby.com",
+                                    url: ALBY_LIGHTNING_ADDRESS,
                                     amount: value
                                 },
                             });
