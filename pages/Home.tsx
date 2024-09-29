@@ -124,7 +124,9 @@ export function Home() {
               )}
             </View>
           </TouchableOpacity>
-          <AlbyBanner />
+          {new Date().getDate() == 21 &&
+            <AlbyBanner />
+          }
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>

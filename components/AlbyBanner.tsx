@@ -9,7 +9,7 @@ function AlbyBanner() {
     const lastPayment = useAppStore
         .getState()
         .getLastAlbyPayment();
-    const showAlbyBanner = new Date().getDate() === 21 && isPaymentOlderThan24Hours(lastPayment);
+    const showAlbyBanner = isPaymentOlderThan24Hours(lastPayment);
     const amounts = [
         { value: 1000, emoji: '🧡' },
         { value: 5000, emoji: '🔥' },
