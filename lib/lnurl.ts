@@ -29,14 +29,14 @@ type LNURLDetails = LNURLPayServiceResponse;
 //| LNURLAuthServiceResponse
 //| LNURLWithdrawServiceResponse;
 
-interface LNURLPaymentSuccessAction {
+export interface LNURLPaymentSuccessAction {
   tag: string;
   description?: string;
   message?: string;
   url?: string;
 }
 
-interface LNURLPaymentInfo {
+export interface LNURLPaymentInfo {
   pr: string;
   successAction?: LNURLPaymentSuccessAction;
 }

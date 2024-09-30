@@ -22,6 +22,7 @@ import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
 import Screen from "~/components/Screen";
 import { useOnboarding } from "~/hooks/useOnboarding";
+import AlbyBanner from "~/components/AlbyBanner";
 
 dayjs.extend(relativeTime);
 
@@ -80,7 +81,7 @@ export function Home() {
           </Link>
         }
       />
-      <View className="h-full flex">
+      <View className="h-full flex p-6">
         <View className="grow flex flex-col items-center justify-center gap-4">
           <TouchableOpacity
             onPress={switchBalanceState}
@@ -123,6 +124,9 @@ export function Home() {
               )}
             </View>
           </TouchableOpacity>
+          {new Date().getDate() == 21 &&
+            <AlbyBanner />
+          }
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
@@ -131,11 +135,9 @@ export function Home() {
             </Button>
           </Link>
         </View>
-        <View>
-          <View className="flex flex-row gap-6 p-6 pt-2">
-            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
-            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
-          </View>
+        <View className="flex flex-row gap-6 pt-2">
+          <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+          <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
         </View>
       </View>
     </>
