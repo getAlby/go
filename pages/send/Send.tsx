@@ -17,6 +17,7 @@ import { Invoice } from "@getalby/lightning-tools";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Loading from "~/components/Loading";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import Toast from "react-native-toast-message";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{ url: string, amount: string }>();
@@ -29,13 +30,8 @@ export function Send() {
   useEffect(() => {
     if (url) {
       (async () => {
-        try {
-          const result = await loadPayment(url);
-          setStartScanning(!result);
-        } catch (error) {
-          console.error("failed to load payment", url, error);
-          errorToast(error);
-        }
+        const result = await loadPayment(url);
+        setStartScanning(!result);
       })();
     } else {
       setStartScanning(true);
@@ -141,7 +137,11 @@ export function Send() {
       }
     } catch (error) {
       console.error("failed to load payment", originalText, error);
-      errorToast(error);
+      //errorToast(error);
+      Toast.show({
+        type: "error",
+        text1: text,
+      })
     } finally {
       setLoading(false);
     }
