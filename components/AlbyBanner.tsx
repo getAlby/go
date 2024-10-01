@@ -16,7 +16,7 @@ function AlbyBanner() {
         { value: 10000, emoji: '🚀' }
     ];
 
-    function isPaymentOlderThan24Hours(paymentDate: Date | undefined) {
+    function isPaymentOlderThan24Hours(paymentDate: Date | null) {
         if (!paymentDate) return true;
 
         const currentDate = new Date();
@@ -39,6 +39,7 @@ function AlbyBanner() {
                         key={value}
                         variant="secondary"
                         size="sm"
+                        className="flex-1"
                         onPress={() => {
                             router.navigate({
                                 pathname: "/send",
