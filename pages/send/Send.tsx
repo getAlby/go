@@ -31,7 +31,12 @@ export function Send() {
     if (url) {
       (async () => {
         const result = await loadPayment(url);
-        setStartScanning(!result);
+        // Delay the camera to show the error message
+        if (!result) {
+          setTimeout(() => {
+            setStartScanning(!result);
+          }, 2000);
+        }
       })();
     } else {
       setStartScanning(true);
