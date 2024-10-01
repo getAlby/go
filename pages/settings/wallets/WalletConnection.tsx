@@ -2,7 +2,7 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
-import { ClipboardPaste, HelpCircle, X } from "~/components/Icons";
+import { ClipboardPaste, HelpCircle, Trash2 } from "~/components/Icons";
 import { useAppStore } from "lib/state/appStore";
 import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
@@ -83,13 +83,12 @@ export function WalletConnection() {
           walletIdWithConnection !== -1 ? (
             <Pressable
               onPress={() => {
-                useAppStore
-                  .getState()
-                  .setSelectedWalletId(walletIdWithConnection);
+                useAppStore.getState().removeCurrentWallet()
+                useAppStore.getState().setSelectedWalletId(walletIdWithConnection);
                 router.replace("/");
               }}
             >
-              <X className="text-foreground" />
+              <Trash2 className="text-foreground" />
             </Pressable>
           ) :
 
