@@ -19,7 +19,7 @@ import Loading from "~/components/Loading";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function Send() {
-  const { url } = useLocalSearchParams<{ url: string }>();
+  const { url, amount } = useLocalSearchParams<{ url: string, amount: string }>();
   const [isLoading, setLoading] = React.useState(false);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
@@ -120,6 +120,7 @@ export function Send() {
             params: {
               lnurlDetailsJSON: JSON.stringify(lnurlDetails),
               originalText,
+              amount,
             },
           });
         }

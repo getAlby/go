@@ -24,6 +24,8 @@ interface AppState {
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
   showOnboarding(): void;
+  getLastAlbyPayment(): Date | undefined;
+  updateLastAlbyPayment(): void;
 }
 
 const walletKeyPrefix = "wallet";
@@ -33,6 +35,7 @@ const fiatCurrencyKey = "fiatCurrency";
 export const isSecurityEnabledKey = "isSecurityEnabled";
 export const hasOnboardedKey = "hasOnboarded";
 export const lastActiveTimeKey = "lastActiveTime";
+const lastAlbyPaymentKey = "lastAlbyPayment";
 
 type Wallet = {
   name?: string;
@@ -139,7 +142,8 @@ export const useAppStore = create<AppState>()((set, get) => {
     secureStorage.getItem(selectedWalletIdKey) || "0"
   );
 
-  const iSecurityEnabled = secureStorage.getItem(isSecurityEnabledKey) === "true";
+  const iSecurityEnabled =
+    secureStorage.getItem(isSecurityEnabledKey) === "true";
 
   const initialWallets = loadWallets();
   return {
@@ -207,6 +211,16 @@ export const useAppStore = create<AppState>()((set, get) => {
         addressBookEntries: [...currentAddressBookEntries, addressBookEntry],
       });
     },
+    getLastAlbyPayment: () => {
+      const result = secureStorage.getItem(lastAlbyPaymentKey);
+      if (result) {
+        return new Date(result);
+      }
+      return null;
+    },
+    updateLastAlbyPayment: () => {
+      secureStorage.setItem(lastAlbyPaymentKey, new Date().toString());
+    },
     showOnboarding() {
       // clear onboarding status
       secureStorage.removeItem(hasOnboardedKey);
@@ -229,6 +243,9 @@ export const useAppStore = create<AppState>()((set, get) => {
 
       // clear onboarding status
       secureStorage.removeItem(hasOnboardedKey);
+
+      // clear last alby payment date
+      secureStorage.removeItem(lastAlbyPaymentKey);
 
       // set to initial wallet status
       secureStorage.setItem(selectedWalletIdKey, "0");
