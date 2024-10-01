@@ -15,6 +15,7 @@ import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "~/components/ui/dialog";
+import { REQUIRED_CAPABILITIES } from "~/lib/constants";
 
 export function WalletConnection() {
   const hasConnection = useAppStore((store) => !!store.nwcClient);
@@ -53,6 +54,10 @@ export function WalletConnection() {
       const capabilities = [...info.methods] as Nip47Capability[];
       if (info.notifications?.length) {
         capabilities.push("notifications");
+      }
+      if (!REQUIRED_CAPABILITIES.every(capability => capabilities.includes(capability))) {
+        const missing = REQUIRED_CAPABILITIES.filter(capability => !capabilities.includes(capability));
+        throw new Error(`Missing required capabilities: ${missing.join(", ")}`)
       }
       console.log("NWC connected", info);
       useAppStore.getState().setNostrWalletConnectUrl(nostrWalletConnectUrl);
