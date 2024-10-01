@@ -4,9 +4,7 @@ import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
 import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 import {
-  Link,
-  router, useFocusEffect,
-  useRootNavigationState
+  Link, router, useFocusEffect
 } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -40,20 +38,20 @@ export function Home() {
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
-  const rootNavigationState = useRootNavigationState();
+
   const isOnboarded = useOnboarding();
+  const hasNwcClient = !!nwcClient;
 
   useFocusEffect(() => {
     reloadBalance();
   });
 
-  let hasNavigationState = !!rootNavigationState?.key;
-  const hasNwcClient = !!nwcClient;
+
   React.useEffect(() => {
-    if (hasNavigationState && !hasNwcClient && isOnboarded) {
+    if (!hasNwcClient && isOnboarded) {
       router.replace(`/settings/wallets/${selectedWalletId}/wallet-connection`);
     }
-  }, [hasNwcClient, hasNavigationState, isOnboarded]);
+  }, [hasNwcClient, isOnboarded]);
 
   if (!nwcClient && isOnboarded) {
     return <WalletConnection />;

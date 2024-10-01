@@ -5,10 +5,11 @@ import * as LocalAuthentication from "expo-local-authentication";
 
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { useAppStore } from "~/lib/state/appStore";
+import { useSession } from "~/hooks/useSession";
 
 export function Unlock() {
   const [isUnlocking, setIsUnlocking] = React.useState(false);
+  const { signIn } = useSession();
 
   const handleUnlock = async () => {
     try {
@@ -17,14 +18,13 @@ export function Unlock() {
         promptMessage: "Unlock Alby Go",
       });
       if (biometricAuth.success) {
-        useAppStore.getState().setUnlocked(true);
-        if (router.canGoBack()) {
-          router.back();
-        } else {
-          router.replace("/");
-        }
+        signIn();
+        router.replace("/")
       }
-    } finally {
+    } catch (e) {
+      console.error(e);
+    }
+    finally {
       setIsUnlocking(false);
     }
   };
