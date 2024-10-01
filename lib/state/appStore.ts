@@ -24,7 +24,7 @@ interface AppState {
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
   showOnboarding(): void;
-  getLastAlbyPayment(): Date | undefined;
+  getLastAlbyPayment(): Date | null;
   updateLastAlbyPayment(): void;
 }
 

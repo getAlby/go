@@ -13,6 +13,8 @@ import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import * as Clipboard from "expo-clipboard";
 import Screen from "~/components/Screen";
+import { TriangleAlert } from "~/components/Icons";
+import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -22,20 +24,18 @@ export function EditWallet() {
       <Screen
         title="Edit Wallet"
       />
-      {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-        "notifications",
-      ) < 0 && (
-          <Text>
-            Warning: Your wallet does not support notifications capability.
-          </Text>
-        )}
-      {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-        "list_transactions",
-      ) < 0 && (
-          <Text>
-            Warning: Your wallet does not support list_transactions capability.
-          </Text>
-        )}
+      {(["notifications", "list_transactions"] as Nip47Capability[]).map(capability => 
+        (wallets[selectedWalletId].nwcCapabilities || []).indexOf(capability) < 0 && (
+          <Card key={capability}>
+            <CardHeader>
+              <CardTitle className="flex flex-row gap-3 items-center">
+                <TriangleAlert size={16} className="text-foreground" />
+                <Text>Your wallet does not support {capability}</Text>
+              </CardTitle>
+            </CardHeader>
+          </Card>
+        )
+      )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">
