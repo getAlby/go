@@ -1,4 +1,4 @@
-import { Transaction } from "../pages/Transaction";
+import { Transaction } from "../../pages/Transaction";
 
 export default function Page() {
   return <Transaction />;

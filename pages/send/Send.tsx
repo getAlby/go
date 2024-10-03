@@ -29,12 +29,12 @@ export function Send() {
   useEffect(() => {
     if (url) {
       (async () => {
-        try {
-          const result = await loadPayment(url);
-          setStartScanning(!result);
-        } catch (error) {
-          console.error("failed to load payment", url, error);
-          errorToast(error);
+        const result = await loadPayment(url);
+        // Delay the camera to show the error message
+        if (!result) {
+          setTimeout(() => {
+            setStartScanning(true);
+          }, 2000);
         }
       })();
     } else {

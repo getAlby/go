@@ -1,12 +1,8 @@
-import "../lib/applyGlobalPolyfills";
-
 import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import {
-  router,
-  SplashScreen,
-  Stack,
-  useRootNavigationState,
+  Slot,
+  SplashScreen, useRouter
 } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
@@ -22,11 +18,10 @@ import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
 import { secureStorage } from "~/lib/secureStorage";
 import { hasOnboardedKey, useAppStore } from "~/lib/state/appStore";
-import { usePathname } from "expo-router";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import { PortalHost } from '@rn-primitives/portal';
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
-import { useHandleLinking } from "~/hooks/useHandleLinking";
+import { SessionProvider } from "~/hooks/useSession";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -45,26 +40,21 @@ export {
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
 
-// export const unstable_settings = {
-//   initialRouteName: "index",
-// };
+export const unstable_settings = {
+  initialRouteName: "(app)/index",
+};
 
 export default function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
   const [checkedOnboarding, setCheckedOnboarding] = React.useState(false);
-  const isUnlocked = useAppStore((store) => store.unlocked);
-  const pathname = usePathname();
+  const router = useRouter();
 
-  useHandleLinking();
   useConnectionChecker();
-
-  const rootNavigationState = useRootNavigationState();
-  const hasNavigationState = !!rootNavigationState?.key;
 
   async function checkOnboardingStatus() {
     const hasOnboarded = await secureStorage.getItem(hasOnboardedKey);
-    if (!hasOnboarded && hasNavigationState) {
+    if (!hasOnboarded) {
       router.replace("/onboarding");
     }
 
@@ -104,15 +94,7 @@ export default function RootLayout() {
     };
 
     init();
-  }, [hasNavigationState]);
-
-  React.useEffect(() => {
-    if (hasNavigationState && !isUnlocked) {
-      if (pathname !== "/unlock") {
-        router.push("/unlock");
-      }
-    }
-  }, [isUnlocked, hasNavigationState]);
+  }, []);
 
   if (!fontsLoaded || !checkedOnboarding) {
     return null;
@@ -125,7 +107,9 @@ export default function RootLayout() {
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
           <UserInactivityProvider>
-            <Stack />
+            <SessionProvider>
+              <Slot />
+            </SessionProvider>
           </UserInactivityProvider>
           <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
           <PortalHost />
