@@ -16,7 +16,7 @@ import { useSession } from "~/hooks/useSession";
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
-  const [developerMode, setDeveloperMode] = React.useState(false);
+  const [developerMode, setDeveloperMode] = React.useState(__DEV__);
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const { signOut } = useSession();
