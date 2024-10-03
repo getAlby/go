@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { NWCClient, Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import { nwc } from "@getalby/sdk";
-import { secureStorage } from "lib/secureStorage";
+import { secureStorage } from "../secureStorage";
 
 interface AppState {
   readonly unlocked: boolean;

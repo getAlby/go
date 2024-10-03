@@ -1,4 +1,4 @@
-import { handleLink } from "../useHandleLinking";
+import { handleLink } from "../../lib/link";
 import { router } from "expo-router";
 
 jest.mock("expo-router");
