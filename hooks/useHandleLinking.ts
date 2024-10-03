@@ -2,6 +2,7 @@ import * as Linking from "expo-linking";
 import { getInitialURL } from "expo-linking";
 import { useEffect } from "react";
 import { useSession } from "./useSession";
+import { handleLink } from "~/lib/link";
 
 export function useHandleLinking() {
   const { hasSession } = useSession();

@@ -40,9 +40,9 @@ export {
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
 
-// export const unstable_settings = {
-//   initialRouteName: "(app)/index",
-// };
+export const unstable_settings = {
+  initialRouteName: "(app)/index",
+};
 
 export default function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
