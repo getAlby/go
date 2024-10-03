@@ -33,7 +33,7 @@ export function Send() {
         // Delay the camera to show the error message
         if (!result) {
           setTimeout(() => {
-            setStartScanning(!result);
+            setStartScanning(true);
           }, 2000);
         }
       })();
