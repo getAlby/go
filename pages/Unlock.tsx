@@ -44,7 +44,8 @@ export function Unlock() {
       <View className="flex-1 flex items-center justify-center gap-4">
         <Image
           source={require('./../assets/logo.png')}
-          className="mb-10 w-52 h-52 object-contain"
+          className="mb-10 w-52 h-52"
+          resizeMode="contain"
         />
         <Text className="font-semibold2 text-4xl text-center text-foreground">Unlock to continue</Text>
       </View>
