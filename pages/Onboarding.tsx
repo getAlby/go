@@ -24,7 +24,7 @@ export function Onboarding() {
       <View className="flex-1 flex items-center justify-center gap-4">
         <Image
           source={require('./../assets/logo.png')}
-          className="mb-10 w-52 h-52 object-contain"
+          className="mb-10 w-52 h-52" resizeMode="contain"
         />
         <Text className="font-semibold2 text-4xl text-center text-foreground">Hello there 👋</Text>
         <Text className="font-medium2 text-xl text-muted-foreground text-center">
