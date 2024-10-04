@@ -2,7 +2,7 @@ import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import {
   Slot,
-  SplashScreen, useRouter
+  SplashScreen
 } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
@@ -16,8 +16,7 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
 import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
-import { secureStorage } from "~/lib/secureStorage";
-import { hasOnboardedKey, useAppStore } from "~/lib/state/appStore";
+import { useAppStore } from "~/lib/state/appStore";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import { PortalHost } from '@rn-primitives/portal';
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
@@ -47,19 +46,8 @@ export const unstable_settings = {
 export default function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
-  const [checkedOnboarding, setCheckedOnboarding] = React.useState(false);
-  const router = useRouter();
 
   useConnectionChecker();
-
-  async function checkOnboardingStatus() {
-    const hasOnboarded = await secureStorage.getItem(hasOnboardedKey);
-    if (!hasOnboarded) {
-      router.replace("/onboarding");
-    }
-
-    setCheckedOnboarding(true);
-  };
 
   async function loadFonts() {
     await Font.loadAsync({
@@ -83,7 +71,6 @@ export default function RootLayout() {
     const init = async () => {
       try {
         await Promise.all([
-          checkOnboardingStatus(),
           loadFonts(),
           checkBiometricStatus(),
         ]);
@@ -96,7 +83,7 @@ export default function RootLayout() {
     init();
   }, []);
 
-  if (!fontsLoaded || !checkedOnboarding) {
+  if (!fontsLoaded) {
     return null;
   }
 

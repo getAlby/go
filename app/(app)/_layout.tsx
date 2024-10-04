@@ -1,20 +1,32 @@
 import { Redirect, Stack } from 'expo-router';
 import { useSession } from '~/hooks/useSession';
 import { useHandleLinking } from '~/hooks/useHandleLinking';
+import { secureStorage } from '~/lib/secureStorage';
+import { hasOnboardedKey } from '~/lib/state/appStore';
+import { useMemo } from 'react'; // Add useMemo
 
 export default function AppLayout() {
     const { hasSession } = useSession();
     useHandleLinking();
 
-    // Only require authentication within the (app) group's layout as users
-    // need to be able to access the (auth) group and sign in again.
+    // Memoize the onboarded status to prevent unnecessary reads from storage
+    const isOnboarded = useMemo(() => {
+        return secureStorage.getItem(hasOnboardedKey);
+    }, []);
+
+    // Don't render while the onboarding state is loaded
+    if (isOnboarded === null) {
+        return null;
+    }
+
+    if (!isOnboarded) {
+        return <Redirect href="/onboarding" />;
+    }
+
     if (!hasSession) {
         console.log("Not authenticated, redirecting to /unlock")
-        // On web, static rendering will stop here as the user is not authenticated
-        // in the headless Node process that the pages are rendered in.
         return <Redirect href="/unlock" />;
     }
 
-    // This layout can be deferred because it's not the root layout.
     return <Stack />;
 }
