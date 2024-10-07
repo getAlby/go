@@ -86,8 +86,7 @@ export function Settings() {
                 className="flex flex-row gap-4"
                 onPress={() => {
                   router.dismissAll();
-                  useAppStore.getState().showOnboarding();
-                  router.replace("/onboarding");
+                  useAppStore.getState().setOnboarded(false);
                 }}
               >
                 <Egg className="text-foreground" />
@@ -109,7 +108,6 @@ export function Settings() {
                         onPress: () => {
                           router.dismissAll();
                           useAppStore.getState().reset();
-                          router.replace("/onboarding");
                         },
                       },
                     ],

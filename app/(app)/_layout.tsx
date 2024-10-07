@@ -1,31 +1,32 @@
 import { Redirect, Stack } from 'expo-router';
 import { useSession } from '~/hooks/useSession';
 import { useHandleLinking } from '~/hooks/useHandleLinking';
-import { secureStorage } from '~/lib/secureStorage';
-import { hasOnboardedKey } from '~/lib/state/appStore';
-import { useMemo } from 'react'; // Add useMemo
+import { useAppStore } from '~/lib/state/appStore';
+import { useRouteInfo } from 'expo-router/build/hooks';
 
 export default function AppLayout() {
     const { hasSession } = useSession();
+    const isOnboarded = useAppStore(store => store.isOnboarded);
+    const nwcClient = useAppStore(store => store.nwcClient);
+    const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+    const route = useRouteInfo();
     useHandleLinking();
 
-    // Memoize the onboarded status to prevent unnecessary reads from storage
-    const isOnboarded = useMemo(() => {
-        return secureStorage.getItem(hasOnboardedKey);
-    }, []);
-
-    // Don't render while the onboarding state is loaded
-    if (isOnboarded === null) {
-        return null;
-    }
-
     if (!isOnboarded) {
+        console.log("Not onboarded, redirecting to /onboarding")
         return <Redirect href="/onboarding" />;
     }
 
     if (!hasSession) {
         console.log("Not authenticated, redirecting to /unlock")
         return <Redirect href="/unlock" />;
+    }
+
+    const connectionPage = `/settings/wallets/${selectedWalletId}/wallet-connection`;
+    // Check the current pathname to prevent redirect loops
+    if (!nwcClient && route.pathname !== connectionPage) {
+        console.log("No NWC client available, redirecting to wallet setup");
+        return <Redirect href={connectionPage} />;
     }
 
     return <Stack />;

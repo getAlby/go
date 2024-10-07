@@ -4,12 +4,11 @@ import React from "react";
 import { View, Image } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { secureStorage } from "~/lib/secureStorage";
-import { hasOnboardedKey } from "~/lib/state/appStore";
+import { useAppStore } from "~/lib/state/appStore";
 
 export function Onboarding() {
   async function finish() {
-    secureStorage.setItem(hasOnboardedKey, "true");
+    useAppStore.getState().setOnboarded(true)
     router.replace("/");
   }
 

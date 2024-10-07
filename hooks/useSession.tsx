@@ -25,8 +25,8 @@ export function useSession() {
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const appStore = useAppStore();
-  const isSecurityEnabled = useAppStore(x => x.isSecurityEnabled);
-  const unlocked = useAppStore(x => x.unlocked)
+  const isSecurityEnabled = useAppStore(store => store.isSecurityEnabled);
+  const unlocked = useAppStore(store => store.unlocked)
 
   return (
     <AuthContext.Provider
