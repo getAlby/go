@@ -87,7 +87,6 @@ export function Settings() {
                 onPress={() => {
                   router.dismissAll();
                   useAppStore.getState().showOnboarding();
-                  router.replace("/onboarding");
                 }}
               >
                 <Egg className="text-foreground" />
@@ -109,7 +108,6 @@ export function Settings() {
                         onPress: () => {
                           router.dismissAll();
                           useAppStore.getState().reset();
-                          router.replace("/onboarding");
                         },
                       },
                     ],

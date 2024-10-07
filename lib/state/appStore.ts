@@ -11,7 +11,9 @@ interface AppState {
   readonly wallets: Wallet[];
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
+  readonly isOnboarded: boolean;
   setUnlocked: (unlocked: boolean) => void;
+  setOnboarding: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
   removeNostrWalletConnectUrl(): void;
@@ -116,6 +118,7 @@ export const useAppStore = create<AppState>()((set, get) => {
         nwcClient: undefined,
         selectedWalletId: 0,
         wallets: [{}],
+        isOnboarded: false
       });
       return;
     }
@@ -153,11 +156,20 @@ export const useAppStore = create<AppState>()((set, get) => {
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     isSecurityEnabled: iSecurityEnabled,
+    isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
     removeCurrentWallet,
     setUnlocked: (unlocked) => {
       set({ unlocked });
+    },
+    setOnboarding: (isOnboarded) => {
+      if (isOnboarded) {
+        secureStorage.setItem(hasOnboardedKey, "true");
+      } else {
+        secureStorage.removeItem(hasOnboardedKey);
+      }
+      set({ isOnboarded });
     },
     setNWCClient: (nwcClient) => set({ nwcClient }),
     removeNostrWalletConnectUrl: () => {
@@ -223,7 +235,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     },
     showOnboarding() {
       // clear onboarding status
-      secureStorage.removeItem(hasOnboardedKey);
+      this.setOnboarding(false)
     },
     reset() {
       // clear wallets
@@ -258,6 +270,7 @@ export const useAppStore = create<AppState>()((set, get) => {
         wallets: [{}],
         addressBookEntries: [],
         isSecurityEnabled: false,
+        isOnboarded: false,
       });
     },
   };

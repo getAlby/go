@@ -19,7 +19,6 @@ import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
 import Screen from "~/components/Screen";
-import { useOnboarding } from "~/hooks/useOnboarding";
 import AlbyBanner from "~/components/AlbyBanner";
 
 dayjs.extend(relativeTime);
@@ -33,13 +32,13 @@ enum BalanceState {
 export function Home() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const nwcClient = useAppStore((store) => store.nwcClient);
+  const isOnboarded = useAppStore((store) => store.isOnboarded);
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
 
-  const isOnboarded = useOnboarding();
   const hasNwcClient = !!nwcClient;
 
   useFocusEffect(() => {
