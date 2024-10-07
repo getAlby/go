@@ -8,8 +8,8 @@ export default function AppLayout() {
     const isOnboarded = useAppStore(store => store.isOnboarded);
     useHandleLinking();
 
-
     if (!isOnboarded) {
+        console.log("Not onboarded, redirecting to /onboarding")
         return <Redirect href="/onboarding" />;
     }
 

@@ -13,7 +13,7 @@ interface AppState {
   readonly isSecurityEnabled: boolean;
   readonly isOnboarded: boolean;
   setUnlocked: (unlocked: boolean) => void;
-  setOnboarding: (isOnboarded: boolean) => void;
+  setOnboarded: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
   removeNostrWalletConnectUrl(): void;
@@ -25,7 +25,6 @@ interface AppState {
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
-  showOnboarding(): void;
   getLastAlbyPayment(): Date | null;
   updateLastAlbyPayment(): void;
 }
@@ -34,10 +33,10 @@ const walletKeyPrefix = "wallet";
 const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
-export const isSecurityEnabledKey = "isSecurityEnabled";
-export const hasOnboardedKey = "hasOnboarded";
-export const lastActiveTimeKey = "lastActiveTime";
+const hasOnboardedKey = "hasOnboarded";
 const lastAlbyPaymentKey = "lastAlbyPayment";
+export const isSecurityEnabledKey = "isSecurityEnabled";
+export const lastActiveTimeKey = "lastActiveTime";
 
 type Wallet = {
   name?: string;
@@ -118,7 +117,7 @@ export const useAppStore = create<AppState>()((set, get) => {
         nwcClient: undefined,
         selectedWalletId: 0,
         wallets: [{}],
-        isOnboarded: false
+        isOnboarded: false,
       });
       return;
     }
@@ -163,7 +162,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     setUnlocked: (unlocked) => {
       set({ unlocked });
     },
-    setOnboarding: (isOnboarded) => {
+    setOnboarded: (isOnboarded) => {
       if (isOnboarded) {
         secureStorage.setItem(hasOnboardedKey, "true");
       } else {
@@ -232,10 +231,6 @@ export const useAppStore = create<AppState>()((set, get) => {
     },
     updateLastAlbyPayment: () => {
       secureStorage.setItem(lastAlbyPaymentKey, new Date().toString());
-    },
-    showOnboarding() {
-      // clear onboarding status
-      this.setOnboarding(false)
     },
     reset() {
       // clear wallets

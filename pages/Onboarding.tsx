@@ -8,7 +8,7 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function Onboarding() {
   async function finish() {
-    useAppStore.getState().setOnboarding(true)
+    useAppStore.getState().setOnboarded(true)
     router.replace("/");
   }
 
