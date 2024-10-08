@@ -1,6 +1,6 @@
 {
   "name": "alby-go",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "main": "./index.js",
   "scripts": {
     "start": "expo start",
