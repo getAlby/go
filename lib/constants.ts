@@ -29,4 +29,9 @@ export const DEFAULT_CURRENCY = "USD";
 export const DEFAULT_WALLET_NAME = "Default Wallet";
 export const ALBY_LIGHTNING_ADDRESS = "go@getalby.com";
 
-export const REQUIRED_CAPABILITIES: Nip47Capability[] = ["get_info", "get_balance", "make_invoice", "pay_invoice", "list_transactions"];
+export const REQUIRED_CAPABILITIES: Nip47Capability[] = [
+  "get_balance",
+  "make_invoice",
+  "pay_invoice",
+  "list_transactions",
+];
