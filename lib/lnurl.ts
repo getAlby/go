@@ -111,7 +111,7 @@ export const lnurl = {
     const url = normalizeLnurl(lnurlString);
 
     try {
-      const response = await fetch(url.toString());
+      const response = await fetch(url.toString(), { redirect: "follow" });
 
       if (!response.ok) {
         throw new Error(
