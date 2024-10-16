@@ -6,7 +6,7 @@ import React from "react";
 import { useAppStore } from "~/lib/state/appStore";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Copy, Share2, ZapIcon } from "~/components/Icons";
+import { ArchiveRestore, Copy, Share2, ZapIcon } from "~/components/Icons";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
@@ -24,7 +24,6 @@ export function Receive() {
   const invoiceRef = React.useRef("");
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
-  const [addComment, setAddComment] = React.useState(false);
   const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
@@ -270,6 +269,16 @@ export function Receive() {
                 <Text>Invoice</Text>
               </Button>
             )}
+            <Button
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+              onPress={() => {
+                router.push("/withdraw");
+              }}
+            >
+              <ArchiveRestore className="text-muted-foreground" />
+              <Text>Redeem</Text>
+            </Button>
           </View>
         </>
       )}
