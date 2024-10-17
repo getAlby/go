@@ -282,7 +282,7 @@ export function Receive() {
                 }}
               >
                 <ArchiveRestore className="text-muted-foreground" />
-                <Text>Redeem</Text>
+                <Text>Withdraw</Text>
               </Button>
             }
           </View>
