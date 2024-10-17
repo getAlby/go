@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Share, View } from "react-native";
+import { Share, TouchableOpacity, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import * as Clipboard from "expo-clipboard";
 import React from "react";
@@ -223,9 +223,11 @@ export function Receive() {
                 </View>
               ) : (
                 lightningAddress && (
-                  <Text className="text-foreground text-xl font-medium2">
-                    {lightningAddress}
-                  </Text>
+                  <TouchableOpacity onPress={copy}>
+                    <Text className="text-foreground text-xl font-medium2">
+                      {lightningAddress}
+                    </Text>
+                  </TouchableOpacity>
                 )
               )}
               {invoice && getFiatAmount && (
@@ -251,14 +253,16 @@ export function Receive() {
               <Share2 className="text-muted-foreground" />
               <Text>Share</Text>
             </Button>
-            <Button
-              variant="secondary"
-              onPress={copy}
-              className="flex-1 flex flex-col gap-2"
-            >
-              <Copy className="text-muted-foreground" />
-              <Text>Copy</Text>
-            </Button>
+            {!enterCustomAmount && invoice &&
+              <Button
+                variant="secondary"
+                onPress={copy}
+                className="flex-1 flex flex-col gap-2"
+              >
+                <Copy className="text-muted-foreground" />
+                <Text>Copy</Text>
+              </Button>
+            }
             {!enterCustomAmount && !invoice && (
               <Button
                 variant="secondary"
@@ -269,16 +273,18 @@ export function Receive() {
                 <Text>Invoice</Text>
               </Button>
             )}
-            <Button
-              variant="secondary"
-              className="flex-1 flex flex-col gap-2"
-              onPress={() => {
-                router.push("/withdraw");
-              }}
-            >
-              <ArchiveRestore className="text-muted-foreground" />
-              <Text>Redeem</Text>
-            </Button>
+            {!enterCustomAmount && !invoice &&
+              <Button
+                variant="secondary"
+                className="flex-1 flex flex-col gap-2"
+                onPress={() => {
+                  router.push("/withdraw");
+                }}
+              >
+                <ArchiveRestore className="text-muted-foreground" />
+                <Text>Redeem</Text>
+              </Button>
+            }
           </View>
         </>
       )}
