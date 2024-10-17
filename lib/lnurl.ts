@@ -111,7 +111,7 @@ export const lnurl = {
     const url = normalizeLnurl(lnurlString);
 
     try {
-      const response = await fetch(url.toString());
+      const response = await fetch(url.toString(), { redirect: "follow" });
 
       if (!response.ok) {
         throw new Error(
@@ -144,7 +144,7 @@ export const lnurl = {
 
   async getPayRequest(url: string): Promise<LNURLPaymentInfo> {
     try {
-      const response = await fetch(url.toString());
+      const response = await fetch(url.toString(), { redirect: "follow" });
 
       if (!response.ok) {
         throw new Error(

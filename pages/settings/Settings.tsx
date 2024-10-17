@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
-import { Bitcoin, Egg, Fingerprint, Palette, Power, Wallet2 } from "~/components/Icons";
+import { Bitcoin, Egg, Fingerprint, LogOut, Palette, Power, Wallet2 } from "~/components/Icons";
 
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -11,13 +11,15 @@ import Toast from "react-native-toast-message";
 import { useColorScheme } from "~/lib/useColorScheme";
 import Screen from "~/components/Screen";
 import AlbyBanner from "~/components/AlbyBanner";
+import { useSession } from "~/hooks/useSession";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
-  const [developerMode, setDeveloperMode] = React.useState(false);
+  const [developerMode, setDeveloperMode] = React.useState(__DEV__);
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
+  const { signOut } = useSession();
 
   return (
     <View className="flex-1 p-6 ">
@@ -74,9 +76,17 @@ export function Settings() {
               <TouchableOpacity
                 className="flex flex-row gap-4"
                 onPress={() => {
+                  signOut();
+                }}
+              >
+                <LogOut className="text-foreground" />
+                <Text className="font-medium2 text-xl">Sign out</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex flex-row gap-4"
+                onPress={() => {
                   router.dismissAll();
-                  useAppStore.getState().showOnboarding();
-                  router.replace("/onboarding");
+                  useAppStore.getState().setOnboarded(false);
                 }}
               >
                 <Egg className="text-foreground" />
@@ -98,7 +108,6 @@ export function Settings() {
                         onPress: () => {
                           router.dismissAll();
                           useAppStore.getState().reset();
-                          router.replace("/onboarding");
                         },
                       },
                     ],

@@ -11,9 +11,9 @@ function AlbyBanner() {
         .getLastAlbyPayment();
     const showAlbyBanner = isPaymentOlderThan24Hours(lastPayment);
     const amounts = [
-        { value: 1000, emoji: '🧡' },
-        { value: 5000, emoji: '🔥' },
-        { value: 10000, emoji: '🚀' }
+        { value: 1000, label: "1k", emoji: '🧡' },
+        { value: 5000, label: "5k", emoji: '🔥' },
+        { value: 10000, label: "10k", emoji: '🚀' }
     ];
 
     function isPaymentOlderThan24Hours(paymentDate: Date | null) {
@@ -34,7 +34,7 @@ function AlbyBanner() {
             <Text className="font-semibold2 text-center">✨ Enjoying Alby Go?</Text>
             <Text className="text-muted-foreground text-center">Help us grow and improve by supporting our development.</Text>
             <View className="flex flex-row gap-3 mt-3">
-                {amounts.map(({ value, emoji }) => (
+                {amounts.map(({ value, label, emoji }) => (
                     <Button
                         key={value}
                         variant="secondary"
@@ -50,7 +50,7 @@ function AlbyBanner() {
                             });
                         }}
                     >
-                        <Text>{emoji} {new Intl.NumberFormat().format(value)}</Text>
+                        <Text>{emoji} {label}</Text>
                     </Button>
                 ))}
             </View>

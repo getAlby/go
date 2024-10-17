@@ -21,7 +21,7 @@ export function LNURLPay() {
     };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
-  const [amount, setAmount] = React.useState(amountParam);
+  const [amount, setAmount] = React.useState(amountParam ?? 0);
   const [comment, setComment] = React.useState("");
   const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
 

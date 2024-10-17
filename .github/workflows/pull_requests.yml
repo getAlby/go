@@ -32,6 +32,9 @@ jobs:
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
 
+      - name: 🧪 Run tests
+        run: yarn test:ci
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:

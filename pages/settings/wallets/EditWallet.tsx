@@ -117,13 +117,10 @@ export function EditWallet() {
               {
                 text: "Confirm",
                 onPress: () => {
-                  if (useAppStore.getState().wallets.length == 1) {
-                    router.dismissAll();
-                    router.replace("/onboarding");
-                  } else {
+                  useAppStore.getState().removeCurrentWallet();
+                  if (wallets.length != 1) {
                     router.back();
                   }
-                  useAppStore.getState().removeCurrentWallet();
                 },
               },
             ],

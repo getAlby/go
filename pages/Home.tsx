@@ -2,11 +2,8 @@ import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
 import { useAppStore } from "lib/state/appStore";
-import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 import {
-  Link,
-  router, useFocusEffect,
-  useRootNavigationState
+  Link, useFocusEffect
 } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -21,7 +18,6 @@ import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
 import Screen from "~/components/Screen";
-import { useOnboarding } from "~/hooks/useOnboarding";
 import AlbyBanner from "~/components/AlbyBanner";
 
 dayjs.extend(relativeTime);
@@ -40,24 +36,10 @@ export function Home() {
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
-  const rootNavigationState = useRootNavigationState();
-  const isOnboarded = useOnboarding();
 
   useFocusEffect(() => {
     reloadBalance();
   });
-
-  let hasNavigationState = !!rootNavigationState?.key;
-  const hasNwcClient = !!nwcClient;
-  React.useEffect(() => {
-    if (hasNavigationState && !hasNwcClient && isOnboarded) {
-      router.replace(`/settings/wallets/${selectedWalletId}/wallet-connection`);
-    }
-  }, [hasNwcClient, hasNavigationState, isOnboarded]);
-
-  if (!nwcClient && isOnboarded) {
-    return <WalletConnection />;
-  }
 
   function switchBalanceState(): void {
     if (balanceState == BalanceState.SATS) {
