@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Paid } from "~/animations/Paid";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -24,11 +24,13 @@ export function PaymentSuccess() {
   return (
     <View className="flex-1 flex flex-col">
       <Screen
-        title="Success"
+        title="Payment succeeded"
       />
-      <View className="flex-1 justify-center items-center gap-8 p-6">
-        <Paid />
-        <View className="flex flex-col items-center gap-2 -mt-24">
+      <ScrollView contentContainerClassName="flex justify-between items-center gap-8 p-6">
+        <View className="flex-1 w-full">
+          <Paid />
+        </View>
+        <View className="flex flex-col items-center gap-2">
           <View className="flex flex-row items-end justify-center">
             <Text className="text-3xl text-foreground font-semibold2">{new Intl.NumberFormat().format(+amount)}{" "}</Text>
             <Text className="text-2xl text-muted-foreground font-semibold2">sats</Text>
@@ -65,7 +67,7 @@ export function PaymentSuccess() {
           </View>
         }
 
-      </View>
+      </ScrollView>
       <View className="p-6">
         <Button
           size="lg"
