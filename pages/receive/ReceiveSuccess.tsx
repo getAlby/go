@@ -19,7 +19,7 @@ export function ReceiveSuccess() {
       <Screen
         title="Receive successful"
       />
-      <ScrollView contentContainerClassName="flex justify-between items-center gap-8 p-6">
+      <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
         <View className="flex-1 w-full">
           <Paid />
         </View>
