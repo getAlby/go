@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
+import { View, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 import Screen from "~/components/Screen";
@@ -8,6 +8,8 @@ import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { ALBY_URL } from "~/lib/constants";
+import { Input } from "~/components/ui/input";
+import Loading from "~/components/Loading";
 
 let cachedCurrencies: Record<string, [string, string][]> = {};
 
@@ -22,7 +24,7 @@ export function FiatCurrency() {
 
   useEffect(() => {
     async function fetchCurrencies() {
-   
+
       if (cachedCurrencies[fiatCurrency]) {
         const cachedData = cachedCurrencies[fiatCurrency];
         setCurrencies(cachedData);
@@ -41,7 +43,7 @@ export function FiatCurrency() {
 
         mappedCurrencies.sort((a, b) => a[1].localeCompare(b[1]));
 
-      
+
         cachedCurrencies[fiatCurrency] = mappedCurrencies;
 
         setCurrencies(mappedCurrencies);
@@ -58,7 +60,7 @@ export function FiatCurrency() {
 
   useEffect(() => {
     const filtered = currencies.filter(([code, name]) =>
-      name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       code.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredCurrencies(filtered);
@@ -97,18 +99,18 @@ export function FiatCurrency() {
   return (
     <View className="flex-1 flex flex-col p-6">
       <Screen title="Fiat Currency" />
-      <TextInput
-        className="border border-gray-300 rounded-lg p-2 mb-4"
-        placeholder="Search currencies..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-      <FlatList
-        data={filteredCurrencies}
-        renderItem={renderCurrencyItem}
-        keyExtractor={(item) => item[0]}
-        className="flex-1 mb-4"
-      />
+      {loading ? <Loading /> : (
+        <>
+          <Input
+            placeholder="Search currencies..."
+            value={searchQuery}
+            onChangeText={setSearchQuery} />
+          <FlatList
+            data={filteredCurrencies}
+            renderItem={renderCurrencyItem}
+            keyExtractor={(item) => item[0]}
+            className="flex-1 mb-4" />
+        </>)}
     </View>
   );
 }
