@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { lnurl } from "./lnurl";
 
 const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
 
@@ -8,7 +9,7 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
   SUPPORTED_SCHEMES.push("exp:");
 }
 
-export const handleLink = (url: string) => {
+export const handleLink = async (url: string) => {
   if (!url) return;
 
   const parsedUrl = new URL(url);
@@ -36,6 +37,20 @@ export const handleLink = (url: string) => {
     }
 
     console.log("Navigating to", fullUrl);
+
+    const lnurlValue = lnurl.findLnurl(fullUrl);
+    if (lnurlValue) {
+      const lnurlDetails = await lnurl.getDetails(lnurlValue)
+
+      if (lnurlDetails.tag === "withdrawRequest") {
+        router.push({
+          pathname: "/withdraw",
+          params: {
+            url: fullUrl,
+          },
+        });
+      }
+    }
 
     router.push({
       pathname: "/send",

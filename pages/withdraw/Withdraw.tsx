@@ -16,7 +16,6 @@ import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function Withdraw() {
-  // TODO: add linking for lnurl withdraw
   const { url } = useLocalSearchParams<{ url: string }>();
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
@@ -107,6 +106,13 @@ export function Withdraw() {
   async function confirm() {
     try {
       if (!lnurlDetails) return;
+
+      if (Number(valueSat) < lnurlDetails.minWithdrawable) {
+        throw new Error(`Amount below minimum limit of ${lnurlDetails.minWithdrawable} sats`);
+      }
+      if (Number(valueSat) > lnurlDetails.maxWithdrawable) {
+        throw new Error(`Amount exceeds maximum limit of ${lnurlDetails.maxWithdrawable} sats.`);
+      }
 
       setLoadingConfirm(true);
 
@@ -242,13 +248,7 @@ export function Withdraw() {
                       size="lg"
                       className="flex flex-row gap-2"
                       onPress={confirm}
-                      disabled={
-                        loadingConfirm ||
-                        Number(valueSat) <
-                          Math.floor(lnurlDetails.minWithdrawable / 1000) ||
-                        Number(valueSat) >
-                          Math.floor(lnurlDetails.maxWithdrawable / 1000)
-                      }
+                      disabled={loadingConfirm}
                     >
                       {loadingConfirm && (
                         <Loading className="text-primary-foreground" />

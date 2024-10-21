@@ -14,15 +14,15 @@ export function useHandleLinking() {
 
     const processInitialURL = async () => {
       const url = await getInitialURL();
-      if (url) handleLink(url);
+      if (url) await handleLink(url);
     };
 
     processInitialURL();
 
     const subscription = Linking.addEventListener(
       "url",
-      (event: { url: string }) => {
-        handleLink(event.url);
+      async (event: { url: string }) => {
+        await handleLink(event.url);
       },
     );
 
