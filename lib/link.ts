@@ -49,6 +49,7 @@ export const handleLink = async (url: string) => {
             url: fullUrl,
           },
         });
+        return;
       }
     }
 

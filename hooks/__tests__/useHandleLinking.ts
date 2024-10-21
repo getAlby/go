@@ -3,7 +3,31 @@ import { router } from "expo-router";
 
 jest.mock("expo-router");
 
-const lnurlWithdrawLink = "" // "lnurl1dp68gurn8ghj7mrfva58gumpw3ejucm0d5hkzurf9amkjargv3exzampd3xxjmntwvhkvepcvcckvc3s94jnqerz956r2wtr95urqcfc95urqcnpxd3rqc3evv6kx5kckkv"
+// Mock the lnurl module
+jest.mock("../../lib/lnurl", () => {
+  const originalModule = jest.requireActual("../../lib/lnurl");
+  return {
+    ...originalModule,
+    lnurl: {
+      ...originalModule.lnurl,
+      getDetails: jest.fn(async (lnurlString) => {
+        if (lnurlString.startsWith("lnurlw")) {
+          return {
+            tag: 'withdrawRequest',
+            callback: 'https://getalby.com/callback',
+            k1: 'unused',
+            defaultDescription: 'withdrawal',
+            minWithdrawable: 21000,
+            maxWithdrawable: 21000
+          };
+        } else {
+          // call original function
+          originalModule.getDetails(lnurlString)
+        }
+      }),
+    },
+  };
+});
 
 const testVectors: Record<string, { url: string, path: string }> = {
   "lightning:hello@getalby.com": { url: "lightning:hello@getalby.com", path: "/send" },
@@ -14,9 +38,7 @@ const testVectors: Record<string, { url: string, path: string }> = {
   "lightning://lnbc1": { url: "lightning:lnbc1", path: "/send" },
   "bitcoin:bitcoinaddress?lightning=invoice": { url: "bitcoin:bitcoinaddress?lightning=invoice", path: "/send" },
   "BITCOIN:bitcoinaddress?lightning=invoice": { url: "bitcoin:bitcoinaddress?lightning=invoice", path: "/send" },
-  ...(lnurlWithdrawLink ? {
-    [`lightning:${lnurlWithdrawLink}`]: { url: `lightning:${lnurlWithdrawLink}`, path: "/withdraw" },
-  } : {})
+  "lightning:lnurlw123": { url: "lightning:lnurlw123", path: "/withdraw" },
 };
 
 describe("handleLink", () => {
