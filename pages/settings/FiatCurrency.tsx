@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, FlatList, TouchableOpacity } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 import Screen from "~/components/Screen";
@@ -10,8 +10,6 @@ import { errorToast } from "~/lib/errorToast";
 import { ALBY_URL } from "~/lib/constants";
 import { Input } from "~/components/ui/input";
 import Loading from "~/components/Loading";
-
-let cachedCurrencies: Record<string, [string, string][]> = {};
 
 export function FiatCurrency() {
   const [fiatCurrency, setFiatCurrency] = React.useState(
@@ -24,15 +22,6 @@ export function FiatCurrency() {
 
   useEffect(() => {
     async function fetchCurrencies() {
-
-      if (cachedCurrencies[fiatCurrency]) {
-        const cachedData = cachedCurrencies[fiatCurrency];
-        setCurrencies(cachedData);
-        setFilteredCurrencies(cachedData);
-        setLoading(false);
-        return;
-      }
-
       try {
         const response = await fetch(`${ALBY_URL}/api/rates`);
         const data = await response.json();
@@ -43,11 +32,7 @@ export function FiatCurrency() {
 
         mappedCurrencies.sort((a, b) => a[1].localeCompare(b[1]));
 
-
-        cachedCurrencies[fiatCurrency] = mappedCurrencies;
-
         setCurrencies(mappedCurrencies);
-        setFilteredCurrencies(mappedCurrencies);
       } catch (error) {
         errorToast(error);
       } finally {
@@ -56,7 +41,7 @@ export function FiatCurrency() {
     }
 
     fetchCurrencies();
-  }, [fiatCurrency]);
+  }, []);
 
   useEffect(() => {
     const filtered = currencies.filter(([code, name]) =>
@@ -76,30 +61,10 @@ export function FiatCurrency() {
     router.back();
   }
 
-  const renderCurrencyItem = ({ item }: { item: [string, string] }) => (
-    <TouchableOpacity
-      className={cn("p-4 flex flex-row gap-2 border-b border-input", item[0] === fiatCurrency && "bg-muted")}
-      onPress={() => select(item[0])}
-    >
-      <Text className={cn("text-lg", item[0] === fiatCurrency && "font-bold2")}>
-        {item[1]}
-      </Text>
-      <Text className="text-lg text-muted-foreground">({item[0]})</Text>
-    </TouchableOpacity>
-  );
-
-  if (loading) {
-    return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#000" />
-      </View>
-    );
-  }
-
   return (
     <View className="flex-1 flex flex-col p-6">
       <Screen title="Fiat Currency" />
-      {loading ? <Loading /> : (
+      {loading ? <Loading className="flex-1" /> : (
         <>
           <Input
             placeholder="Search currencies..."
@@ -107,7 +72,17 @@ export function FiatCurrency() {
             onChangeText={setSearchQuery} />
           <FlatList
             data={filteredCurrencies}
-            renderItem={renderCurrencyItem}
+            renderItem={({ item }: { item: [string, string]; }) => (
+              <TouchableOpacity
+                className={cn("p-4 flex flex-row gap-2 border-b border-input", item[0] === fiatCurrency && "bg-muted")}
+                onPress={() => select(item[0])}
+              >
+                <Text className={cn("text-lg", item[0] === fiatCurrency && "font-bold2")}>
+                  {item[1]}
+                </Text>
+                <Text className="text-lg text-muted-foreground">({item[0]})</Text>
+              </TouchableOpacity>
+            )}
             keyExtractor={(item) => item[0]}
             className="flex-1 mb-4" />
         </>)}
