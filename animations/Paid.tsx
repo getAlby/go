@@ -1,5 +1,4 @@
 import LottieView from "lottie-react-native";
-import { View } from "react-native";
 
 export function Paid() {
   return (
@@ -7,8 +6,9 @@ export function Paid() {
       autoPlay
       loop={false}
       style={{
-        width: 400,
-        height: 400,
+        width: "100%",
+        height: "100%",
+        minHeight: 250,
       }}
       source={require("../assets/animations/success.json")}
     />
