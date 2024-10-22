@@ -13,12 +13,21 @@ import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { TextClassContext } from "~/components/ui/text";
 
+// TODO: Handle wallets with expired connection secrets
 export function SetupWallet() {
   const wallets = useAppStore((store) => store.wallets);
   const walletIdWithConnection = wallets.findIndex((wallet) => wallet.nostrWalletConnectUrl);
+
   const [isConnecting, setConnecting] = React.useState(false);
+  const [nostrWalletConnectUrl, setNostrWalletConnectUrl] = React.useState<string>();
+  const [capabilities, setCapabilities] = React.useState<nwc.Nip47Capability[]>();
+  const [name, setName] = React.useState("");
 
   const handleScanned = (data: string) => {
     return connect(data);
@@ -55,19 +64,14 @@ export function SetupWallet() {
 
       console.log("NWC connected", info);
 
-      useAppStore.getState().addWallet({
-        nostrWalletConnectUrl,
-        nwcCapabilities: capabilities,
-        ...(nwcClient.lud16
-          ? { lightningAddress: nwcClient.lud16, name: nwcClient.lud16 }
-          : { name: `Wallet ${wallets.length}` }),
-      });
-      useAppStore.getState().setNWCClient(nwcClient);
-      router.replace("/settings/wallets/name");
+      setNostrWalletConnectUrl(nostrWalletConnectUrl);
+      setCapabilities(capabilities);
+      setName(nwcClient.lud16 || "");
+
       Toast.show({
         type: "success",
-        text1: "New wallet created",
-        text2: "Please configure your wallet connection",
+        text1: "Connection successful",
+        text2: "Please set your wallet name to finish",
       });
     } catch (error) {
       console.error(error);
@@ -76,10 +80,32 @@ export function SetupWallet() {
     setConnecting(false);
   }
 
+  const addWallet = () => {
+    if (!nostrWalletConnectUrl) return;
+
+    const nwcClient = new nwc.NWCClient({ nostrWalletConnectUrl });
+    useAppStore.getState().addWallet({
+      nostrWalletConnectUrl,
+      nwcCapabilities: capabilities,
+      name: name,
+      lightningAddress: nwcClient.lud16 || "",
+    });
+    useAppStore.getState().setNWCClient(nwcClient);
+
+    Toast.show({
+      type: "success",
+      text1: "Wallet Connected",
+      text2: "Your lightning wallet is ready to use",
+      position: "top",
+    });
+
+    router.replace("/");
+  };
+
   return (
     <>
       <Screen
-        title="Setup Wallet Connection"
+        title={!nostrWalletConnectUrl ? "Setup Wallet Connection" : "Name Wallet"}
         right={() =>
           walletIdWithConnection !== -1 ? (
             <Pressable
@@ -123,7 +149,7 @@ export function SetupWallet() {
           <Loading />
           <Text className="mt-4">Connecting to your Wallet</Text>
         </View>
-      ) : (
+      ) : !nostrWalletConnectUrl ? (
         <>
           <QRCodeScanner onScanned={handleScanned} startScanning />
           <View className="flex flex-row items-stretch justify-center gap-4 p-6">
@@ -137,6 +163,30 @@ export function SetupWallet() {
             </Button>
           </View>
         </>
+      ) : (
+        <DismissableKeyboardView>
+          <View className="flex-1 p-6">
+            <View className="flex-1 flex flex-col gap-3 items-center justify-center">
+              <Label nativeID="name" className="text-muted-foreground text-center">
+                Wallet name
+              </Label>
+              <Input
+                autoFocus
+                className="w-full border-transparent bg-transparent native:text-2xl text-center"
+                value={name}
+                onChangeText={setName}
+                aria-labelledbyledBy="name"
+                placeholder="Enter a name for your wallet"
+                returnKeyType="done"
+              />
+            </View>
+            <Button size="lg" onPress={addWallet}>
+              <TextClassContext.Consumer>
+                {(className) => <Text className={className}>Finish</Text>}
+              </TextClassContext.Consumer>
+            </Button>
+          </View>
+        </DismissableKeyboardView>
       )}
     </>
   );
