@@ -72,6 +72,7 @@ export function SetupWallet() {
         type: "success",
         text1: "Connection successful",
         text2: "Please set your wallet name to finish",
+        position: "top",
       });
     } catch (error) {
       console.error(error);
