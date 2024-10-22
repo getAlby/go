@@ -25,9 +25,23 @@ export interface LNURLPayServiceResponse {
   url: string;
 }
 
-type LNURLDetails = LNURLPayServiceResponse;
+export interface LNURLWithdrawServiceResponse {
+  tag: "withdrawRequest"; // type of LNURL
+  callback: string; // The URL which LN SERVICE would accept a withdrawal Lightning invoice as query parameter
+  k1: string; // Random or non-random string to identify the user's LN WALLET when using the callback URL
+  defaultDescription: string; // A default withdrawal invoice description
+  balanceCheck?: string;
+  payLink?: string;
+  minWithdrawable: number; // Min amount (in millisatoshis) the user can withdraw from LN SERVICE, or 0
+  maxWithdrawable: number; // Max amount (in millisatoshis) the user can withdraw from LN SERVICE, or equal to minWithdrawable if the user has no choice over the amounts
+  domain: string;
+  url: string;
+}
+
+type LNURLDetails = 
+  | LNURLPayServiceResponse
+  | LNURLWithdrawServiceResponse;
 //| LNURLAuthServiceResponse
-//| LNURLWithdrawServiceResponse;
 
 export interface LNURLPaymentSuccessAction {
   tag: string;

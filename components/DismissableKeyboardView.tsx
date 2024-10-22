@@ -1,6 +1,6 @@
 import { Platform, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from "react-native";
 
-function DismissableKeyboardView({ children }: { children?: React.ReactNode | undefined }) {
+function DismissableKeyboardView({ children }: { children?: React.ReactNode }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
