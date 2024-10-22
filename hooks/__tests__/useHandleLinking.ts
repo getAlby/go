@@ -3,17 +3,68 @@ import { router } from "expo-router";
 
 jest.mock("expo-router");
 
-const testVectors: Record<string, string> = {
-  "lightning:hello@getalby.com": "lightning:hello@getalby.com",
-  "lightning://hello@getalby.com": "lightning:hello@getalby.com",
-  "LIGHTNING://hello@getalby.com": "lightning:hello@getalby.com",
-  "LIGHTNING:hello@getalby.com": "lightning:hello@getalby.com",
-  "lightning:lnbc1": "lightning:lnbc1",
-  "lightning://lnbc1": "lightning:lnbc1",
-  "bitcoin:bitcoinaddress?lightning=invoice":
-    "bitcoin:bitcoinaddress?lightning=invoice",
-  "BITCOIN:bitcoinaddress?lightning=invoice":
-    "bitcoin:bitcoinaddress?lightning=invoice",
+// Mock the lnurl module
+jest.mock("../../lib/lnurl", () => {
+  const originalModule = jest.requireActual("../../lib/lnurl");
+
+  const mockGetDetails = jest.fn(async (lnurlString) => {
+    if (lnurlString.startsWith("lnurlw")) {
+      return {
+        tag: "withdrawRequest",
+        callback: "https://getalby.com/callback",
+        k1: "unused",
+        defaultDescription: "withdrawal",
+        minWithdrawable: 21000,
+        maxWithdrawable: 21000,
+      };
+    }
+    return originalModule.lnurl.getDetails(lnurlString);
+  });
+
+  return {
+    ...originalModule,
+    lnurl: {
+      ...originalModule.lnurl,
+      getDetails: mockGetDetails,
+    },
+  };
+});
+
+const testVectors: Record<string, { url: string; path: string }> = {
+  // Lightning Addresses
+  "lightning:hello@getalby.com": {
+    url: "lightning:hello@getalby.com",
+    path: "/send",
+  },
+  "lightning://hello@getalby.com": {
+    url: "lightning:hello@getalby.com",
+    path: "/send",
+  },
+  "LIGHTNING://hello@getalby.com": {
+    url: "lightning:hello@getalby.com",
+    path: "/send",
+  },
+  "LIGHTNING:hello@getalby.com": {
+    url: "lightning:hello@getalby.com",
+    path: "/send",
+  },
+
+  // Lightning invoices
+  "lightning:lnbc1": { url: "lightning:lnbc1", path: "/send" },
+  "lightning://lnbc1": { url: "lightning:lnbc1", path: "/send" },
+
+  // BIP21
+  "bitcoin:bitcoinaddress?lightning=invoice": {
+    url: "bitcoin:bitcoinaddress?lightning=invoice",
+    path: "/send",
+  },
+  "BITCOIN:bitcoinaddress?lightning=invoice": {
+    url: "bitcoin:bitcoinaddress?lightning=invoice",
+    path: "/send",
+  },
+
+  // LNURL-withdraw
+  "lightning:lnurlw123": { url: "lightning:lnurlw123", path: "/withdraw" },
 };
 
 describe("handleLink", () => {
@@ -21,40 +72,44 @@ describe("handleLink", () => {
     jest.clearAllMocks();
   });
 
-  it("should return early if url is empty", () => {
-    handleLink("");
+  it("should return early if url is empty", async () => {
+    await handleLink("");
     expect(router.push).not.toHaveBeenCalled();
     expect(router.replace).not.toHaveBeenCalled();
   });
 
-  it("should return early if scheme is not supported", () => {
-    handleLink("mailto:hello@getalby.com");
+  it("should return early if scheme is not supported", async () => {
+    await handleLink("mailto:hello@getalby.com");
     expect(router.replace).toHaveBeenCalledWith({
       pathname: "/",
     });
     expect(router.push).not.toHaveBeenCalled();
   });
 
-  it("should parse the URL and navigate correctly for expo links", () => {
-    Object.entries(testVectors).forEach(([url, expectedOutput]) => {
-      jest.clearAllMocks();
-      handleLink("exp://127.0.0.1:8081/--/" + url);
-      assertRedirect(expectedOutput);
-    });
+  describe("Expo links", () => {
+    test.each(Object.entries(testVectors))(
+      "should parse the URL '%s' and navigate correctly",
+      async (url, expectedOutput) => {
+        await handleLink("exp://127.0.0.1:8081/--/" + url);
+        assertRedirect(expectedOutput.path, expectedOutput.url);
+      },
+    );
   });
 
-  it("should parse the URL and navigate correctly for production links", () => {
-    Object.entries(testVectors).forEach(([url, expectedOutput]) => {
-      jest.clearAllMocks();
-      handleLink(url);
-      assertRedirect(expectedOutput);
-    });
+  describe("Production links", () => {
+    test.each(Object.entries(testVectors))(
+      "should parse the URL '%s' and navigate correctly",
+      async (url, expectedOutput) => {
+        await handleLink(url);
+        assertRedirect(expectedOutput.path, expectedOutput.url);
+      },
+    );
   });
 });
 
-const assertRedirect = (expectedUrl: string) => {
+const assertRedirect = (expectedPath: string, expectedUrl: string) => {
   expect(router.push).toHaveBeenCalledWith({
-    pathname: "/send",
+    pathname: expectedPath,
     params: {
       url: expectedUrl,
     },
