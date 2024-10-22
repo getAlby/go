@@ -19,7 +19,6 @@ import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { TextClassContext } from "~/components/ui/text";
 
-// TODO: Handle wallets with expired connection secrets
 export function SetupWallet() {
   const wallets = useAppStore((store) => store.wallets);
   const walletIdWithConnection = wallets.findIndex((wallet) => wallet.nostrWalletConnectUrl);
