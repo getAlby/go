@@ -40,17 +40,21 @@ export function Transaction() {
   };
   const transaction: Nip47Transaction = JSON.parse(transactionJSON);
   const getFiatAmount = useGetFiatAmount();
-  const rawMetadata = transaction.metadata;
-  let boostagram: Boostagram | undefined;
 
-  try {
-    const tlvRecord = (rawMetadata?.tlv_records as TLVRecord[])?.find(record => record.type === 7629169);
-    if (tlvRecord) {
-      boostagram = JSON.parse(Utf8.stringify(Hex.parse(tlvRecord.value)))
+  const boostagram = React.useMemo(() => {
+    let parsedBoostagram;
+    try {
+      const tlvRecord = (transaction.metadata?.tlv_records as TLVRecord[])?.find(
+        (record) => record.type === 7629169
+      );
+      if (tlvRecord) {
+        parsedBoostagram = JSON.parse(Utf8.stringify(Hex.parse(tlvRecord.value)));
+      }
+    } catch (e) {
+      console.error(e);
     }
-  } catch (e) {
-    console.error(e);
-  }
+    return parsedBoostagram;
+  }, [transaction.metadata]);
 
   return (
     <View className="flex-1 flex flex-col gap-3">
