@@ -1,7 +1,7 @@
 import { Link, router } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native";
-import { Settings2, TriangleAlert, Wallet2 } from "~/components/Icons";
+import { Settings2, Wallet2 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
 import { Text } from "~/components/ui/text";
@@ -35,8 +35,8 @@ export function Wallets() {
                       router.dismissAll();
                       router.navigate("/");
                       Toast.show({
-                        type: !!item.item.nostrWalletConnectUrl ? "success" : "info",
-                        text1: !!item.item.nostrWalletConnectUrl ? `Switched wallet to ${item.item.name || DEFAULT_WALLET_NAME}` : "Finish wallet setup to continue",
+                        type: "success",
+                        text1: `Switched wallet to ${item.item.name || DEFAULT_WALLET_NAME}`,
                         position: "top",
                       });
                     }
@@ -63,7 +63,6 @@ export function Wallets() {
                       </TouchableOpacity>
                     </Link>
                   )}
-                  {!item.item.nostrWalletConnectUrl && <TriangleAlert className="text-destructive absolute right-4" />}
                 </TouchableOpacity>
               );
             }}
