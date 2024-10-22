@@ -149,8 +149,6 @@ export function Withdraw() {
     }
   }
 
-  console.log(lnurlDetails)
-
   return (
     <>
       <Screen title="Withdraw" />
@@ -180,37 +178,55 @@ export function Withdraw() {
             </>
           )}
           {lnurlDetails &&
-            (lnurlDetails.minWithdrawable == lnurlDetails.maxWithdrawable ? (
-              <>
-                <View className="flex-1 justify-center items-center gap-8 p-6">
-                  <View className="flex flex-col gap-2">
-                    <View className="flex flex-row items-center justify-center gap-2">
-                      <Text className="text-5xl font-bold2 text-foreground">
-                        {new Intl.NumberFormat().format(
-                          Math.floor(lnurlDetails.minWithdrawable / 1000)
-                        )}
+            <DismissableKeyboardView>
+              <View className="flex-1 flex flex-col">
+                {lnurlDetails.minWithdrawable == lnurlDetails.maxWithdrawable ? (
+                  <View className="flex-1 justify-center items-center gap-8 p-6">
+                    <View className="flex flex-col gap-2 items-center">
+                      <View className="flex flex-row items-center justify-center gap-2">
+                        <Text className="text-5xl font-bold2 text-foreground">
+                          {new Intl.NumberFormat().format(
+                            Math.floor(lnurlDetails.minWithdrawable / 1000)
+                          )}
+                        </Text>
+                        <Text className="text-3xl font-bold2 text-muted-foreground">
+                          sats
+                        </Text>
+                      </View>
+                      {getFiatAmount && (
+                        <Text className="text-center text-muted-foreground text-3xl font-semibold2">
+                          {getFiatAmount(
+                            Math.floor(lnurlDetails.minWithdrawable / 1000)
+                          )}
+                        </Text>
+                      )}
+                    </View>
+                    <View className="flex flex-col gap-2 justify-center items-center">
+                      <Text className="text-muted-foreground text-center font-semibold2">
+                        Description
                       </Text>
-                      <Text className="text-3xl font-bold2 text-muted-foreground">
-                        sats
+                      <Text className="text-center text-foreground text-2xl font-medium2">
+                        {lnurlDetails.defaultDescription}
                       </Text>
                     </View>
-                    {getFiatAmount && (
-                      <Text className="text-center text-muted-foreground text-3xl font-semibold2">
-                        {getFiatAmount(
-                          Math.floor(lnurlDetails.minWithdrawable / 1000)
-                        )}
+                  </View>
+                ) : (
+                  <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
+                    <DualCurrencyInput
+                      amount={valueSat}
+                      setAmount={setValueSat}
+                      autoFocus
+                    />
+                    <View className="flex flex-col gap-2 items-center">
+                      <Text className="text-muted-foreground text-center font-semibold2">
+                        Description
                       </Text>
-                    )}
+                      <Text className="text-center text-foreground text-2xl font-medium2">
+                        {lnurlDetails.defaultDescription}
+                      </Text>
+                    </View>
                   </View>
-                  <View className="flex flex-col gap-2 justify-center items-center">
-                    <Text className="text-muted-foreground text-center font-semibold2">
-                      Description
-                    </Text>
-                    <Text className="text-center text-foreground text-2xl font-medium2">
-                      {lnurlDetails.defaultDescription}
-                    </Text>
-                  </View>
-                </View>
+                )}
                 <View className="p-6">
                   <Button
                     size="lg"
@@ -224,41 +240,9 @@ export function Withdraw() {
                     <Text>Confirm Withdrawal</Text>
                   </Button>
                 </View>
-              </>
-            ) : (
-              <DismissableKeyboardView>
-                <View className="flex-1 flex flex-col">
-                  <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
-                    <DualCurrencyInput
-                      amount={valueSat}
-                      setAmount={setValueSat}
-                      autoFocus
-                    />
-                    <View className="flex flex-col gap-2 justify-center items-center">
-                      <Text className="text-muted-foreground text-center font-semibold2">
-                        Description
-                      </Text>
-                      <Text className="text-center text-foreground text-2xl font-medium2">
-                        {lnurlDetails.defaultDescription}
-                      </Text>
-                    </View>
-                  </View>
-                  <View className="m-6">
-                    <Button
-                      size="lg"
-                      className="flex flex-row gap-2"
-                      onPress={confirm}
-                      disabled={loadingConfirm}
-                    >
-                      {loadingConfirm && (
-                        <Loading className="text-primary-foreground" />
-                      )}
-                      <Text>Confirm Withdrawal</Text>
-                    </Button>
-                  </View>
-                </View>
-              </DismissableKeyboardView>
-            ))}
+              </View>
+            </DismissableKeyboardView>
+          }
         </>
       )}
     </>
