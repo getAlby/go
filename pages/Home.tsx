@@ -1,7 +1,6 @@
 import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
-import { useAppStore } from "lib/state/appStore";
 import {
   Link, useFocusEffect
 } from "expo-router";
@@ -29,8 +28,6 @@ enum BalanceState {
 }
 
 export function Home() {
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
-  const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
   const [balanceState, setBalanceState] = useState<BalanceState>(

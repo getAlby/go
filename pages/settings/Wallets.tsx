@@ -73,8 +73,7 @@ export function Wallets() {
           <Button
             size="lg"
             onPress={() => {
-              useAppStore.getState().addWallet({ name: `Wallet ${wallets.length}` });
-              useAppStore.getState().setNWCClient(undefined);
+              useAppStore.getState().setSelectedWalletId(wallets.length);
               router.dismissAll();
             }}
           >
