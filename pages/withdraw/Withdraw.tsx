@@ -87,7 +87,7 @@ export function Withdraw() {
         setValueSat(
           (lnurlDetails.maxWithdrawable &&
             Math.floor(+lnurlDetails.maxWithdrawable / 1000).toString()) ||
-            ""
+          ""
         );
         return true;
       } else {
@@ -107,10 +107,10 @@ export function Withdraw() {
     try {
       if (!lnurlDetails) return;
 
-      if (Number(valueSat) < lnurlDetails.minWithdrawable) {
+      if (Number(valueSat) < lnurlDetails.minWithdrawable / 1000) {
         throw new Error(`Amount below minimum limit of ${lnurlDetails.minWithdrawable} sats`);
       }
-      if (Number(valueSat) > lnurlDetails.maxWithdrawable) {
+      if (Number(valueSat) > lnurlDetails.maxWithdrawable / 1000) {
         throw new Error(`Amount exceeds maximum limit of ${lnurlDetails.maxWithdrawable} sats.`);
       }
 
