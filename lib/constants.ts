@@ -28,6 +28,7 @@ export const TRANSACTIONS_PAGE_SIZE = 20;
 export const DEFAULT_CURRENCY = "USD";
 export const DEFAULT_WALLET_NAME = "Default Wallet";
 export const ALBY_LIGHTNING_ADDRESS = "go@getalby.com";
+export const ALBY_URL = "https://getalby.com";
 
 export const REQUIRED_CAPABILITIES: Nip47Capability[] = [
   "get_balance",

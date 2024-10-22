@@ -28,7 +28,6 @@
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "currency-list": "^1.0.8",
     "dayjs": "^1.11.10",
     "expo": "~51.0.34",
     "expo-camera": "~15.0.16",
