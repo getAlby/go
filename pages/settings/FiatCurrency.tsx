@@ -62,14 +62,15 @@ export function FiatCurrency() {
   }
 
   return (
-    <View className="flex-1 flex flex-col p-6">
+    <View className="flex-1 flex flex-col gap-6 p-6">
       <Screen title="Fiat Currency" />
       {loading ? <Loading className="flex-1" /> : (
         <>
           <Input
-            placeholder="Search currencies..."
+            placeholder="Search Fiat Currencies"
             value={searchQuery}
-            onChangeText={setSearchQuery} />
+            onChangeText={setSearchQuery}
+          />
           <FlatList
             data={filteredCurrencies}
             renderItem={({ item }: { item: [string, string]; }) => (
@@ -84,7 +85,7 @@ export function FiatCurrency() {
               </TouchableOpacity>
             )}
             keyExtractor={(item) => item[0]}
-            className="flex-1 mb-4" />
+            className="flex-1" />
         </>)}
     </View>
   );
