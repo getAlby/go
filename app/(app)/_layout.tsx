@@ -3,6 +3,7 @@ import { useSession } from '~/hooks/useSession';
 import { useHandleLinking } from '~/hooks/useHandleLinking';
 import { useAppStore } from '~/lib/state/appStore';
 import { useRouteInfo } from 'expo-router/build/hooks';
+import { useNotificationObserver } from '~/hooks/useNotificationObserver';
 
 export default function AppLayout() {
     const { hasSession } = useSession();
@@ -11,6 +12,7 @@ export default function AppLayout() {
     const selectedWalletId = useAppStore((store) => store.selectedWalletId);
     const route = useRouteInfo();
     useHandleLinking();
+    useNotificationObserver();
 
     if (!isOnboarded) {
         console.log("Not onboarded, redirecting to /onboarding")
