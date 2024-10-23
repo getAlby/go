@@ -17,6 +17,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { TextClassContext } from "~/components/ui/text";
 
 export function SetupWallet() {
   const wallets = useAppStore((store) => store.wallets);
@@ -180,7 +181,9 @@ export function SetupWallet() {
               />
             </View>
             <Button size="lg" onPress={addWallet}>
-              <Text>Finish</Text>
+              <TextClassContext.Consumer>
+                {(className) => <Text className={className}>Finish</Text>}
+              </TextClassContext.Consumer>
             </Button>
           </View>
         </DismissableKeyboardView>
