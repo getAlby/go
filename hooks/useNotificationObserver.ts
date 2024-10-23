@@ -1,35 +1,30 @@
-import { router } from "expo-router";
-import { useEffect } from "react";
-
 import * as ExpoNotifications from "expo-notifications";
+import React from "react";
+import { router } from "expo-router";
 
 export function useNotificationObserver() {
-  useEffect(() => {
-    let isMounted = true;
-
-    function redirect(notification: ExpoNotifications.Notification) {
-      const url = notification.request.content.data?.url;
-      if (url) {
-        console.log("🔔 Received push notification, redirecting to: " + url);
-        router.push(url);
-      }
+  const lastNotificationResponse =
+    ExpoNotifications.useLastNotificationResponse();
+  console.log("lastnot", lastNotificationResponse);
+  React.useEffect(() => {
+    console.log("lastnotificationresponse", lastNotificationResponse);
+    if (
+      lastNotificationResponse &&
+      lastNotificationResponse.notification.request.content.data.url &&
+      lastNotificationResponse.actionIdentifier ===
+        ExpoNotifications.DEFAULT_ACTION_IDENTIFIER
+    ) {
+      console.log(
+        "redirecting",
+        lastNotificationResponse.notification.request.content.data.url,
+      );
+      router.dismissAll();
+      router.push(
+        lastNotificationResponse.notification.request.content.data.url,
+      );
+      //   Linking.openURL(
+      //     lastNotificationResponse.notification.request.content.data.url,
+      //   );
     }
-
-    ExpoNotifications.getLastNotificationResponseAsync().then((response) => {
-      if (!isMounted || !response?.notification) {
-        return;
-      }
-      redirect(response?.notification);
-    });
-
-    const subscription =
-      ExpoNotifications.addNotificationResponseReceivedListener((response) => {
-        redirect(response.notification);
-      });
-
-    return () => {
-      isMounted = false;
-      subscription.remove();
-    };
-  }, []);
+  }, [lastNotificationResponse]);
 }
