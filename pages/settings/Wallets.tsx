@@ -72,8 +72,8 @@ export function Wallets() {
           <Button
             size="lg"
             onPress={() => {
-              useAppStore.getState().setSelectedWalletId(wallets.length);
               router.dismissAll();
+              router.push("/settings/wallets/setup");
             }}
           >
             <Text>Connect a Wallet</Text>
