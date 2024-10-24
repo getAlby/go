@@ -1,4 +1,4 @@
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import React from "react";
 import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
@@ -16,8 +16,8 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import { Text } from "~/components/ui/text";
 import { REQUIRED_CAPABILITIES } from "~/lib/constants";
-import { TextClassContext } from "~/components/ui/text";
 
 export function SetupWallet() {
   const wallets = useAppStore((store) => store.wallets);
@@ -181,9 +181,7 @@ export function SetupWallet() {
               />
             </View>
             <Button size="lg" onPress={addWallet}>
-              <TextClassContext.Consumer>
-                {(className) => <Text className={className}>Finish</Text>}
-              </TextClassContext.Consumer>
+              <Text>Finish</Text>
             </Button>
           </View>
         </DismissableKeyboardView>
