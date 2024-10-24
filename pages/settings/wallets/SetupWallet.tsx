@@ -180,7 +180,7 @@ export function SetupWallet() {
                 returnKeyType="done"
               />
             </View>
-            <Button size="lg" onPress={addWallet}>
+            <Button size="lg" onPress={addWallet} disabled={!name}>
               <Text>Finish</Text>
             </Button>
           </View>
