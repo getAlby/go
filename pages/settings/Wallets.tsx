@@ -46,9 +46,9 @@ export function Wallets() {
                     active ? "border-primary" : "border-transparent",
                   )}
                 >
-                  <View className="flex flex-row gap-4 items-center">
+                  <View className="flex flex-row gap-4 items-center flex-shrink">
                     <Wallet2 className="text-foreground" />
-                    <Text className={cn("text-xl", active && "font-semibold2")}>
+                    <Text className={cn("text-xl pr-16", active && "font-semibold2")} numberOfLines={1} ellipsizeMode="tail">
                       {item.item.name || DEFAULT_WALLET_NAME}
                     </Text>
                   </View>
@@ -69,11 +69,15 @@ export function Wallets() {
           />
         </View>
         <View className="p-6">
-          <Link href="/settings/wallets/new" asChild>
-            <Button size="lg">
-              <Text>Connect a Wallet</Text>
-            </Button>
-          </Link>
+          <Button
+            size="lg"
+            onPress={() => {
+              router.dismissAll();
+              router.push("/settings/wallets/setup");
+            }}
+          >
+            <Text>Connect a Wallet</Text>
+          </Button>
         </View>
       </View>
     </>
