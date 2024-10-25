@@ -10,16 +10,18 @@ import { errorToast } from "~/lib/errorToast";
 import Loading from "~/components/Loading";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import { Receiver } from "~/components/Receiver";
 
 export function LNURLPay() {
-  const { lnurlDetailsJSON, originalText } =
+  const { lnurlDetailsJSON, originalText, amount: amountParam } =
     useLocalSearchParams() as unknown as {
       lnurlDetailsJSON: string;
       originalText: string;
+      amount: string;
     };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
-  const [amount, setAmount] = React.useState("");
+  const [amount, setAmount] = React.useState(amountParam ?? 0);
   const [comment, setComment] = React.useState("");
   const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
 
@@ -44,7 +46,12 @@ export function LNURLPay() {
       //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
-        params: { invoice: lnurlPayInfo.pr, originalText, comment },
+        params: {
+          invoice: lnurlPayInfo.pr,
+          originalText,
+          comment,
+          successAction: lnurlPayInfo.successAction ? JSON.stringify(lnurlPayInfo.successAction) : undefined,
+        },
       });
     } catch (error) {
       console.error(error);
@@ -63,31 +70,21 @@ export function LNURLPay() {
               amount={amount}
               setAmount={setAmount}
               readOnly={isAmountReadOnly}
-              autoFocus={!isAmountReadOnly}
+              autoFocus={!isAmountReadOnly && !amount}
             />
-            {lnurlDetails.commentAllowed &&
-              <View className="w-full">
-                <Text className="text-muted-foreground text-center font-semibold2">
-                  Comment
-                </Text>
-                <Input
-                  className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
-                  placeholder="Enter an optional comment"
-                  value={comment}
-                  onChangeText={setComment}
-                  returnKeyType="done"
-                  maxLength={lnurlDetails.commentAllowed}
-                />
-              </View>
-            }
-            <View>
+            <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
-                To
+                Comment
               </Text>
-              <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText}
-              </Text>
+              <Input
+                className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
+                placeholder="Enter an optional comment"
+                value={comment}
+                onChangeText={setComment}
+                returnKeyType="done"
+              />
             </View>
+            <Receiver originalText={originalText} />
           </View>
           <View className="p-6">
             <Button

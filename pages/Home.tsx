@@ -1,12 +1,8 @@
 import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
-import { useAppStore } from "lib/state/appStore";
-import { WalletConnection } from "~/pages/settings/wallets/WalletConnection";
 import {
-  Link,
-  router, useFocusEffect,
-  useRootNavigationState
+  Link, useFocusEffect
 } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -21,7 +17,7 @@ import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import { SvgProps } from "react-native-svg";
 import { Button } from "~/components/ui/button";
 import Screen from "~/components/Screen";
-import { useOnboarding } from "~/hooks/useOnboarding";
+import AlbyBanner from "~/components/AlbyBanner";
 
 dayjs.extend(relativeTime);
 
@@ -32,31 +28,15 @@ enum BalanceState {
 }
 
 export function Home() {
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
-  const nwcClient = useAppStore((store) => store.nwcClient);
   const { data: balance, mutate: reloadBalance } = useBalance();
   const getFiatAmount = useGetFiatAmount();
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
-  const rootNavigationState = useRootNavigationState();
-  const isOnboarded = useOnboarding();
 
   useFocusEffect(() => {
     reloadBalance();
   });
-
-  let hasNavigationState = !!rootNavigationState?.key;
-  const hasNwcClient = !!nwcClient;
-  React.useEffect(() => {
-    if (hasNavigationState && !hasNwcClient && isOnboarded) {
-      router.replace(`/settings/wallets/${selectedWalletId}/wallet-connection`);
-    }
-  }, [hasNwcClient, hasNavigationState, isOnboarded]);
-
-  if (!nwcClient && isOnboarded) {
-    return <WalletConnection />;
-  }
 
   function switchBalanceState(): void {
     if (balanceState == BalanceState.SATS) {
@@ -80,7 +60,7 @@ export function Home() {
           </Link>
         }
       />
-      <View className="h-full flex">
+      <View className="h-full flex p-6">
         <View className="grow flex flex-col items-center justify-center gap-4">
           <TouchableOpacity
             onPress={switchBalanceState}
@@ -123,6 +103,9 @@ export function Home() {
               )}
             </View>
           </TouchableOpacity>
+          {new Date().getDate() == 21 &&
+            <AlbyBanner />
+          }
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
@@ -131,11 +114,9 @@ export function Home() {
             </Button>
           </Link>
         </View>
-        <View>
-          <View className="flex flex-row gap-6 p-6 pt-2">
-            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
-            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
-          </View>
+        <View className="flex flex-row gap-6 pt-2">
+          <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+          <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
         </View>
       </View>
     </>

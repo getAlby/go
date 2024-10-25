@@ -19,14 +19,26 @@ import Loading from "~/components/Loading";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 
 export function Send() {
-  const { url } = useLocalSearchParams<{ url: string }>();
+  const { url, amount } = useLocalSearchParams<{ url: string, amount: string }>();
   const [isLoading, setLoading] = React.useState(false);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
+  const [startScanning, setStartScanning] = React.useState(false);
 
+  // Delay starting the QR scanner if url has valid payment info
   useEffect(() => {
     if (url) {
-      loadPayment(url);
+      (async () => {
+        const result = await loadPayment(url);
+        // Delay the camera to show the error message
+        if (!result) {
+          setTimeout(() => {
+            setStartScanning(true);
+          }, 2000);
+        }
+      })();
+    } else {
+      setStartScanning(true);
     }
   }, [url]);
 
@@ -53,11 +65,15 @@ export function Send() {
     loadPayment(keyboardText);
   }
 
-  async function loadPayment(text: string) {
+  async function loadPayment(text: string): Promise<boolean> {
     if (!text) {
       errorToast(new Error("Your clipboard is empty."));
-      return;
+      return false;
     }
+
+    // Some apps use uppercased LIGHTNING: prefixes
+    text = text.toLowerCase();
+
     console.log("loading payment", text);
     const originalText = text;
     setLoading(true);
@@ -74,6 +90,7 @@ export function Send() {
       if (text.startsWith("lightning:")) {
         text = text.substring("lightning:".length);
       }
+
       const lnurlValue = lnurl.findLnurl(text);
       console.log("Checked lnurl value", text, lnurlValue);
       if (lnurlValue) {
@@ -103,9 +120,12 @@ export function Send() {
             params: {
               lnurlDetailsJSON: JSON.stringify(lnurlDetails),
               originalText,
+              amount,
             },
           });
         }
+
+        return true;
       } else {
         // Check if this is a valid invoice
         new Invoice({
@@ -116,12 +136,17 @@ export function Send() {
           pathname: "/send/confirm",
           params: { invoice: text, originalText },
         });
+
+        return true;
       }
     } catch (error) {
       console.error("failed to load payment", originalText, error);
       errorToast(error);
+    } finally {
       setLoading(false);
     }
+
+    return false;
   }
 
   return (
@@ -136,7 +161,7 @@ export function Send() {
         <>
           {!keyboardOpen && (
             <>
-              <QRCodeScanner onScanned={handleScanned} />
+              <QRCodeScanner onScanned={handleScanned} startScanning={startScanning} />
               <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button
                   onPress={openKeyboard}

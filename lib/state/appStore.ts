@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { NWCClient, Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import { nwc } from "@getalby/sdk";
-import { secureStorage } from "lib/secureStorage";
+import { secureStorage } from "../secureStorage";
 
 interface AppState {
   readonly unlocked: boolean;
@@ -11,10 +11,10 @@ interface AppState {
   readonly wallets: Wallet[];
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
+  readonly isOnboarded: boolean;
   setUnlocked: (unlocked: boolean) => void;
+  setOnboarded: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
-  setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
-  removeNostrWalletConnectUrl(): void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
   removeCurrentWallet(): void;
   setFiatCurrency(fiatCurrency: string): void;
@@ -23,15 +23,17 @@ interface AppState {
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
-  showOnboarding(): void;
+  getLastAlbyPayment(): Date | null;
+  updateLastAlbyPayment(): void;
 }
 
 const walletKeyPrefix = "wallet";
 const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
+const hasOnboardedKey = "hasOnboarded";
+const lastAlbyPaymentKey = "lastAlbyPayment";
 export const isSecurityEnabledKey = "isSecurityEnabled";
-export const hasOnboardedKey = "hasOnboarded";
 export const lastActiveTimeKey = "lastActiveTime";
 
 type Wallet = {
@@ -62,9 +64,6 @@ function loadWallets(): Wallet[] {
       break;
     }
     wallets.push(JSON.parse(walletJSON));
-  }
-  if (!wallets.length) {
-    wallets.push({});
   }
   return wallets;
 }
@@ -107,12 +106,13 @@ export const useAppStore = create<AppState>()((set, get) => {
     if (wallets.length <= 1) {
       // set to initial wallet status
       secureStorage.removeItem(hasOnboardedKey);
+      secureStorage.removeItem(getWalletKey(0));
       secureStorage.setItem(selectedWalletIdKey, "0");
-      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
       set({
-        nwcClient: undefined,
+        isOnboarded: false,
+        wallets: [],
         selectedWalletId: 0,
-        wallets: [{}],
+        nwcClient: undefined,
       });
       return;
     }
@@ -139,7 +139,8 @@ export const useAppStore = create<AppState>()((set, get) => {
     secureStorage.getItem(selectedWalletIdKey) || "0"
   );
 
-  const iSecurityEnabled = secureStorage.getItem(isSecurityEnabledKey) === "true";
+  const iSecurityEnabled =
+    secureStorage.getItem(isSecurityEnabledKey) === "true";
 
   const initialWallets = loadWallets();
   return {
@@ -149,25 +150,22 @@ export const useAppStore = create<AppState>()((set, get) => {
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     isSecurityEnabled: iSecurityEnabled,
+    isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
     removeCurrentWallet,
     setUnlocked: (unlocked) => {
       set({ unlocked });
     },
+    setOnboarded: (isOnboarded) => {
+      if (isOnboarded) {
+        secureStorage.setItem(hasOnboardedKey, "true");
+      } else {
+        secureStorage.removeItem(hasOnboardedKey);
+      }
+      set({ isOnboarded });
+    },
     setNWCClient: (nwcClient) => set({ nwcClient }),
-    removeNostrWalletConnectUrl: () => {
-      updateCurrentWallet({
-        nostrWalletConnectUrl: undefined,
-      });
-
-      set({ nwcClient: undefined });
-    },
-    setNostrWalletConnectUrl: (nostrWalletConnectUrl) => {
-      updateCurrentWallet({
-        nostrWalletConnectUrl,
-      });
-    },
     setSecurityEnabled: (isEnabled) => {
       secureStorage.setItem(isSecurityEnabledKey, isEnabled.toString());
       set({
@@ -193,7 +191,6 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({
         wallets: [...currentWallets, wallet],
         selectedWalletId: newWalletId,
-        nwcClient: undefined,
       });
     },
     addAddressBookEntry: (addressBookEntry: AddressBookEntry) => {
@@ -207,9 +204,15 @@ export const useAppStore = create<AppState>()((set, get) => {
         addressBookEntries: [...currentAddressBookEntries, addressBookEntry],
       });
     },
-    showOnboarding() {
-      // clear onboarding status
-      secureStorage.removeItem(hasOnboardedKey);
+    getLastAlbyPayment: () => {
+      const result = secureStorage.getItem(lastAlbyPaymentKey);
+      if (result) {
+        return new Date(result);
+      }
+      return null;
+    },
+    updateLastAlbyPayment: () => {
+      secureStorage.setItem(lastAlbyPaymentKey, new Date().toString());
     },
     reset() {
       // clear wallets
@@ -230,17 +233,20 @@ export const useAppStore = create<AppState>()((set, get) => {
       // clear onboarding status
       secureStorage.removeItem(hasOnboardedKey);
 
+      // clear last alby payment date
+      secureStorage.removeItem(lastAlbyPaymentKey);
+
       // set to initial wallet status
       secureStorage.setItem(selectedWalletIdKey, "0");
-      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
 
       set({
         nwcClient: undefined,
         fiatCurrency: undefined,
         selectedWalletId: 0,
-        wallets: [{}],
+        wallets: [],
         addressBookEntries: [],
         isSecurityEnabled: false,
+        isOnboarded: false,
       });
     },
   };

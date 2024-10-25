@@ -5,18 +5,21 @@ import React from "react";
 import { View } from "react-native";
 import { ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
-  const { invoice, originalText, comment } = useLocalSearchParams() as {
+  const { invoice, originalText, comment, successAction } = useLocalSearchParams() as {
     invoice: string;
     originalText: string;
     comment: string;
+    successAction: string;
   };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
@@ -34,6 +37,12 @@ export function ConfirmPayment() {
 
       console.log("payInvoice Response", response);
 
+      if (originalText === ALBY_LIGHTNING_ADDRESS) {
+        useAppStore
+          .getState()
+          .updateLastAlbyPayment();
+      }
+
       router.dismissAll();
       router.replace({
         pathname: "/send/success",
@@ -42,6 +51,7 @@ export function ConfirmPayment() {
           originalText,
           invoice,
           amount: decodedInvoice.satoshi,
+          successAction,
         },
       });
     } catch (error) {
@@ -94,23 +104,7 @@ export function ConfirmPayment() {
             </View>
           )
         )}
-        {
-          /* only show "To" for lightning addresses */ originalText !==
-          invoice &&
-          originalText
-            .toLowerCase()
-            .replace("lightning:", "")
-            .includes("@") && (
-            <View className="flex flex-col gap-2">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                To
-              </Text>
-              <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText.toLowerCase().replace("lightning:", "")}
-              </Text>
-            </View>
-          )
-        }
+        <Receiver originalText={originalText} invoice={invoice} />
       </View>
       <View className="p-6">
         <Button
