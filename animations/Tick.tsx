@@ -1,6 +1,6 @@
 import LottieView from "lottie-react-native";
 
-export function Paid() {
+export function Tick() {
   return (
     <LottieView
       autoPlay

@@ -15,8 +15,6 @@ interface AppState {
   setUnlocked: (unlocked: boolean) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
-  setNostrWalletConnectUrl(nostrWalletConnectUrl: string): void;
-  removeNostrWalletConnectUrl(): void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
   removeCurrentWallet(): void;
   setFiatCurrency(fiatCurrency: string): void;
@@ -67,9 +65,6 @@ function loadWallets(): Wallet[] {
     }
     wallets.push(JSON.parse(walletJSON));
   }
-  if (!wallets.length) {
-    wallets.push({});
-  }
   return wallets;
 }
 
@@ -111,13 +106,13 @@ export const useAppStore = create<AppState>()((set, get) => {
     if (wallets.length <= 1) {
       // set to initial wallet status
       secureStorage.removeItem(hasOnboardedKey);
+      secureStorage.removeItem(getWalletKey(0));
       secureStorage.setItem(selectedWalletIdKey, "0");
-      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
       set({
-        nwcClient: undefined,
-        selectedWalletId: 0,
-        wallets: [{}],
         isOnboarded: false,
+        wallets: [],
+        selectedWalletId: 0,
+        nwcClient: undefined,
       });
       return;
     }
@@ -171,18 +166,6 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({ isOnboarded });
     },
     setNWCClient: (nwcClient) => set({ nwcClient }),
-    removeNostrWalletConnectUrl: () => {
-      updateCurrentWallet({
-        nostrWalletConnectUrl: undefined,
-      });
-
-      set({ nwcClient: undefined });
-    },
-    setNostrWalletConnectUrl: (nostrWalletConnectUrl) => {
-      updateCurrentWallet({
-        nostrWalletConnectUrl,
-      });
-    },
     setSecurityEnabled: (isEnabled) => {
       secureStorage.setItem(isSecurityEnabledKey, isEnabled.toString());
       set({
@@ -208,7 +191,6 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({
         wallets: [...currentWallets, wallet],
         selectedWalletId: newWalletId,
-        nwcClient: undefined,
       });
     },
     addAddressBookEntry: (addressBookEntry: AddressBookEntry) => {
@@ -256,13 +238,12 @@ export const useAppStore = create<AppState>()((set, get) => {
 
       // set to initial wallet status
       secureStorage.setItem(selectedWalletIdKey, "0");
-      secureStorage.setItem(getWalletKey(0), JSON.stringify({}));
 
       set({
         nwcClient: undefined,
         fiatCurrency: undefined,
         selectedWalletId: 0,
-        wallets: [{}],
+        wallets: [],
         addressBookEntries: [],
         isSecurityEnabled: false,
         isOnboarded: false,

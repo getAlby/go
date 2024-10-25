@@ -39,7 +39,7 @@ import {
   CircleCheck,
   TriangleAlert,
   LogOut,
-  ArchiveRestore
+  ArchiveRestore,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 

@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, View } from "react-native";
-import { Paid } from "~/animations/Paid";
+import { Tick } from "~/animations/Tick";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import Screen from "~/components/Screen";
@@ -28,7 +28,7 @@ export function PaymentSuccess() {
       />
       <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
         <View className="flex-1 w-full">
-          <Paid />
+          <Tick />
         </View>
         <View className="flex flex-col items-center gap-2">
           <View className="flex flex-row items-end justify-center">

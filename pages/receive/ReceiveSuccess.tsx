@@ -1,7 +1,7 @@
 import { Invoice } from "@getalby/lightning-tools";
 import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, View } from "react-native";
-import { Paid } from "~/animations/Paid";
+import { Tick } from "~/animations/Tick";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -21,7 +21,7 @@ export function ReceiveSuccess() {
       />
       <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
         <View className="flex-1 w-full">
-          <Paid />
+          <Tick />
         </View>
         <Text className="text-3xl font-bold2 text-muted-foreground">
           Received

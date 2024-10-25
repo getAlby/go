@@ -7,8 +7,7 @@ import { useRouteInfo } from 'expo-router/build/hooks';
 export default function AppLayout() {
     const { hasSession } = useSession();
     const isOnboarded = useAppStore(store => store.isOnboarded);
-    const nwcClient = useAppStore(store => store.nwcClient);
-    const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+    const wallets = useAppStore(store => store.wallets);
     const route = useRouteInfo();
     useHandleLinking();
 
@@ -22,10 +21,10 @@ export default function AppLayout() {
         return <Redirect href="/unlock" />;
     }
 
-    const connectionPage = `/settings/wallets/${selectedWalletId}/wallet-connection`;
+    const connectionPage = "/settings/wallets/setup";
     // Check the current pathname to prevent redirect loops
-    if (!nwcClient && route.pathname !== connectionPage) {
-        console.log("No NWC client available, redirecting to wallet setup");
+    if (!wallets.length && route.pathname !== connectionPage) {
+        console.log("No wallets available, redirecting to setup");
         return <Redirect href={connectionPage} />;
     }
 
