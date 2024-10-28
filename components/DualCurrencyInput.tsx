@@ -1,7 +1,12 @@
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
-import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
+import {
+  CURSOR_COLOR,
+  DEFAULT_CURRENCY,
+  FIAT_REGEX,
+  SATS_REGEX,
+} from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { RefreshCw } from "./Icons";
 import { Input } from "./ui/input";
@@ -29,8 +34,14 @@ export function DualCurrencyInput({
 
   function onChangeText(text: string) {
     if (inputMode === "sats") {
+      if (!SATS_REGEX.test(text)) {
+        return;
+      }
       setAmount(text);
     } else {
+      if (!FIAT_REGEX.test(text)) {
+        return;
+      }
       setFiatAmount(text);
       if (getSatsAmount) {
         setAmount(getSatsAmount(+text)?.toString() || "");
