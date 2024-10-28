@@ -9,7 +9,14 @@ module.exports = {
         "ts-ignore": "allow-with-description",
       },
     ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        args: "none",
+      },
+    ],
     "no-console": ["error", { allow: ["info", "warn", "error"] }],
     "no-constant-binary-expression": "error",
+    curly: "error",
   },
 };
