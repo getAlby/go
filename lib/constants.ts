@@ -19,7 +19,7 @@ export const NAV_THEME = {
   },
 };
 
-export const INACTIVITY_THRESHOLD = 2 * 1000;
+export const INACTIVITY_THRESHOLD = 5 * 60 * 1000;
 
 export const CURSOR_COLOR = "hsl(47 100% 72%)";
 
