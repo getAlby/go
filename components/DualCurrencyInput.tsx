@@ -1,11 +1,11 @@
+import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
-import { Input } from "./ui/input";
-import { Text } from "./ui/text";
-import React from "react";
+import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { RefreshCw } from "./Icons";
-import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
+import { Input } from "./ui/input";
+import { Text } from "./ui/text";
 
 type DualCurrencyInputProps = {
   amount: string;
@@ -41,7 +41,7 @@ export function DualCurrencyInput({
   function toggleInputMode() {
     if (inputMode === "sats" && getFiatAmount) {
       setFiatAmount(
-        amount ? getFiatAmount(+amount, false)?.toString() || "" : ""
+        amount ? getFiatAmount(+amount, false)?.toString() || "" : "",
       );
     }
     setInputMode(inputMode === "fiat" ? "sats" : "fiat");
@@ -61,7 +61,7 @@ export function DualCurrencyInput({
         autoFocus={autoFocus}
         returnKeyType="done"
         readOnly={readOnly}
-      // aria-errormessage="inputError"
+        // aria-errormessage="inputError"
       />
       <Pressable onPress={toggleInputMode}>
         <View className="flex flex-row gap-2 items-center justify-center">

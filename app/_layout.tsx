@@ -1,26 +1,23 @@
-import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
-import {
-  Slot,
-  SplashScreen
-} from "expo-router";
+import { PortalHost } from "@rn-primitives/portal";
+import * as Font from "expo-font";
+import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { swrConfiguration } from "lib/swr";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
-import { NAV_THEME } from "~/lib/constants";
-import { useColorScheme } from "~/lib/useColorScheme";
+import Toast from "react-native-toast-message";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
-import { swrConfiguration } from "lib/swr";
-import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
-import * as Font from "expo-font";
-import { useInfo } from "~/hooks/useInfo";
-import { useAppStore } from "~/lib/state/appStore";
 import { UserInactivityProvider } from "~/context/UserInactivity";
-import { PortalHost } from '@rn-primitives/portal';
-import { isBiometricSupported } from "~/lib/isBiometricSupported";
+import "~/global.css";
+import { useInfo } from "~/hooks/useInfo";
 import { SessionProvider } from "~/hooks/useSession";
+import { NAV_THEME } from "~/lib/constants";
+import { isBiometricSupported } from "~/lib/isBiometricSupported";
+import { useAppStore } from "~/lib/state/appStore";
+import { useColorScheme } from "~/lib/useColorScheme";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -61,7 +58,7 @@ export default function RootLayout() {
   }
 
   async function checkBiometricStatus() {
-    const isSupported = await isBiometricSupported()
+    const isSupported = await isBiometricSupported();
     if (!isSupported) {
       useAppStore.getState().setSecurityEnabled(false);
     }
@@ -70,12 +67,8 @@ export default function RootLayout() {
   React.useEffect(() => {
     const init = async () => {
       try {
-        await Promise.all([
-          loadFonts(),
-          checkBiometricStatus(),
-        ]);
-      }
-      finally {
+        await Promise.all([loadFonts(), checkBiometricStatus()]);
+      } finally {
         SplashScreen.hideAsync();
       }
     };
@@ -98,7 +91,12 @@ export default function RootLayout() {
               <Slot />
             </SessionProvider>
           </UserInactivityProvider>
-          <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
+          <Toast
+            config={toastConfig}
+            position="bottom"
+            bottomOffset={140}
+            topOffset={140}
+          />
           <PortalHost />
         </SafeAreaView>
       </ThemeProvider>

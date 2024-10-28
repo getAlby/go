@@ -1,24 +1,27 @@
-import Screen from "~/components/Screen";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { View } from "react-native";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
-import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
-import { Input } from "~/components/ui/input";
-import { errorToast } from "~/lib/errorToast";
-import Loading from "~/components/Loading";
-import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import { DualCurrencyInput } from "~/components/DualCurrencyInput";
+import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
+import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { errorToast } from "~/lib/errorToast";
+import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
 
 export function LNURLPay() {
-  const { lnurlDetailsJSON, originalText, amount: amountParam } =
-    useLocalSearchParams() as unknown as {
-      lnurlDetailsJSON: string;
-      originalText: string;
-      amount: string;
-    };
+  const {
+    lnurlDetailsJSON,
+    originalText,
+    amount: amountParam,
+  } = useLocalSearchParams() as unknown as {
+    lnurlDetailsJSON: string;
+    originalText: string;
+    amount: string;
+  };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState(amountParam ?? 0);
@@ -50,7 +53,9 @@ export function LNURLPay() {
           invoice: lnurlPayInfo.pr,
           originalText,
           comment,
-          successAction: lnurlPayInfo.successAction ? JSON.stringify(lnurlPayInfo.successAction) : undefined,
+          successAction: lnurlPayInfo.successAction
+            ? JSON.stringify(lnurlPayInfo.successAction)
+            : undefined,
         },
       });
     } catch (error) {

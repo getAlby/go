@@ -1,10 +1,10 @@
-import { ToastConfig } from "react-native-toast-message";
-import { Text } from "./ui/text";
-import { View } from "react-native";
-import { CircleCheck, XCircle } from "./Icons";
 import { Link } from "expo-router";
-import { Button } from "./ui/button";
+import { View } from "react-native";
+import { ToastConfig } from "react-native-toast-message";
 import { useAppStore } from "~/lib/state/appStore";
+import { CircleCheck, XCircle } from "./Icons";
+import { Button } from "./ui/button";
+import { Text } from "./ui/text";
 
 export const toastConfig: ToastConfig = {
   success: ({ text1, text2 }) => (
@@ -35,6 +35,7 @@ export const toastConfig: ToastConfig = {
     </View>
   ),
   connectionError: ({ text1, text2, hide }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const selectedWalletId = useAppStore((store) => store.selectedWalletId);
     return (
       <View className="bg-foreground rounded-xl px-6 py-3 mx-6 flex flex-col gap-2">

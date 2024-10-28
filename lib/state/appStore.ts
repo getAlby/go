@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { NWCClient, Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import { nwc } from "@getalby/sdk";
+import { NWCClient, Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import { create } from "zustand";
 import { secureStorage } from "../secureStorage";
 
 interface AppState {

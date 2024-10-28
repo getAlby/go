@@ -1,15 +1,14 @@
 import { Link, router } from "expo-router";
-import { TouchableOpacity, View } from "react-native";
-import { FlatList } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import { Settings2, Wallet2 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
+import Toast from "react-native-toast-message";
+import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
-import Screen from "~/components/Screen";
-import Toast from "react-native-toast-message";
 
 export function Wallets() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -17,9 +16,7 @@ export function Wallets() {
   return (
     <>
       <View className="flex-1 flex flex-col">
-        <Screen
-          title="Manage Wallets"
-        />
+        <Screen title="Manage Wallets" />
         <View className="flex-1 px-6 py-3">
           <FlatList
             className="flex flex-col"
@@ -48,7 +45,14 @@ export function Wallets() {
                 >
                   <View className="flex flex-row gap-4 items-center flex-shrink">
                     <Wallet2 className="text-foreground" />
-                    <Text className={cn("text-xl pr-16", active && "font-semibold2")} numberOfLines={1} ellipsizeMode="tail">
+                    <Text
+                      className={cn(
+                        "text-xl pr-16",
+                        active && "font-semibold2",
+                      )}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
                       {item.item.name || DEFAULT_WALLET_NAME}
                     </Text>
                   </View>

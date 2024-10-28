@@ -1,17 +1,25 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
-import { Bitcoin, Egg, Fingerprint, LogOut, Palette, Power, Wallet2 } from "~/components/Icons";
+import {
+  Bitcoin,
+  Egg,
+  Fingerprint,
+  LogOut,
+  Palette,
+  Power,
+  Wallet2,
+} from "~/components/Icons";
 
+import Constants from "expo-constants";
+import React from "react";
+import Toast from "react-native-toast-message";
+import AlbyBanner from "~/components/AlbyBanner";
+import Screen from "~/components/Screen";
+import { Text } from "~/components/ui/text";
+import { useSession } from "~/hooks/useSession";
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
-import { Text } from "~/components/ui/text";
-import React from "react";
-import Constants from "expo-constants";
-import Toast from "react-native-toast-message";
 import { useColorScheme } from "~/lib/useColorScheme";
-import Screen from "~/components/Screen";
-import AlbyBanner from "~/components/AlbyBanner";
-import { useSession } from "~/hooks/useSession";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
@@ -28,8 +36,14 @@ export function Settings() {
         <Link href="/settings/wallets" asChild>
           <TouchableOpacity className="flex flex-row items-center gap-4">
             <Wallet2 className="text-foreground" />
-            <Text className="font-medium2 text-xl text-foreground">Wallets</Text>
-            <Text className="text-muted-foreground text-xl flex-shrink" numberOfLines={1} ellipsizeMode="tail">
+            <Text className="font-medium2 text-xl text-foreground">
+              Wallets
+            </Text>
+            <Text
+              className="text-muted-foreground text-xl flex-shrink"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               ({wallet.name || DEFAULT_WALLET_NAME})
             </Text>
           </TouchableOpacity>

@@ -2,6 +2,10 @@ import { Link, router } from "expo-router";
 import { Alert, Pressable, View } from "react-native";
 import Toast from "react-native-toast-message";
 
+import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import * as Clipboard from "expo-clipboard";
+import { TriangleAlert } from "~/components/Icons";
+import Screen from "~/components/Screen";
 import {
   Card,
   CardDescription,
@@ -11,30 +15,27 @@ import {
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
-import * as Clipboard from "expo-clipboard";
-import Screen from "~/components/Screen";
-import { TriangleAlert } from "~/components/Icons";
-import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
-      <Screen
-        title="Edit Wallet"
-      />
-      {(["notifications", "list_transactions"] as Nip47Capability[]).map(capability => 
-        (wallets[selectedWalletId].nwcCapabilities || []).indexOf(capability) < 0 && (
-          <Card key={capability}>
-            <CardHeader>
-              <CardTitle className="flex flex-row gap-3 items-center">
-                <TriangleAlert size={16} className="text-foreground" />
-                <Text>Your wallet does not support {capability}</Text>
-              </CardTitle>
-            </CardHeader>
-          </Card>
-        )
+      <Screen title="Edit Wallet" />
+      {(["notifications", "list_transactions"] as Nip47Capability[]).map(
+        (capability) =>
+          (wallets[selectedWalletId].nwcCapabilities || []).indexOf(
+            capability,
+          ) < 0 && (
+            <Card key={capability}>
+              <CardHeader>
+                <CardTitle className="flex flex-row gap-3 items-center">
+                  <TriangleAlert size={16} className="text-foreground" />
+                  <Text>Your wallet does not support {capability}</Text>
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          ),
       )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
@@ -118,7 +119,7 @@ export function EditWallet() {
                 text: "Confirm",
                 onPress: () => {
                   useAppStore.getState().removeCurrentWallet();
-                  if (wallets.length != 1) {
+                  if (wallets.length !== 1) {
                     router.back();
                   }
                 },

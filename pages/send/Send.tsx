@@ -1,46 +1,32 @@
-import Screen from "~/components/Screen";
-import React, { useEffect } from "react";
-import { View } from "react-native";
+import { Invoice } from "@getalby/lightning-tools";
 import * as Clipboard from "expo-clipboard";
+import { router, useLocalSearchParams } from "expo-router";
 import { lnurl } from "lib/lnurl";
-import { Button } from "~/components/ui/button";
+import React from "react";
+import { View } from "react-native";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
   BookUser,
   ClipboardPaste,
   Keyboard as KeyboardIcon,
 } from "~/components/Icons";
-import { router, useLocalSearchParams } from "expo-router";
-import { Text } from "~/components/ui/text";
-import { Input } from "~/components/ui/input";
-import { errorToast } from "~/lib/errorToast";
-import { Invoice } from "@getalby/lightning-tools";
-import QRCodeScanner from "~/components/QRCodeScanner";
 import Loading from "~/components/Loading";
-import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import QRCodeScanner from "~/components/QRCodeScanner";
+import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { errorToast } from "~/lib/errorToast";
 
 export function Send() {
-  const { url, amount } = useLocalSearchParams<{ url: string, amount: string }>();
+  const { url, amount } = useLocalSearchParams<{
+    url: string;
+    amount: string;
+  }>();
   const [isLoading, setLoading] = React.useState(false);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
   const [startScanning, setStartScanning] = React.useState(false);
-
-  // Delay starting the QR scanner if url has valid payment info
-  useEffect(() => {
-    if (url) {
-      (async () => {
-        const result = await loadPayment(url);
-        // Delay the camera to show the error message
-        if (!result) {
-          setTimeout(() => {
-            setStartScanning(true);
-          }, 2000);
-        }
-      })();
-    } else {
-      setStartScanning(true);
-    }
-  }, [url]);
 
   async function paste() {
     let clipboardText;
@@ -65,89 +51,113 @@ export function Send() {
     loadPayment(keyboardText);
   }
 
-  async function loadPayment(text: string): Promise<boolean> {
-    if (!text) {
-      errorToast(new Error("Your clipboard is empty."));
-      return false;
-    }
-
-    // Some apps use uppercased LIGHTNING: prefixes
-    text = text.toLowerCase();
-
-    console.log("loading payment", text);
-    const originalText = text;
-    setLoading(true);
-    try {
-      if (text.startsWith("bitcoin:")) {
-        const universalUrl = text.replace("bitcoin:", "http://");
-        const url = new URL(universalUrl);
-        const lightningParam = url.searchParams.get("lightning");
-        if (!lightningParam) {
-          throw new Error("No lightning param found in bitcoin payment link");
-        }
-        text = lightningParam;
-      }
-      if (text.startsWith("lightning:")) {
-        text = text.substring("lightning:".length);
+  const loadPayment = React.useCallback(
+    async (text: string): Promise<boolean> => {
+      if (!text) {
+        errorToast(new Error("Your clipboard is empty."));
+        return false;
       }
 
-      const lnurlValue = lnurl.findLnurl(text);
-      console.log("Checked lnurl value", text, lnurlValue);
-      if (lnurlValue) {
-        const lnurlDetails = await lnurl.getDetails(lnurlValue);
+      // Some apps use uppercased LIGHTNING: prefixes
+      text = text.toLowerCase();
 
-        if (lnurlDetails.tag !== "payRequest") {
-          throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
-        }
-
-        // Handle fixed amount LNURLs
-        if (lnurlDetails.minSendable === lnurlDetails.maxSendable && !lnurlDetails.commentAllowed) {
-          try {
-            const callback = new URL(lnurlDetails.callback);
-            callback.searchParams.append("amount", (lnurlDetails.minSendable).toString());
-            const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-            router.push({
-              pathname: "/send/confirm",
-              params: { invoice: lnurlPayInfo.pr, originalText },
-            });
-          } catch (error) {
-            console.error(error);
-            errorToast(error);
+      console.info("loading payment", text);
+      const originalText = text;
+      setLoading(true);
+      try {
+        if (text.startsWith("bitcoin:")) {
+          const universalUrl = text.replace("bitcoin:", "http://");
+          const url = new URL(universalUrl);
+          const lightningParam = url.searchParams.get("lightning");
+          if (!lightningParam) {
+            throw new Error("No lightning param found in bitcoin payment link");
           }
-        } else {
-          router.replace({
-            pathname: "/send/lnurl-pay",
-            params: {
-              lnurlDetailsJSON: JSON.stringify(lnurlDetails),
-              originalText,
-              amount,
-            },
-          });
+          text = lightningParam;
+        }
+        if (text.startsWith("lightning:")) {
+          text = text.substring("lightning:".length);
         }
 
-        return true;
-      } else {
-        // Check if this is a valid invoice
-        new Invoice({
-          pr: text,
-        });
+        const lnurlValue = lnurl.findLnurl(text);
+        console.info("Checked lnurl value", text, lnurlValue);
+        if (lnurlValue) {
+          const lnurlDetails = await lnurl.getDetails(lnurlValue);
 
-        router.replace({
-          pathname: "/send/confirm",
-          params: { invoice: text, originalText },
-        });
+          if (lnurlDetails.tag !== "payRequest") {
+            throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
+          }
 
-        return true;
+          // Handle fixed amount LNURLs
+          if (
+            lnurlDetails.minSendable === lnurlDetails.maxSendable &&
+            !lnurlDetails.commentAllowed
+          ) {
+            try {
+              const callback = new URL(lnurlDetails.callback);
+              callback.searchParams.append(
+                "amount",
+                lnurlDetails.minSendable.toString(),
+              );
+              const lnurlPayInfo = await lnurl.getPayRequest(
+                callback.toString(),
+              );
+              router.push({
+                pathname: "/send/confirm",
+                params: { invoice: lnurlPayInfo.pr, originalText },
+              });
+            } catch (error) {
+              console.error(error);
+              errorToast(error);
+            }
+          } else {
+            router.replace({
+              pathname: "/send/lnurl-pay",
+              params: {
+                lnurlDetailsJSON: JSON.stringify(lnurlDetails),
+                originalText,
+                amount,
+              },
+            });
+          }
+
+          return true;
+        } else {
+          // Check if this is a valid invoice
+          new Invoice({ pr: text });
+          router.replace({
+            pathname: "/send/confirm",
+            params: { invoice: text, originalText },
+          });
+          return true;
+        }
+      } catch (error) {
+        console.error("failed to load payment", originalText, error);
+        errorToast(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("failed to load payment", originalText, error);
-      errorToast(error);
-    } finally {
-      setLoading(false);
-    }
 
-    return false;
-  }
+      return false;
+    },
+    [amount],
+  );
+
+  // Delay starting the QR scanner if url has valid payment info
+  React.useEffect(() => {
+    if (url) {
+      (async () => {
+        const result = await loadPayment(url);
+        // Delay the camera to show the error message
+        if (!result) {
+          setTimeout(() => {
+            setStartScanning(true);
+          }, 2000);
+        }
+      })();
+    } else {
+      setStartScanning(true);
+    }
+  }, [loadPayment, url]);
 
   return (
     <>
@@ -161,7 +171,10 @@ export function Send() {
         <>
           {!keyboardOpen && (
             <>
-              <QRCodeScanner onScanned={handleScanned} startScanning={startScanning} />
+              <QRCodeScanner
+                onScanned={handleScanned}
+                startScanning={startScanning}
+              />
               <View className="flex flex-row items-stretch justify-center gap-4 p-6">
                 <Button
                   onPress={openKeyboard}
@@ -208,7 +221,7 @@ export function Send() {
                     inputMode="email"
                     autoFocus
                     returnKeyType="done"
-                  // aria-errormessage="inputError"
+                    // aria-errormessage="inputError"
                   />
                 </View>
                 <Button onPress={submitKeyboardText} size="lg">

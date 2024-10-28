@@ -62,12 +62,11 @@ export function useGetFiatAmount() {
 }
 
 export function useGetSatsAmount() {
-  const fiatCurrency = useAppStore((store) => store.fiatCurrency) || "USD";
   const rate = useFiatRate();
 
   const getSatsAmount = React.useCallback(
     (fiatAmount: number) => (rate ? Math.round(fiatAmount / rate) : undefined),
-    [rate, fiatCurrency],
+    [rate],
   );
 
   return rate ? getSatsAmount : undefined;
