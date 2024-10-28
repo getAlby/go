@@ -41,7 +41,8 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  const { isDarkColorScheme } = useColorScheme();
+  const { isDarkColorScheme, setColorScheme } = useColorScheme();
+  const [themeLoaded, setThemeLoaded] = React.useState(false);
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
 
   useConnectionChecker();
@@ -64,9 +65,17 @@ export default function RootLayout() {
     }
   }
 
+  const loadTheme = React.useCallback((): void => {
+    const theme = useAppStore.getState().theme as "light" | "dark" | "system";
+    setColorScheme(theme);
+
+    setThemeLoaded(true);
+  }, [setColorScheme]);
+
   React.useEffect(() => {
     const init = async () => {
       try {
+        loadTheme();
         await Promise.all([loadFonts(), checkBiometricStatus()]);
       } finally {
         SplashScreen.hideAsync();
@@ -74,9 +83,9 @@ export default function RootLayout() {
     };
 
     init();
-  }, []);
+  }, [loadTheme]);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !themeLoaded) {
     return null;
   }
 
