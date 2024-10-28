@@ -1,22 +1,22 @@
-import Screen from "~/components/Screen";
+import { Invoice } from "@getalby/lightning-tools";
+import * as Clipboard from "expo-clipboard";
+import { router, useLocalSearchParams } from "expo-router";
+import { lnurl } from "lib/lnurl";
 import React from "react";
 import { View } from "react-native";
-import * as Clipboard from "expo-clipboard";
-import { lnurl } from "lib/lnurl";
-import { Button } from "~/components/ui/button";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
   BookUser,
   ClipboardPaste,
   Keyboard as KeyboardIcon,
 } from "~/components/Icons";
-import { router, useLocalSearchParams } from "expo-router";
-import { Text } from "~/components/ui/text";
-import { Input } from "~/components/ui/input";
-import { errorToast } from "~/lib/errorToast";
-import { Invoice } from "@getalby/lightning-tools";
-import QRCodeScanner from "~/components/QRCodeScanner";
 import Loading from "~/components/Loading";
-import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import QRCodeScanner from "~/components/QRCodeScanner";
+import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { errorToast } from "~/lib/errorToast";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{

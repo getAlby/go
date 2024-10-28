@@ -1,6 +1,6 @@
+import { HeaderButtonProps } from "@react-navigation/native-stack/src/types";
 import { Stack } from "expo-router";
 import { StackAnimationTypes } from "react-native-screens";
-import { HeaderButtonProps } from "@react-navigation/native-stack/src/types";
 
 type ScreenProps = {
   title: string;

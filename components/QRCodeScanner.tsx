@@ -1,11 +1,11 @@
-import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
-import { View } from "react-native";
-import { FocusableCamera } from "./FocusableCamera";
-import React, { useEffect } from "react";
-import Loading from "./Loading";
 import { Camera } from "expo-camera";
+import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
+import React, { useEffect } from "react";
+import { View } from "react-native";
 import { Text } from "~/components/ui/text";
+import { FocusableCamera } from "./FocusableCamera";
 import { CameraOff } from "./Icons";
+import Loading from "./Loading";
 
 interface QRCodeScannerProps {
   onScanned: (data: string) => void;

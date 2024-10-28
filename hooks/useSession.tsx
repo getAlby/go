@@ -1,4 +1,4 @@
-import { useContext, createContext, type PropsWithChildren } from "react";
+import { createContext, useContext, type PropsWithChildren } from "react";
 import { useAppStore } from "~/lib/state/appStore";
 
 const AuthContext = createContext<{

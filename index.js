@@ -1,2 +1,2 @@
-import "lib/applyGlobalPolyfills";
 import "expo-router/entry";
+import "lib/applyGlobalPolyfills";

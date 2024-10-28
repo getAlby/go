@@ -1,9 +1,9 @@
+import { router } from "expo-router";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
-import { Button } from "./ui/button";
-import { router } from "expo-router";
-import { useAppStore } from "~/lib/state/appStore";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
+import { useAppStore } from "~/lib/state/appStore";
+import { Button } from "./ui/button";
 
 function AlbyBanner() {
   const lastPayment = useAppStore.getState().getLastAlbyPayment();

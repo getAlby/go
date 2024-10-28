@@ -2,6 +2,10 @@ import { Link, router } from "expo-router";
 import { Alert, Pressable, View } from "react-native";
 import Toast from "react-native-toast-message";
 
+import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import * as Clipboard from "expo-clipboard";
+import { TriangleAlert } from "~/components/Icons";
+import Screen from "~/components/Screen";
 import {
   Card,
   CardDescription,
@@ -11,10 +15,6 @@ import {
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
-import * as Clipboard from "expo-clipboard";
-import Screen from "~/components/Screen";
-import { TriangleAlert } from "~/components/Icons";
-import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);

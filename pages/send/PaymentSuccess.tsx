@@ -1,13 +1,13 @@
+import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
+import { LNURLPaymentSuccessAction } from "lib/lnurl";
 import { ScrollView, View } from "react-native";
 import { Tick } from "~/animations/Tick";
+import { Receiver } from "~/components/Receiver";
+import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import Screen from "~/components/Screen";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { LNURLPaymentSuccessAction } from "lib/lnurl";
-import { openURL } from "expo-linking";
-import { Receiver } from "~/components/Receiver";
 
 export function PaymentSuccess() {
   const getFiatAmount = useGetFiatAmount();

@@ -1,17 +1,17 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
+import Hex from "crypto-js/enc-hex";
+import Utf8 from "crypto-js/enc-utf8";
 import dayjs from "dayjs";
+import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View, TouchableOpacity, ScrollView } from "react-native";
-import Screen from "~/components/Screen";
+import { ScrollView, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { MoveDownLeft, MoveUpRight } from "~/components/Icons";
+import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { cn } from "~/lib/utils";
-import * as Clipboard from "expo-clipboard";
-import Toast from "react-native-toast-message";
-import Hex from "crypto-js/enc-hex";
-import Utf8 from "crypto-js/enc-utf8";
 
 type TLVRecord = {
   type: number;

@@ -1,8 +1,8 @@
 import { Redirect, Stack } from "expo-router";
-import { useSession } from "~/hooks/useSession";
-import { useHandleLinking } from "~/hooks/useHandleLinking";
-import { useAppStore } from "~/lib/state/appStore";
 import { useRouteInfo } from "expo-router/build/hooks";
+import { useHandleLinking } from "~/hooks/useHandleLinking";
+import { useSession } from "~/hooks/useSession";
+import { useAppStore } from "~/lib/state/appStore";
 
 export default function AppLayout() {
   const { hasSession } = useSession();

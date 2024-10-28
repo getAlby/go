@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, { SvgProps, G, Path, Defs } from "react-native-svg";
+import Svg, { Defs, G, Path, SvgProps } from "react-native-svg";
 const LargeArrowUp = (props: SvgProps) => (
   <Svg width={49} height={48} fill="none" {...props}>
     <G fill="#1f2937" fillRule="evenodd" clipRule="evenodd" filter="url(#a)">

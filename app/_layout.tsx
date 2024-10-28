@@ -1,23 +1,23 @@
-import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
+import { PortalHost } from "@rn-primitives/portal";
+import * as Font from "expo-font";
 import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { swrConfiguration } from "lib/swr";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
-import { NAV_THEME } from "~/lib/constants";
-import { useColorScheme } from "~/lib/useColorScheme";
+import Toast from "react-native-toast-message";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
-import { swrConfiguration } from "lib/swr";
-import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
-import * as Font from "expo-font";
-import { useInfo } from "~/hooks/useInfo";
-import { useAppStore } from "~/lib/state/appStore";
 import { UserInactivityProvider } from "~/context/UserInactivity";
-import { PortalHost } from "@rn-primitives/portal";
-import { isBiometricSupported } from "~/lib/isBiometricSupported";
+import "~/global.css";
+import { useInfo } from "~/hooks/useInfo";
 import { SessionProvider } from "~/hooks/useSession";
+import { NAV_THEME } from "~/lib/constants";
+import { isBiometricSupported } from "~/lib/isBiometricSupported";
+import { useAppStore } from "~/lib/state/appStore";
+import { useColorScheme } from "~/lib/useColorScheme";
 
 const LIGHT_THEME: Theme = {
   dark: false,

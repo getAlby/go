@@ -4,8 +4,8 @@ import {
   AppStateStatus,
   NativeEventSubscription,
 } from "react-native";
-import { secureStorage } from "~/lib/secureStorage";
 import { INACTIVITY_THRESHOLD } from "~/lib/constants";
+import { secureStorage } from "~/lib/secureStorage";
 import { lastActiveTimeKey, useAppStore } from "~/lib/state/appStore";
 
 export const UserInactivityProvider = ({ children }: any) => {

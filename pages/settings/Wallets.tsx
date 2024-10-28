@@ -1,15 +1,14 @@
 import { Link, router } from "expo-router";
-import { TouchableOpacity, View } from "react-native";
-import { FlatList } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import { Settings2, Wallet2 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
+import Toast from "react-native-toast-message";
+import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
-import Screen from "~/components/Screen";
-import Toast from "react-native-toast-message";
 
 export function Wallets() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);

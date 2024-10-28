@@ -1,7 +1,7 @@
 import { openURL } from "expo-linking";
 import { Link, Stack, router } from "expo-router";
 import React from "react";
-import { View, Image } from "react-native";
+import { Image, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";

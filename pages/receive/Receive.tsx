@@ -1,21 +1,21 @@
-import { Link, router } from "expo-router";
-import { Share, TouchableOpacity, View } from "react-native";
-import { Button } from "~/components/ui/button";
-import * as Clipboard from "expo-clipboard";
-import React from "react";
-import { useAppStore } from "~/lib/state/appStore";
-import { Input } from "~/components/ui/input";
-import { Text } from "~/components/ui/text";
-import { ArchiveRestore, Copy, Share2, ZapIcon } from "~/components/Icons";
-import Toast from "react-native-toast-message";
-import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
-import Loading from "~/components/Loading";
+import * as Clipboard from "expo-clipboard";
+import { Link, router } from "expo-router";
+import React from "react";
+import { Share, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { ArchiveRestore, Copy, Share2, ZapIcon } from "~/components/Icons";
+import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
-import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { errorToast } from "~/lib/errorToast";
+import { useAppStore } from "~/lib/state/appStore";
 
 export function Receive() {
   const getFiatAmount = useGetFiatAmount();

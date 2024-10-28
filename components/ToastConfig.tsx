@@ -1,10 +1,10 @@
-import { ToastConfig } from "react-native-toast-message";
-import { Text } from "./ui/text";
-import { View } from "react-native";
-import { CircleCheck, XCircle } from "./Icons";
 import { Link } from "expo-router";
-import { Button } from "./ui/button";
+import { View } from "react-native";
+import { ToastConfig } from "react-native-toast-message";
 import { useAppStore } from "~/lib/state/appStore";
+import { CircleCheck, XCircle } from "./Icons";
+import { Button } from "./ui/button";
+import { Text } from "./ui/text";
 
 export const toastConfig: ToastConfig = {
   success: ({ text1, text2 }) => (

@@ -9,8 +9,8 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import Screen from "~/components/Screen";
 import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
+import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";

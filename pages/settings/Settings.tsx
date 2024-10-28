@@ -10,16 +10,16 @@ import {
   Wallet2,
 } from "~/components/Icons";
 
+import Constants from "expo-constants";
+import React from "react";
+import Toast from "react-native-toast-message";
+import AlbyBanner from "~/components/AlbyBanner";
+import Screen from "~/components/Screen";
+import { Text } from "~/components/ui/text";
+import { useSession } from "~/hooks/useSession";
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
-import { Text } from "~/components/ui/text";
-import React from "react";
-import Constants from "expo-constants";
-import Toast from "react-native-toast-message";
 import { useColorScheme } from "~/lib/useColorScheme";
-import Screen from "~/components/Screen";
-import AlbyBanner from "~/components/AlbyBanner";
-import { useSession } from "~/hooks/useSession";
 
 export function Settings() {
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);

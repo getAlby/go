@@ -1,31 +1,31 @@
-import { Pressable, TouchableOpacity, View } from "react-native";
-import React from "react";
-import * as Clipboard from "expo-clipboard";
 import { nwc } from "@getalby/sdk";
-import { ClipboardPaste, HelpCircle, X } from "~/components/Icons";
-import { useAppStore } from "lib/state/appStore";
-import { router } from "expo-router";
-import { Button } from "~/components/ui/button";
-import Toast from "react-native-toast-message";
-import { errorToast } from "~/lib/errorToast";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import * as Clipboard from "expo-clipboard";
+import { router } from "expo-router";
+import { useAppStore } from "lib/state/appStore";
+import React from "react";
+import { Pressable, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import { ClipboardPaste, HelpCircle, X } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
-  DialogTrigger,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogClose,
+  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { Text } from "~/components/ui/text";
 import { REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
 
 export function SetupWallet() {
   const wallets = useAppStore((store) => store.wallets);

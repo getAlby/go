@@ -1,7 +1,7 @@
 import {
-  Platform,
-  KeyboardAvoidingView,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   TouchableWithoutFeedback,
 } from "react-native";
 

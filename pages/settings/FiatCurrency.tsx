@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { View, FlatList, TouchableOpacity } from "react-native";
-import { Text } from "~/components/ui/text";
-import { useAppStore } from "~/lib/state/appStore";
-import Screen from "~/components/Screen";
-import { cn } from "~/lib/utils";
 import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { errorToast } from "~/lib/errorToast";
-import { ALBY_URL } from "~/lib/constants";
-import { Input } from "~/components/ui/input";
 import Loading from "~/components/Loading";
+import Screen from "~/components/Screen";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { ALBY_URL } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
+import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function FiatCurrency() {
   const [fiatCurrency, setFiatCurrency] = React.useState(
