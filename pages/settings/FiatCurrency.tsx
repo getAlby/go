@@ -13,10 +13,12 @@ import Loading from "~/components/Loading";
 
 export function FiatCurrency() {
   const [fiatCurrency, setFiatCurrency] = React.useState(
-    useAppStore.getState().fiatCurrency
+    useAppStore.getState().fiatCurrency,
   );
   const [currencies, setCurrencies] = useState<[string, string][]>([]);
-  const [filteredCurrencies, setFilteredCurrencies] = useState<[string, string][]>([]);
+  const [filteredCurrencies, setFilteredCurrencies] = useState<
+    [string, string][]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -27,7 +29,7 @@ export function FiatCurrency() {
         const data = await response.json();
 
         const mappedCurrencies: [string, string][] = Object.entries(data).map(
-          ([code, details]: any) => [code.toUpperCase(), details.name]
+          ([code, details]: any) => [code.toUpperCase(), details.name],
         );
 
         mappedCurrencies.sort((a, b) => a[1].localeCompare(b[1]));
@@ -44,9 +46,10 @@ export function FiatCurrency() {
   }, []);
 
   useEffect(() => {
-    const filtered = currencies.filter(([code, name]) =>
-      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      code.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = currencies.filter(
+      ([code, name]) =>
+        name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        code.toLowerCase().includes(searchQuery.toLowerCase()),
     );
     setFilteredCurrencies(filtered);
   }, [searchQuery, currencies]);
@@ -64,7 +67,9 @@ export function FiatCurrency() {
   return (
     <View className="flex-1 flex flex-col gap-6 p-6">
       <Screen title="Fiat Currency" />
-      {loading ? <Loading className="flex-1" /> : (
+      {loading ? (
+        <Loading className="flex-1" />
+      ) : (
         <>
           <Input
             placeholder="Search Fiat Currencies"
@@ -73,20 +78,32 @@ export function FiatCurrency() {
           />
           <FlatList
             data={filteredCurrencies}
-            renderItem={({ item }: { item: [string, string]; }) => (
+            renderItem={({ item }: { item: [string, string] }) => (
               <TouchableOpacity
-                className={cn("p-4 flex flex-row gap-2 border-b border-input", item[0] === fiatCurrency && "bg-muted")}
+                className={cn(
+                  "p-4 flex flex-row gap-2 border-b border-input",
+                  item[0] === fiatCurrency && "bg-muted",
+                )}
                 onPress={() => select(item[0])}
               >
-                <Text className={cn("text-lg", item[0] === fiatCurrency && "font-bold2")}>
+                <Text
+                  className={cn(
+                    "text-lg",
+                    item[0] === fiatCurrency && "font-bold2",
+                  )}
+                >
                   {item[1]}
                 </Text>
-                <Text className="text-lg text-muted-foreground">({item[0]})</Text>
+                <Text className="text-lg text-muted-foreground">
+                  ({item[0]})
+                </Text>
               </TouchableOpacity>
             )}
             keyExtractor={(item) => item[0]}
-            className="flex-1" />
-        </>)}
+            className="flex-1"
+          />
+        </>
+      )}
     </View>
   );
 }

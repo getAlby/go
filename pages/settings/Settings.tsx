@@ -1,6 +1,14 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
-import { Bitcoin, Egg, Fingerprint, LogOut, Palette, Power, Wallet2 } from "~/components/Icons";
+import {
+  Bitcoin,
+  Egg,
+  Fingerprint,
+  LogOut,
+  Palette,
+  Power,
+  Wallet2,
+} from "~/components/Icons";
 
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -28,8 +36,14 @@ export function Settings() {
         <Link href="/settings/wallets" asChild>
           <TouchableOpacity className="flex flex-row items-center gap-4">
             <Wallet2 className="text-foreground" />
-            <Text className="font-medium2 text-xl text-foreground">Wallets</Text>
-            <Text className="text-muted-foreground text-xl flex-shrink" numberOfLines={1} ellipsizeMode="tail">
+            <Text className="font-medium2 text-xl text-foreground">
+              Wallets
+            </Text>
+            <Text
+              className="text-muted-foreground text-xl flex-shrink"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               ({wallet.name || DEFAULT_WALLET_NAME})
             </Text>
           </TouchableOpacity>

@@ -1,5 +1,5 @@
-import { useContext, createContext, type PropsWithChildren } from 'react';
-import { useAppStore } from '~/lib/state/appStore';
+import { useContext, createContext, type PropsWithChildren } from "react";
+import { useAppStore } from "~/lib/state/appStore";
 
 const AuthContext = createContext<{
   signIn: () => void;
@@ -14,9 +14,9 @@ const AuthContext = createContext<{
 // This hook can be used to access the user info.
 export function useSession() {
   const value = useContext(AuthContext);
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     if (!value) {
-      throw new Error('useSession must be wrapped in a <SessionProvider />');
+      throw new Error("useSession must be wrapped in a <SessionProvider />");
     }
   }
 
@@ -25,8 +25,8 @@ export function useSession() {
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const appStore = useAppStore();
-  const isSecurityEnabled = useAppStore(store => store.isSecurityEnabled);
-  const unlocked = useAppStore(store => store.unlocked)
+  const isSecurityEnabled = useAppStore((store) => store.isSecurityEnabled);
+  const unlocked = useAppStore((store) => store.unlocked);
 
   return (
     <AuthContext.Provider
@@ -37,8 +37,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
         signOut: () => {
           appStore.setUnlocked(false);
         },
-        hasSession: (!isSecurityEnabled || (isSecurityEnabled && unlocked)),
-      }}>
+        hasSession: !isSecurityEnabled || (isSecurityEnabled && unlocked),
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

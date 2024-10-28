@@ -10,16 +10,22 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
 }
 
 export const handleLink = async (url: string) => {
-  if (!url) return;
+  if (!url) {
+    return;
+  }
 
   const parsedUrl = new URL(url);
-  if (!parsedUrl.protocol) return;
+  if (!parsedUrl.protocol) {
+    return;
+  }
 
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
 
     if (parsedUrl.protocol === "exp:") {
-      if (!parsedUrl.pathname) return;
+      if (!parsedUrl.pathname) {
+        return;
+      }
 
       // Extract the pathname from the URL
       const pathnameUrl = new URL(new URL(url).pathname.substring(4));
@@ -36,11 +42,11 @@ export const handleLink = async (url: string) => {
       router.dismissAll();
     }
 
-    console.log("Navigating to", fullUrl);
+    console.info("Navigating to", fullUrl);
 
     const lnurlValue = lnurl.findLnurl(fullUrl);
     if (lnurlValue) {
-      const lnurlDetails = await lnurl.getDetails(lnurlValue)
+      const lnurlDetails = await lnurl.getDetails(lnurlValue);
 
       if (lnurlDetails.tag === "withdrawRequest") {
         router.push({

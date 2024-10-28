@@ -13,12 +13,15 @@ import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { Receiver } from "~/components/Receiver";
 
 export function LNURLPay() {
-  const { lnurlDetailsJSON, originalText, amount: amountParam } =
-    useLocalSearchParams() as unknown as {
-      lnurlDetailsJSON: string;
-      originalText: string;
-      amount: string;
-    };
+  const {
+    lnurlDetailsJSON,
+    originalText,
+    amount: amountParam,
+  } = useLocalSearchParams() as unknown as {
+    lnurlDetailsJSON: string;
+    originalText: string;
+    amount: string;
+  };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState(amountParam ?? 0);
@@ -50,7 +53,9 @@ export function LNURLPay() {
           invoice: lnurlPayInfo.pr,
           originalText,
           comment,
-          successAction: lnurlPayInfo.successAction ? JSON.stringify(lnurlPayInfo.successAction) : undefined,
+          successAction: lnurlPayInfo.successAction
+            ? JSON.stringify(lnurlPayInfo.successAction)
+            : undefined,
         },
       });
     } catch (error) {

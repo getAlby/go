@@ -35,6 +35,7 @@ export const toastConfig: ToastConfig = {
     </View>
   ),
   connectionError: ({ text1, text2, hide }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const selectedWalletId = useAppStore((store) => store.selectedWalletId);
     return (
       <View className="bg-foreground rounded-xl px-6 py-3 mx-6 flex flex-col gap-2">

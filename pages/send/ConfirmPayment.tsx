@@ -15,12 +15,13 @@ import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
-  const { invoice, originalText, comment, successAction } = useLocalSearchParams() as {
-    invoice: string;
-    originalText: string;
-    comment: string;
-    successAction: string;
-  };
+  const { invoice, originalText, comment, successAction } =
+    useLocalSearchParams() as {
+      invoice: string;
+      originalText: string;
+      comment: string;
+      successAction: string;
+    };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
 
@@ -35,12 +36,10 @@ export function ConfirmPayment() {
         invoice,
       });
 
-      console.log("payInvoice Response", response);
+      console.info("payInvoice Response", response);
 
       if (originalText === ALBY_LIGHTNING_ADDRESS) {
-        useAppStore
-          .getState()
-          .updateLastAlbyPayment();
+        useAppStore.getState().updateLastAlbyPayment();
       }
 
       router.dismissAll();

@@ -1,9 +1,6 @@
 import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
-import {
-  Slot,
-  SplashScreen
-} from "expo-router";
+import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
@@ -18,7 +15,7 @@ import * as Font from "expo-font";
 import { useInfo } from "~/hooks/useInfo";
 import { useAppStore } from "~/lib/state/appStore";
 import { UserInactivityProvider } from "~/context/UserInactivity";
-import { PortalHost } from '@rn-primitives/portal';
+import { PortalHost } from "@rn-primitives/portal";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { SessionProvider } from "~/hooks/useSession";
 
@@ -61,7 +58,7 @@ export default function RootLayout() {
   }
 
   async function checkBiometricStatus() {
-    const isSupported = await isBiometricSupported()
+    const isSupported = await isBiometricSupported();
     if (!isSupported) {
       useAppStore.getState().setSecurityEnabled(false);
     }
@@ -70,12 +67,8 @@ export default function RootLayout() {
   React.useEffect(() => {
     const init = async () => {
       try {
-        await Promise.all([
-          loadFonts(),
-          checkBiometricStatus(),
-        ]);
-      }
-      finally {
+        await Promise.all([loadFonts(), checkBiometricStatus()]);
+      } finally {
         SplashScreen.hideAsync();
       }
     };
@@ -98,7 +91,12 @@ export default function RootLayout() {
               <Slot />
             </SessionProvider>
           </UserInactivityProvider>
-          <Toast config={toastConfig} position="bottom" bottomOffset={140} topOffset={140} />
+          <Toast
+            config={toastConfig}
+            position="bottom"
+            bottomOffset={140}
+            topOffset={140}
+          />
           <PortalHost />
         </SafeAreaView>
       </ThemeProvider>

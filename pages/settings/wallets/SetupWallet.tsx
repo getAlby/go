@@ -12,7 +12,15 @@ import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
@@ -21,11 +29,15 @@ import { REQUIRED_CAPABILITIES } from "~/lib/constants";
 
 export function SetupWallet() {
   const wallets = useAppStore((store) => store.wallets);
-  const walletIdWithConnection = wallets.findIndex((wallet) => wallet.nostrWalletConnectUrl);
+  const walletIdWithConnection = wallets.findIndex(
+    (wallet) => wallet.nostrWalletConnectUrl,
+  );
 
   const [isConnecting, setConnecting] = React.useState(false);
-  const [nostrWalletConnectUrl, setNostrWalletConnectUrl] = React.useState<string>();
-  const [capabilities, setCapabilities] = React.useState<nwc.Nip47Capability[]>();
+  const [nostrWalletConnectUrl, setNostrWalletConnectUrl] =
+    React.useState<string>();
+  const [capabilities, setCapabilities] =
+    React.useState<nwc.Nip47Capability[]>();
   const [name, setName] = React.useState("");
 
   const handleScanned = (data: string) => {
@@ -56,12 +68,18 @@ export function SetupWallet() {
       if (info.notifications?.length) {
         capabilities.push("notifications");
       }
-      if (!REQUIRED_CAPABILITIES.every(capability => capabilities.includes(capability))) {
-        const missing = REQUIRED_CAPABILITIES.filter(capability => !capabilities.includes(capability));
-        throw new Error(`Missing required capabilities: ${missing.join(", ")}`)
+      if (
+        !REQUIRED_CAPABILITIES.every((capability) =>
+          capabilities.includes(capability),
+        )
+      ) {
+        const missing = REQUIRED_CAPABILITIES.filter(
+          (capability) => !capabilities.includes(capability),
+        );
+        throw new Error(`Missing required capabilities: ${missing.join(", ")}`);
       }
 
-      console.log("NWC connected", info);
+      console.info("NWC connected", info);
 
       setNostrWalletConnectUrl(nostrWalletConnectUrl);
       setCapabilities(capabilities);
@@ -81,7 +99,9 @@ export function SetupWallet() {
   }
 
   const addWallet = () => {
-    if (!nostrWalletConnectUrl) return;
+    if (!nostrWalletConnectUrl) {
+      return;
+    }
 
     const nwcClient = new nwc.NWCClient({ nostrWalletConnectUrl });
     useAppStore.getState().addWallet({
@@ -110,27 +130,37 @@ export function SetupWallet() {
           walletIdWithConnection !== -1 ? (
             <Pressable
               onPress={() => {
-                useAppStore.getState().setSelectedWalletId(walletIdWithConnection);
+                useAppStore
+                  .getState()
+                  .setSelectedWalletId(walletIdWithConnection);
                 router.replace("/");
               }}
             >
               <X className="text-foreground" />
             </Pressable>
-          ) :
+          ) : (
             <Dialog>
               <DialogTrigger asChild>
                 <TouchableOpacity>
                   <HelpCircle className="text-foreground" />
                 </TouchableOpacity>
               </DialogTrigger>
-              <DialogContent className='sm:max-w-[425px]'>
+              <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>Connect Your Wallet</DialogTitle>
                   <View className="flex flex-col gap-2">
-                    <Text className="text-muted-foreground">Follow these steps to connect Alby Go to your Hub:</Text>
-                    <Text className="text-muted-foreground">1. Open your Alby Hub</Text>
-                    <Text className="text-muted-foreground">2. Go to App Store &raquo; Alby Go</Text>
-                    <Text className="text-muted-foreground">3. Scan the QR code with this app</Text>
+                    <Text className="text-muted-foreground">
+                      Follow these steps to connect Alby Go to your Hub:
+                    </Text>
+                    <Text className="text-muted-foreground">
+                      1. Open your Alby Hub
+                    </Text>
+                    <Text className="text-muted-foreground">
+                      2. Go to App Store &raquo; Alby Go
+                    </Text>
+                    <Text className="text-muted-foreground">
+                      3. Scan the QR code with this app
+                    </Text>
                   </View>
                 </DialogHeader>
                 <DialogFooter>
@@ -142,6 +172,7 @@ export function SetupWallet() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+          )
         }
       />
       {isConnecting ? (
@@ -167,7 +198,10 @@ export function SetupWallet() {
         <DismissableKeyboardView>
           <View className="flex-1 p-6">
             <View className="flex-1 flex flex-col gap-3 items-center justify-center">
-              <Label nativeID="name" className="text-muted-foreground text-center">
+              <Label
+                nativeID="name"
+                className="text-muted-foreground text-center"
+              >
                 Wallet name
               </Label>
               <Input

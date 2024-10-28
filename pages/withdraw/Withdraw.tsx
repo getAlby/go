@@ -66,7 +66,7 @@ export function Withdraw() {
 
     text = text.toLowerCase();
 
-    console.log("loading withdrawal", text);
+    console.info("loading withdrawal", text);
     const originalText = text;
     setLoading(true);
     try {
@@ -75,7 +75,7 @@ export function Withdraw() {
       }
 
       const lnurlValue = lnurl.findLnurl(text);
-      console.log("Checked lnurl value", text, lnurlValue);
+      console.info("Checked lnurl value", text, lnurlValue);
       if (lnurlValue) {
         const lnurlDetails = await lnurl.getDetails(lnurlValue);
 
@@ -87,7 +87,7 @@ export function Withdraw() {
         setValueSat(
           (lnurlDetails.maxWithdrawable &&
             Math.floor(+lnurlDetails.maxWithdrawable / 1000).toString()) ||
-          ""
+            "",
         );
         return true;
       } else {
@@ -105,13 +105,19 @@ export function Withdraw() {
 
   async function confirm() {
     try {
-      if (!lnurlDetails) return;
+      if (!lnurlDetails) {
+        return;
+      }
 
       if (Number(valueSat) < lnurlDetails.minWithdrawable / 1000) {
-        throw new Error(`Amount below minimum limit of ${lnurlDetails.minWithdrawable} sats`);
+        throw new Error(
+          `Amount below minimum limit of ${lnurlDetails.minWithdrawable} sats`,
+        );
       }
       if (Number(valueSat) > lnurlDetails.maxWithdrawable / 1000) {
-        throw new Error(`Amount exceeds maximum limit of ${lnurlDetails.maxWithdrawable} sats.`);
+        throw new Error(
+          `Amount exceeds maximum limit of ${lnurlDetails.maxWithdrawable} sats.`,
+        );
       }
 
       setLoadingConfirm(true);
@@ -177,16 +183,17 @@ export function Withdraw() {
               </View>
             </>
           )}
-          {lnurlDetails &&
+          {lnurlDetails && (
             <DismissableKeyboardView>
               <View className="flex-1 flex flex-col">
-                {lnurlDetails.minWithdrawable == lnurlDetails.maxWithdrawable ? (
+                {lnurlDetails.minWithdrawable ===
+                lnurlDetails.maxWithdrawable ? (
                   <View className="flex-1 justify-center items-center gap-8 p-6">
                     <View className="flex flex-col gap-2 items-center">
                       <View className="flex flex-row items-center justify-center gap-2">
                         <Text className="text-5xl font-bold2 text-foreground">
                           {new Intl.NumberFormat().format(
-                            Math.floor(lnurlDetails.minWithdrawable / 1000)
+                            Math.floor(lnurlDetails.minWithdrawable / 1000),
                           )}
                         </Text>
                         <Text className="text-3xl font-bold2 text-muted-foreground">
@@ -196,7 +203,7 @@ export function Withdraw() {
                       {getFiatAmount && (
                         <Text className="text-center text-muted-foreground text-3xl font-semibold2">
                           {getFiatAmount(
-                            Math.floor(lnurlDetails.minWithdrawable / 1000)
+                            Math.floor(lnurlDetails.minWithdrawable / 1000),
                           )}
                         </Text>
                       )}
@@ -242,7 +249,7 @@ export function Withdraw() {
                 </View>
               </View>
             </DismissableKeyboardView>
-          }
+          )}
         </>
       )}
     </>

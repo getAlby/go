@@ -136,5 +136,5 @@ export {
   CircleCheck,
   TriangleAlert,
   LogOut,
-  ArchiveRestore
+  ArchiveRestore,
 };

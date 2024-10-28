@@ -10,11 +10,15 @@ export function useHandleLinking() {
   useEffect(() => {
     // Do not process any deep links until the user authenticated
     // This prevents redirect loops between the deep link and /unlock
-    if (!hasSession) return;
+    if (!hasSession) {
+      return;
+    }
 
     const processInitialURL = async () => {
       const url = await getInitialURL();
-      if (url) await handleLink(url);
+      if (url) {
+        await handleLink(url);
+      }
     };
 
     processInitialURL();

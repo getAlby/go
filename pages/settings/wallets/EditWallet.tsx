@@ -21,20 +21,21 @@ export function EditWallet() {
   const wallets = useAppStore((store) => store.wallets);
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
-      <Screen
-        title="Edit Wallet"
-      />
-      {(["notifications", "list_transactions"] as Nip47Capability[]).map(capability => 
-        (wallets[selectedWalletId].nwcCapabilities || []).indexOf(capability) < 0 && (
-          <Card key={capability}>
-            <CardHeader>
-              <CardTitle className="flex flex-row gap-3 items-center">
-                <TriangleAlert size={16} className="text-foreground" />
-                <Text>Your wallet does not support {capability}</Text>
-              </CardTitle>
-            </CardHeader>
-          </Card>
-        )
+      <Screen title="Edit Wallet" />
+      {(["notifications", "list_transactions"] as Nip47Capability[]).map(
+        (capability) =>
+          (wallets[selectedWalletId].nwcCapabilities || []).indexOf(
+            capability,
+          ) < 0 && (
+            <Card key={capability}>
+              <CardHeader>
+                <CardTitle className="flex flex-row gap-3 items-center">
+                  <TriangleAlert size={16} className="text-foreground" />
+                  <Text>Your wallet does not support {capability}</Text>
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          ),
       )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
@@ -118,7 +119,7 @@ export function EditWallet() {
                 text: "Confirm",
                 onPress: () => {
                   useAppStore.getState().removeCurrentWallet();
-                  if (wallets.length != 1) {
+                  if (wallets.length !== 1) {
                     router.back();
                   }
                 },

@@ -38,9 +38,7 @@ export interface LNURLWithdrawServiceResponse {
   url: string;
 }
 
-type LNURLDetails = 
-  | LNURLPayServiceResponse
-  | LNURLWithdrawServiceResponse;
+type LNURLDetails = LNURLPayServiceResponse | LNURLWithdrawServiceResponse;
 //| LNURLAuthServiceResponse
 
 export interface LNURLPaymentSuccessAction {
@@ -135,7 +133,7 @@ export const lnurl = {
 
       const data: LNURLDetails | LNURLError = await response.json();
 
-      console.log("Got LNURL details", data);
+      console.info("Got LNURL details", data);
 
       const lnurlDetails = data as LNURLDetails;
 
@@ -170,7 +168,7 @@ export const lnurl = {
       // lnurl1dp68gurn8ghj7em9w3skccne9e3k7mf09emk2mrv944kummhdchkcmn4wfk8qtmjdak85mn6dk7p2p
       const data: LNURLPaymentInfo | LNURLError = await response.json();
 
-      console.log("Got LNURL payment info", data);
+      console.info("Got LNURL payment info", data);
 
       const lnurlPaymentInfo = data as LNURLPaymentInfo;
 

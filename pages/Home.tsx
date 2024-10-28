@@ -1,9 +1,7 @@
 import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useBalance } from "hooks/useBalance";
-import {
-  Link, useFocusEffect
-} from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Text } from "~/components/ui/text";
@@ -39,9 +37,9 @@ export function Home() {
   });
 
   function switchBalanceState(): void {
-    if (balanceState == BalanceState.SATS) {
+    if (balanceState === BalanceState.SATS) {
       setBalanceState(BalanceState.FIAT);
-    } else if (balanceState == BalanceState.FIAT) {
+    } else if (balanceState === BalanceState.FIAT) {
       setBalanceState(BalanceState.HIDDEN);
     } else {
       setBalanceState(BalanceState.SATS);
@@ -52,13 +50,13 @@ export function Home() {
     <>
       <Screen
         title=""
-        right={() =>
+        right={() => (
           <Link href="/settings" asChild>
             <TouchableOpacity>
               <Settings2 className="text-foreground" />
             </TouchableOpacity>
           </Link>
-        }
+        )}
       />
       <View className="h-full flex p-6">
         <View className="grow flex flex-col items-center justify-center gap-4">
@@ -70,17 +68,17 @@ export function Home() {
               {balance ? (
                 <>
                   <Text className="text-foreground text-5xl font-bold2">
-                    {balanceState == BalanceState.SATS &&
+                    {balanceState === BalanceState.SATS &&
                       new Intl.NumberFormat().format(
                         Math.floor(balance.balance / 1000),
                       )}
-                    {balanceState == BalanceState.FIAT &&
+                    {balanceState === BalanceState.FIAT &&
                       getFiatAmount &&
                       getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceState == BalanceState.HIDDEN && "****"}
+                    {balanceState === BalanceState.HIDDEN && "****"}
                   </Text>
                   <Text className="text-muted-foreground text-3xl font-semibold2">
-                    {balanceState == BalanceState.SATS && "sats"}
+                    {balanceState === BalanceState.SATS && "sats"}
                   </Text>
                 </>
               ) : (
@@ -90,10 +88,10 @@ export function Home() {
             <View className="flex justify-center items-center">
               {balance ? (
                 <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                  {balanceState == BalanceState.SATS &&
+                  {balanceState === BalanceState.SATS &&
                     getFiatAmount &&
                     getFiatAmount(Math.floor(balance.balance / 1000))}
-                  {balanceState == BalanceState.FIAT &&
+                  {balanceState === BalanceState.FIAT &&
                     new Intl.NumberFormat().format(
                       Math.floor(balance.balance / 1000),
                     ) + " sats"}
@@ -103,9 +101,7 @@ export function Home() {
               )}
             </View>
           </TouchableOpacity>
-          {new Date().getDate() == 21 &&
-            <AlbyBanner />
-          }
+          {new Date().getDate() === 21 && <AlbyBanner />}
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
@@ -156,8 +152,8 @@ function MainButton({
               alignItems: "center",
               ...(pressed
                 ? {
-                  transform: "scale(0.98)",
-                }
+                    transform: "scale(0.98)",
+                  }
                 : {}),
             }}
           >
