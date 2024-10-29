@@ -12,9 +12,9 @@ interface AppState {
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
   readonly isOnboarded: boolean;
-  readonly theme: string;
+  readonly theme: Theme;
   setUnlocked: (unlocked: boolean) => void;
-  setTheme: (theme: string) => void;
+  setTheme: (theme: Theme) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
@@ -38,6 +38,8 @@ const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
 const isSecurityEnabledKey = "isSecurityEnabled";
 export const lastActiveTimeKey = "lastActiveTime";
+
+export type Theme = "system" | "light" | "dark";
 
 type Wallet = {
   name?: string;
@@ -145,7 +147,7 @@ export const useAppStore = create<AppState>()((set, get) => {
   const isSecurityEnabled =
     secureStorage.getItem(isSecurityEnabledKey) === "true";
 
-  const theme = secureStorage.getItem(themeKey) || "system";
+  const theme = (secureStorage.getItem(themeKey) as Theme) || "system";
 
   const initialWallets = loadWallets();
   return {

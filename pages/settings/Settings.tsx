@@ -72,12 +72,7 @@ export function Settings() {
 
         <TouchableOpacity
           className="flex flex-row gap-4"
-          onPress={() => {
-            useAppStore
-              .getState()
-              .setTheme(colorScheme === "light" ? "dark" : "light");
-            toggleColorScheme();
-          }}
+          onPress={toggleColorScheme}
         >
           <Palette className="text-foreground" />
           <Text className="text-foreground font-medium2 text-xl">Theme</Text>
