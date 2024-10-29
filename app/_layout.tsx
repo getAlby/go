@@ -21,12 +21,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 Sentry.init({
-  dsn: "https://ingest.us.sentry.io/key",
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for tracing.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
+  // dsn: "https://ingest.us.sentry.io/key",
 });
 
 const LIGHT_THEME: Theme = {
