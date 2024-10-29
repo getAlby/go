@@ -34,7 +34,7 @@ export function PaymentSuccess() {
         <View className="flex flex-col items-center gap-2">
           <View className="flex flex-row items-end justify-center">
             <Text className="text-3xl text-foreground font-semibold2">
-              {new Intl.NumberFormat().format(+amount)}{" "}
+              {new Intl.NumberFormat().format(Math.ceil(+amount))}{" "}
             </Text>
             <Text className="text-2xl text-muted-foreground font-semibold2">
               sats
