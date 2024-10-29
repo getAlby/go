@@ -21,7 +21,12 @@ import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 Sentry.init({
-  // Uses SENTRY_DSN from ENV
+  dsn: "https://ingest.us.sentry.io/key",
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for tracing.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
 });
 
 const LIGHT_THEME: Theme = {
@@ -45,7 +50,7 @@ export const unstable_settings = {
   initialRouteName: "(app)/index",
 };
 
-export default function RootLayout() {
+function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
 
@@ -120,3 +125,5 @@ function useConnectionChecker() {
     }
   }, [error?.message]);
 }
+
+export default Sentry.wrap(RootLayout);
