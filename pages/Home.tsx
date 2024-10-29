@@ -1,21 +1,21 @@
-import { View, Pressable, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { useBalance } from "hooks/useBalance";
-import { Link, useFocusEffect } from "expo-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Link, useFocusEffect } from "expo-router";
+import { useBalance } from "hooks/useBalance";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ChevronUp, Settings2 } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
-import { Settings2, ChevronUp } from "~/components/Icons";
 
+import { LinearGradient } from "expo-linear-gradient";
+import { SvgProps } from "react-native-svg";
+import AlbyBanner from "~/components/AlbyBanner";
+import LargeArrowDown from "~/components/icons/LargeArrowDown";
+import LargeArrowUp from "~/components/icons/LargeArrowUp";
+import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { LinearGradient } from "expo-linear-gradient";
-import LargeArrowUp from "~/components/icons/LargeArrowUp";
-import LargeArrowDown from "~/components/icons/LargeArrowDown";
-import { SvgProps } from "react-native-svg";
-import { Button } from "~/components/ui/button";
-import Screen from "~/components/Screen";
-import AlbyBanner from "~/components/AlbyBanner";
 
 dayjs.extend(relativeTime);
 
@@ -105,12 +105,15 @@ export function Home() {
         </View>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
-            <Button variant="ghost" className="p-10 rounded-full aspect-square">
+            <Button
+              variant="secondary"
+              className="p-10 rounded-full aspect-square"
+            >
               <ChevronUp className="text-muted-foreground" size={32} />
             </Button>
           </Link>
         </View>
-        <View className="flex flex-row gap-6 pt-2">
+        <View className="flex flex-row gap-6 mt-10">
           <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
           <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
         </View>
