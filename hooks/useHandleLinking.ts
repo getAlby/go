@@ -1,38 +1,35 @@
 import * as Linking from "expo-linking";
-import { router, useRootNavigationState } from "expo-router";
-import React from "react";
-
-const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
+import { getInitialURL } from "expo-linking";
+import { useEffect } from "react";
+import { handleLink } from "~/lib/link";
+import { useSession } from "./useSession";
 
 export function useHandleLinking() {
-  const rootNavigationState = useRootNavigationState();
-  let url = Linking.useURL();
-  let hasNavigationState = !!rootNavigationState?.key;
+  const { hasSession } = useSession();
 
-  React.useEffect(() => {
-    if (!hasNavigationState) {
+  useEffect(() => {
+    // Do not process any deep links until the user authenticated
+    // This prevents redirect loops between the deep link and /unlock
+    if (!hasSession) {
       return;
     }
-    console.log("Received linking URL", url);
 
-    for (const scheme of SUPPORTED_SCHEMES) {
-      if (url?.startsWith(scheme)) {
-        console.log("Linking URL matched scheme", url, scheme);
-        if (url.startsWith(scheme + "//")) {
-          url = url.replace(scheme + "//", scheme);
-        }
-
-        // TODO: it should not always navigate to send,
-        // but that's the only linking functionality supported right now
-        router.dismissAll();
-        router.navigate({
-          pathname: "/send",
-          params: {
-            url,
-          },
-        });
-        break;
+    const processInitialURL = async () => {
+      const url = await getInitialURL();
+      if (url) {
+        await handleLink(url);
       }
-    }
-  }, [url, hasNavigationState]);
+    };
+
+    processInitialURL();
+
+    const subscription = Linking.addEventListener(
+      "url",
+      async (event: { url: string }) => {
+        await handleLink(event.url);
+      },
+    );
+
+    return () => subscription.remove();
+  }, [hasSession]);
 }

@@ -1,7 +1,7 @@
 {
   "name": "alby-go",
-  "version": "1.4.0",
-  "main": "expo-router/entry",
+  "version": "1.6.2",
+  "main": "./index.js",
   "scripts": {
     "start": "expo start",
     "start:clean": "expo start --reset-cache",
@@ -13,25 +13,39 @@
     "eas:build:android": "eas build --platform android",
     "eas:build:ios": "eas build --platform ios",
     "eas:submit:ios": "eas submit -p ios --latest",
-    "ts:check": "tsc"
+    "ts:check": "tsc",
+    "prepare": "husky",
+    "lint": "yarn lint:js && yarn tsc:compile && yarn format:fix --report-unused-disable-directives --max-warnings 0",
+    "lint:js": "eslint . --max-warnings 0",
+    "lint:js:fix": "eslint . --fix",
+    "tsc:compile": "tsc --noEmit",
+    "format": "prettier --check '**/*.{js,ts,tsx,md,json}'",
+    "format:fix": "prettier --log-level silent --write '**/*.{js,ts,tsx,md,json}'",
+    "test": "jest --watchAll",
+    "test:ci": "jest"
   },
   "dependencies": {
     "@getalby/lightning-tools": "^5.0.3",
-    "@getalby/sdk": "^3.7.0",
+    "@getalby/sdk": "^3.7.1",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@sentry/react-native": "~5.22.0",
+    "@rn-primitives/dialog": "^1.0.3",
+    "@rn-primitives/portal": "^1.0.3",
+    "@rn-primitives/switch": "^1.0.3",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.10",
-    "expo": "~51.0.31",
-    "expo-camera": "~15.0.15",
+    "expo": "~51.0.34",
+    "expo-camera": "~15.0.16",
     "expo-clipboard": "~6.0.3",
     "expo-constants": "~16.0.2",
     "expo-font": "~12.0.10",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
+    "expo-local-authentication": "~14.0.1",
     "expo-router": "^3.5.23",
     "expo-secure-store": "^13.0.2",
     "expo-status-bar": "~1.12.1",
@@ -50,7 +64,7 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-webview": "13.8.6",
-    "react-native-webview-crypto": "^0.0.25",
+    "react-native-webview-crypto": "^0.0.26",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0",
     "text-encoding": "^0.7.0",
@@ -58,10 +72,29 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@babel/preset-typescript": "^7.24.7",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-native": "^12.7.2",
+    "@types/crypto-js": "^4.2.2",
+    "@types/jest": "^29.5.13",
     "@types/react": "~18.2.45",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "^7.1.2",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "jest": "^29.7.0",
+    "jest-expo": "^51.0.4",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.3",
     "typescript": "~5.3.3"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg))"
+    ]
+  }
 }

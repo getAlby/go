@@ -5,19 +5,23 @@ import React from "react";
 import { View } from "react-native";
 import { ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
-  const { invoice, originalText, comment } = useLocalSearchParams() as {
-    invoice: string;
-    originalText: string;
-    comment: string;
-  };
+  const { invoice, originalText, comment, successAction } =
+    useLocalSearchParams() as {
+      invoice: string;
+      originalText: string;
+      comment: string;
+      successAction: string;
+    };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
 
@@ -32,7 +36,11 @@ export function ConfirmPayment() {
         invoice,
       });
 
-      console.log("payInvoice Response", response);
+      console.info("payInvoice Response", response);
+
+      if (originalText === ALBY_LIGHTNING_ADDRESS) {
+        useAppStore.getState().updateLastAlbyPayment();
+      }
 
       router.dismissAll();
       router.replace({
@@ -42,11 +50,12 @@ export function ConfirmPayment() {
           originalText,
           invoice,
           amount: decodedInvoice.satoshi,
+          successAction,
         },
       });
     } catch (error) {
       console.error(error);
-      errorToast(error as Error);
+      errorToast(error);
     }
     setLoading(false);
   }
@@ -56,14 +65,12 @@ export function ConfirmPayment() {
   });
   return (
     <>
-      <Screen
-        title="Confirm Payment"
-      />
+      <Screen title="Confirm Payment" />
       <View className="flex-1 justify-center items-center gap-8 p-6">
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
             <Text className="text-5xl font-bold2 text-foreground">
-              {decodedInvoice.satoshi}
+              {new Intl.NumberFormat().format(decodedInvoice.satoshi)}
             </Text>
             <Text className="text-3xl font-bold2 text-muted-foreground">
               sats
@@ -96,26 +103,15 @@ export function ConfirmPayment() {
             </View>
           )
         )}
-        {
-          /* only show "To" for lightning addresses */ originalText !==
-          invoice &&
-          originalText
-            .toLowerCase()
-            .replace("lightning:", "")
-            .includes("@") && (
-            <View className="flex flex-col gap-2">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                To
-              </Text>
-              <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText.toLowerCase().replace("lightning:", "")}
-              </Text>
-            </View>
-          )
-        }
+        <Receiver originalText={originalText} invoice={invoice} />
       </View>
       <View className="p-6">
-        <Button size="lg" onPress={pay} className="flex flex-row gap-2" disabled={isLoading}>
+        <Button
+          size="lg"
+          onPress={pay}
+          className="flex flex-row gap-2"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <Loading className="text-primary-foreground" />
           ) : (

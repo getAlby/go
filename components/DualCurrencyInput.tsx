@@ -1,22 +1,24 @@
+import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
-import { Input } from "./ui/input";
-import { Text } from "./ui/text";
-import React from "react";
+import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { RefreshCw } from "./Icons";
-import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
+import { Input } from "./ui/input";
+import { Text } from "./ui/text";
 
 type DualCurrencyInputProps = {
   amount: string;
   setAmount(amount: string): void;
   autoFocus?: boolean;
+  readOnly?: boolean;
 };
 
 export function DualCurrencyInput({
   amount,
   setAmount,
   autoFocus = false,
+  readOnly = false,
 }: DualCurrencyInputProps) {
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
@@ -39,7 +41,7 @@ export function DualCurrencyInput({
   function toggleInputMode() {
     if (inputMode === "sats" && getFiatAmount) {
       setFiatAmount(
-        amount ? getFiatAmount(+amount, false)?.toString() || "" : ""
+        amount ? getFiatAmount(+amount, false)?.toString() || "" : "",
       );
     }
     setInputMode(inputMode === "fiat" ? "sats" : "fiat");
@@ -50,14 +52,16 @@ export function DualCurrencyInput({
       <Input
         className="w-full border-transparent bg-transparent text-center mt-3"
         placeholder="0"
-        keyboardType="number-pad"
+        keyboardType={inputMode === "sats" ? "number-pad" : "decimal-pad"}
         value={inputMode === "sats" ? amount : fiatAmount}
-        cursorColor={CURSOR_COLOR}
+        selectionColor={CURSOR_COLOR}
         onChangeText={onChangeText}
         aria-labelledbyledBy="amount"
         style={styles.amountInput}
         autoFocus={autoFocus}
-      // aria-errormessage="inputError"
+        returnKeyType="done"
+        readOnly={readOnly}
+        // aria-errormessage="inputError"
       />
       <Pressable onPress={toggleInputMode}>
         <View className="flex flex-row gap-2 items-center justify-center">

@@ -1,3 +1,5 @@
+import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+
 export const NAV_THEME = {
   light: {
     background: "hsl(210 20% 98%)", // background
@@ -17,9 +19,20 @@ export const NAV_THEME = {
   },
 };
 
+export const INACTIVITY_THRESHOLD = 5 * 60 * 1000;
+
 export const CURSOR_COLOR = "hsl(47 100% 72%)";
 
 export const TRANSACTIONS_PAGE_SIZE = 20;
 
 export const DEFAULT_CURRENCY = "USD";
 export const DEFAULT_WALLET_NAME = "Default Wallet";
+export const ALBY_LIGHTNING_ADDRESS = "go@getalby.com";
+export const ALBY_URL = "https://getalby.com";
+
+export const REQUIRED_CAPABILITIES: Nip47Capability[] = [
+  "get_balance",
+  "make_invoice",
+  "pay_invoice",
+  "list_transactions",
+];

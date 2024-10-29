@@ -25,18 +25,30 @@ export interface LNURLPayServiceResponse {
   url: string;
 }
 
-type LNURLDetails = LNURLPayServiceResponse;
-//| LNURLAuthServiceResponse
-//| LNURLWithdrawServiceResponse;
+export interface LNURLWithdrawServiceResponse {
+  tag: "withdrawRequest"; // type of LNURL
+  callback: string; // The URL which LN SERVICE would accept a withdrawal Lightning invoice as query parameter
+  k1: string; // Random or non-random string to identify the user's LN WALLET when using the callback URL
+  defaultDescription: string; // A default withdrawal invoice description
+  balanceCheck?: string;
+  payLink?: string;
+  minWithdrawable: number; // Min amount (in millisatoshis) the user can withdraw from LN SERVICE, or 0
+  maxWithdrawable: number; // Max amount (in millisatoshis) the user can withdraw from LN SERVICE, or equal to minWithdrawable if the user has no choice over the amounts
+  domain: string;
+  url: string;
+}
 
-interface LNURLPaymentSuccessAction {
+type LNURLDetails = LNURLPayServiceResponse | LNURLWithdrawServiceResponse;
+//| LNURLAuthServiceResponse
+
+export interface LNURLPaymentSuccessAction {
   tag: string;
   description?: string;
   message?: string;
   url?: string;
 }
 
-interface LNURLPaymentInfo {
+export interface LNURLPaymentInfo {
   pr: string;
   successAction?: LNURLPaymentSuccessAction;
 }
@@ -111,7 +123,7 @@ export const lnurl = {
     const url = normalizeLnurl(lnurlString);
 
     try {
-      const response = await fetch(url.toString());
+      const response = await fetch(url.toString(), { redirect: "follow" });
 
       if (!response.ok) {
         throw new Error(
@@ -121,7 +133,7 @@ export const lnurl = {
 
       const data: LNURLDetails | LNURLError = await response.json();
 
-      console.log("Got LNURL details", data);
+      console.info("Got LNURL details", data);
 
       const lnurlDetails = data as LNURLDetails;
 
@@ -144,7 +156,7 @@ export const lnurl = {
 
   async getPayRequest(url: string): Promise<LNURLPaymentInfo> {
     try {
-      const response = await fetch(url.toString());
+      const response = await fetch(url.toString(), { redirect: "follow" });
 
       if (!response.ok) {
         throw new Error(
@@ -156,7 +168,7 @@ export const lnurl = {
       // lnurl1dp68gurn8ghj7em9w3skccne9e3k7mf09emk2mrv944kummhdchkcmn4wfk8qtmjdak85mn6dk7p2p
       const data: LNURLPaymentInfo | LNURLError = await response.json();
 
-      console.log("Got LNURL payment info", data);
+      console.info("Got LNURL payment info", data);
 
       const lnurlPaymentInfo = data as LNURLPaymentInfo;
 

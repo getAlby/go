@@ -1,20 +1,21 @@
-import { Link, router } from "expo-router";
-import { Keyboard, Share, TouchableWithoutFeedback, View } from "react-native";
-import { Button } from "~/components/ui/button";
-import * as Clipboard from "expo-clipboard";
-import React from "react";
-import { useAppStore } from "~/lib/state/appStore";
-import { Input } from "~/components/ui/input";
-import { Text } from "~/components/ui/text";
-import { Copy, Share2, ZapIcon } from "~/components/Icons";
-import Toast from "react-native-toast-message";
-import { errorToast } from "~/lib/errorToast";
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
-import Loading from "~/components/Loading";
+import * as Clipboard from "expo-clipboard";
+import { Link, router } from "expo-router";
+import React from "react";
+import { Share, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { ArchiveRestore, Copy, Share2, ZapIcon } from "~/components/Icons";
+import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { errorToast } from "~/lib/errorToast";
+import { useAppStore } from "~/lib/state/appStore";
 
 export function Receive() {
   const getFiatAmount = useGetFiatAmount();
@@ -23,7 +24,6 @@ export function Receive() {
   const invoiceRef = React.useRef("");
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
-  const [addComment, setAddComment] = React.useState(false);
   const [enterCustomAmount, setEnterCustomAmount] = React.useState(false);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
@@ -52,13 +52,13 @@ export function Receive() {
           ...(comment ? { description: comment } : {}),
         });
 
-        console.log("makeInvoice Response", response);
+        console.info("makeInvoice Response", response);
 
         setInvoice(response.invoice);
         setEnterCustomAmount(false);
       } catch (error) {
         console.error(error);
-        errorToast(error as Error);
+        errorToast(error);
       }
       setLoading(false);
     })();
@@ -100,7 +100,7 @@ export function Receive() {
                 polling &&
                 pollCount > 0 &&
                 receivedTransaction.payment_hash !==
-                prevTransaction?.payment_hash
+                  prevTransaction?.payment_hash
               ) {
                 if (
                   !invoiceRef.current ||
@@ -112,7 +112,7 @@ export function Receive() {
                     params: { invoice: receivedTransaction.invoice },
                   });
                 } else {
-                  console.log("Received another payment");
+                  console.info("Received another payment");
                 }
               }
               prevTransaction = receivedTransaction;
@@ -136,7 +136,7 @@ export function Receive() {
     let unsub: (() => void) | undefined = undefined;
     (async () => {
       unsub = await nwcClient.subscribeNotifications((notification) => {
-        console.log("RECEIVED notification", notification);
+        console.info("RECEIVED notification", notification);
         if (notification.notification_type === "payment_received") {
           if (
             !invoiceRef.current ||
@@ -148,7 +148,7 @@ export function Receive() {
               params: { invoice: notification.notification.invoice },
             });
           } else {
-            console.log("Received another payment");
+            console.info("Received another payment");
           }
         }
       });
@@ -156,7 +156,7 @@ export function Receive() {
     return () => {
       unsub?.();
     };
-  }, []);
+  }, [nwcCapabilities]);
 
   async function share() {
     const message = invoice || lightningAddress;
@@ -169,15 +169,13 @@ export function Receive() {
       });
     } catch (error) {
       console.error("Error sharing:", error);
-      errorToast(error as Error);
+      errorToast(error);
     }
   }
 
   return (
     <>
-      <Screen
-        title="Receive"
-      />
+      <Screen title="Receive" animation="slide_from_left" />
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
@@ -222,9 +220,11 @@ export function Receive() {
                 </View>
               ) : (
                 lightningAddress && (
-                  <Text className="text-foreground text-xl font-medium2">
-                    {lightningAddress}
-                  </Text>
+                  <TouchableOpacity onPress={copy}>
+                    <Text className="text-foreground text-xl font-medium2">
+                      {lightningAddress}
+                    </Text>
+                  </TouchableOpacity>
                 )
               )}
               {invoice && getFiatAmount && (
@@ -242,18 +242,24 @@ export function Receive() {
           </View>
 
           <View className="flex flex-row gap-3 p-6">
-            <Button onPress={share} variant="secondary" className="flex-1 flex flex-col gap-2">
+            <Button
+              onPress={share}
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+            >
               <Share2 className="text-muted-foreground" />
               <Text>Share</Text>
             </Button>
-            <Button
-              variant="secondary"
-              onPress={copy}
-              className="flex-1 flex flex-col gap-2"
-            >
-              <Copy className="text-muted-foreground" />
-              <Text>Copy</Text>
-            </Button>
+            {!enterCustomAmount && invoice && (
+              <Button
+                variant="secondary"
+                onPress={copy}
+                className="flex-1 flex flex-col gap-2"
+              >
+                <Copy className="text-muted-foreground" />
+                <Text>Copy</Text>
+              </Button>
+            )}
             {!enterCustomAmount && !invoice && (
               <Button
                 variant="secondary"
@@ -264,16 +270,24 @@ export function Receive() {
                 <Text>Invoice</Text>
               </Button>
             )}
+            {!enterCustomAmount && !invoice && (
+              <Button
+                variant="secondary"
+                className="flex-1 flex flex-col gap-2"
+                onPress={() => {
+                  router.push("/withdraw");
+                }}
+              >
+                <ArchiveRestore className="text-muted-foreground" />
+                <Text>Withdraw</Text>
+              </Button>
+            )}
           </View>
         </>
       )}
       {/* TODO: move to one place - this is all copied from LNURL-Pay */}
       {!invoice && enterCustomAmount && (
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-          }}
-        >
+        <DismissableKeyboardView>
           <View className="flex-1 flex flex-col">
             <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
               <DualCurrencyInput
@@ -290,6 +304,7 @@ export function Receive() {
                   placeholder="No description"
                   value={comment}
                   onChangeText={setComment}
+                  returnKeyType="done"
                 />
               </View>
             </View>
@@ -305,10 +320,8 @@ export function Receive() {
               </Button>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </DismissableKeyboardView>
       )}
     </>
   );
 }
-
-

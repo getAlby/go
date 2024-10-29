@@ -1,13 +1,20 @@
 import { useAppStore } from "lib/state/appStore";
 import useSWR from "swr";
+import { errorToast } from "~/lib/errorToast";
 
 type FetchArgs = Parameters<typeof fetch>;
-const fetcher = (...args: FetchArgs) => {
+const fetcher = async (...args: FetchArgs) => {
   const nwcClient = useAppStore.getState().nwcClient;
   if (!nwcClient) {
     throw new Error("No NWC client");
   }
-  return nwcClient.getBalance();
+  try {
+    const balance = await nwcClient.getBalance();
+    return balance;
+  } catch (error) {
+    errorToast(error);
+    throw error;
+  }
 };
 
 export function useBalance() {

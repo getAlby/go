@@ -1,28 +1,24 @@
-import "../lib/applyGlobalPolyfills";
-
-import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
-import {
-  router,
-  SplashScreen,
-  Stack,
-  useRootNavigationState,
-} from "expo-router";
+import { PortalHost } from "@rn-primitives/portal";
+import * as Sentry from "@sentry/react-native";
+import * as Font from "expo-font";
+import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { swrConfiguration } from "lib/swr";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
-import { NAV_THEME } from "~/lib/constants";
-import { useColorScheme } from "~/lib/useColorScheme";
+import Toast from "react-native-toast-message";
 import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
-import { swrConfiguration } from "lib/swr";
-import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/ToastConfig";
-import * as Font from "expo-font";
+import { UserInactivityProvider } from "~/context/UserInactivity";
+import "~/global.css";
 import { useInfo } from "~/hooks/useInfo";
-import { secureStorage } from "~/lib/secureStorage";
-import { hasOnboardedKey } from "~/lib/state/appStore";
-import * as Sentry from "@sentry/react-native";
+import { SessionProvider } from "~/hooks/useSession";
+import { NAV_THEME } from "~/lib/constants";
+import { isBiometricSupported } from "~/lib/isBiometricSupported";
+import { useAppStore } from "~/lib/state/appStore";
+import { useColorScheme } from "~/lib/useColorScheme";
 
 Sentry.init({
   // Uses SENTRY_DSN from ENV
@@ -45,30 +41,17 @@ export {
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
 
-// export const unstable_settings = {
-//   initialRouteName: "index",
-// };
+export const unstable_settings = {
+  initialRouteName: "(app)/index",
+};
 
 export default function RootLayout() {
   const { isDarkColorScheme } = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
-  const [checkedOnboarding, setCheckedOnboarding] = React.useState(false);
+
   useConnectionChecker();
 
-  const rootNavigationState = useRootNavigationState();
-  const hasNavigationState = !!rootNavigationState?.key;
-
-  async function checkOnboardingStatus() {
-    const hasOnboarded = await secureStorage.getItem(hasOnboardedKey);
-    if (!hasOnboarded && hasNavigationState) {
-      router.replace("/onboarding");
-    }
-
-    setCheckedOnboarding(true);
-  };
-
   async function loadFonts() {
-
     await Font.loadAsync({
       OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
       "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
@@ -79,24 +62,26 @@ export default function RootLayout() {
     setFontsLoaded(true);
   }
 
+  async function checkBiometricStatus() {
+    const isSupported = await isBiometricSupported();
+    if (!isSupported) {
+      useAppStore.getState().setSecurityEnabled(false);
+    }
+  }
+
   React.useEffect(() => {
     const init = async () => {
       try {
-        await Promise.all([
-          checkOnboardingStatus(),
-          loadFonts(),
-        ]);
-      }
-      finally {
+        await Promise.all([loadFonts(), checkBiometricStatus()]);
+      } finally {
         SplashScreen.hideAsync();
       }
     };
 
     init();
+  }, []);
 
-  }, [hasNavigationState]);
-
-  if (!fontsLoaded || !checkedOnboarding) {
+  if (!fontsLoaded) {
     return null;
   }
 
@@ -106,8 +91,18 @@ export default function RootLayout() {
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
-          <Stack />
-          <Toast config={toastConfig} position="bottom" bottomOffset={140} />
+          <UserInactivityProvider>
+            <SessionProvider>
+              <Slot />
+            </SessionProvider>
+          </UserInactivityProvider>
+          <Toast
+            config={toastConfig}
+            position="bottom"
+            bottomOffset={140}
+            topOffset={140}
+          />
+          <PortalHost />
         </SafeAreaView>
       </ThemeProvider>
     </SWRConfig>

@@ -2,6 +2,10 @@ import { Link, router } from "expo-router";
 import { Alert, Pressable, View } from "react-native";
 import Toast from "react-native-toast-message";
 
+import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import * as Clipboard from "expo-clipboard";
+import { TriangleAlert } from "~/components/Icons";
+import Screen from "~/components/Screen";
 import {
   Card,
   CardDescription,
@@ -11,31 +15,28 @@ import {
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
-import * as Clipboard from "expo-clipboard";
-import Screen from "~/components/Screen";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
-      <Screen
-        title="Edit Wallet"
-      />
-      {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-        "notifications",
-      ) < 0 && (
-          <Text>
-            Warning: Your wallet does not support notifications capability.
-          </Text>
-        )}
-      {(wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-        "list_transactions",
-      ) < 0 && (
-          <Text>
-            Warning: Your wallet does not support list_transactions capability.
-          </Text>
-        )}
+      <Screen title="Edit Wallet" />
+      {(["notifications", "list_transactions"] as Nip47Capability[]).map(
+        (capability) =>
+          (wallets[selectedWalletId].nwcCapabilities || []).indexOf(
+            capability,
+          ) < 0 && (
+            <Card key={capability}>
+              <CardHeader>
+                <CardTitle className="flex flex-row gap-3 items-center">
+                  <TriangleAlert size={16} className="text-foreground" />
+                  <Text>Your wallet does not support {capability}</Text>
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          ),
+      )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">
@@ -43,21 +44,6 @@ export function EditWallet() {
               <CardTitle>Wallet Name</CardTitle>
               <CardDescription>
                 {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </Pressable>
-      </Link>
-      <Link
-        href={`/settings/wallets/${selectedWalletId}/wallet-connection`}
-        asChild
-      >
-        <Pressable>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Wallet Connection</CardTitle>
-              <CardDescription>
-                Configure your wallet connection
               </CardDescription>
             </CardHeader>
           </Card>
@@ -132,8 +118,10 @@ export function EditWallet() {
               {
                 text: "Confirm",
                 onPress: () => {
-                  router.back();
                   useAppStore.getState().removeCurrentWallet();
+                  if (wallets.length !== 1) {
+                    router.back();
+                  }
                 },
               },
             ],

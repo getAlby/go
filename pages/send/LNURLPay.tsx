@@ -1,26 +1,40 @@
-
-import Screen from "~/components/Screen";
 import { router, useLocalSearchParams } from "expo-router";
-import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
-import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
-import { Input } from "~/components/ui/input";
-import { errorToast } from "~/lib/errorToast";
-import Loading from "~/components/Loading";
+import React, { useEffect } from "react";
+import { View } from "react-native";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
+import Loading from "~/components/Loading";
+import { Receiver } from "~/components/Receiver";
+import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { errorToast } from "~/lib/errorToast";
+import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
 
 export function LNURLPay() {
-  const { lnurlDetailsJSON, originalText } =
-    useLocalSearchParams() as unknown as {
-      lnurlDetailsJSON: string;
-      originalText: string;
-    };
+  const {
+    lnurlDetailsJSON,
+    originalText,
+    amount: amountParam,
+  } = useLocalSearchParams() as unknown as {
+    lnurlDetailsJSON: string;
+    originalText: string;
+    amount: string;
+  };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
-  const [amount, setAmount] = React.useState("");
+  const [amount, setAmount] = React.useState(amountParam ?? 0);
   const [comment, setComment] = React.useState("");
+  const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
+
+  useEffect(() => {
+    // Handle fixed amount LNURLs
+    if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
+      setAmount((lnurlDetails.minSendable / 1000).toString());
+      setAmountReadOnly(true);
+    }
+  }, [lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
   async function requestInvoice() {
     setLoading(true);
@@ -35,28 +49,34 @@ export function LNURLPay() {
       //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
-        params: { invoice: lnurlPayInfo.pr, originalText, comment },
+        params: {
+          invoice: lnurlPayInfo.pr,
+          originalText,
+          comment,
+          successAction: lnurlPayInfo.successAction
+            ? JSON.stringify(lnurlPayInfo.successAction)
+            : undefined,
+        },
       });
     } catch (error) {
       console.error(error);
-      errorToast(error as Error);
+      errorToast(error);
     }
     setLoading(false);
   }
 
   return (
     <>
-      <Screen
-        title="Send"
-      />
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
+      <Screen title="Send" />
+      <DismissableKeyboardView>
         <View className="flex-1 flex flex-col">
           <View className="flex-1 justify-center items-center p-6 gap-6">
-            <DualCurrencyInput amount={amount} setAmount={setAmount} autoFocus />
+            <DualCurrencyInput
+              amount={amount}
+              setAmount={setAmount}
+              readOnly={isAmountReadOnly}
+              autoFocus={!isAmountReadOnly && !amount}
+            />
             <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
                 Comment
@@ -66,16 +86,10 @@ export function LNURLPay() {
                 placeholder="Enter an optional comment"
                 value={comment}
                 onChangeText={setComment}
+                returnKeyType="done"
               />
             </View>
-            <View>
-              <Text className="text-muted-foreground text-center font-semibold2">
-                To
-              </Text>
-              <Text className="text-center text-foreground text-2xl font-medium2">
-                {originalText}
-              </Text>
-            </View>
+            <Receiver originalText={originalText} />
           </View>
           <View className="p-6">
             <Button
@@ -89,8 +103,7 @@ export function LNURLPay() {
             </Button>
           </View>
         </View>
-      </TouchableWithoutFeedback>
-
+      </DismissableKeyboardView>
     </>
   );
 }

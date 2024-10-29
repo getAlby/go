@@ -1,5 +1,4 @@
-import { BareFetcher, SWRConfiguration } from "swr";
-import { useAppStore } from "./state/appStore";
+import { SWRConfiguration } from "swr";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const swrConfiguration: SWRConfiguration = {
