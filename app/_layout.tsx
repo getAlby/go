@@ -83,7 +83,7 @@ export default function RootLayout() {
   return (
     <SWRConfig value={swrConfiguration}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+        <StatusBar translucent style={isDarkColorScheme ? "light" : "dark"} />
         <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
           <UserInactivityProvider>
