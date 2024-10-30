@@ -2,7 +2,7 @@
   "expo": {
     "name": "Alby Go",
     "slug": "alby-mobile",
-    "version": "1.6.2",
+    "version": "1.7.0",
     "scheme": ["bitcoin", "lightning", "alby"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
