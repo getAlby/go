@@ -1,6 +1,6 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import { router, Stack } from "expo-router";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Image, View } from "react-native";
 
 import { Button } from "~/components/ui/button";
@@ -11,7 +11,14 @@ export function Unlock() {
   const [isUnlocking, setIsUnlocking] = React.useState(false);
   const { signIn } = useSession();
 
-  const handleUnlock = React.useCallback(async (): Promise<void> => {
+  const handleUnlock = useCallback(async () => {
+    // The call `signIn()` below triggers a re-render of the component
+    // and would prompt the user again (before the actual redirect
+    // happens and the view is replaced)
+    if (isUnlocking) {
+      return;
+    }
+
     try {
       setIsUnlocking(true);
       const biometricAuth = await LocalAuthentication.authenticateAsync({
@@ -26,9 +33,9 @@ export function Unlock() {
     } finally {
       setIsUnlocking(false);
     }
-  }, [signIn]);
+  }, [isUnlocking, signIn]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleUnlock();
   }, [handleUnlock]);
 
