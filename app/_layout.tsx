@@ -41,8 +41,8 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  const { isDarkColorScheme } = useColorScheme();
-  const [fontsLoaded, setFontsLoaded] = React.useState(false);
+  const { isDarkColorScheme, setColorScheme } = useColorScheme();
+  const [resourcesLoaded, setResourcesLoaded] = React.useState(false);
 
   useConnectionChecker();
 
@@ -53,8 +53,6 @@ export default function RootLayout() {
       "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),
       "OpenRunde-Bold": require("./../assets/fonts/OpenRunde-Bold.otf"),
     });
-
-    setFontsLoaded(true);
   }
 
   async function checkBiometricStatus() {
@@ -64,19 +62,28 @@ export default function RootLayout() {
     }
   }
 
+  const loadTheme = React.useCallback((): Promise<void> => {
+    return new Promise((resolve) => {
+      const theme = useAppStore.getState().theme;
+      setColorScheme(theme);
+      resolve();
+    });
+  }, [setColorScheme]);
+
   React.useEffect(() => {
     const init = async () => {
       try {
-        await Promise.all([loadFonts(), checkBiometricStatus()]);
+        await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
+        setResourcesLoaded(true);
         SplashScreen.hideAsync();
       }
     };
 
     init();
-  }, []);
+  }, [loadTheme]);
 
-  if (!fontsLoaded) {
+  if (!resourcesLoaded) {
     return null;
   }
 
