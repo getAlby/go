@@ -12,7 +12,9 @@ interface AppState {
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
   readonly isOnboarded: boolean;
+  readonly theme: Theme;
   setUnlocked: (unlocked: boolean) => void;
+  setTheme: (theme: Theme) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
@@ -33,8 +35,11 @@ const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
 const hasOnboardedKey = "hasOnboarded";
 const lastAlbyPaymentKey = "lastAlbyPayment";
-export const isSecurityEnabledKey = "isSecurityEnabled";
+const themeKey = "theme";
+const isSecurityEnabledKey = "isSecurityEnabled";
 export const lastActiveTimeKey = "lastActiveTime";
+
+export type Theme = "system" | "light" | "dark";
 
 type Wallet = {
   name?: string;
@@ -139,23 +144,30 @@ export const useAppStore = create<AppState>()((set, get) => {
     secureStorage.getItem(selectedWalletIdKey) || "0"
   );
 
-  const iSecurityEnabled =
+  const isSecurityEnabled =
     secureStorage.getItem(isSecurityEnabledKey) === "true";
+
+  const theme = (secureStorage.getItem(themeKey) as Theme) || "system";
 
   const initialWallets = loadWallets();
   return {
-    unlocked: !iSecurityEnabled,
+    unlocked: !isSecurityEnabled,
     addressBookEntries: loadAddressBookEntries(),
     wallets: initialWallets,
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
-    isSecurityEnabled: iSecurityEnabled,
+    isSecurityEnabled,
+    theme,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
     removeCurrentWallet,
     setUnlocked: (unlocked) => {
       set({ unlocked });
+    },
+    setTheme: (theme) => {
+      secureStorage.setItem(themeKey, theme);
+      set({ theme });
     },
     setOnboarded: (isOnboarded) => {
       if (isOnboarded) {

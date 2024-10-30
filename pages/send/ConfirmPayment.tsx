@@ -70,7 +70,9 @@ export function ConfirmPayment() {
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
             <Text className="text-5xl font-bold2 text-foreground">
-              {new Intl.NumberFormat().format(decodedInvoice.satoshi)}
+              {new Intl.NumberFormat().format(
+                Math.ceil(decodedInvoice.satoshi),
+              )}
             </Text>
             <Text className="text-3xl font-bold2 text-muted-foreground">
               sats

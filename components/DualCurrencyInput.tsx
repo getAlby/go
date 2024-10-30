@@ -1,7 +1,12 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
-import { CURSOR_COLOR, DEFAULT_CURRENCY } from "~/lib/constants";
+import {
+  CURSOR_COLOR,
+  DEFAULT_CURRENCY,
+  FIAT_REGEX,
+  SATS_REGEX,
+} from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { RefreshCw } from "./Icons";
 import { Input } from "./ui/input";
@@ -29,8 +34,14 @@ export function DualCurrencyInput({
 
   function onChangeText(text: string) {
     if (inputMode === "sats") {
+      if (!SATS_REGEX.test(text)) {
+        return;
+      }
       setAmount(text);
     } else {
+      if (!FIAT_REGEX.test(text)) {
+        return;
+      }
       setFiatAmount(text);
       if (getSatsAmount) {
         setAmount(getSatsAmount(+text)?.toString() || "");
@@ -63,14 +74,14 @@ export function DualCurrencyInput({
         readOnly={readOnly}
         // aria-errormessage="inputError"
       />
-      <Pressable onPress={toggleInputMode}>
+      <TouchableOpacity onPress={toggleInputMode}>
         <View className="flex flex-row gap-2 items-center justify-center">
           <Text className="font-semibold2 text-2xl text-muted-foreground">
             {inputMode === "fiat" ? fiatCurrency : "sats"}
           </Text>
           <RefreshCw className="text-muted-foreground" width={16} height={16} />
         </View>
-      </Pressable>
+      </TouchableOpacity>
       {
         <Text className="text-muted-foreground text-2xl font-semibold2">
           {inputMode === "fiat"
