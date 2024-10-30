@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import {
   CURSOR_COLOR,
@@ -74,14 +74,14 @@ export function DualCurrencyInput({
         readOnly={readOnly}
         // aria-errormessage="inputError"
       />
-      <Pressable onPress={toggleInputMode}>
+      <TouchableOpacity onPress={toggleInputMode}>
         <View className="flex flex-row gap-2 items-center justify-center">
           <Text className="font-semibold2 text-2xl text-muted-foreground">
             {inputMode === "fiat" ? fiatCurrency : "sats"}
           </Text>
           <RefreshCw className="text-muted-foreground" width={16} height={16} />
         </View>
-      </Pressable>
+      </TouchableOpacity>
       {
         <Text className="text-muted-foreground text-2xl font-semibold2">
           {inputMode === "fiat"
