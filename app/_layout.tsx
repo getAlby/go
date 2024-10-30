@@ -21,7 +21,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 Sentry.init({
-  // dsn: "https://ingest.us.sentry.io/key",
+  dsn: process.env.SENTRY_DSN,
 });
 
 const LIGHT_THEME: Theme = {

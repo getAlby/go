@@ -55,6 +55,7 @@ jobs:
       - name: 🚀 Build app
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: eas build --non-interactive --platform android --local --profile production_apk --output=./app-release.apk
 
       - name: Upload Artifact
