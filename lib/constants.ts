@@ -2,9 +2,9 @@ import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 
 export const NAV_THEME = {
   light: {
-    background: "hsl(210 20% 98%)", // background
+    background: "hsl(0 0% 100%)", // background
     border: "hsl(240 5.9% 90%)", // border
-    card: "hsl(210 20% 98%)", // card
+    card: "hsl(0 0% 100%)", // card
     notification: "hsl(0 84.2% 60.2%)", // destructive
     primary: "hsl(240 5.9% 10%)", // primary
     text: "hsl(240 10% 3.9%)", // foreground
