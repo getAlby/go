@@ -36,3 +36,7 @@ export const REQUIRED_CAPABILITIES: Nip47Capability[] = [
   "pay_invoice",
   "list_transactions",
 ];
+
+export const SATS_REGEX = /^\d*$/;
+
+export const FIAT_REGEX = /^\d*(\.\d{0,2})?$/;
