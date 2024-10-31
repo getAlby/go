@@ -9,11 +9,31 @@ import * as Device from "expo-device";
 import * as ExpoNotifications from "expo-notifications";
 
 ExpoNotifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
+  handleNotification: async (notification) => {
+    console.log("🔔 handleNotification", { data: notification.request.content.data })
+
+    if (!notification.request.content.data.isLocal) {
+      console.log("🏠️ Local notification", notification.request.content);
+
+      ExpoNotifications.scheduleNotificationAsync({
+        content: {
+          title: 'Decrypted content',
+          body: "test",
+          data: {
+            ...notification.request.content.data,
+            isLocal: true,
+          }
+        },
+        trigger: null
+      });
+    }
+
+    return {
+      shouldShowAlert: !!notification.request.content.data.isLocal,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }
+  }
 });
 
 async function sendPushNotification(expoPushToken: string) {
