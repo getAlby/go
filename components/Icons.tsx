@@ -102,7 +102,9 @@ export {
   AlertCircle,
   ArchiveRestore,
   ArrowDown,
-  ArrowLeftRight, Bell, Bitcoin,
+  ArrowLeftRight,
+  Bell,
+  Bitcoin,
   BookUser,
   Camera,
   CameraOff,
@@ -137,6 +139,5 @@ export {
   WalletIcon,
   X,
   XCircle,
-  ZapIcon
+  ZapIcon,
 };
-
