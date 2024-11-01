@@ -40,6 +40,7 @@ import {
   TriangleAlert,
   LogOut,
   ArchiveRestore,
+  Nfc,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -95,6 +96,7 @@ interopIcon(CircleCheck);
 interopIcon(TriangleAlert);
 interopIcon(LogOut);
 interopIcon(ArchiveRestore);
+interopIcon(Nfc);
 
 export {
   AlertCircle,
@@ -136,5 +138,6 @@ export {
   CircleCheck,
   TriangleAlert,
   LogOut,
-  ArchiveRestore
+  ArchiveRestore,
+  Nfc,
 };

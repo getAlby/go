@@ -15,6 +15,12 @@
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
+        "./plugins/withReactNativeHce",
+        {
+          "appIds": ["D2760000850101"]
+        }
+      ],
+      [
         "expo-local-authentication",
         {
           "faceIDPermission": "Allow Alby Go to use Face ID."
