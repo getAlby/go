@@ -258,8 +258,10 @@ export function Withdraw() {
                     onPress={confirm}
                     disabled={
                       loadingConfirm ||
-                      Number(valueSat) < lnurlDetails.minWithdrawable / 1000 ||
-                      Number(valueSat) > lnurlDetails.maxWithdrawable / 1000
+                      Number(valueSat) <
+                        Math.floor(lnurlDetails.minWithdrawable / 1000) ||
+                      Number(valueSat) >
+                        Math.floor(lnurlDetails.maxWithdrawable / 1000)
                     }
                   >
                     {loadingConfirm && (

@@ -7,6 +7,12 @@ import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
@@ -76,6 +82,8 @@ export function LNURLPay() {
               setAmount={setAmount}
               readOnly={isAmountReadOnly}
               autoFocus={!isAmountReadOnly && !amount}
+              min={Math.floor(lnurlDetails.minSendable / 1000)}
+              max={Math.floor(lnurlDetails.maxSendable / 1000)}
             />
             <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
@@ -92,11 +100,32 @@ export function LNURLPay() {
             <Receiver originalText={originalText} />
           </View>
           <View className="p-6">
+            {lnurlDetails.minSendable !== lnurlDetails.maxSendable && (
+              <Card className="mb-4">
+                <CardHeader>
+                  <CardTitle>Sending Limit</CardTitle>
+                  <CardDescription>
+                    Enter an amount between{" "}
+                    <Text className="font-bold2 text-sm">
+                      {Math.floor(lnurlDetails.minSendable / 1000)} sats
+                    </Text>{" "}
+                    and{" "}
+                    <Text className="font-bold2 text-sm">
+                      {Math.floor(lnurlDetails.maxSendable / 1000)} sats
+                    </Text>
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            )}
             <Button
               size="lg"
               className="flex flex-row gap-2"
               onPress={requestInvoice}
-              disabled={isLoading}
+              disabled={
+                isLoading ||
+                Number(amount) < Math.floor(lnurlDetails.minSendable / 1000) ||
+                Number(amount) > Math.floor(lnurlDetails.maxSendable / 1000)
+              }
             >
               {isLoading && <Loading className="text-primary-foreground" />}
               <Text>Next</Text>
