@@ -10,6 +10,12 @@ import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
@@ -107,17 +113,6 @@ export function Withdraw() {
     try {
       if (!lnurlDetails) {
         return;
-      }
-
-      if (Number(valueSat) < lnurlDetails.minWithdrawable / 1000) {
-        throw new Error(
-          `Amount below minimum limit of ${lnurlDetails.minWithdrawable} sats`,
-        );
-      }
-      if (Number(valueSat) > lnurlDetails.maxWithdrawable / 1000) {
-        throw new Error(
-          `Amount exceeds maximum limit of ${lnurlDetails.maxWithdrawable} sats.`,
-        );
       }
 
       setLoadingConfirm(true);
@@ -222,6 +217,8 @@ export function Withdraw() {
                     <DualCurrencyInput
                       amount={valueSat}
                       setAmount={setValueSat}
+                      min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
+                      max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
                       autoFocus
                     />
                     <View className="flex flex-col gap-2 items-center">
@@ -235,11 +232,35 @@ export function Withdraw() {
                   </View>
                 )}
                 <View className="p-6">
+                  {lnurlDetails.minWithdrawable !==
+                    lnurlDetails.maxWithdrawable && (
+                    <Card className="mb-4">
+                      <CardHeader>
+                        <CardTitle>Withdraw Limit</CardTitle>
+                        <CardDescription>
+                          Enter an amount between{" "}
+                          <Text className="font-bold2 text-sm">
+                            {Math.floor(lnurlDetails.minWithdrawable / 1000)}{" "}
+                            sats
+                          </Text>{" "}
+                          and{" "}
+                          <Text className="font-bold2 text-sm">
+                            {Math.floor(lnurlDetails.maxWithdrawable / 1000)}{" "}
+                            sats
+                          </Text>
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  )}
                   <Button
                     size="lg"
                     className="flex flex-row gap-2"
                     onPress={confirm}
-                    disabled={loadingConfirm}
+                    disabled={
+                      loadingConfirm ||
+                      Number(valueSat) < lnurlDetails.minWithdrawable / 1000 ||
+                      Number(valueSat) > lnurlDetails.maxWithdrawable / 1000
+                    }
                   >
                     {loadingConfirm && (
                       <Loading className="text-primary-foreground" />
