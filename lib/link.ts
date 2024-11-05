@@ -1,5 +1,6 @@
 import { router } from "expo-router";
-import { lnurl } from "./lnurl";
+import { BOLT11_REGEX } from "./constants";
+import { lnurl as lnurlLib } from "./lnurl";
 
 const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
 
@@ -44,27 +45,48 @@ export const handleLink = async (url: string) => {
 
     console.info("Navigating to", fullUrl);
 
-    const lnurlValue = lnurl.findLnurl(fullUrl);
-    if (lnurlValue) {
-      const lnurlDetails = await lnurl.getDetails(lnurlValue);
+    const schemePattern = new RegExp(
+      `^(${SUPPORTED_SCHEMES.map((s) => s.replace(":", "")).join("|")}):`,
+    );
+    const trimmedUrl = fullUrl.replace(schemePattern, "");
+
+    // Check for LNURLs
+    const lnurl = lnurlLib.findLnurl(trimmedUrl);
+    if (lnurl) {
+      const lnurlDetails = await lnurlLib.getDetails(lnurl);
 
       if (lnurlDetails.tag === "withdrawRequest") {
         router.push({
           pathname: "/withdraw",
           params: {
-            url: fullUrl,
+            url: lnurl,
+          },
+        });
+        return;
+      }
+
+      if (lnurlDetails.tag === "payRequest") {
+        router.push({
+          pathname: "/send",
+          params: {
+            url: lnurl,
           },
         });
         return;
       }
     }
 
-    router.push({
-      pathname: "/send",
-      params: {
-        url: fullUrl,
-      },
-    });
+    // Check for BOLT-11 invoices (including BIP-21 unified QRs)
+    const bolt11Match = trimmedUrl.match(BOLT11_REGEX);
+    if (bolt11Match) {
+      const bolt11 = bolt11Match[1];
+      router.push({
+        pathname: "/send",
+        params: {
+          url: bolt11,
+        },
+      });
+    }
   } else {
     // Redirect the user to the home screen
     // if no match was found

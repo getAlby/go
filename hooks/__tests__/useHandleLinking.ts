@@ -33,38 +33,51 @@ jest.mock("../../lib/lnurl", () => {
 const testVectors: Record<string, { url: string; path: string }> = {
   // Lightning Addresses
   "lightning:hello@getalby.com": {
-    url: "lightning:hello@getalby.com",
+    url: "hello@getalby.com",
     path: "/send",
   },
   "lightning://hello@getalby.com": {
-    url: "lightning:hello@getalby.com",
+    url: "hello@getalby.com",
     path: "/send",
   },
   "LIGHTNING://hello@getalby.com": {
-    url: "lightning:hello@getalby.com",
+    url: "hello@getalby.com",
     path: "/send",
   },
   "LIGHTNING:hello@getalby.com": {
-    url: "lightning:hello@getalby.com",
+    url: "hello@getalby.com",
     path: "/send",
   },
 
   // Lightning invoices
-  "lightning:lnbc1": { url: "lightning:lnbc1", path: "/send" },
-  "lightning://lnbc1": { url: "lightning:lnbc1", path: "/send" },
-
-  // BIP21
-  "bitcoin:bitcoinaddress?lightning=invoice": {
-    url: "bitcoin:bitcoinaddress?lightning=invoice",
+  "lightning:lnbc123": {
+    url: "lnbc123",
     path: "/send",
   },
-  "BITCOIN:bitcoinaddress?lightning=invoice": {
-    url: "bitcoin:bitcoinaddress?lightning=invoice",
+  "lightning://lnbc123": {
+    url: "lnbc123",
+    path: "/send",
+  },
+
+  // BIP21
+  "bitcoin:bitcoinaddress?lightning=lnbc123": {
+    url: "lnbc123",
+    path: "/send",
+  },
+  "BITCOIN:bitcoinaddress?lightning=lnbc123": {
+    url: "lnbc123",
     path: "/send",
   },
 
   // LNURL-withdraw
-  "lightning:lnurlw123": { url: "lightning:lnurlw123", path: "/withdraw" },
+  "lightning:lnurlw123": {
+    url: "lnurlw123",
+    path: "/withdraw",
+  },
+  "lightning://lnurlw123": {
+    url: "lnurlw123",
+    path: "/withdraw",
+  },
 };
 
 describe("handleLink", () => {
