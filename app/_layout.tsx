@@ -1,5 +1,6 @@
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
+import * as Sentry from "@sentry/react-native";
 import * as Font from "expo-font";
 import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -18,6 +19,10 @@ import { NAV_THEME } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+});
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -40,7 +45,7 @@ export const unstable_settings = {
   initialRouteName: "(app)/index",
 };
 
-export default function RootLayout() {
+function RootLayout() {
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const [resourcesLoaded, setResourcesLoaded] = React.useState(false);
 
@@ -122,3 +127,5 @@ function useConnectionChecker() {
     }
   }, [error?.message]);
 }
+
+export default Sentry.wrap(RootLayout);

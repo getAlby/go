@@ -30,6 +30,8 @@ jobs:
         run: yarn install
 
       - name: 🚀 Build app
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
 
       - name: 🧪 Run tests
