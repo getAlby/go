@@ -192,14 +192,24 @@ export function Receive() {
               </Button>
             </Link>
           </View>
-          <View className="p-6">
+          <View className="flex flex-row gap-3 p-6">
             <Button
               variant="secondary"
               onPress={() => setEnterCustomAmount(true)}
-              className="flex flex-col gap-2"
+              className="flex-1 flex flex-col gap-2"
             >
               <ZapIcon className="text-muted-foreground" />
               <Text>Invoice</Text>
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+              onPress={() => {
+                router.push("/withdraw");
+              }}
+            >
+              <ArchiveRestore className="text-muted-foreground" />
+              <Text>Withdraw</Text>
             </Button>
           </View>
         </>
