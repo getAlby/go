@@ -5,8 +5,11 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
+import { Nip47Notification } from "@getalby/sdk/dist/NWCClient";
 import * as Device from "expo-device";
 import * as ExpoNotifications from "expo-notifications";
+import { useAppStore } from "~/lib/state/appStore";
+
 
 ExpoNotifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -15,17 +18,39 @@ ExpoNotifications.setNotificationHandler({
     if (!notification.request.content.data.isLocal) {
       console.log("🏠️ Local notification", notification.request.content);
 
-      ExpoNotifications.scheduleNotificationAsync({
-        content: {
-          title: 'Decrypted content',
-          body: "test",
-          data: {
-            ...notification.request.content.data,
-            isLocal: true,
-          }
-        },
-        trigger: null
-      });
+      const encryptedData = notification.request.content.data.content;
+      const nwcClient = useAppStore.getState().nwcClient!;
+
+      try {
+        console.log("🔴", encryptedData, nwcClient?.secret);
+        const decryptedContent = await nwcClient.decrypt(
+          nwcClient?.walletPubkey!,
+          encryptedData,
+        );
+        console.log("🔓️ decrypted data", decryptedContent);
+        const nip47Notification = JSON.parse(decryptedContent) as Nip47Notification;
+        console.log("deserialized", nip47Notification);
+
+        if (nip47Notification.notification_type === "payment_received") {
+          ExpoNotifications.scheduleNotificationAsync({
+            content: {
+              title: `You just received ${Math.floor(nip47Notification.notification.amount / 1000)} sats`,
+              body: nip47Notification.notification.description,
+              data: {
+                ...notification.request.content.data,
+                isLocal: true,
+              }
+            },
+            trigger: null
+          });
+        }
+
+
+
+      } catch (e) {
+        console.error("Failed to parse decrypted event content", e);
+        return;
+      }
     }
 
     return {
