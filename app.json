@@ -46,6 +46,9 @@
       "bundleIdentifier": "com.getalby.mobile",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "LSMinimumSystemVersion": "12.0"
       }
     },
     "android": {
