@@ -1,6 +1,7 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import {
+  Bell,
   Bitcoin,
   Egg,
   Fingerprint,
@@ -104,7 +105,16 @@ export function Settings() {
                 }}
               >
                 <Egg className="text-foreground" />
-                <Text className="font-medium2 text-xl">Open Onboarding</Text>
+                <Text className="font-medium2 text-xl">Onboarding</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex flex-row gap-4"
+                onPress={() => {
+                  router.push("/notifications");
+                }}
+              >
+                <Bell className="text-foreground" />
+                <Text className="font-medium2 text-xl">Notifications</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex flex-row gap-4"

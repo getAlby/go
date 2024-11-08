@@ -3,6 +3,7 @@ import {
   ArchiveRestore,
   ArrowDown,
   ArrowLeftRight,
+  Bell,
   Bitcoin,
   BookUser,
   Camera,
@@ -95,12 +96,14 @@ interopIcon(CircleCheck);
 interopIcon(TriangleAlert);
 interopIcon(LogOut);
 interopIcon(ArchiveRestore);
+interopIcon(Bell);
 
 export {
   AlertCircle,
   ArchiveRestore,
   ArrowDown,
   ArrowLeftRight,
+  Bell,
   Bitcoin,
   BookUser,
   Camera,
