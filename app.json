@@ -15,6 +15,13 @@
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
+        "expo-notification-service-extension-plugin",
+        {
+          "mode": "production",
+          "iosNSEFilePath": "./assets/NotificationService.m"
+        }
+      ],
+      [
         "expo-local-authentication",
         {
           "faceIDPermission": "Allow Alby Go to use Face ID."

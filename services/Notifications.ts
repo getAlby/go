@@ -1,11 +1,13 @@
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
+import UserDefaults from "@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios";
 import { nwc } from "@getalby/sdk";
 import * as Device from "expo-device";
 import * as ExpoNotifications from "expo-notifications";
-import { NOSTR_API_URL } from "~/lib/constants";
+import { NOSTR_API_URL, SUITE_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import { computeSharedSecret } from "~/lib/sharedSecret";
 import { useAppStore } from "~/lib/state/appStore";
 
 // TODO: add background notification handling for android
@@ -52,6 +54,10 @@ export async function registerForPushNotificationsAsync() {
       // FIXME: This would trigger the same notification
       // per wallet if they belong to the same node
       const wallets = useAppStore.getState().wallets;
+      let groupDefaults;
+      if (Platform.OS === "ios") {
+        groupDefaults = new UserDefaults(SUITE_NAME);
+      }
 
       for (const wallet of wallets) {
         const nwcUrl = wallet.nostrWalletConnectUrl;
@@ -94,6 +100,18 @@ export async function registerForPushNotificationsAsync() {
             // TODO: Send a DELETE call to nostr api on deleting the wallet
           } else {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
+          }
+
+          if (groupDefaults) {
+            let wallets = (await groupDefaults.get("wallets")) || {};
+            wallets[nwcClient.publicKey] = {
+              name: wallet.name,
+              sharedSecret: computeSharedSecret(
+                nwcClient.walletPubkey,
+                nwcClient.secret ?? "",
+              ),
+            };
+            groupDefaults.set("wallets", wallets);
           }
         } catch (error) {
           errorToast(error);
