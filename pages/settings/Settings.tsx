@@ -62,6 +62,15 @@ export function Settings() {
           </TouchableOpacity>
         </Link>
 
+        <Link href="/settings/notifications" asChild>
+          <TouchableOpacity className="flex flex-row gap-4">
+            <Bell className="text-foreground" />
+            <Text className="text-foreground font-medium2 text-xl">
+              Notifications
+            </Text>
+          </TouchableOpacity>
+        </Link>
+
         <Link href="/settings/security" asChild>
           <TouchableOpacity className="flex flex-row gap-4">
             <Fingerprint className="text-foreground" />
@@ -106,15 +115,6 @@ export function Settings() {
               >
                 <Egg className="text-foreground" />
                 <Text className="font-medium2 text-xl">Onboarding</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="flex flex-row gap-4"
-                onPress={() => {
-                  router.push("/notifications");
-                }}
-              >
-                <Bell className="text-foreground" />
-                <Text className="font-medium2 text-xl">Notifications</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex flex-row gap-4"

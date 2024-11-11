@@ -46,6 +46,9 @@
       "bundleIdentifier": "com.getalby.mobile",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification", "processing"]
       }
     },
     "android": {

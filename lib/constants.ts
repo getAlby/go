@@ -19,6 +19,8 @@ export const NAV_THEME = {
   },
 };
 
+export const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+
 export const INACTIVITY_THRESHOLD = 5 * 60 * 1000;
 
 export const CURSOR_COLOR = "hsl(47 100% 72%)";
@@ -29,6 +31,7 @@ export const DEFAULT_CURRENCY = "USD";
 export const DEFAULT_WALLET_NAME = "Default Wallet";
 export const ALBY_LIGHTNING_ADDRESS = "go@getalby.com";
 export const ALBY_URL = "https://getalby.com";
+export const NOSTR_API_URL = "https://api.getalby.com/nwc";
 
 export const REQUIRED_CAPABILITIES: Nip47Capability[] = [
   "get_balance",

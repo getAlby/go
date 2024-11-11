@@ -11,17 +11,20 @@ interface AppState {
   readonly wallets: Wallet[];
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
+  readonly isNotificationsEnabled: boolean;
   readonly isOnboarded: boolean;
   readonly theme: Theme;
   setUnlocked: (unlocked: boolean) => void;
   setTheme: (theme: Theme) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
+  updateWallet(wallet: Partial<Wallet>, nostrWalletConnectUrl?: string): void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
   removeCurrentWallet(): void;
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
+  setNotificationsEnabled(notificationsEnabled: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   reset(): void;
@@ -37,6 +40,7 @@ const hasOnboardedKey = "hasOnboarded";
 const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
 const isSecurityEnabledKey = "isSecurityEnabled";
+const isNotificationsEnabledKey = "isNotificationsEnabled";
 export const lastActiveTimeKey = "lastActiveTime";
 
 export type Theme = "system" | "light" | "dark";
@@ -46,6 +50,7 @@ type Wallet = {
   nostrWalletConnectUrl?: string;
   lightningAddress?: string;
   nwcCapabilities?: Nip47Capability[];
+  pushId?: string;
 };
 
 type AddressBookEntry = {
@@ -88,6 +93,28 @@ function loadAddressBookEntries(): AddressBookEntry[] {
 }
 
 export const useAppStore = create<AppState>()((set, get) => {
+  const updateWallet = (
+    walletUpdate: Partial<Wallet>,
+    nostrWalletConnectUrl: string,
+  ) => {
+    const wallets = [...get().wallets];
+    const walletId = wallets.findIndex(
+      (wallet) => wallet.nostrWalletConnectUrl === nostrWalletConnectUrl,
+    );
+    if (walletId < 0) {
+      return;
+    }
+    const wallet: Wallet = {
+      ...(wallets[walletId] || {}),
+      ...walletUpdate,
+    };
+    secureStorage.setItem(getWalletKey(walletId), JSON.stringify(wallet));
+    wallets[walletId] = wallet;
+    set({
+      wallets,
+    });
+  };
+
   const updateCurrentWallet = (walletUpdate: Partial<Wallet>) => {
     const selectedWalletId = get().selectedWalletId;
     const wallets = [...get().wallets];
@@ -106,6 +133,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     });
   };
 
+  // TODO: de-register push notification subscripiton using pushId
   const removeCurrentWallet = () => {
     const wallets = [...get().wallets];
     if (wallets.length <= 1) {
@@ -157,9 +185,12 @@ export const useAppStore = create<AppState>()((set, get) => {
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     isSecurityEnabled,
+    isNotificationsEnabled:
+      secureStorage.getItem(isNotificationsEnabledKey) === "true",
     theme,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
+    updateWallet,
     updateCurrentWallet,
     removeCurrentWallet,
     setUnlocked: (unlocked) => {
@@ -183,6 +214,12 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({
         isSecurityEnabled: isEnabled,
         ...(!isEnabled ? { unlocked: true } : {}),
+      });
+    },
+    setNotificationsEnabled: (isEnabled) => {
+      secureStorage.setItem(isNotificationsEnabledKey, isEnabled.toString());
+      set({
+        isNotificationsEnabled: isEnabled,
       });
     },
     setFiatCurrency: (fiatCurrency) => {
@@ -226,6 +263,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     updateLastAlbyPayment: () => {
       secureStorage.setItem(lastAlbyPaymentKey, new Date().toString());
     },
+    // TODO: de-register push notification subscripitons using pushId
     reset() {
       // clear wallets
       for (let i = 0; i < get().wallets.length; i++) {
@@ -241,6 +279,9 @@ export const useAppStore = create<AppState>()((set, get) => {
 
       // clear security enabled status
       secureStorage.removeItem(isSecurityEnabledKey);
+
+      // clear security enabled status
+      secureStorage.removeItem(isNotificationsEnabledKey);
 
       // clear onboarding status
       secureStorage.removeItem(hasOnboardedKey);
