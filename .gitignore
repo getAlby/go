@@ -35,4 +35,6 @@ yarn-error.*
 *.tsbuildinfo
 
 ios
-android
+android 
+
+google-services.json

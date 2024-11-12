@@ -65,7 +65,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundImage": "./assets/adaptive-icon-bg.png"
       },
-      "permissions": ["android.permission.CAMERA"]
+      "permissions": ["android.permission.CAMERA"],
+      "googleServicesFile": "./google-services.json"
     },
     "extra": {
       "eas": {

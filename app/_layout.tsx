@@ -1,10 +1,8 @@
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 import * as Font from "expo-font";
-import * as Notifications from "expo-notifications";
 import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import * as TaskManager from "expo-task-manager";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
@@ -17,7 +15,7 @@ import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { useInfo } from "~/hooks/useInfo";
 import { SessionProvider } from "~/hooks/useSession";
-import { BACKGROUND_NOTIFICATION_TASK, NAV_THEME } from "~/lib/constants";
+import { NAV_THEME } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -35,25 +33,6 @@ export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
-
-// FIXME: only use this in android (?)
-TaskManager.defineTask(
-  BACKGROUND_NOTIFICATION_TASK,
-  ({ data }: { data: Record<string, any> }) => {
-    console.info("Received a notification in the background!", data?.body);
-    // Do something with the notification data
-  },
-);
-
-Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK)
-  .then(() => {
-    console.info(
-      `Notifications.registerTaskAsync success: ${BACKGROUND_NOTIFICATION_TASK}`,
-    );
-  })
-  .catch((reason) => {
-    console.info(`Notifications registerTaskAsync failed: ${reason}`);
-  });
 
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();

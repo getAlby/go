@@ -1,14 +1,20 @@
-import Constants from "expo-constants";
-import { Platform } from "react-native";
-
-import UserDefaults from "@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios";
 import { nwc } from "@getalby/sdk";
+import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as ExpoNotifications from "expo-notifications";
+import * as SharedPreferences from "expo-shared-preferences";
+import { Platform } from "react-native";
 import { NOSTR_API_URL, SUITE_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { computeSharedSecret } from "~/lib/sharedSecret";
 import { useAppStore } from "~/lib/state/appStore";
+
+let UserDefaults: any;
+
+if (Platform.OS === "ios") {
+  UserDefaults =
+    require("@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios").default;
+}
 
 // TODO: add background notification handling for android
 
@@ -102,6 +108,9 @@ export async function registerForPushNotificationsAsync() {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
           }
 
+          // TODO: also update these defaults when wallet name is updated
+          // TODO: remove these group defaults when wallet is removed
+          // or when notifications are removed maybe?
           if (groupDefaults) {
             let wallets = (await groupDefaults.get("wallets")) || {};
             wallets[nwcClient.publicKey] = {
@@ -112,6 +121,18 @@ export async function registerForPushNotificationsAsync() {
               ),
             };
             groupDefaults.set("wallets", wallets);
+          } else {
+            // TODO: json stringify and add similar to iOS
+            const sharedSecretKey = `${nwcClient.publicKey}_shared_secret`;
+            const nameKey = `${nwcClient.publicKey}_name`;
+            SharedPreferences.setItemAsync(nameKey, wallet.name ?? "");
+            SharedPreferences.setItemAsync(
+              sharedSecretKey,
+              computeSharedSecret(
+                nwcClient.walletPubkey,
+                nwcClient.secret ?? "",
+              ),
+            );
           }
         } catch (error) {
           errorToast(error);
