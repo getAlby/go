@@ -78,6 +78,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/preset-typescript": "^7.24.7",
+    "@expo/config-plugins": "^8.0.10",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/react-native": "^12.7.2",
     "@types/crypto-js": "^4.2.2",

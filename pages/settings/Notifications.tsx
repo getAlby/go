@@ -21,12 +21,12 @@ export function Notifications() {
           <Switch
             checked={isEnabled}
             onCheckedChange={async (checked) => {
-              useAppStore.getState().setNotificationsEnabled(checked);
               if (checked) {
                 await registerForPushNotificationsAsync();
               } else {
                 // TODO: de-register all wallets on nostr api
               }
+              useAppStore.getState().setNotificationsEnabled(checked);
             }}
             nativeID="security"
           />
