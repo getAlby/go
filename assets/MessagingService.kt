@@ -50,6 +50,10 @@ class MessagingService : FirebaseMessagingService() {
             return
         }
 
+        if (appPubkey.isEmpty()) {
+            return
+        }
+
         val sharedSecret = getSharedSecretFromPreferences(this, appPubkey)
         val walletName = getWalletNameFromPreferences(this, appPubkey) ?: "Alby Go"
 
@@ -64,6 +68,7 @@ class MessagingService : FirebaseMessagingService() {
             return
         }
 
+        // TODO: remove if notification type is not payment_received
         val amount = try {
             val json = JSONObject(decryptedContent)
             val notification = json.getJSONObject("notification")

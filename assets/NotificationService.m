@@ -32,14 +32,21 @@ NSData* dataFromHexString(NSString *hexString) {
   self.receivedRequest = request;
   self.contentHandler = contentHandler;
   self.bestAttemptContent = [request.content mutableCopy];
-  
-  NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.getalby.mobile.nse"];
-  NSDictionary *walletsDict = [sharedDefaults objectForKey:@"wallets"];
+
+  // TODO: check if userinfo / body are empty
 
   NSString *appPubkey = request.content.userInfo[@"body"][@"appPubkey"];
   if (!appPubkey) {
     return;
   }
+
+  NSString *encryptedContent = request.content.userInfo[@"body"][@"content"];
+  if (!encryptedContent) {
+    return;
+  }
+
+  NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.getalby.mobile.nse"];
+  NSDictionary *walletsDict = [sharedDefaults objectForKey:@"wallets"];
 
   NSDictionary *walletInfo = walletsDict[appPubkey];
   if (!walletInfo) {
@@ -57,7 +64,6 @@ NSData* dataFromHexString(NSString *hexString) {
     return;
   }
 
-  NSString *encryptedContent = request.content.userInfo[@"body"][@"content"];
   NSArray *parts = [encryptedContent componentsSeparatedByString:@"?iv="];
   if (parts.count < 2) {
     return;
