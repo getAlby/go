@@ -1,8 +1,8 @@
+import * as SharedPreferences from "@getalby/expo-shared-preferences";
 import { nwc } from "@getalby/sdk";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as ExpoNotifications from "expo-notifications";
-import * as SharedPreferences from "expo-shared-preferences";
 import { Platform } from "react-native";
 import { NOSTR_API_URL, SUITE_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
