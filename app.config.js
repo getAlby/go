@@ -76,7 +76,7 @@ export default ({ config }) => {
         backgroundImage: "./assets/adaptive-icon-bg.png",
       },
       permissions: ["android.permission.CAMERA"],
-      googleServicesFile: "./google-services.json",
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
     },
     extra: {
       eas: {
