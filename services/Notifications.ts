@@ -1,4 +1,3 @@
-import * as SharedPreferences from "@getalby/expo-shared-preferences";
 import { nwc } from "@getalby/sdk";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
@@ -10,10 +9,13 @@ import { computeSharedSecret } from "~/lib/sharedSecret";
 import { useAppStore } from "~/lib/state/appStore";
 
 let UserDefaults: any;
+let SharedPreferences: any;
 
 if (Platform.OS === "ios") {
   UserDefaults =
     require("@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios").default;
+} else {
+  SharedPreferences = require("@getalby/expo-shared-preferences");
 }
 
 // TODO: add background notification handling for android
@@ -79,6 +81,7 @@ export async function registerForPushNotificationsAsync() {
           relayUrl: nwcClient.relayUrl,
           connectionPubkey: nwcClient.publicKey,
           walletPubkey: nwcClient.walletPubkey,
+          isIOS: Platform.OS === "ios",
         };
 
         try {
