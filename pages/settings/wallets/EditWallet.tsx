@@ -16,10 +16,13 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
+import { removeWalletInfo } from "~/lib/storeWalletInfo";
 
 export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
+  const nwcClient = useAppStore((store) => store.nwcClient);
+
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
       <Screen title="Edit Wallet" />
@@ -122,6 +125,7 @@ export function EditWallet() {
                   await deregisterWalletNotifications(
                     wallets[selectedWalletId].pushId,
                   );
+                  await removeWalletInfo(nwcClient?.publicKey ?? "");
                   useAppStore.getState().removeCurrentWallet();
                   if (wallets.length !== 1) {
                     router.back();

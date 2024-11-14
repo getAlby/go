@@ -16,6 +16,10 @@ type WalletInfo = {
   sharedSecret: string;
 };
 
+type Wallets = {
+  [publicKey: string]: Partial<WalletInfo>;
+};
+
 export async function storeWalletInfo(
   publicKey: string,
   walletData: Partial<WalletInfo>,
@@ -25,20 +29,50 @@ export async function storeWalletInfo(
   }
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
-    let wallets = (await groupDefaults.get("wallets")) || [];
+    const wallets = (await groupDefaults.get("wallets")) || {};
     wallets[publicKey] = {
       ...(wallets[publicKey] || {}),
       ...walletData,
     };
     await groupDefaults.set("wallets", wallets);
   } else {
-    let wallets = [];
     const walletsString = await SharedPreferences.getItemAsync("wallets");
-    wallets = walletsString ? JSON.parse(walletsString) : [];
+    const wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
     wallets[publicKey] = {
       ...(wallets[publicKey] || {}),
       ...walletData,
     };
     await SharedPreferences.setItemAsync("wallets", JSON.stringify(wallets));
+  }
+}
+
+export async function removeWalletInfo(publicKey: string) {
+  if (!publicKey) {
+    return;
+  }
+  if (Platform.OS === "ios") {
+    const groupDefaults = new UserDefaults(SUITE_NAME);
+    const wallets = await groupDefaults.get("wallets");
+    await groupDefaults.set("wallets", wallets);
+    if (wallets && wallets[publicKey]) {
+      delete wallets[publicKey];
+      await groupDefaults.set("wallets", wallets);
+    }
+  } else {
+    const walletsString = await SharedPreferences.getItemAsync("wallets");
+    const wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
+    if (wallets[publicKey]) {
+      delete wallets[publicKey];
+      await SharedPreferences.setItemAsync("wallets", JSON.stringify(wallets));
+    }
+  }
+}
+
+export async function removeAllInfo() {
+  if (Platform.OS === "ios") {
+    const groupDefaults = new UserDefaults(SUITE_NAME);
+    await groupDefaults.removeAll();
+  } else {
+    await SharedPreferences.deleteItemAsync("wallets");
   }
 }

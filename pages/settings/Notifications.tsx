@@ -5,6 +5,7 @@ import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
+import { removeAllInfo } from "~/lib/storeWalletInfo";
 import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 export function Notifications() {
@@ -31,6 +32,8 @@ export function Notifications() {
                 for (const wallet of wallets) {
                   await deregisterWalletNotifications(wallet.pushId);
                 }
+                await removeAllInfo();
+                useAppStore.getState().setExpoPushToken("");
               }
               useAppStore.getState().setNotificationsEnabled(checked);
               setLoading(false);

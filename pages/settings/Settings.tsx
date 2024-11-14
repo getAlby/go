@@ -21,6 +21,7 @@ import { useSession } from "~/hooks/useSession";
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
+import { removeAllInfo } from "~/lib/storeWalletInfo";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 export function Settings() {
@@ -135,6 +136,7 @@ export function Settings() {
                           for (const wallet of wallets) {
                             await deregisterWalletNotifications(wallet.pushId);
                           }
+                          await removeAllInfo();
                           router.dismissAll();
                           useAppStore.getState().reset();
                         },
