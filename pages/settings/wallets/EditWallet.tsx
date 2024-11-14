@@ -14,6 +14,7 @@ import {
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function EditWallet() {
@@ -117,7 +118,10 @@ export function EditWallet() {
               },
               {
                 text: "Confirm",
-                onPress: () => {
+                onPress: async () => {
+                  await deregisterWalletNotifications(
+                    wallets[selectedWalletId].pushId,
+                  );
                   useAppStore.getState().removeCurrentWallet();
                   if (wallets.length !== 1) {
                     router.back();

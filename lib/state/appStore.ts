@@ -14,11 +14,13 @@ interface AppState {
   readonly isNotificationsEnabled: boolean;
   readonly isOnboarded: boolean;
   readonly theme: Theme;
+  readonly expoPushToken: string;
   setUnlocked: (unlocked: boolean) => void;
   setTheme: (theme: Theme) => void;
   setOnboarded: (isOnboarded: boolean) => void;
+  setExpoPushToken: (expoPushToken: string) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
-  updateWallet(wallet: Partial<Wallet>, nostrWalletConnectUrl?: string): void;
+  updateWallet(walletId: number, walletUpdate: Partial<Wallet>): void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
   removeCurrentWallet(): void;
   setFiatCurrency(fiatCurrency: string): void;
@@ -37,6 +39,7 @@ const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
 const hasOnboardedKey = "hasOnboarded";
+const expoPushTokenKey = "expoPushToken";
 const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
 const isSecurityEnabledKey = "isSecurityEnabled";
@@ -93,17 +96,11 @@ function loadAddressBookEntries(): AddressBookEntry[] {
 }
 
 export const useAppStore = create<AppState>()((set, get) => {
-  const updateWallet = (
-    walletUpdate: Partial<Wallet>,
-    nostrWalletConnectUrl: string,
-  ) => {
-    const wallets = [...get().wallets];
-    const walletId = wallets.findIndex(
-      (wallet) => wallet.nostrWalletConnectUrl === nostrWalletConnectUrl,
-    );
+  const updateWallet = (walletId: number, walletUpdate: Partial<Wallet>) => {
     if (walletId < 0) {
       return;
     }
+    const wallets = [...get().wallets];
     const wallet: Wallet = {
       ...(wallets[walletId] || {}),
       ...walletUpdate,
@@ -133,7 +130,6 @@ export const useAppStore = create<AppState>()((set, get) => {
     });
   };
 
-  // TODO: de-register push notification subscripiton using pushId
   const removeCurrentWallet = () => {
     const wallets = [...get().wallets];
     if (wallets.length <= 1) {
@@ -190,6 +186,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     theme,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
+    expoPushToken: "",
     updateWallet,
     updateCurrentWallet,
     removeCurrentWallet,
@@ -207,6 +204,10 @@ export const useAppStore = create<AppState>()((set, get) => {
         secureStorage.removeItem(hasOnboardedKey);
       }
       set({ isOnboarded });
+    },
+    setExpoPushToken: (expoPushToken) => {
+      secureStorage.setItem(expoPushTokenKey, expoPushToken);
+      set({ expoPushToken });
     },
     setNWCClient: (nwcClient) => set({ nwcClient }),
     setSecurityEnabled: (isEnabled) => {
@@ -263,7 +264,6 @@ export const useAppStore = create<AppState>()((set, get) => {
     updateLastAlbyPayment: () => {
       secureStorage.setItem(lastAlbyPaymentKey, new Date().toString());
     },
-    // TODO: de-register push notification subscripitons using pushId
     reset() {
       // clear wallets
       for (let i = 0; i < get().wallets.length; i++) {
@@ -291,6 +291,12 @@ export const useAppStore = create<AppState>()((set, get) => {
 
       // set to initial wallet status
       secureStorage.setItem(selectedWalletIdKey, "0");
+
+      // clear notifications enabled status
+      secureStorage.removeItem(isNotificationsEnabledKey);
+
+      // clear expo push notifications token
+      secureStorage.removeItem(expoPushTokenKey);
 
       set({
         nwcClient: undefined,

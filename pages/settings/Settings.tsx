@@ -19,10 +19,12 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 export function Settings() {
+  const wallets = useAppStore((store) => store.wallets);
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(__DEV__);
@@ -129,7 +131,10 @@ export function Settings() {
                       },
                       {
                         text: "Confirm",
-                        onPress: () => {
+                        onPress: async () => {
+                          for (const wallet of wallets) {
+                            await deregisterWalletNotifications(wallet.pushId);
+                          }
                           router.dismissAll();
                           useAppStore.getState().reset();
                         },

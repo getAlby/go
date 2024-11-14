@@ -3,11 +3,12 @@ import { Text, View } from "react-native";
 import Screen from "~/components/Screen";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
+import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 export function Notifications() {
-  // TODO: If this is enabled, register notifications on new wallets being added
+  const [isLoading, setLoading] = React.useState(false);
   const isEnabled = useAppStore((store) => store.isNotificationsEnabled);
 
   return (
@@ -19,14 +20,20 @@ export function Notifications() {
             <Text className="text-lg">Allow Go to send notifications</Text>
           </Label>
           <Switch
+            disabled={isLoading}
             checked={isEnabled}
             onCheckedChange={async (checked) => {
+              setLoading(true);
               if (checked) {
-                await registerForPushNotificationsAsync();
+                checked = await registerForPushNotificationsAsync();
               } else {
-                // TODO: de-register all wallets on nostr api
+                const wallets = useAppStore.getState().wallets;
+                for (const wallet of wallets) {
+                  await deregisterWalletNotifications(wallet.pushId);
+                }
               }
               useAppStore.getState().setNotificationsEnabled(checked);
+              setLoading(false);
             }}
             nativeID="security"
           />

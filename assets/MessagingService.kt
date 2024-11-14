@@ -3,7 +3,9 @@ package com.getalby.mobile
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
+// import android.os.PowerManager
 import android.util.Base64
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -17,100 +19,94 @@ import javax.crypto.spec.SecretKeySpec
 
 class MessagingService : FirebaseMessagingService() {
 
+    data class WalletInfo(
+        val name: String,
+        val sharedSecret: String
+    )
+
+    private fun getWalletInfo(context: Context, key: String): WalletInfo? {
+      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
+      val walletsString = sharedPreferences.getString("wallets", null) ?: return null
+      return try {
+          val walletsJson = JSONObject(walletsString)
+          val walletJson = walletsJson.optJSONObject(key) ?: return null
+          WalletInfo(
+              name = walletJson.optString("name", "Alby Go"),
+              sharedSecret = walletJson.optString("sharedSecret", "")
+          )
+      } catch (e: Exception) {
+          e.printStackTrace()
+          null
+      }
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        val notificationId = System.currentTimeMillis().toInt()
-
-        val notificationManager = NotificationManagerCompat.from(this)
-
         if (remoteMessage.data.isEmpty()) {
             return
         }
 
-        if (!remoteMessage.data.containsKey("body")) {
-            return
-        }
-        
-        var encryptedContent = ""
-        var appPubkey = ""
-        val body = remoteMessage.data["body"] ?: return
+        val data = remoteMessage.data
+        val body = data["body"] ?: return
 
-        if (body.isEmpty()) {
-            return
-        }
-
-        try {
-            val jsonBody = JSONObject(body)
-            encryptedContent = jsonBody.optString("content", "")
-            appPubkey = jsonBody.optString("appPubkey", "")
+        val jsonBody = try {
+            JSONObject(body)
         } catch (e: Exception) {
             return
         }
 
-        if (encryptedContent.isEmpty()) {
+        val encryptedContent = jsonBody.optString("content", "")
+        val appPubkey = jsonBody.optString("appPubkey", "")
+
+        if (encryptedContent.isEmpty() || appPubkey.isEmpty()) {
             return
         }
 
-        if (appPubkey.isEmpty()) {
+        val walletInfo = getWalletInfo(this, appPubkey) ?: return
+        if (walletInfo.sharedSecret.isEmpty()) {
             return
         }
+        val sharedSecretBytes = hexStringToByteArray(walletInfo.sharedSecret)
+        val walletName = walletInfo.name
 
-        val sharedSecret = getSharedSecretFromPreferences(this, appPubkey)
-        val walletName = getWalletNameFromPreferences(this, appPubkey) ?: "Alby Go"
+        val decryptedContent = decrypt(encryptedContent, sharedSecretBytes) ?: return
 
-        if (sharedSecret.isNullOrEmpty()) {
-          return
-        }
-
-        val sharedSecretBytes = hexStringToByteArray(sharedSecret)
-        val decryptedContent = decrypt(encryptedContent, sharedSecretBytes)
-
-        if (decryptedContent == null) {
-            return
-        }
-
-        // TODO: remove if notification type is not payment_received
-        val amount = try {
-            val json = JSONObject(decryptedContent)
-            val notification = json.getJSONObject("notification")
-            notification.getInt("amount") / 1000
+        val json = try {
+            JSONObject(decryptedContent)
         } catch (e: Exception) {
             return
         }
+
+        val notificationType = json.optString("notification_type", "")
+        if (notificationType != "payment_received") {
+            return
+        }
+
+        val notification = json.optJSONObject("notification") ?: return
+        val amount = notification.optInt("amount", 0) / 1000
 
         val notificationText = "You have received $amount sats ⚡️"
 
-        // TODO: check if these are the right channel ids corressponding to expo code
-        // Create a notification channel for Android O and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "default",
-                "default",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
-        }
-
-        // Build the notification
         val notificationBuilder = NotificationCompat.Builder(this, "default")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(walletName)
             .setContentText(notificationText)
             .setAutoCancel(true)
+        val notificationManager = NotificationManagerCompat.from(this)
+        val notificationId = System.currentTimeMillis().toInt()
         notificationManager.notify(notificationId, notificationBuilder.build())
+        // wakeApp()
     }
 
     private fun getSharedSecretFromPreferences(context: Context, key: String): String? {
-      val sharedPreferences = context.getSharedPreferences(context.packageName + ".settings", Context.MODE_PRIVATE)
+      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
       return sharedPreferences.getString("${key}_shared_secret", null)
     }
 
     private fun getWalletNameFromPreferences(context: Context, key: String): String? {
-      val sharedPreferences = context.getSharedPreferences(context.packageName + ".settings", Context.MODE_PRIVATE)
+      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
       return sharedPreferences.getString("${key}_name", null)
     }
 
-    // Function to decrypt the content
     private fun decrypt(content: String, key: ByteArray): String? {
         val parts = content.split("?iv=")
         if (parts.size < 2) {
@@ -129,12 +125,10 @@ class MessagingService : FirebaseMessagingService() {
             val plaintext = cipher.doFinal(ciphertext)
             String(plaintext, Charset.forName("UTF-8"))
         } catch (e: Exception) {
-            e.printStackTrace()
             null
         }
     }
 
-    // Helper function to convert hex string to byte array
     private fun hexStringToByteArray(s: String): ByteArray {
         val len = s.length
         val data = ByteArray(len / 2)
@@ -146,4 +140,19 @@ class MessagingService : FirebaseMessagingService() {
         }
         return data
     }
+    
+    // private fun wakeApp() {
+    //   @Suppress("DEPRECATION")
+    //   val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
+    //   val screenIsOn = pm.isInteractive
+    //   if (!screenIsOn) {
+    //       val wakeLockTag = packageName + "WAKELOCK"
+    //       val wakeLock = pm.newWakeLock(
+    //           PowerManager.FULL_WAKE_LOCK or
+    //           PowerManager.ACQUIRE_CAUSES_WAKEUP or
+    //           PowerManager.ON_AFTER_RELEASE, wakeLockTag
+    //       )
+    //       wakeLock.acquire()
+    //   }
+    // }
 }

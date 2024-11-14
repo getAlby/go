@@ -9,10 +9,12 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { storeWalletInfo } from "~/lib/storeWalletInfo";
 
 export function RenameWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
+  const nwcClient = useAppStore((store) => store.nwcClient);
   const [walletName, setWalletName] = React.useState(
     wallets[selectedWalletId].name || "",
   );
@@ -34,8 +36,11 @@ export function RenameWallet() {
         </View>
         <Button
           size="lg"
-          onPress={() => {
+          onPress={async () => {
             useAppStore.getState().updateCurrentWallet({
+              name: walletName,
+            });
+            await storeWalletInfo(nwcClient?.publicKey ?? "", {
               name: walletName,
             });
             Toast.show({

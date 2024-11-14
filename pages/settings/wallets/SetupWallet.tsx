@@ -26,6 +26,7 @@ import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
 import { REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import { registerWalletNotifications } from "~/lib/notifications";
 
 export function SetupWallet() {
   const wallets = useAppStore((store) => store.wallets);
@@ -98,7 +99,7 @@ export function SetupWallet() {
     setConnecting(false);
   }
 
-  const addWallet = () => {
+  const addWallet = async () => {
     if (!nostrWalletConnectUrl) {
       return;
     }
@@ -110,6 +111,17 @@ export function SetupWallet() {
       name: name,
       lightningAddress: nwcClient.lud16 || "",
     });
+
+    const isNotificationsEnabled =
+      useAppStore.getState().isNotificationsEnabled;
+    if (isNotificationsEnabled) {
+      await registerWalletNotifications(
+        nostrWalletConnectUrl,
+        wallets.length,
+        name,
+      );
+    }
+
     useAppStore.getState().setNWCClient(nwcClient);
 
     Toast.show({
