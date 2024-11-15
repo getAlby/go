@@ -14,6 +14,7 @@ if (Platform.OS === "ios") {
 type WalletInfo = {
   name: string;
   sharedSecret: string;
+  id: number;
 };
 
 type Wallets = {
@@ -46,7 +47,7 @@ export async function storeWalletInfo(
   }
 }
 
-export async function removeWalletInfo(publicKey: string) {
+export async function removeWalletInfo(publicKey: string, walletId: number) {
   if (!publicKey) {
     return;
   }
@@ -56,6 +57,12 @@ export async function removeWalletInfo(publicKey: string) {
     await groupDefaults.set("wallets", wallets);
     if (wallets && wallets[publicKey]) {
       delete wallets[publicKey];
+      for (const key in wallets) {
+        const wallet = wallets[key];
+        if (wallet && wallet.id && wallet.id > walletId) {
+          wallet.id -= 1;
+        }
+      }
       await groupDefaults.set("wallets", wallets);
     }
   } else {
@@ -63,6 +70,12 @@ export async function removeWalletInfo(publicKey: string) {
     const wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
     if (wallets[publicKey]) {
       delete wallets[publicKey];
+      for (const key in wallets) {
+        const wallet = wallets[key];
+        if (wallet && wallet.id && wallet.id > walletId) {
+          wallet.id -= 1;
+        }
+      }
       await SharedPreferences.setItemAsync("wallets", JSON.stringify(wallets));
     }
   }

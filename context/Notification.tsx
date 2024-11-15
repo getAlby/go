@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-
 import * as ExpoNotifications from "expo-notifications";
+import { useEffect, useRef } from "react";
+import { handleLink } from "~/lib/link";
 import { useAppStore } from "~/lib/state/appStore";
 
 ExpoNotifications.setNotificationHandler({
@@ -14,7 +14,6 @@ ExpoNotifications.setNotificationHandler({
 });
 
 export const NotificationProvider = ({ children }: any) => {
-  const notificationListener = useRef<ExpoNotifications.Subscription>();
   const responseListener = useRef<ExpoNotifications.Subscription>();
   const isNotificationsEnabled = useAppStore(
     (store) => store.isNotificationsEnabled,
@@ -25,25 +24,17 @@ export const NotificationProvider = ({ children }: any) => {
       return;
     }
 
-    notificationListener.current =
-      ExpoNotifications.addNotificationReceivedListener((notification) => {
-        // triggers when app is foregrounded
-        console.info("received from server just now");
-      });
-
+    // this is for iOS only as tapping the notifications
+    // directly open the deep link on android
     responseListener.current =
       ExpoNotifications.addNotificationResponseReceivedListener((response) => {
-        // triggers when notification is clicked (only when foreground or background)
-        // see https://docs.expo.dev/versions/latest/sdk/notifications/#notification-events-listeners
-        // TODO: to also redirect when the app is killed, use useLastNotificationResponse
-        // TODO: redirect the user to transaction page after switching to the right wallet
+        const deepLink = response.notification.request.content.data.deepLink;
+        if (deepLink) {
+          handleLink(deepLink);
+        }
       });
 
     return () => {
-      notificationListener.current &&
-        ExpoNotifications.removeNotificationSubscription(
-          notificationListener.current,
-        );
       responseListener.current &&
         ExpoNotifications.removeNotificationSubscription(
           responseListener.current,

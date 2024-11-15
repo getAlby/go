@@ -125,7 +125,10 @@ export function EditWallet() {
                   await deregisterWalletNotifications(
                     wallets[selectedWalletId].pushId,
                   );
-                  await removeWalletInfo(nwcClient?.publicKey ?? "");
+                  await removeWalletInfo(
+                    nwcClient?.publicKey ?? "",
+                    selectedWalletId,
+                  );
                   useAppStore.getState().removeCurrentWallet();
                   if (wallets.length !== 1) {
                     router.back();

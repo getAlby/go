@@ -2,8 +2,11 @@ package com.getalby.mobile
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 // import android.os.PowerManager
 import android.util.Base64
@@ -21,7 +24,8 @@ class MessagingService : FirebaseMessagingService() {
 
     data class WalletInfo(
         val name: String,
-        val sharedSecret: String
+        val sharedSecret: String,
+        val id: Int
     )
 
     private fun getWalletInfo(context: Context, key: String): WalletInfo? {
@@ -32,7 +36,8 @@ class MessagingService : FirebaseMessagingService() {
           val walletJson = walletsJson.optJSONObject(key) ?: return null
           WalletInfo(
               name = walletJson.optString("name", "Alby Go"),
-              sharedSecret = walletJson.optString("sharedSecret", "")
+              sharedSecret = walletJson.optString("sharedSecret", ""),
+              id = walletJson.optInt("id", -1)
           )
       } catch (e: Exception) {
           e.printStackTrace()
@@ -45,8 +50,8 @@ class MessagingService : FirebaseMessagingService() {
             return
         }
 
-        val data = remoteMessage.data
-        val body = data["body"] ?: return
+        val messageData = remoteMessage.data
+        val body = messageData["body"] ?: return
 
         val jsonBody = try {
             JSONObject(body)
@@ -62,7 +67,7 @@ class MessagingService : FirebaseMessagingService() {
         }
 
         val walletInfo = getWalletInfo(this, appPubkey) ?: return
-        if (walletInfo.sharedSecret.isEmpty()) {
+        if (walletInfo.sharedSecret.isEmpty() || walletInfo.id == -1) {
             return
         }
         val sharedSecretBytes = hexStringToByteArray(walletInfo.sharedSecret)
@@ -83,14 +88,29 @@ class MessagingService : FirebaseMessagingService() {
 
         val notification = json.optJSONObject("notification") ?: return
         val amount = notification.optInt("amount", 0) / 1000
+        val paymentHash = notification.optString("payment_hash", "")
 
         val notificationText = "You have received $amount sats ⚡️"
+
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse("alby://payment_received?payment_hash=$paymentHash&wallet_id=${walletInfo.id}")
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val notificationBuilder = NotificationCompat.Builder(this, "default")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(walletName)
             .setContentText(notificationText)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+
         val notificationManager = NotificationManagerCompat.from(this)
         val notificationId = System.currentTimeMillis().toInt()
         notificationManager.notify(notificationId, notificationBuilder.build())

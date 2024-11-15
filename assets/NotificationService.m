@@ -71,11 +71,12 @@ NSData* dataFromHexString(NSString *hexString) {
 
   NSString *sharedSecretString = walletInfo[@"sharedSecret"];
   NSString *walletName = walletInfo[@"name"];
+  NSNumber *walletId = walletInfo[@"id"];
   if (!walletName) {
     walletName = @"Alby Go";
   }
 
-  if (!sharedSecretString) {
+  if (!sharedSecretString || walletId == nil) {
     self.contentHandler(nil);
     return;
   }
@@ -132,12 +133,28 @@ NSData* dataFromHexString(NSString *hexString) {
 
   NSDictionary *notificationDict = parsedContent[@"notification"];
   NSNumber *amountNumber = notificationDict[@"amount"];
-  if (!amountNumber) {
+  NSString *paymentHash = notificationDict[@"payment_hash"];
+  if (!amountNumber || !paymentHash) {
     self.contentHandler(nil);
     return;
   }
 
   double amountInSats = [amountNumber doubleValue] / 1000.0;
+  NSString *deepLink = [NSString stringWithFormat:@"alby://payment_received?payment_hash=%@&wallet_id=%@", paymentHash, walletId.stringValue];
+
+  NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy];
+  if (!newUserInfo) {
+      newUserInfo = [NSMutableDictionary dictionary];
+  }
+
+  NSMutableDictionary *newBodyDict = [newUserInfo[@"body"] mutableCopy];
+  if (!newBodyDict) {
+    newBodyDict = [NSMutableDictionary dictionary];
+  }
+  newBodyDict[@"deepLink"] = deepLink;
+  newUserInfo[@"body"] = newBodyDict;
+  self.bestAttemptContent.userInfo = newUserInfo;
+
   self.bestAttemptContent.title = walletName;
   self.bestAttemptContent.body = [NSString stringWithFormat:@"You just received %.0f sats ⚡️", amountInSats];
   self.contentHandler(self.bestAttemptContent);

@@ -53,6 +53,7 @@ export async function registerForPushNotificationsAsync(): Promise<boolean> {
 
       for (let i = 0; i < wallets.length; i++) {
         const wallet = wallets[i];
+        // TODO: return false if this fails
         await registerWalletNotifications(
           wallet.nostrWalletConnectUrl ?? "",
           i,
