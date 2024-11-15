@@ -133,14 +133,20 @@ NSData* dataFromHexString(NSString *hexString) {
 
   NSDictionary *notificationDict = parsedContent[@"notification"];
   NSNumber *amountNumber = notificationDict[@"amount"];
-  NSString *paymentHash = notificationDict[@"payment_hash"];
-  if (!amountNumber || !paymentHash) {
+  if (!amountNumber) {
+    self.contentHandler(nil);
+    return;
+  }
+
+  NSString *transactionJSON = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:notificationDict options:0 error:nil] encoding:NSUTF8StringEncoding];
+  NSString *encodedTransaction = [transactionJSON stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+  if (!encodedTransaction) {
     self.contentHandler(nil);
     return;
   }
 
   double amountInSats = [amountNumber doubleValue] / 1000.0;
-  NSString *deepLink = [NSString stringWithFormat:@"alby://payment_received?payment_hash=%@&wallet_id=%@", paymentHash, walletId.stringValue];
+  NSString *deepLink = [NSString stringWithFormat:@"alby://payment_received?transaction=%@&wallet_id=%@", encodedTransaction, walletId.stringValue];
 
   NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy];
   if (!newUserInfo) {

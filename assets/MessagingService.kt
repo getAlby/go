@@ -88,12 +88,12 @@ class MessagingService : FirebaseMessagingService() {
 
         val notification = json.optJSONObject("notification") ?: return
         val amount = notification.optInt("amount", 0) / 1000
-        val paymentHash = notification.optString("payment_hash", "")
+        val transaction = notification.toString()
 
         val notificationText = "You have received $amount sats ⚡️"
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("alby://payment_received?payment_hash=$paymentHash&wallet_id=${walletInfo.id}")
+            data = Uri.parse("alby://payment_received?transaction=${Uri.encode(transaction)}&wallet_id=${walletInfo.id}")
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 

@@ -47,26 +47,21 @@ export const handleLink = async (url: string) => {
 
     if (hostname === "payment_received") {
       const urlParams = new URLSearchParams(search);
-      const paymentHash = urlParams.get("payment_hash");
       const walletId = urlParams.get("wallet_id");
-      if (!paymentHash || !walletId) {
+      const transaction = urlParams.get("transaction");
+      if (!transaction || !walletId) {
         return;
       }
+      const transactionJSON = decodeURIComponent(transaction);
 
       useAppStore.getState().setSelectedWalletId(Number(walletId));
       const nwcClient = useAppStore.getState().nwcClient;
       if (!nwcClient) {
         return;
       }
-      const tx = await nwcClient.lookupInvoice({
-        payment_hash: paymentHash,
-      });
-      if (!tx) {
-        return;
-      }
       router.push({
         pathname: "/transaction",
-        params: { transactionJSON: JSON.stringify(tx) },
+        params: { transactionJSON },
       });
       return;
     }
