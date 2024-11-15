@@ -105,7 +105,7 @@ class MessagingService : FirebaseMessagingService() {
         )
 
         val notificationBuilder = NotificationCompat.Builder(this, "default")
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.notification_icon)
             .setContentTitle(walletName)
             .setContentText(notificationText)
             .setAutoCancel(true)
