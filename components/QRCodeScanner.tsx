@@ -41,14 +41,11 @@ function QRCodeScanner({
   }
 
   const handleScanned = (data: string) => {
-    setScanning((current) => {
-      if (current === true) {
-        console.info(`Bar code with data ${data} has been scanned!`);
-        onScanned(data);
-        return true;
-      }
-      return false;
-    });
+    if (isScanning) {
+      console.info(`Bar code with data ${data} has been scanned!`);
+      onScanned(data);
+      setScanning(false);
+    }
   };
 
   return (
