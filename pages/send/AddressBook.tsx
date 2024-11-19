@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { Trash2, UserCircle2 } from "~/components/Icons";
+import { Trash2 } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import {
@@ -36,7 +36,13 @@ export function AddressBook() {
             >
               <Card>
                 <CardContent className="flex flex-row items-center gap-4">
-                  <UserCircle2 size={32} className="text-muted-foreground" />
+                  <View className="h-10 w-10 flex items-center justify-center rounded-full bg-accent">
+                    <Text className="text-foreground text-base font-bold">
+                      {addressBookEntry.name?.[0]?.toUpperCase() ||
+                        addressBookEntry.lightningAddress?.[0]?.toUpperCase() ||
+                        "SN"}
+                    </Text>
+                  </View>
                   <View className="flex flex-1 flex-col">
                     <CardTitle>
                       {addressBookEntry.name ||

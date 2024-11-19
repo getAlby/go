@@ -56,9 +56,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Text
     ref={ref}
-    numberOfLines={1}
-    ellipsizeMode="tail"
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("mt-1 text-sm text-muted-foreground", className)}
     {...props}
   />
 ));
