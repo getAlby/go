@@ -3,7 +3,7 @@
     "name": "Alby Go",
     "slug": "alby-mobile",
     "version": "1.7.1",
-    "scheme": ["bitcoin", "lightning", "alby"],
+    "scheme": ["lightning", "bitcoin", "alby"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
