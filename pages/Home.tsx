@@ -3,7 +3,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Link, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ChevronUp, Settings2 } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
@@ -137,7 +143,14 @@ function MainButton({
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
           className="flex-1 aspect-square rounded-xl flex"
-          style={shadows.large}
+          style={{
+            ...shadows.large,
+            ...(pressed
+              ? {
+                  transform: "scale(0.98)",
+                }
+              : {}),
+          }}
           onPressIn={() => setPressed(true)}
           onPressOut={() => setPressed(false)}
         >
@@ -150,14 +163,8 @@ function MainButton({
               flex: 1,
               padding: 6,
               borderRadius: 24,
-              elevation: 2,
               justifyContent: "center",
               alignItems: "center",
-              ...(pressed
-                ? {
-                    transform: "scale(0.98)",
-                  }
-                : {}),
             }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
@@ -173,16 +180,24 @@ function MainButton({
   );
 }
 
-// NOTE: only applies on iOS
 const shadows = StyleSheet.create({
   large: {
-    // TODO: check dark mode
-    shadowColor: "black",
-    shadowOpacity: 0.15,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowRadius: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOpacity: 0.15,
+        shadowOffset: {
+          width: 5,
+          height: 5,
+        },
+        shadowRadius: 4,
+        borderRadius: 24,
+        backgroundColor: "white",
+      },
+      android: {
+        borderRadius: 24,
+        elevation: 2,
+      },
+    }),
   },
 });
