@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Pressable, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import {
@@ -16,7 +16,7 @@ export function AddressBook() {
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">
       <Screen title="Address Book" />
-      <View className="flex-1 flex flex-col gap-4">
+      <ScrollView className="flex-1 flex flex-col">
         {addressBookEntries.length > 0 ? (
           addressBookEntries.map((addressBookEntry, index) => (
             <Pressable
@@ -31,7 +31,7 @@ export function AddressBook() {
                 });
               }}
             >
-              <Card className="w-full">
+              <Card className="w-full mb-4">
                 <CardHeader className="w-full">
                   <CardTitle>
                     {addressBookEntry.name || addressBookEntry.lightningAddress}
@@ -46,7 +46,7 @@ export function AddressBook() {
         ) : (
           <Text className="text-lg">No entries yet.</Text>
         )}
-      </View>
+      </ScrollView>
 
       <Link href="/settings/address-book/new" asChild>
         <Button size="lg">
