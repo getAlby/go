@@ -24,6 +24,7 @@ interface AppState {
   setSecurityEnabled(securityEnabled: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
+  removeAddressBookEntry: (index: number) => void;
   reset(): void;
   getLastAlbyPayment(): Date | null;
   updateLastAlbyPayment(): void;
@@ -140,6 +141,26 @@ export const useAppStore = create<AppState>()((set, get) => {
     });
   };
 
+  const removeAddressBookEntry = (index: number) => {
+    const addressBookEntries = [...get().addressBookEntries];
+    if (index < 0 || index >= addressBookEntries.length) {
+      return;
+    }
+
+    addressBookEntries.splice(index, 1);
+
+    for (let i = index; i < addressBookEntries.length; i++) {
+      secureStorage.setItem(
+        getAddressBookEntryKey(i),
+        JSON.stringify(addressBookEntries[i]),
+      );
+    }
+
+    secureStorage.removeItem(getAddressBookEntryKey(addressBookEntries.length));
+
+    set({ addressBookEntries });
+  };
+
   const initialSelectedWalletId = +(
     secureStorage.getItem(selectedWalletIdKey) || "0"
   );
@@ -162,6 +183,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
     removeCurrentWallet,
+    removeAddressBookEntry,
     setUnlocked: (unlocked) => {
       set({ unlocked });
     },
