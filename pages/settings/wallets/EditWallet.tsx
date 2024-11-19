@@ -1,18 +1,23 @@
 import { Link, router } from "expo-router";
-import { Alert, Pressable, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
-import { TriangleAlert } from "~/components/Icons";
+import {
+  ArchiveRestore,
+  Trash2,
+  TriangleAlert,
+  Wallet2,
+  ZapIcon,
+} from "~/components/Icons";
 import Screen from "~/components/Screen";
 import {
   Card,
+  CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -27,25 +32,28 @@ export function EditWallet() {
           (wallets[selectedWalletId].nwcCapabilities || []).indexOf(
             capability,
           ) < 0 && (
-            <Card key={capability}>
-              <CardHeader>
-                <CardTitle className="flex flex-row gap-3 items-center">
-                  <TriangleAlert size={16} className="text-foreground" />
-                  <Text>Your wallet does not support {capability}</Text>
-                </CardTitle>
-              </CardHeader>
+            <Card key={capability} className="border-destructive">
+              <CardContent className="flex flex-row items-center gap-4">
+                <TriangleAlert className="text-destructive" />
+                <Text className="text-foreground">
+                  Your wallet does not support {capability}
+                </Text>
+              </CardContent>
             </Card>
           ),
       )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Wallet Name</CardTitle>
-              <CardDescription>
-                {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
-              </CardDescription>
-            </CardHeader>
+            <CardContent className="flex flex-row items-center gap-4">
+              <Wallet2 className="text-muted-foreground" />
+              <View className="flex flex-1 flex-col">
+                <CardTitle>Wallet Name</CardTitle>
+                <CardDescription>
+                  {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                </CardDescription>
+              </View>
+            </CardContent>
           </Card>
         </Pressable>
       </Link>
@@ -55,12 +63,15 @@ export function EditWallet() {
       >
         <Pressable>
           <Card className="w-full">
-            <CardHeader className="w-full">
-              <CardTitle className="flex flex-col">Lightning Address</CardTitle>
-              <CardDescription>
-                Update your Lightning Address to easily receive payments
-              </CardDescription>
-            </CardHeader>
+            <CardContent className="flex flex-row items-center gap-4">
+              <ZapIcon className="text-muted-foreground" />
+              <View className="flex flex-1 flex-col">
+                <CardTitle>Lightning Address</CardTitle>
+                <CardDescription>
+                  Update your Lightning Address to easily receive payments
+                </CardDescription>
+              </View>
+            </CardContent>
           </Card>
         </Pressable>
       </Link>
@@ -96,13 +107,16 @@ export function EditWallet() {
         }}
       >
         <Card className="w-full">
-          <CardHeader className="w-full">
-            <CardTitle className="flex flex-col">Export Wallet</CardTitle>
-            <CardDescription>
-              Copy your wallet's Connection Secret which can be imported into
-              another app
-            </CardDescription>
-          </CardHeader>
+          <CardContent className="flex flex-row items-center gap-4">
+            <ArchiveRestore className="text-muted-foreground" />
+            <View className="flex flex-1 flex-col">
+              <CardTitle>Export Wallet</CardTitle>
+              <CardDescription>
+                Copy your wallet's Connection Secret which can be imported into
+                another app
+              </CardDescription>
+            </View>
+          </CardContent>
         </Card>
       </Pressable>
       <Pressable
@@ -129,12 +143,15 @@ export function EditWallet() {
         }}
       >
         <Card className="w-full">
-          <CardHeader className="w-full">
-            <CardTitle className="flex flex-col">Delete Wallet</CardTitle>
-            <CardDescription>
-              Remove this wallet from your list of wallets
-            </CardDescription>
-          </CardHeader>
+          <CardContent className="flex flex-row items-center gap-4">
+            <Trash2 className="text-muted-foreground" />
+            <View className="flex flex-1 flex-col">
+              <CardTitle>Delete Wallet</CardTitle>
+              <CardDescription>
+                Remove this wallet from your list of wallets
+              </CardDescription>
+            </View>
+          </CardContent>
         </Card>
       </Pressable>
     </View>
