@@ -1,5 +1,4 @@
 import { router } from "expo-router";
-import { useAppStore } from "~/lib/state/appStore";
 import { lnurl } from "./lnurl";
 
 const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
@@ -53,15 +52,9 @@ export const handleLink = async (url: string) => {
         return;
       }
       const transactionJSON = decodeURIComponent(transaction);
-
-      useAppStore.getState().setSelectedWalletId(Number(walletId));
-      const nwcClient = useAppStore.getState().nwcClient;
-      if (!nwcClient) {
-        return;
-      }
       router.push({
         pathname: "/transaction",
-        params: { transactionJSON },
+        params: { transactionJSON, walletId },
       });
       return;
     }
