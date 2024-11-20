@@ -40,11 +40,14 @@ export function Transaction() {
     transactionJSON: string;
     walletId?: string;
   };
-  if (walletId) {
-    useAppStore.getState().setSelectedWalletId(Number(walletId));
-  }
   const transaction: Nip47Transaction = JSON.parse(transactionJSON);
   const getFiatAmount = useGetFiatAmount();
+
+  React.useEffect(() => {
+    if (walletId) {
+      useAppStore.getState().setSelectedWalletId(Number(walletId));
+    }
+  }, [walletId]);
 
   const boostagram = React.useMemo(() => {
     let parsedBoostagram;
