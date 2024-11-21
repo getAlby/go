@@ -44,6 +44,21 @@ export const handleLink = async (url: string) => {
 
     console.info("Navigating to", fullUrl);
 
+    if (hostname === "payment_received") {
+      const urlParams = new URLSearchParams(search);
+      const walletId = urlParams.get("wallet_id");
+      const transaction = urlParams.get("transaction");
+      if (!transaction || !walletId) {
+        return;
+      }
+      const transactionJSON = decodeURIComponent(transaction);
+      router.push({
+        pathname: "/transaction",
+        params: { transactionJSON, walletId },
+      });
+      return;
+    }
+
     const lnurlValue = lnurl.findLnurl(fullUrl);
     if (lnurlValue) {
       const lnurlDetails = await lnurl.getDetails(lnurlValue);

@@ -19,10 +19,13 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
+import { removeAllInfo } from "~/lib/storeWalletInfo";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 export function Settings() {
+  const wallets = useAppStore((store) => store.wallets);
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(__DEV__);
@@ -58,6 +61,15 @@ export function Settings() {
             </Text>
             <Text className="text-muted-foreground text-xl">
               ({fiatCurrency || DEFAULT_CURRENCY})
+            </Text>
+          </TouchableOpacity>
+        </Link>
+
+        <Link href="/settings/notifications" asChild>
+          <TouchableOpacity className="flex flex-row gap-4">
+            <Bell className="text-foreground" />
+            <Text className="text-foreground font-medium2 text-xl">
+              Notifications
             </Text>
           </TouchableOpacity>
         </Link>
@@ -110,15 +122,6 @@ export function Settings() {
               <TouchableOpacity
                 className="flex flex-row gap-4"
                 onPress={() => {
-                  router.push("/notifications");
-                }}
-              >
-                <Bell className="text-foreground" />
-                <Text className="font-medium2 text-xl">Notifications</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="flex flex-row gap-4"
-                onPress={() => {
                   Alert.alert(
                     "Reset",
                     "Are you sure you want to reset? You will be signed out of all your wallets. Your connection secrets and address book will be lost.",
@@ -129,7 +132,11 @@ export function Settings() {
                       },
                       {
                         text: "Confirm",
-                        onPress: () => {
+                        onPress: async () => {
+                          for (const wallet of wallets) {
+                            await deregisterWalletNotifications(wallet.pushId);
+                          }
+                          await removeAllInfo();
                           router.dismissAll();
                           useAppStore.getState().reset();
                         },

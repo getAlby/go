@@ -2,15 +2,18 @@ import * as Linking from "expo-linking";
 import { getInitialURL } from "expo-linking";
 import { useEffect } from "react";
 import { handleLink } from "~/lib/link";
+import { useAppStore } from "~/lib/state/appStore";
 import { useSession } from "./useSession";
 
 export function useHandleLinking() {
   const { hasSession } = useSession();
+  const isOnboarded = useAppStore((store) => store.isOnboarded);
+  const wallets = useAppStore((store) => store.wallets);
 
   useEffect(() => {
-    // Do not process any deep links until the user authenticated
+    // Do not process any deep links until the user is onboarded and authenticated
     // This prevents redirect loops between the deep link and /unlock
-    if (!hasSession) {
+    if (!hasSession || !isOnboarded || !wallets.length) {
       return;
     }
 
@@ -31,5 +34,5 @@ export function useHandleLinking() {
     );
 
     return () => subscription.remove();
-  }, [hasSession]);
+  }, [hasSession, isOnboarded, wallets.length]);
 }
