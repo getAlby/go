@@ -71,7 +71,7 @@ export default ({ config }) => {
         usesNonExemptEncryption: false,
       },
       infoPlist: {
-        UIBackgroundModes: ["remote-notification", "processing"],
+        UIBackgroundModes: ["remote-notification"],
       },
     },
     android: {
