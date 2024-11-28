@@ -12,6 +12,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#0F0C40"
     },
+    "newArchEnabled": true,
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
