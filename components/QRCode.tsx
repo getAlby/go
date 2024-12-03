@@ -12,7 +12,7 @@ function QRCode({ value }: { value: string }) {
       style={{ borderRadius: 28, elevation: 2 }}
     >
       <View className="flex items-center justify-center p-3 rounded-3xl bg-white w-96 h-96">
-        <QRCodeLibrary value={value} size={300} />
+        <QRCodeLibrary value={value} size={300} ecl="H" />
       </View>
     </LinearGradient>
   );
