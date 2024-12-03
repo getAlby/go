@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
 import React, { useEffect } from "react";
@@ -16,6 +17,7 @@ function QRCodeScanner({
   onScanned,
   startScanning = true,
 }: QRCodeScannerProps) {
+  const isFocused = useIsFocused();
   const [isScanning, setScanning] = React.useState(startScanning);
   const [isLoading, setLoading] = React.useState(false);
   const [permissionStatus, setPermissionStatus] = React.useState(
@@ -72,7 +74,9 @@ function QRCodeScanner({
               </Text>
             </View>
           )}
-          {isScanning && <FocusableCamera onScanned={handleScanned} />}
+          {isScanning && isFocused && (
+            <FocusableCamera onScanned={handleScanned} />
+          )}
         </>
       )}
     </View>
