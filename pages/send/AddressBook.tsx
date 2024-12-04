@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import { Trash2 } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -21,7 +21,7 @@ export function AddressBook() {
       <ScrollView className="flex-1 flex flex-col">
         {addressBookEntries.length > 0 ? (
           addressBookEntries.map((addressBookEntry, index) => (
-            <TouchableOpacity
+            <Pressable
               key={index}
               onPress={() => {
                 router.dismissAll();
@@ -62,7 +62,7 @@ export function AddressBook() {
                   </TouchableOpacity>
                 </CardContent>
               </Card>
-            </TouchableOpacity>
+            </Pressable>
           ))
         ) : (
           <Text className="text-lg">No entries yet.</Text>
