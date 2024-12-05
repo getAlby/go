@@ -24,8 +24,8 @@ type Boostagram = {
   podcast: string;
   url: string;
   episode?: string;
-  itemID?: string;
-  ts?: string;
+  itemID?: number;
+  ts?: number;
   message?: string;
   sender_id: string;
   sender_name: string;
@@ -186,8 +186,8 @@ function PodcastingInfo({ boost }: { boost: Boostagram }) {
       {boost.action && (
         <TransactionDetailRow title="Action" content={boost.action} />
       )}
-      {boost.ts && (
-        <TransactionDetailRow title="Timestamp" content={boost.ts} />
+      {boost.ts !== undefined && (
+        <TransactionDetailRow title="Timestamp" content={boost.ts.toString()} />
       )}
       {boost.value_msat_total && (
         <TransactionDetailRow
