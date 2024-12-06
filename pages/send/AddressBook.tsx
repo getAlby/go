@@ -1,11 +1,12 @@
 import { Link, router } from "expo-router";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
+import { Trash2 } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
@@ -13,6 +14,7 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function AddressBook() {
   const addressBookEntries = useAppStore((store) => store.addressBookEntries);
+
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">
       <Screen title="Address Book" />
@@ -30,16 +32,35 @@ export function AddressBook() {
                   },
                 });
               }}
+              className="mb-4"
             >
-              <Card className="w-full mb-4">
-                <CardHeader className="w-full">
-                  <CardTitle>
-                    {addressBookEntry.name || addressBookEntry.lightningAddress}
-                  </CardTitle>
-                  <CardDescription>
-                    {addressBookEntry.lightningAddress}
-                  </CardDescription>
-                </CardHeader>
+              <Card>
+                <CardContent className="flex flex-row items-center gap-4">
+                  <View className="h-10 w-10 flex items-center justify-center rounded-full bg-accent">
+                    <Text className="text-foreground text-base font-bold">
+                      {addressBookEntry.name?.[0]?.toUpperCase() ||
+                        addressBookEntry.lightningAddress?.[0]?.toUpperCase() ||
+                        "SN"}
+                    </Text>
+                  </View>
+                  <View className="flex flex-1 flex-col">
+                    <CardTitle>
+                      {addressBookEntry.name ||
+                        addressBookEntry.lightningAddress}
+                    </CardTitle>
+                    <CardDescription>
+                      {addressBookEntry.lightningAddress}
+                    </CardDescription>
+                  </View>
+                  <TouchableOpacity
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      useAppStore.getState().removeAddressBookEntry(index);
+                    }}
+                  >
+                    <Trash2 className="text-destructive" />
+                  </TouchableOpacity>
+                </CardContent>
               </Card>
             </Pressable>
           ))

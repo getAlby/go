@@ -34,7 +34,9 @@ import {
   RefreshCw,
   Settings2,
   Share2,
+  Trash2,
   TriangleAlert,
+  UserCircle2,
   Wallet2,
   WalletIcon,
   X,
@@ -95,6 +97,8 @@ interopIcon(CircleCheck);
 interopIcon(TriangleAlert);
 interopIcon(LogOut);
 interopIcon(ArchiveRestore);
+interopIcon(UserCircle2);
+interopIcon(Trash2);
 
 export {
   AlertCircle,
@@ -131,7 +135,9 @@ export {
   RefreshCw,
   Settings2,
   Share2,
+  Trash2,
   TriangleAlert,
+  UserCircle2,
   Wallet2,
   WalletIcon,
   X,

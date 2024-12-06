@@ -17,7 +17,7 @@ export function NewAddressBookEntry() {
     <DismissableKeyboardView>
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex flex-col p-3 gap-3">
-          <Screen title="New Address Book Entry" />
+          <Screen title="New Contact" />
           <Label nativeID="name" className="self-start justify-self-start">
             Name
           </Label>
@@ -51,6 +51,7 @@ export function NewAddressBookEntry() {
         </View>
         <View className="p-6">
           <Button
+            disabled={!name || !lightningAddress}
             onPress={() => {
               useAppStore
                 .getState()
