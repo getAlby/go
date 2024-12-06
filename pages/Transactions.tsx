@@ -26,7 +26,11 @@ export function Transactions() {
   const [loadingNextPage, setLoadingNextPage] = React.useState(false);
   const [transactionsLoaded, setTransactionsLoaded] = React.useState(false);
   const [allTransactions, setAllTransactions] = React.useState<
-    Nip47Transaction[]
+    //Nip47Transaction[]
+    // TODO: undo when JS SDK includes state property
+    (Nip47Transaction & {
+      state: "settled" | "pending" | "failed";
+    })[]
   >([]);
   const [refreshingTransactions, setRefreshingTransactions] =
     React.useState(false);
@@ -116,26 +120,47 @@ export function Transactions() {
                 })
               }
             >
-              <View className="flex flex-row items-center gap-3 px-4 py-3">
+              <View
+                className={cn(
+                  "flex flex-row items-center gap-3 px-4 py-3",
+                  transaction.state === "pending" && "animate-pulse",
+                )}
+              >
                 <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
-                  {transaction.type === "incoming" && (
-                    <MoveDownLeft className="text-receive" size={20} />
+                  {transaction.state !== "failed" && (
+                    <>
+                      {transaction.type === "incoming" && (
+                        <MoveDownLeft className="text-receive" size={20} />
+                      )}
+                      {transaction.type === "outgoing" && (
+                        <MoveUpRight className="text-send" size={20} />
+                      )}
+                    </>
                   )}
-                  {transaction.type === "outgoing" && (
-                    <MoveUpRight className="text-send" size={20} />
+                  {transaction.state === "failed" && (
+                    <X className="text-destructive" size={20} />
                   )}
                 </View>
                 <View className="flex flex-col flex-1">
-                  <Text numberOfLines={1} className="font-medium2">
-                    {transaction.description
-                      ? transaction.description
-                      : transaction.type === "incoming"
+                  <View className="flex flex-row flex-1 items-center gap-2">
+                    <Text numberOfLines={1} className="font-medium2">
+                      {transaction.type === "incoming"
                         ? "Received"
-                        : "Sent"}
-                  </Text>
-                  <Text className="text-muted-foreground text-sm">
-                    {dayjs.unix(transaction.settled_at).fromNow()}
-                  </Text>
+                        : transaction.state === "failed"
+                          ? "Failed"
+                          : transaction.state === "pending"
+                            ? "Sending"
+                            : "Sent"}
+                    </Text>
+                    <Text className="text-muted-foreground text-sm">
+                      {dayjs
+                        .unix(transaction.settled_at || transaction.created_at)
+                        .fromNow()}
+                    </Text>
+                  </View>
+                  {transaction.description && (
+                    <Text numberOfLines={1}>{transaction.description}</Text>
+                  )}
                 </View>
                 <View>
                   <Text
