@@ -18,6 +18,7 @@ const fetcher = async (...args: FetchArgs) => {
     const transactions = await nwcClient.listTransactions({
       limit: TRANSACTIONS_PAGE_SIZE,
       offset: (page - 1) * TRANSACTIONS_PAGE_SIZE,
+      unpaid_outgoing: true,
     });
     return transactions;
   } catch (error) {
