@@ -26,11 +26,7 @@ export function Transactions() {
   const [loadingNextPage, setLoadingNextPage] = React.useState(false);
   const [transactionsLoaded, setTransactionsLoaded] = React.useState(false);
   const [allTransactions, setAllTransactions] = React.useState<
-    //Nip47Transaction[]
-    // TODO: undo when JS SDK includes state property
-    (Nip47Transaction & {
-      state: "settled" | "pending" | "failed";
-    })[]
+    Nip47Transaction[]
   >([]);
   const [refreshingTransactions, setRefreshingTransactions] =
     React.useState(false);

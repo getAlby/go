@@ -1,7 +1,3 @@
-import {
-  Nip47ListTransactionsRequest,
-  Nip47Transaction,
-} from "@getalby/sdk/dist/NWCClient";
 import { useAppStore } from "lib/state/appStore";
 import useSWR from "swr";
 import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
@@ -19,19 +15,12 @@ const fetcher = async (...args: FetchArgs) => {
   const page = +(transactionsUrl.searchParams.get("page") as string);
 
   try {
-    const transactions = await nwcClient.listTransactions(
-      {
-        limit: TRANSACTIONS_PAGE_SIZE,
-        offset: (page - 1) * TRANSACTIONS_PAGE_SIZE,
-        unpaid_outgoing: true,
-      } as Nip47ListTransactionsRequest /* TODO: remove cast once unpaid_outgoing or similar is part of spec/js-sdk */,
-    );
-    return transactions as {
-      // TODO: undo when JS SDK includes state property
-      transactions: (Nip47Transaction & {
-        state: "settled" | "pending" | "failed";
-      })[];
-    };
+    const transactions = await nwcClient.listTransactions({
+      limit: TRANSACTIONS_PAGE_SIZE,
+      offset: (page - 1) * TRANSACTIONS_PAGE_SIZE,
+      unpaid_outgoing: true,
+    });
+    return transactions;
   } catch (error) {
     errorToast(error);
     throw error;

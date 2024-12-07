@@ -38,10 +38,7 @@ export function Transaction() {
   const { transactionJSON } = useLocalSearchParams() as unknown as {
     transactionJSON: string;
   };
-  // TODO: undo when JS SDK includes state property
-  const transaction: Nip47Transaction & {
-    state: "settled" | "pending" | "failed";
-  } = JSON.parse(transactionJSON);
+  const transaction: Nip47Transaction = JSON.parse(transactionJSON);
   const getFiatAmount = useGetFiatAmount();
 
   const boostagram = React.useMemo(() => {
