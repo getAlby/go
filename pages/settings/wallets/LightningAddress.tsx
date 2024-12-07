@@ -1,21 +1,70 @@
+import { LightningAddress } from "@getalby/lightning-tools";
 import { router } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
+import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
-export function LightningAddress() {
+export function SetLightningAddress() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   const [lightningAddress, setLightningAddress] = React.useState("");
   React.useEffect(() => {
     setLightningAddress(wallets[selectedWalletId].lightningAddress || "");
   }, [wallets, selectedWalletId]);
+  const [isLoading, setLoading] = React.useState(false);
+
+  const updateLightningAddress = async () => {
+    setLoading(true);
+    try {
+      if (lightningAddress) {
+        const nwcClient = useAppStore.getState().nwcClient;
+        if (!nwcClient) {
+          throw new Error("NWC client not connected");
+        }
+
+        // by generating an invoice from the lightning address and checking
+        // we own it via lookup_invoice, we can prove we own the lightning address
+        const _lightningAddress = new LightningAddress(lightningAddress);
+        await _lightningAddress.fetch();
+        const invoiceFromLightningAddress =
+          await _lightningAddress.requestInvoice({ satoshi: 1 });
+        let found = false;
+        try {
+          const transaction = await nwcClient.lookupInvoice({
+            payment_hash: invoiceFromLightningAddress.paymentHash,
+          });
+          found =
+            transaction?.invoice === invoiceFromLightningAddress.paymentRequest;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (_ /* transaction is not found */) {}
+
+        if (!found) {
+          throw new Error(
+            "Could not verify you are the owner of this lightning address.",
+          );
+        }
+      }
+
+      useAppStore.getState().updateCurrentWallet({ lightningAddress });
+      Toast.show({
+        type: "success",
+        text1: "Lightning address updated",
+      });
+      router.back();
+    } catch (error) {
+      errorToast(error);
+    }
+    setLoading(false);
+  };
+
   return (
     <DismissableKeyboardView>
       <View className="flex-1 flex flex-col">
@@ -41,15 +90,10 @@ export function LightningAddress() {
         <View className="p-6">
           <Button
             size="lg"
-            onPress={() => {
-              useAppStore.getState().updateCurrentWallet({ lightningAddress });
-              Toast.show({
-                type: "success",
-                text1: "Lightning address updated",
-              });
-              router.back();
-            }}
+            className="flex flex-row gap-2"
+            onPress={updateLightningAddress}
           >
+            {isLoading && <Loading className="text-primary-foreground" />}
             <Text>Save</Text>
           </Button>
         </View>

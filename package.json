@@ -25,7 +25,7 @@
     "test:ci": "jest"
   },
   "dependencies": {
-    "@getalby/lightning-tools": "^5.1.0",
+    "@getalby/lightning-tools": "^5.1.1",
     "@getalby/sdk": "^3.8.1",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@rn-primitives/dialog": "^1.0.3",

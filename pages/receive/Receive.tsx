@@ -1,6 +1,6 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
 import { Image, Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -179,7 +179,8 @@ export function Receive() {
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-            <ZapIcon className="text-foreground" size={64} />
+            {/* TODO: re-add when we have a way to create a lightning address for new users */}
+            {/* <ZapIcon className="text-foreground" size={64} />
             <Text className="text-2xl max-w-64 text-center">
               Receive quickly with a Lightning Address
             </Text>
@@ -190,7 +191,7 @@ export function Receive() {
               <Button variant="secondary">
                 <Text>Set Lightning Address</Text>
               </Button>
-            </Link>
+            </Link> */}
           </View>
           <View className="flex flex-row gap-3 p-6">
             <Button
