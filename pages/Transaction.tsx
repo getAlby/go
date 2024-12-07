@@ -1,6 +1,5 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
-import Hex from "crypto-js/enc-hex";
-import Utf8 from "crypto-js/enc-utf8";
+import { hexToBytes } from "@noble/hashes/utils";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams } from "expo-router";
@@ -49,7 +48,7 @@ export function Transaction() {
       )?.find((record) => record.type === 7629169);
       if (tlvRecord) {
         parsedBoostagram = JSON.parse(
-          Utf8.stringify(Hex.parse(tlvRecord.value)),
+          new TextDecoder().decode(hexToBytes(tlvRecord.value)),
         );
       }
     } catch (e) {

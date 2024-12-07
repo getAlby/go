@@ -12,7 +12,6 @@ import { swrConfiguration } from "lib/swr";
 import * as React from "react";
 import { SafeAreaView } from "react-native";
 import Toast from "react-native-toast-message";
-import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { toastConfig } from "~/components/ToastConfig";
 import { UserInactivityProvider } from "~/context/UserInactivity";
@@ -96,7 +95,6 @@ export default function RootLayout() {
     <SWRConfig value={swrConfiguration}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <PolyfillCrypto />
         <SafeAreaView className="w-full h-full bg-background">
           <UserInactivityProvider>
             <SessionProvider>
