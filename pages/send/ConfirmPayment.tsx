@@ -10,8 +10,8 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
@@ -120,19 +120,17 @@ export function ConfirmPayment() {
           (transaction) => transaction.state === "pending",
         ) && (
           <Link href="/transactions" className="mb-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  <View className="flex flex-row gap-3 items-center animate-pulse">
-                    <TriangleAlert size={16} className="text-foreground" />
-                    <Text>One or more pending payments</Text>
-                  </View>
-                </CardTitle>
-                <CardDescription>
-                  Please check your transaction list before paying to ensure you
-                  do not make a payment twice.
-                </CardDescription>
-              </CardHeader>
+            <Card className="w-full">
+              <CardContent className="flex flex-row items-center gap-4">
+                <TriangleAlert className="text-muted-foreground" />
+                <View className="flex flex-1 flex-col">
+                  <CardTitle>One or more pending payments</CardTitle>
+                  <CardDescription>
+                    Please check your transaction list before paying to ensure
+                    you do not make a payment twice.
+                  </CardDescription>
+                </View>
+              </CardContent>
             </Card>
           </Link>
         )}
