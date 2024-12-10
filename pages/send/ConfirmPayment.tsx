@@ -1,20 +1,28 @@
 import { Invoice } from "@getalby/lightning-tools";
 
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { ZapIcon } from "~/components/Icons";
+import { TriangleAlert, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { useTransactions } from "~/hooks/useTransactions";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
+  const { data: transactions } = useTransactions();
   const { invoice, originalText, comment, successAction } =
     useLocalSearchParams() as {
       invoice: string;
@@ -108,6 +116,24 @@ export function ConfirmPayment() {
         <Receiver originalText={originalText} invoice={invoice} />
       </View>
       <View className="p-6">
+        {!transactions?.transactions.some(
+          (transaction) => transaction.state === "pending",
+        ) && (
+          <Link href="/transactions" className="mb-6">
+            <Card className="w-full">
+              <CardContent className="flex flex-row items-center gap-4">
+                <TriangleAlert className="text-muted-foreground" />
+                <View className="flex flex-1 flex-col">
+                  <CardTitle>One or more pending payments</CardTitle>
+                  <CardDescription>
+                    Please check your transaction list before paying to ensure
+                    you do not make a payment twice.
+                  </CardDescription>
+                </View>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
         <Button
           size="lg"
           onPress={pay}
