@@ -1252,10 +1252,10 @@
     find-up "^5.0.0"
     js-yaml "^4.1.0"
 
-"@getalby/lightning-tools@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.1.0.tgz#85fae6c6501e59e3fc1ae836e365a35df00bab41"
-  integrity sha512-KhLnKu6hboNYxVmmegRi06ufW3J0o/5gZ5vMe4e94tKC1o8glN/fDn1fTL4hRIqgZjfzvDPPmV1A3YUkNtQttA==
+"@getalby/lightning-tools@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.1.1.tgz#51125b2c58ef9372ae9efa93d0808d2205914b91"
+  integrity sha512-qiGWY7AMnQXywNlpEUTm/2u7Qx0C0qV0i3vlAV5ip8xV2quo4hkesHuAh6dBg/p3VC7t1fa9YUe9677hvQ3fVA==
 
 "@getalby/sdk@^3.8.2":
   version "3.8.2"
