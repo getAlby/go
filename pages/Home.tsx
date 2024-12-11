@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import {
   Platform,
   Pressable,
+  RefreshControl,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -33,6 +35,7 @@ enum BalanceState {
 
 export function Home() {
   const { data: balance, mutate: reloadBalance } = useBalance();
+  const [refreshingBalance, setRefreshingBalance] = useState(false);
   const getFiatAmount = useGetFiatAmount();
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
@@ -41,6 +44,12 @@ export function Home() {
   useFocusEffect(() => {
     reloadBalance();
   });
+
+  const refreshBalance = async () => {
+    setRefreshingBalance(true);
+    await reloadBalance();
+    setRefreshingBalance(false);
+  };
 
   function switchBalanceState(): void {
     if (balanceState === BalanceState.SATS) {
@@ -65,50 +74,61 @@ export function Home() {
         )}
       />
       <View className="h-full flex p-6">
-        <View className="grow flex flex-col items-center justify-center gap-4">
-          <TouchableOpacity
-            onPress={switchBalanceState}
-            className="w-full flex flex-col items-center justify-center gap-4"
-          >
-            <View className="w-full flex flex-row justify-center items-center gap-2">
-              {balance ? (
-                <>
-                  <Text className="text-foreground text-5xl font-bold2">
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshingBalance}
+              onRefresh={refreshBalance}
+              progressViewOffset={128}
+            />
+          }
+          contentContainerClassName="flex-1"
+        >
+          <View className="grow flex flex-col items-center justify-center gap-4">
+            <TouchableOpacity
+              onPress={switchBalanceState}
+              className="w-full flex flex-col items-center justify-center gap-4"
+            >
+              <View className="w-full flex flex-row justify-center items-center gap-2">
+                {balance && !refreshingBalance ? (
+                  <>
+                    <Text className="text-foreground text-5xl font-bold2">
+                      {balanceState === BalanceState.SATS &&
+                        new Intl.NumberFormat().format(
+                          Math.floor(balance.balance / 1000),
+                        )}
+                      {balanceState === BalanceState.FIAT &&
+                        getFiatAmount &&
+                        getFiatAmount(Math.floor(balance.balance / 1000))}
+                      {balanceState === BalanceState.HIDDEN && "****"}
+                    </Text>
+                    <Text className="text-muted-foreground text-3xl font-semibold2">
+                      {balanceState === BalanceState.SATS && "sats"}
+                    </Text>
+                  </>
+                ) : (
+                  <Skeleton className="w-48 h-12" />
+                )}
+              </View>
+              <View className="flex justify-center items-center">
+                {balance && !refreshingBalance ? (
+                  <Text className="text-center text-3xl text-muted-foreground font-semibold2">
                     {balanceState === BalanceState.SATS &&
-                      new Intl.NumberFormat().format(
-                        Math.floor(balance.balance / 1000),
-                      )}
-                    {balanceState === BalanceState.FIAT &&
                       getFiatAmount &&
                       getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceState === BalanceState.HIDDEN && "****"}
+                    {balanceState === BalanceState.FIAT &&
+                      new Intl.NumberFormat().format(
+                        Math.floor(balance.balance / 1000),
+                      ) + " sats"}
                   </Text>
-                  <Text className="text-muted-foreground text-3xl font-semibold2">
-                    {balanceState === BalanceState.SATS && "sats"}
-                  </Text>
-                </>
-              ) : (
-                <Skeleton className="w-48 h-12" />
-              )}
-            </View>
-            <View className="flex justify-center items-center">
-              {balance ? (
-                <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                  {balanceState === BalanceState.SATS &&
-                    getFiatAmount &&
-                    getFiatAmount(Math.floor(balance.balance / 1000))}
-                  {balanceState === BalanceState.FIAT &&
-                    new Intl.NumberFormat().format(
-                      Math.floor(balance.balance / 1000),
-                    ) + " sats"}
-                </Text>
-              ) : (
-                <Skeleton className="w-32 h-10" />
-              )}
-            </View>
-          </TouchableOpacity>
-          {new Date().getDate() === 21 && <AlbyBanner />}
-        </View>
+                ) : (
+                  <Skeleton className="w-32 h-10" />
+                )}
+              </View>
+            </TouchableOpacity>
+            {new Date().getDate() === 21 && <AlbyBanner />}
+          </View>
+        </ScrollView>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
             <Button
