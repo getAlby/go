@@ -5,15 +5,15 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { ClipboardPaste } from "~/components/Icons";
+import { AlertCircle, ClipboardPaste } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
@@ -235,21 +235,24 @@ export function Withdraw() {
                   {lnurlDetails.minWithdrawable !==
                     lnurlDetails.maxWithdrawable && (
                     <Card className="mb-4">
-                      <CardHeader>
-                        <CardTitle>Withdraw Limit</CardTitle>
-                        <CardDescription>
-                          Enter an amount between{" "}
-                          <Text className="font-bold2 text-sm">
-                            {Math.floor(lnurlDetails.minWithdrawable / 1000)}{" "}
-                            sats
-                          </Text>{" "}
-                          and{" "}
-                          <Text className="font-bold2 text-sm">
-                            {Math.floor(lnurlDetails.maxWithdrawable / 1000)}{" "}
-                            sats
-                          </Text>
-                        </CardDescription>
-                      </CardHeader>
+                      <CardContent className="flex flex-row items-center gap-4">
+                        <AlertCircle className="text-muted-foreground" />
+                        <View className="flex flex-1 flex-col">
+                          <CardTitle>Withdraw Limit</CardTitle>
+                          <CardDescription>
+                            Enter an amount between{" "}
+                            <Text className="font-bold2 text-sm">
+                              {Math.floor(lnurlDetails.minWithdrawable / 1000)}{" "}
+                              sats
+                            </Text>{" "}
+                            and{" "}
+                            <Text className="font-bold2 text-sm">
+                              {Math.floor(lnurlDetails.maxWithdrawable / 1000)}{" "}
+                              sats
+                            </Text>
+                          </CardDescription>
+                        </View>
+                      </CardContent>
                     </Card>
                   )}
                   <Button
