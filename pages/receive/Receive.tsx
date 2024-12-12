@@ -220,10 +220,10 @@ export function Receive() {
           <View className="flex-1 justify-center items-center gap-8">
             <View className="justify-center">
               <QRCode value={invoice || lightningAddress || ""} />
-              <View className="absolute self-center p-2 rounded-2xl bg-white">
+              <View className="absolute self-center p-2 rounded-2xl bg-background">
                 <Image
                   source={require("../../assets/icon.png")}
-                  className="w-20 h-20 rounded-xl"
+                  className="w-20 h-20 rounded-xl border-2 border-foreground"
                   resizeMode="contain"
                 />
               </View>
