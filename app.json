@@ -2,16 +2,17 @@
   "expo": {
     "name": "Alby Go",
     "slug": "alby-mobile",
-    "version": "1.7.1",
-    "scheme": ["bitcoin", "lightning", "alby"],
+    "version": "1.7.2",
+    "scheme": ["lightning", "bitcoin", "alby"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#0F0C40"
+      "backgroundColor": "#0B0930"
     },
+    "newArchEnabled": true,
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
@@ -46,6 +47,9 @@
       "bundleIdentifier": "com.getalby.mobile",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "LSMinimumSystemVersion": "12.0"
       }
     },
     "android": {
@@ -53,7 +57,8 @@
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundImage": "./assets/adaptive-icon-bg.png"
+        "backgroundImage": "./assets/adaptive-icon-bg.png",
+        "monochromeImage": "./assets/monochromatic.png"
       },
       "permissions": ["android.permission.CAMERA"]
     },

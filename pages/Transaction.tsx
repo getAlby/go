@@ -1,13 +1,12 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
-import Hex from "crypto-js/enc-hex";
-import Utf8 from "crypto-js/enc-utf8";
+import { hexToBytes } from "@noble/hashes/utils";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { MoveDownLeft, MoveUpRight } from "~/components/Icons";
+import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
@@ -49,7 +48,7 @@ export function Transaction() {
       )?.find((record) => record.type === 7629169);
       if (tlvRecord) {
         parsedBoostagram = JSON.parse(
-          Utf8.stringify(Hex.parse(tlvRecord.value)),
+          new TextDecoder().decode(hexToBytes(tlvRecord.value)),
         );
       }
     } catch (e) {
@@ -64,18 +63,43 @@ export function Transaction() {
       <ScrollView className="p-6">
         <View className="flex flex-col gap-5 justify-center items-center mb-12">
           <View
-            className="my-8 bg-muted rounded-full p-8"
+            className={cn(
+              "my-8 bg-muted rounded-full p-8",
+              transaction.state === "pending" && "animate-pulse",
+            )}
             style={{ elevation: 2 }}
           >
-            {transaction.type === "incoming" && (
-              <MoveDownLeft className="text-receive" width={100} height={100} />
+            {transaction.state !== "failed" && (
+              <>
+                {transaction.type === "incoming" && (
+                  <MoveDownLeft
+                    className="text-receive"
+                    width={100}
+                    height={100}
+                  />
+                )}
+                {transaction.type === "outgoing" && (
+                  <MoveUpRight className="text-send" width={100} height={100} />
+                )}
+              </>
             )}
-            {transaction.type === "outgoing" && (
-              <MoveUpRight className="text-send" width={100} height={100} />
+            {transaction.state === "failed" && (
+              <X className="text-destructive" width={100} height={100} />
             )}
           </View>
-          <Text className="text-3xl font-bold2 text-foreground">
-            {transaction.type === "incoming" ? "Received" : "Sent"}
+          <Text
+            className={cn(
+              "text-3xl font-bold2 text-foreground",
+              transaction.state === "pending" && "animate-pulse",
+            )}
+          >
+            {transaction.type === "incoming"
+              ? "Received"
+              : transaction.state === "failed"
+                ? "Failed"
+                : transaction.state === "pending"
+                  ? "Sending"
+                  : "Sent"}
           </Text>
           <View className="flex flex-col items-center justify-center gap-2">
             <View className="flex flex-row items-end mt-5">
@@ -104,7 +128,9 @@ export function Transaction() {
           <View className="flex flex-col gap-2 w-full mt-8">
             <TransactionDetailRow
               title="Date & Time"
-              content={dayjs.unix(transaction.settled_at).fromNow()}
+              content={dayjs
+                .unix(transaction.settled_at || transaction.created_at)
+                .fromNow()}
             />
             <TransactionDetailRow
               title="Description"
@@ -113,27 +139,33 @@ export function Transaction() {
 
             {boostagram && <PodcastingInfo boost={boostagram} />}
 
+            {transaction.state === "settled" &&
+              transaction.type === "outgoing" && (
+                <TransactionDetailRow
+                  title="Fee"
+                  content={
+                    Math.floor(transaction.fees_paid / 1000).toString() +
+                    " sats (" +
+                    (
+                      (transaction.fees_paid / transaction.amount) *
+                      100
+                    ).toFixed(2) +
+                    "%)"
+                  }
+                />
+              )}
             <TransactionDetailRow
               title="Payment Hash"
               content={transaction.payment_hash}
               copy
             />
-            <TransactionDetailRow
-              title="Preimage"
-              content={transaction.preimage}
-              copy
-            />
-            <TransactionDetailRow
-              title="Fee"
-              content={
-                Math.floor(transaction.fees_paid / 1000).toString() +
-                " sats (" +
-                ((transaction.fees_paid / transaction.amount) * 100).toFixed(
-                  2,
-                ) +
-                "%)"
-              }
-            />
+            {transaction.state === "settled" && (
+              <TransactionDetailRow
+                title="Preimage"
+                content={transaction.preimage}
+                copy
+              />
+            )}
           </View>
         </View>
       </ScrollView>

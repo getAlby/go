@@ -83,8 +83,21 @@ export function Send() {
         if (lnurlValue) {
           const lnurlDetails = await lnurl.getDetails(lnurlValue);
 
-          if (lnurlDetails.tag !== "payRequest") {
-            throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
+          if (
+            lnurlDetails.tag !== "payRequest" &&
+            lnurlDetails.tag !== "withdrawRequest"
+          ) {
+            throw new Error("LNURL tag not supported");
+          }
+
+          if (lnurlDetails.tag === "withdrawRequest") {
+            router.replace({
+              pathname: "/withdraw",
+              params: {
+                url: lnurlValue,
+              },
+            });
+            return true;
           }
 
           // Handle fixed amount LNURLs
