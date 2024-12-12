@@ -6,7 +6,9 @@ import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
+import FailedTransactionIcon from "~/components/icons/FailedTransaction";
+import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
+import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
@@ -64,7 +66,7 @@ export function Transaction() {
         <View className="flex flex-col gap-5 justify-center items-center mb-12">
           <View
             className={cn(
-              "my-8 bg-muted rounded-full p-8",
+              "my-8 bg-muted rounded-full",
               transaction.state === "pending" && "animate-pulse",
             )}
             style={{ elevation: 2 }}
@@ -72,24 +74,20 @@ export function Transaction() {
             {transaction.state !== "failed" && (
               <>
                 {transaction.type === "incoming" && (
-                  <MoveDownLeft
-                    className="text-receive"
-                    width={100}
-                    height={100}
-                  />
+                  <ReceivedTransactionIcon width={128} height={128} />
                 )}
                 {transaction.type === "outgoing" && (
-                  <MoveUpRight className="text-send" width={100} height={100} />
+                  <SentTransactionIcon width={128} height={128} />
                 )}
               </>
             )}
             {transaction.state === "failed" && (
-              <X className="text-destructive" width={100} height={100} />
+              <FailedTransactionIcon width={128} height={128} />
             )}
           </View>
           <Text
             className={cn(
-              "text-3xl font-bold2 text-foreground",
+              "text-4xl font-bold2 text-muted-foreground",
               transaction.state === "pending" && "animate-pulse",
             )}
           >
@@ -105,7 +103,7 @@ export function Transaction() {
             <View className="flex flex-row items-end mt-5">
               <Text
                 className={cn(
-                  "text-4xl gap-2 font-semibold2",
+                  "text-5xl gap-2 font-semibold2",
                   transaction.type === "incoming"
                     ? "text-receive"
                     : "text-foreground",
@@ -114,23 +112,23 @@ export function Transaction() {
                 {transaction.type === "incoming" ? "+" : "-"}{" "}
                 {Math.floor(transaction.amount / 1000)}
               </Text>
-              <Text className="text-2xl font-semibold2 text-muted-foreground">
+              <Text className="text-3xl font-semibold2 text-muted-foreground mb-1">
                 {" "}
                 sats
               </Text>
             </View>
             {getFiatAmount && (
-              <Text className="text-2xl font-semibold2 text-muted-foreground ">
+              <Text className="text-3xl font-semibold2 text-muted-foreground">
                 {getFiatAmount(Math.floor(transaction.amount / 1000))}
               </Text>
             )}
           </View>
-          <View className="flex flex-col gap-2 w-full mt-8">
+          <View className="flex flex-col gap-4 w-full mt-10">
             <TransactionDetailRow
               title="Date & Time"
               content={dayjs
                 .unix(transaction.settled_at || transaction.created_at)
-                .fromNow()}
+                .format("D MMMM YYYY, HH:mm")}
             />
             <TransactionDetailRow
               title="Description"
@@ -180,7 +178,7 @@ function TransactionDetailRow(props: {
 }) {
   return (
     <View className="flex flex-row gap-3">
-      <Text className="w-32 text-muted-foreground">{props.title}</Text>
+      <Text className="w-32 text-muted-foreground text-lg">{props.title}</Text>
       {props.copy ? (
         <TouchableOpacity
           className="flex-1"
@@ -192,10 +190,12 @@ function TransactionDetailRow(props: {
             });
           }}
         >
-          <Text className="text-foreground font-medium2">{props.content}</Text>
+          <Text className="text-foreground font-medium2 text-lg">
+            {props.content}
+          </Text>
         </TouchableOpacity>
       ) : (
-        <Text className="flex-1 text-foreground font-medium2">
+        <Text className="flex-1 text-foreground font-medium2 text-lg">
           {props.content}
         </Text>
       )}
