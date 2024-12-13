@@ -82,6 +82,7 @@ export function Home() {
               progressViewOffset={128}
             />
           }
+          showsVerticalScrollIndicator={false}
           contentContainerClassName="flex-1"
         >
           <View className="grow flex flex-col items-center justify-center gap-4">
