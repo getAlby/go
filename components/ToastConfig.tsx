@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import { View } from "react-native";
 import { ToastConfig } from "react-native-toast-message";
-import { CircleCheck, XCircle } from "./Icons";
+import { CheckCircleIcon, XCircleIcon } from "~/components/Icons";
 import { Button } from "./ui/button";
 import { Text } from "./ui/text";
 
@@ -9,7 +9,7 @@ export const toastConfig: ToastConfig = {
   success: ({ text1, text2 }) => (
     <View className="bg-foreground rounded-xl px-6 py-3 mx-6">
       <View className="flex flex-row gap-2 justify-center items-center">
-        <CircleCheck className="text-background" width={16} height={16} />
+        <CheckCircleIcon className="text-background" width={16} height={16} />
         <Text className="text-background font-semibold2">{text1}</Text>
       </View>
       {text2 && <Text className="text-background text-center">{text2}</Text>}
@@ -18,7 +18,7 @@ export const toastConfig: ToastConfig = {
   info: ({ text1, text2, hide }) => (
     <View className="bg-yellow-500 rounded-full px-6 py-3 mx-6">
       <View className="flex flex-row gap-2 justify-center items-center">
-        <XCircle className="text-background" width={16} height={16} />
+        <XCircleIcon className="text-background" width={16} height={16} />
         <Text className="text-background font-semibold2">{text1}</Text>
       </View>
       {text2 && <Text className="text-background text-center">{text2}</Text>}
@@ -27,7 +27,7 @@ export const toastConfig: ToastConfig = {
   error: ({ text1, text2, hide }) => (
     <View className="bg-destructive rounded-xl px-6 py-3 mx-6">
       <View className="flex flex-row gap-2 justify-center items-center">
-        <XCircle className="text-background" width={16} height={16} />
+        <XCircleIcon className="text-background" width={16} height={16} />
         <Text className="text-background font-semibold2">{text1}</Text>
       </View>
       {text2 && <Text className="text-background text-center">{text2}</Text>}
@@ -37,7 +37,7 @@ export const toastConfig: ToastConfig = {
     return (
       <View className="bg-foreground rounded-xl px-6 py-3 mx-6 flex flex-col gap-2">
         <View className="flex flex-row gap-2 justify-center items-center">
-          <XCircle className="text-background" width={16} height={16} />
+          <XCircleIcon className="text-background" width={16} height={16} />
           <Text className="text-background font-semibold2">{text1}</Text>
         </View>
         <Link href={`/settings/wallets`} asChild>

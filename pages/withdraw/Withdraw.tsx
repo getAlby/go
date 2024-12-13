@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { ClipboardPaste } from "~/components/Icons";
+import { PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
@@ -177,7 +177,7 @@ export function Withdraw() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <ClipboardPaste className="text-secondary-foreground" />
+                  <PasteIcon className="text-secondary-foreground" />
                   <Text numberOfLines={1}>Paste</Text>
                 </Button>
               </View>

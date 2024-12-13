@@ -9,7 +9,7 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
+import { MoveDownIcon, MoveUpIcon, XIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -75,7 +75,7 @@ export function Transactions() {
               router.back();
             }}
           >
-            <X className="text-foreground" />
+            <XIcon className="text-foreground" />
           </Pressable>
         )}
       />
@@ -126,15 +126,19 @@ export function Transactions() {
                   {transaction.state !== "failed" && (
                     <>
                       {transaction.type === "incoming" && (
-                        <MoveDownLeft className="text-receive" size={20} />
+                        <MoveDownIcon className="text-receive" />
                       )}
                       {transaction.type === "outgoing" && (
-                        <MoveUpRight className="text-send" size={20} />
+                        <MoveUpIcon className="text-send" />
                       )}
                     </>
                   )}
                   {transaction.state === "failed" && (
-                    <X className="text-destructive" size={20} />
+                    <XIcon
+                      className="text-destructive"
+                      width={20}
+                      height={20}
+                    />
                   )}
                 </View>
                 <View className="flex flex-col flex-1">

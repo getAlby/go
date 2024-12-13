@@ -7,7 +7,7 @@ import React from "react";
 import { Pressable, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
-import { ClipboardPaste, HelpCircle, X } from "~/components/Icons";
+import { HelpCircleIcon, PasteIcon, XIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
@@ -136,13 +136,13 @@ export function SetupWallet() {
                 router.replace("/");
               }}
             >
-              <X className="text-foreground" />
+              <XIcon className="text-foreground" />
             </Pressable>
           ) : (
             <Dialog>
               <DialogTrigger asChild>
                 <TouchableOpacity>
-                  <HelpCircle className="text-foreground" />
+                  <HelpCircleIcon className="text-foreground" />
                 </TouchableOpacity>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -189,7 +189,7 @@ export function SetupWallet() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <ClipboardPaste className="text-secondary-foreground" />
+              <PasteIcon className="text-secondary-foreground" />
               <Text className="text-secondary-foreground">Paste</Text>
             </Button>
           </View>

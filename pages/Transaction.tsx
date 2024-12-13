@@ -6,7 +6,7 @@ import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
+import { MoveDownIcon, MoveUpIcon, XIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
@@ -72,19 +72,19 @@ export function Transaction() {
             {transaction.state !== "failed" && (
               <>
                 {transaction.type === "incoming" && (
-                  <MoveDownLeft
+                  <MoveDownIcon
                     className="text-receive"
                     width={100}
                     height={100}
                   />
                 )}
                 {transaction.type === "outgoing" && (
-                  <MoveUpRight className="text-send" width={100} height={100} />
+                  <MoveUpIcon className="text-send" width={100} height={100} />
                 )}
               </>
             )}
             {transaction.state === "failed" && (
-              <X className="text-destructive" width={100} height={100} />
+              <XIcon className="text-destructive" width={100} height={100} />
             )}
           </View>
           <Text
