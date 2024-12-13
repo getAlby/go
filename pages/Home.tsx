@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ChevronUp, Settings2 } from "~/components/Icons";
+import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -68,7 +68,7 @@ export function Home() {
         right={() => (
           <Link href="/settings" asChild>
             <TouchableOpacity>
-              <Settings2 className="text-foreground" />
+              <SettingsIcon className="text-foreground" />
             </TouchableOpacity>
           </Link>
         )}
@@ -136,7 +136,11 @@ export function Home() {
               variant="secondary"
               className="p-10 rounded-full aspect-square"
             >
-              <ChevronUp className="text-muted-foreground" size={32} />
+              <ChevronUpIcon
+                className="text-muted-foreground"
+                width={32}
+                height={32}
+              />
             </Button>
           </Link>
         </View>

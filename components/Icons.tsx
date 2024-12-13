@@ -1,51 +1,37 @@
 import {
-  AlertCircle,
-  ArchiveRestore,
-  ArrowDown,
-  ArrowLeftRight,
-  Bitcoin,
-  BookUser,
-  Camera,
-  CameraOff,
-  CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  CircleCheck,
-  ClipboardPaste,
-  Cog,
-  Copy,
-  Currency,
-  Egg,
-  Fingerprint,
-  HelpCircle,
-  Hotel,
-  Keyboard,
-  LogOut,
-  LucideIcon,
-  Menu,
-  MoveDown,
-  MoveDownLeft,
-  MoveDownRight,
-  MoveUp,
-  MoveUpRight,
-  Palette,
-  PlusCircle,
-  Power,
-  RefreshCw,
-  Settings2,
-  Share2,
-  Trash2,
-  TriangleAlert,
-  UserCircle2,
-  Wallet2,
-  WalletIcon,
-  X,
-  XCircle,
-  ZapIcon,
-} from "lucide-react-native";
+  PopiconsCircleExclamationLine as AlertCircleIcon,
+  PopiconsAtomSolid as AtomIcon,
+  PopiconsBitcoinSolid as BitcoinIcon,
+  PopiconsAddressBookSolid as BookUserIcon,
+  PopiconsCameraWebOffSolid as CameraOffIcon,
+  PopiconsCircleCheckLine as CheckCircleIcon,
+  PopiconsChevronTopLine as ChevronUpIcon,
+  PopiconsCopySolid as CopyIcon,
+  PopiconsEditSolid as EditIcon,
+  PopiconsUploadSolid as ExportIcon,
+  PopiconsTouchIdSolid as FingerprintIcon,
+  PopiconsCircleInfoLine as HelpCircleIcon,
+  PopiconsArrowDownLine as MoveDownIcon,
+  PopiconsArrowUpLine as MoveUpIcon,
+  PopiconsClipboardTextSolid as PasteIcon,
+  PopiconsReloadLine as RefreshIcon,
+  PopiconsReloadSolid as ResetIcon,
+  PopiconsSettingsMinimalLine as SettingsIcon,
+  PopiconsShareSolid as ShareIcon,
+  PopiconsLogoutSolid as SignOutIcon,
+  PopiconsLoopSolid as SwapIcon,
+  PopiconsPaintSolid as ThemeIcon,
+  PopiconsBinSolid as TrashIcon,
+  PopiconsTriangleExclamationLine as TriangleAlertIcon,
+  PopiconsWalletHorizontalOpenSolid as WalletIcon,
+  PopiconsCircleXLine as XCircleIcon,
+  PopiconsXSolid as XIcon,
+  PopiconsBoltSolid as ZapIcon,
+} from "@popicons/react-native";
 import { cssInterop } from "nativewind";
+import { SvgProps } from "react-native-svg";
 
-function interopIcon(icon: LucideIcon) {
+function interopIcon(icon: React.FunctionComponent<SvgProps>) {
   cssInterop(icon, {
     className: {
       target: "style",
@@ -57,90 +43,62 @@ function interopIcon(icon: LucideIcon) {
   });
 }
 
-interopIcon(AlertCircle);
-interopIcon(ArrowDown);
-interopIcon(CheckCircle);
-interopIcon(Bitcoin);
-interopIcon(XCircle);
-interopIcon(MoveUp);
-interopIcon(MoveDown);
-interopIcon(ChevronDown);
-interopIcon(ChevronUp);
-interopIcon(MoveDownRight);
-interopIcon(MoveUpRight);
-interopIcon(MoveDownLeft);
-interopIcon(Camera);
-interopIcon(Menu);
-interopIcon(ZapIcon);
+interopIcon(AlertCircleIcon);
+interopIcon(AtomIcon);
+interopIcon(BitcoinIcon);
+interopIcon(BookUserIcon);
+interopIcon(CameraOffIcon);
+interopIcon(CheckCircleIcon);
+interopIcon(ChevronUpIcon);
+interopIcon(CopyIcon);
+interopIcon(EditIcon);
+interopIcon(ExportIcon);
+interopIcon(FingerprintIcon);
+interopIcon(HelpCircleIcon);
+interopIcon(MoveDownIcon);
+interopIcon(MoveUpIcon);
+interopIcon(PasteIcon);
+interopIcon(RefreshIcon);
+interopIcon(ResetIcon);
+interopIcon(SettingsIcon);
+interopIcon(ShareIcon);
+interopIcon(SignOutIcon);
+interopIcon(SwapIcon);
+interopIcon(ThemeIcon);
+interopIcon(TrashIcon);
+interopIcon(TriangleAlertIcon);
 interopIcon(WalletIcon);
-interopIcon(Copy);
-interopIcon(Currency);
-interopIcon(Settings2);
-interopIcon(ArrowLeftRight);
-interopIcon(PlusCircle);
-interopIcon(Cog);
-interopIcon(ClipboardPaste);
-interopIcon(Keyboard);
-interopIcon(BookUser);
-interopIcon(Wallet2);
-interopIcon(Share2);
-interopIcon(RefreshCw);
-interopIcon(X);
-interopIcon(Hotel);
-interopIcon(Power);
-interopIcon(CameraOff);
-interopIcon(Palette);
-interopIcon(Egg);
-interopIcon(Fingerprint);
-interopIcon(HelpCircle);
-interopIcon(CircleCheck);
-interopIcon(TriangleAlert);
-interopIcon(LogOut);
-interopIcon(ArchiveRestore);
-interopIcon(UserCircle2);
-interopIcon(Trash2);
+interopIcon(XCircleIcon);
+interopIcon(XIcon);
+interopIcon(ZapIcon);
 
 export {
-  AlertCircle,
-  ArchiveRestore,
-  ArrowDown,
-  ArrowLeftRight,
-  Bitcoin,
-  BookUser,
-  Camera,
-  CameraOff,
-  CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  CircleCheck,
-  ClipboardPaste,
-  Cog,
-  Copy,
-  Currency,
-  Egg,
-  Fingerprint,
-  HelpCircle,
-  Hotel,
-  Keyboard,
-  LogOut,
-  Menu,
-  MoveDown,
-  MoveDownLeft,
-  MoveDownRight,
-  MoveUp,
-  MoveUpRight,
-  Palette,
-  PlusCircle,
-  Power,
-  RefreshCw,
-  Settings2,
-  Share2,
-  Trash2,
-  TriangleAlert,
-  UserCircle2,
-  Wallet2,
+  AlertCircleIcon,
+  AtomIcon,
+  BitcoinIcon,
+  BookUserIcon,
+  CameraOffIcon,
+  CheckCircleIcon,
+  ChevronUpIcon,
+  CopyIcon,
+  EditIcon,
+  ExportIcon,
+  FingerprintIcon,
+  HelpCircleIcon,
+  MoveDownIcon,
+  MoveUpIcon,
+  PasteIcon,
+  RefreshIcon,
+  ResetIcon,
+  SettingsIcon,
+  ShareIcon,
+  SignOutIcon,
+  SwapIcon,
+  ThemeIcon,
+  TrashIcon,
+  TriangleAlertIcon,
   WalletIcon,
-  X,
-  XCircle,
+  XCircleIcon,
+  XIcon,
   ZapIcon,
 };

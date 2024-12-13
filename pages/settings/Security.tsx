@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { TriangleAlert } from "~/components/Icons";
+import { TriangleAlertIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import {
@@ -40,7 +40,11 @@ export function Security() {
             <Card className="mb-6">
               <CardHeader>
                 <CardTitle className="flex flex-row gap-3 items-center">
-                  <TriangleAlert size={16} className="text-foreground" />
+                  <TriangleAlertIcon
+                    className="text-foreground"
+                    width={16}
+                    height={16}
+                  />
                   <Text> Setup Device Security</Text>
                 </CardTitle>
                 <CardDescription>

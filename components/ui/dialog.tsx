@@ -2,8 +2,8 @@ import * as DialogPrimitive from "@rn-primitives/dialog";
 import * as React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { XIcon } from "~/components/Icons";
 import { cn } from "~/lib/utils";
-import { X } from "../Icons";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -93,12 +93,13 @@ const DialogContent = React.forwardRef<
               "absolute right-4 top-4 p-0.5 web:group rounded-sm opacity-70 web:ring-offset-background web:transition-opacity web:hover:opacity-100 web:focus:outline-none web:focus:ring-2 web:focus:ring-ring web:focus:ring-offset-2 web:disabled:pointer-events-none"
             }
           >
-            <X
-              size={Platform.OS === "web" ? 16 : 18}
+            <XIcon
               className={cn(
                 "text-muted-foreground",
                 open && "text-accent-foreground",
               )}
+              width={Platform.OS === "web" ? 16 : 18}
+              height={Platform.OS === "web" ? 16 : 18}
             />
           </DialogPrimitive.Close>
         </DialogPrimitive.Content>

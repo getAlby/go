@@ -1633,6 +1633,11 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.1.1.tgz#1ec17e2edbec25c8306d424ecfbf13c7de1aaa31"
   integrity sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==
 
+"@popicons/react-native@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@popicons/react-native/-/react-native-0.0.16.tgz#a16d3592709fef87c389822df9a96029d1d71910"
+  integrity sha512-eO+Tf9ovQVx6hxjmTby4nU3t1pVzvigxb5mO1BtCNl52Z9PkSOid+9pDsu9LWmfJBV6h7KP+H9CDyM10nBDd5A==
+
 "@radix-ui/primitive@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/primitive/-/primitive-1.1.0.tgz#42ef83b3b56dccad5d703ae8c42919a68798bbe2"

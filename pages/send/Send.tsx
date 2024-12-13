@@ -5,11 +5,7 @@ import { lnurl } from "lib/lnurl";
 import React from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
-import {
-  BookUser,
-  ClipboardPaste,
-  Keyboard as KeyboardIcon,
-} from "~/components/Icons";
+import { BookUserIcon, EditIcon, PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
@@ -194,7 +190,7 @@ export function Send() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <KeyboardIcon className="text-secondary-foreground" />
+                  <EditIcon className="text-muted-foreground" />
                   <Text numberOfLines={1}>Manual</Text>
                 </Button>
                 <Button
@@ -204,7 +200,7 @@ export function Send() {
                     router.push("/send/address-book");
                   }}
                 >
-                  <BookUser className="text-secondary-foreground" />
+                  <BookUserIcon className="text-muted-foreground" />
                   <Text numberOfLines={1}>Contacts</Text>
                 </Button>
                 <Button
@@ -212,7 +208,7 @@ export function Send() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <ClipboardPaste className="text-secondary-foreground" />
+                  <PasteIcon className="text-muted-foreground" />
                   <Text numberOfLines={1}>Paste</Text>
                 </Button>
               </View>

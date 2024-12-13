@@ -5,10 +5,10 @@ import Toast from "react-native-toast-message";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
 import {
-  ArchiveRestore,
-  Trash2,
-  TriangleAlert,
-  Wallet2,
+  ExportIcon,
+  TrashIcon,
+  TriangleAlertIcon,
+  WalletIcon,
   ZapIcon,
 } from "~/components/Icons";
 import Screen from "~/components/Screen";
@@ -34,7 +34,7 @@ export function EditWallet() {
           ) < 0 && (
             <Card key={capability} className="border-destructive">
               <CardContent className="flex flex-row items-center gap-4">
-                <TriangleAlert className="text-destructive" />
+                <TriangleAlertIcon className="text-destructive" />
                 <Text className="text-foreground">
                   Your wallet does not support {capability}
                 </Text>
@@ -46,7 +46,7 @@ export function EditWallet() {
         <Pressable>
           <Card className="w-full">
             <CardContent className="flex flex-row items-center gap-4">
-              <Wallet2 className="text-muted-foreground" />
+              <WalletIcon className="text-muted-foreground" />
               <View className="flex flex-1 flex-col">
                 <CardTitle>Wallet Name</CardTitle>
                 <CardDescription>
@@ -108,7 +108,7 @@ export function EditWallet() {
       >
         <Card className="w-full">
           <CardContent className="flex flex-row items-center gap-4">
-            <ArchiveRestore className="text-muted-foreground" />
+            <ExportIcon className="text-muted-foreground" />
             <View className="flex flex-1 flex-col">
               <CardTitle>Export Wallet</CardTitle>
               <CardDescription>
@@ -144,7 +144,7 @@ export function EditWallet() {
       >
         <Card className="w-full">
           <CardContent className="flex flex-row items-center gap-4">
-            <Trash2 className="text-muted-foreground" />
+            <TrashIcon className="text-muted-foreground" />
             <View className="flex flex-1 flex-col">
               <CardTitle>Delete Wallet</CardTitle>
               <CardDescription>

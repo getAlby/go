@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
-import { Trash2 } from "~/components/Icons";
+import { TrashIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import {
@@ -58,7 +58,7 @@ export function AddressBook() {
                       useAppStore.getState().removeAddressBookEntry(index);
                     }}
                   >
-                    <Trash2 className="text-destructive" />
+                    <TrashIcon className="text-destructive" />
                   </TouchableOpacity>
                 </CardContent>
               </Card>
