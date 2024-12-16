@@ -3,21 +3,15 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { AlertCircle } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
+import { cn } from "~/lib/utils";
 
 export function LNURLPay() {
   const {
@@ -31,9 +25,16 @@ export function LNURLPay() {
   };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
-  const [amount, setAmount] = React.useState(amountParam ?? 0);
+  const [amount, setAmount] = React.useState(amountParam ?? "");
   const [comment, setComment] = React.useState("");
   const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
+
+  const isAmountInvalid = React.useMemo(() => {
+    const min = Math.floor(lnurlDetails.minSendable / 1000);
+    const max = Math.floor(lnurlDetails.maxSendable / 1000);
+
+    return Number(amount) < min || Number(amount) > max;
+  }, [amount, lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
   useEffect(() => {
     // Handle fixed amount LNURLs
@@ -87,6 +88,24 @@ export function LNURLPay() {
               max={Math.floor(lnurlDetails.maxSendable / 1000)}
             />
             <View className="w-full">
+              <Text
+                className={cn(
+                  "text-muted-foreground text-center font-semibold2",
+                  amount && isAmountInvalid ? "text-red-500" : "",
+                )}
+              >
+                Between{" "}
+                {new Intl.NumberFormat().format(
+                  Math.floor(lnurlDetails.minSendable / 1000),
+                )}
+                {" and "}
+                {new Intl.NumberFormat().format(
+                  Math.floor(lnurlDetails.maxSendable / 1000),
+                )}{" "}
+                sats
+              </Text>
+            </View>
+            <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
                 Comment
               </Text>
@@ -101,35 +120,11 @@ export function LNURLPay() {
             <Receiver originalText={originalText} />
           </View>
           <View className="p-6">
-            {lnurlDetails.minSendable !== lnurlDetails.maxSendable && (
-              <Card className="mb-4">
-                <CardContent className="flex flex-row items-center gap-4">
-                  <AlertCircle className="text-muted-foreground" />
-                  <View className="flex flex-1 flex-col">
-                    <CardTitle>Sending Limit</CardTitle>
-                    <CardDescription>
-                      Enter an amount between{" "}
-                      <Text className="font-bold2 text-sm">
-                        {Math.floor(lnurlDetails.minSendable / 1000)} sats
-                      </Text>{" "}
-                      and{" "}
-                      <Text className="font-bold2 text-sm">
-                        {Math.floor(lnurlDetails.maxSendable / 1000)} sats
-                      </Text>
-                    </CardDescription>
-                  </View>
-                </CardContent>
-              </Card>
-            )}
             <Button
               size="lg"
               className="flex flex-row gap-2"
               onPress={requestInvoice}
-              disabled={
-                isLoading ||
-                Number(amount) < Math.floor(lnurlDetails.minSendable / 1000) ||
-                Number(amount) > Math.floor(lnurlDetails.maxSendable / 1000)
-              }
+              disabled={isLoading || isAmountInvalid}
             >
               {isLoading && <Loading className="text-primary-foreground" />}
               <Text>Next</Text>
