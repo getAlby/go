@@ -9,7 +9,10 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import { MoveDownLeft, MoveUpRight, X } from "~/components/Icons";
+import { X } from "~/components/Icons";
+import FailedTransactionIcon from "~/components/icons/FailedTransaction";
+import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
+import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -118,7 +121,7 @@ export function Transactions() {
             >
               <View
                 className={cn(
-                  "flex flex-row items-center gap-3 px-4 py-3",
+                  "flex flex-row items-center gap-3 px-6 py-2 my-2",
                   transaction.state === "pending" && "animate-pulse",
                 )}
               >
@@ -126,20 +129,18 @@ export function Transactions() {
                   {transaction.state !== "failed" && (
                     <>
                       {transaction.type === "incoming" && (
-                        <MoveDownLeft className="text-receive" size={20} />
+                        <ReceivedTransactionIcon />
                       )}
                       {transaction.type === "outgoing" && (
-                        <MoveUpRight className="text-send" size={20} />
+                        <SentTransactionIcon />
                       )}
                     </>
                   )}
-                  {transaction.state === "failed" && (
-                    <X className="text-destructive" size={20} />
-                  )}
+                  {transaction.state === "failed" && <FailedTransactionIcon />}
                 </View>
                 <View className="flex flex-col flex-1">
                   <View className="flex flex-row flex-1 items-center gap-2">
-                    <Text numberOfLines={1} className="font-medium2">
+                    <Text numberOfLines={1} className="font-medium2 text-lg">
                       {transaction.type === "incoming"
                         ? "Received"
                         : transaction.state === "failed"
@@ -161,7 +162,7 @@ export function Transactions() {
                 <View>
                   <Text
                     className={cn(
-                      "text-right font-medium2",
+                      "text-right font-medium2 text-lg",
                       transaction.type === "incoming"
                         ? "text-receive"
                         : "text-foreground",
@@ -169,7 +170,7 @@ export function Transactions() {
                   >
                     {transaction.type === "incoming" ? "+" : "-"}{" "}
                     {Math.floor(transaction.amount / 1000)}
-                    <Text className="text-muted-foreground"> sats</Text>
+                    <Text className="text-muted-foreground text-lg"> sats</Text>
                   </Text>
                   <Text className="text-right text-sm text-muted-foreground font-medium2">
                     {getFiatAmount &&
