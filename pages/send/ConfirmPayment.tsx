@@ -116,7 +116,7 @@ export function ConfirmPayment() {
         <Receiver originalText={originalText} invoice={invoice} />
       </View>
       <View className="p-6">
-        {!transactions?.transactions.some(
+        {transactions?.transactions.some(
           (transaction) => transaction.state === "pending",
         ) && (
           <Link href="/transactions" className="mb-6">
