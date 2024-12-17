@@ -205,8 +205,7 @@ function TransactionDetailRow(props: {
 
 function PodcastingInfo({ boost }: { boost: Boostagram }) {
   const renderDetail = (title: string, content: any) => {
-    // we want to check if content is not undefined, null or empty string
-    if (content != null && content !== "") {
+    if (content === 0 || !!content) {
       return <TransactionDetailRow title={title} content={String(content)} />;
     }
     return null;
