@@ -119,7 +119,10 @@ export function SetupWallet() {
       position: "top",
     });
 
-    router.replace("/");
+    if (router.canDismiss()) {
+      router.dismissAll();
+    }
+    router.navigate("/");
   };
 
   return (
@@ -133,7 +136,10 @@ export function SetupWallet() {
                 useAppStore
                   .getState()
                   .setSelectedWalletId(walletIdWithConnection);
-                router.replace("/");
+                if (router.canDismiss()) {
+                  router.dismissAll();
+                }
+                router.navigate("/");
               }}
             >
               <X className="text-foreground" />
