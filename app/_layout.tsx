@@ -10,7 +10,7 @@ import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { SWRConfig } from "swr";
 import { toastConfig } from "~/components/ToastConfig";
