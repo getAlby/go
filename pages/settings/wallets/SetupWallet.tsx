@@ -28,7 +28,7 @@ import { REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 
 export function SetupWallet() {
-  const { nwcUrl } = useLocalSearchParams<{
+  const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
     nwcUrl: string;
   }>();
   const wallets = useAppStore((store) => store.wallets);
@@ -135,9 +135,9 @@ export function SetupWallet() {
   };
 
   React.useEffect(() => {
-    if (nwcUrl) {
+    if (nwcUrlFromSchemeLink) {
       (async () => {
-        const result = await connect(nwcUrl);
+        const result = await connect(nwcUrlFromSchemeLink);
         // Delay the camera to show the error message
         if (!result) {
           setTimeout(() => {
@@ -148,7 +148,7 @@ export function SetupWallet() {
     } else {
       setStartScanning(true);
     }
-  }, [connect, nwcUrl]);
+  }, [connect, nwcUrlFromSchemeLink]);
 
   return (
     <>
