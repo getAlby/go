@@ -95,7 +95,7 @@ export default function RootLayout() {
     <SWRConfig value={swrConfiguration}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <SafeAreaView className="w-full h-full">
+        <SafeAreaView className="w-full h-full bg-background">
           <UserInactivityProvider>
             <SessionProvider>
               <Slot />
