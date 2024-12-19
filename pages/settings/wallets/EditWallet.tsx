@@ -1,8 +1,7 @@
 import { Link, router } from "expo-router";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
 import {
   ArchiveRestore,
@@ -18,7 +17,7 @@ import {
   CardDescription,
   CardTitle,
 } from "~/components/ui/card";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { DEFAULT_WALLET_NAME, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function EditWallet() {
@@ -27,21 +26,24 @@ export function EditWallet() {
   return (
     <View className="flex-1 flex flex-col p-3 gap-3">
       <Screen title="Edit Wallet" />
-      {(["notifications", "list_transactions"] as Nip47Capability[]).map(
-        (capability) =>
-          (wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-            capability,
-          ) < 0 && (
-            <Card key={capability} className="border-destructive">
-              <CardContent className="flex flex-row items-center gap-4">
-                <TriangleAlert className="text-destructive" />
-                <Text className="text-foreground">
-                  Your wallet does not support {capability}
-                </Text>
-              </CardContent>
-            </Card>
-          ),
-      )}
+      {/* TODO: Do not allow notifications to be toggled without notifications capability */}
+      <Card>
+        <CardContent className="flex flex-row items-center gap-4">
+          <TriangleAlert className="text-muted-foreground" />
+          <View className="flex flex-1 flex-col">
+            <CardTitle>This wallet might not work as expected</CardTitle>
+            <CardDescription>
+              Missing capabilities:&nbsp;
+              {REQUIRED_CAPABILITIES.filter(
+                (capability) =>
+                  !(wallets[selectedWalletId].nwcCapabilities || []).includes(
+                    capability,
+                  ),
+              ).join(", ")}
+            </CardDescription>
+          </View>
+        </CardContent>
+      </Card>
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">
