@@ -24,11 +24,11 @@ type Boostagram = {
   name: string;
   podcast: string;
   url: string;
-  episode?: string;
-  itemID?: string;
-  ts?: string;
+  episode?: string | number;
+  itemID?: string | number;
+  ts?: string | number;
   message?: string;
-  sender_id: string;
+  sender_id: string | number;
   sender_name: string;
   time: string;
   action: string;
@@ -204,40 +204,30 @@ function TransactionDetailRow(props: {
 }
 
 function PodcastingInfo({ boost }: { boost: Boostagram }) {
+  const renderDetail = (title: string, content: any) => {
+    if (content === 0 || !!content) {
+      return <TransactionDetailRow title={title} content={String(content)} />;
+    }
+    return null;
+  };
   return (
     <>
-      {boost.message && (
-        <TransactionDetailRow title="Message" content={boost.message} />
+      {renderDetail("Message", boost.message)}
+      {renderDetail("Podcast", boost.podcast)}
+      {renderDetail("Episode", boost.episode)}
+      {renderDetail("Action", boost.action)}
+      {renderDetail("Timestamp", boost.ts)}
+      {renderDetail(
+        "Total amount",
+        boost.value_msat_total
+          ? Math.floor(boost.value_msat_total / 1000) +
+              (Math.floor(boost.value_msat_total / 1000) === 1
+                ? " sat"
+                : " sats")
+          : null,
       )}
-      {boost.podcast && (
-        <TransactionDetailRow title="Podcast" content={boost.podcast} />
-      )}
-      {boost.episode && (
-        <TransactionDetailRow title="Episode" content={boost.episode} />
-      )}
-      {boost.action && (
-        <TransactionDetailRow title="Action" content={boost.action} />
-      )}
-      {boost.ts && (
-        <TransactionDetailRow title="Timestamp" content={boost.ts} />
-      )}
-      {boost.value_msat_total && (
-        <TransactionDetailRow
-          title="Total amount"
-          content={
-            Math.floor(boost.value_msat_total / 1000) +
-            (Math.floor(boost.value_msat_total / 1000) === 1 ? " sat" : " sats")
-          }
-        />
-      )}
-      {boost.sender_name && (
-        <TransactionDetailRow title="Sender" content={boost.sender_name} />
-      )}
-      {boost.app_name && (
-        <TransactionDetailRow title="App" content={boost.app_name} />
-      )}
+      {renderDetail("Sender", boost.sender_name)}
+      {renderDetail("App", boost.app_name)}
     </>
   );
 }
-
-export default PodcastingInfo;
