@@ -134,7 +134,6 @@ export function SetupWallet() {
     if (router.canDismiss()) {
       router.dismissAll();
     }
-    router.navigate("/");
   };
 
   React.useEffect(() => {
@@ -167,7 +166,6 @@ export function SetupWallet() {
                 if (router.canDismiss()) {
                   router.dismissAll();
                 }
-                router.navigate("/");
               }}
             >
               <X className="text-foreground" />
