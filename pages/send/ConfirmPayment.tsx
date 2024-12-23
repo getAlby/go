@@ -3,7 +3,7 @@ import { Invoice } from "@getalby/lightning-tools";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";
-import { TriangleAlert, ZapIcon } from "~/components/Icons";
+import { TriangleAlert, Wallet2, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
@@ -17,7 +17,7 @@ import {
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useTransactions } from "~/hooks/useTransactions";
-import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
+import { ALBY_LIGHTNING_ADDRESS, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -32,6 +32,8 @@ export function ConfirmPayment() {
     };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
+  const wallets = useAppStore((store) => store.wallets);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
 
   async function pay() {
     setLoading(true);
@@ -115,7 +117,17 @@ export function ConfirmPayment() {
         )}
         <Receiver originalText={originalText} invoice={invoice} />
       </View>
-      <View className="p-6">
+      <View className="p-6 bg-background">
+        <View className="flex flex-row items-center justify-center gap-2 mb-4 px-4">
+          <Wallet2 className="text-muted-foreground" />
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            className="text-muted-foreground font-medium2 text-xl"
+          >
+            {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+          </Text>
+        </View>
         {transactions?.transactions.some(
           (transaction) => transaction.state === "pending",
         ) && (
