@@ -11,6 +11,7 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
+import { cn } from "~/lib/utils";
 
 export function LNURLPay() {
   const {
@@ -24,9 +25,16 @@ export function LNURLPay() {
   };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
   const [isLoading, setLoading] = React.useState(false);
-  const [amount, setAmount] = React.useState(amountParam ?? 0);
+  const [amount, setAmount] = React.useState(amountParam ?? "");
   const [comment, setComment] = React.useState("");
   const [isAmountReadOnly, setAmountReadOnly] = React.useState(false);
+
+  const isAmountInvalid = React.useMemo(() => {
+    const min = Math.floor(lnurlDetails.minSendable / 1000);
+    const max = Math.floor(lnurlDetails.maxSendable / 1000);
+
+    return Number(amount) < min || Number(amount) > max;
+  }, [amount, lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
   useEffect(() => {
     // Handle fixed amount LNURLs
@@ -76,7 +84,27 @@ export function LNURLPay() {
               setAmount={setAmount}
               readOnly={isAmountReadOnly}
               autoFocus={!isAmountReadOnly && !amount}
+              min={Math.floor(lnurlDetails.minSendable / 1000)}
+              max={Math.floor(lnurlDetails.maxSendable / 1000)}
             />
+            <View className="w-full">
+              <Text
+                className={cn(
+                  "text-muted-foreground text-center font-semibold2",
+                  amount && isAmountInvalid ? "text-destructive" : "",
+                )}
+              >
+                Between{" "}
+                {new Intl.NumberFormat().format(
+                  Math.floor(lnurlDetails.minSendable / 1000),
+                )}
+                {" and "}
+                {new Intl.NumberFormat().format(
+                  Math.floor(lnurlDetails.maxSendable / 1000),
+                )}{" "}
+                sats
+              </Text>
+            </View>
             <View className="w-full">
               <Text className="text-muted-foreground text-center font-semibold2">
                 Comment
@@ -96,7 +124,7 @@ export function LNURLPay() {
               size="lg"
               className="flex flex-row gap-2"
               onPress={requestInvoice}
-              disabled={isLoading}
+              disabled={isLoading || isAmountInvalid}
             >
               {isLoading && <Loading className="text-primary-foreground" />}
               <Text>Next</Text>
