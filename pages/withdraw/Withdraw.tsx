@@ -236,7 +236,7 @@ export function Withdraw() {
                       <Text
                         className={cn(
                           "text-muted-foreground text-center font-semibold2",
-                          valueSat && isAmountInvalid ? "text-red-500" : "",
+                          valueSat && isAmountInvalid ? "text-destructive" : "",
                         )}
                       >
                         Between{" "}

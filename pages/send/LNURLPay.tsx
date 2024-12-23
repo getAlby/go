@@ -91,7 +91,7 @@ export function LNURLPay() {
               <Text
                 className={cn(
                   "text-muted-foreground text-center font-semibold2",
-                  amount && isAmountInvalid ? "text-red-500" : "",
+                  amount && isAmountInvalid ? "text-destructive" : "",
                 )}
               >
                 Between{" "}

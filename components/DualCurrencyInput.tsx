@@ -69,7 +69,7 @@ export function DualCurrencyInput({
         className={cn(
           "w-full border-transparent bg-transparent text-center mt-3",
           ((max && Number(amount) > max) || (min && Number(amount) < min)) &&
-            "text-red-500",
+            "text-destructive",
         )}
         placeholder="0"
         keyboardType={inputMode === "sats" ? "number-pad" : "decimal-pad"}
