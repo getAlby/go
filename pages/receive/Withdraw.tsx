@@ -5,15 +5,22 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { ClipboardPaste } from "~/components/Icons";
+import { AlertCircle, ClipboardPaste } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function Withdraw() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -25,6 +32,16 @@ export function Withdraw() {
   const [valueSat, setValueSat] = React.useState("");
   const [lnurlDetails, setLnurlDetails] =
     React.useState<LNURLWithdrawServiceResponse>();
+
+  const isAmountInvalid = React.useMemo(() => {
+    if (!lnurlDetails) {
+      return true;
+    }
+    const min = Math.floor(lnurlDetails.minWithdrawable / 1000);
+    const max = Math.floor(lnurlDetails.maxWithdrawable / 1000);
+
+    return Number(valueSat) < min || Number(valueSat) > max;
+  }, [valueSat, lnurlDetails]);
 
   // Delay starting the QR scanner if url has valid lnurl withdraw info
   useEffect(() => {
@@ -107,17 +124,6 @@ export function Withdraw() {
     try {
       if (!lnurlDetails) {
         return;
-      }
-
-      if (Number(valueSat) < lnurlDetails.minWithdrawable / 1000) {
-        throw new Error(
-          `Amount below minimum limit of ${lnurlDetails.minWithdrawable} sats`,
-        );
-      }
-      if (Number(valueSat) > lnurlDetails.maxWithdrawable / 1000) {
-        throw new Error(
-          `Amount exceeds maximum limit of ${lnurlDetails.maxWithdrawable} sats.`,
-        );
       }
 
       setLoadingConfirm(true);
@@ -222,8 +228,28 @@ export function Withdraw() {
                     <DualCurrencyInput
                       amount={valueSat}
                       setAmount={setValueSat}
+                      min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
+                      max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
                       autoFocus
                     />
+                    <View className="w-full">
+                      <Text
+                        className={cn(
+                          "text-muted-foreground text-center font-semibold2",
+                          valueSat && isAmountInvalid ? "text-destructive" : "",
+                        )}
+                      >
+                        Between{" "}
+                        {new Intl.NumberFormat().format(
+                          Math.floor(lnurlDetails.minWithdrawable / 1000),
+                        )}
+                        {" and "}
+                        {new Intl.NumberFormat().format(
+                          Math.floor(lnurlDetails.maxWithdrawable / 1000),
+                        )}{" "}
+                        sats
+                      </Text>
+                    </View>
                     <View className="flex flex-col gap-2 items-center">
                       <Text className="text-muted-foreground text-center font-semibold2">
                         Description
@@ -235,11 +261,34 @@ export function Withdraw() {
                   </View>
                 )}
                 <View className="p-6">
+                  {lnurlDetails.minWithdrawable !==
+                    lnurlDetails.maxWithdrawable && (
+                    <Card className="mb-4">
+                      <CardContent className="flex flex-row items-center gap-4">
+                        <AlertCircle className="text-muted-foreground" />
+                        <View className="flex flex-1 flex-col">
+                          <CardTitle>Withdraw Limit</CardTitle>
+                          <CardDescription>
+                            Enter an amount between{" "}
+                            <Text className="font-bold2 text-sm">
+                              {Math.floor(lnurlDetails.minWithdrawable / 1000)}{" "}
+                              sats
+                            </Text>{" "}
+                            and{" "}
+                            <Text className="font-bold2 text-sm">
+                              {Math.floor(lnurlDetails.maxWithdrawable / 1000)}{" "}
+                              sats
+                            </Text>
+                          </CardDescription>
+                        </View>
+                      </CardContent>
+                    </Card>
+                  )}
                   <Button
                     size="lg"
                     className="flex flex-row gap-2"
                     onPress={confirm}
-                    disabled={loadingConfirm}
+                    disabled={loadingConfirm || isAmountInvalid}
                   >
                     {loadingConfirm && (
                       <Loading className="text-primary-foreground" />

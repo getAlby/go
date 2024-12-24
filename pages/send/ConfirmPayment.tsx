@@ -2,7 +2,7 @@ import { Invoice } from "@getalby/lightning-tools";
 
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { TriangleAlert, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
@@ -119,19 +119,21 @@ export function ConfirmPayment() {
         {transactions?.transactions.some(
           (transaction) => transaction.state === "pending",
         ) && (
-          <Link href="/transactions" className="mb-6">
-            <Card className="w-full">
-              <CardContent className="flex flex-row items-center gap-4">
-                <TriangleAlert className="text-muted-foreground" />
-                <View className="flex flex-1 flex-col">
-                  <CardTitle>One or more pending payments</CardTitle>
-                  <CardDescription>
-                    Please check your transaction list before paying to ensure
-                    you do not make a payment twice.
-                  </CardDescription>
-                </View>
-              </CardContent>
-            </Card>
+          <Link href="/transactions" className="mb-6" asChild>
+            <Pressable>
+              <Card className="w-full">
+                <CardContent className="flex flex-row items-center gap-4">
+                  <TriangleAlert className="text-muted-foreground" />
+                  <View className="flex flex-1 flex-col">
+                    <CardTitle>One or more pending payments</CardTitle>
+                    <CardDescription>
+                      Please check your transaction list before paying to ensure
+                      you do not make a payment twice.
+                    </CardDescription>
+                  </View>
+                </CardContent>
+              </Card>
+            </Pressable>
           </Link>
         )}
         <Button
