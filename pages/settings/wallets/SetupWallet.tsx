@@ -6,8 +6,14 @@ import { useAppStore } from "lib/state/appStore";
 import React from "react";
 import { Pressable, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
-import { ClipboardPaste, HelpCircle, X } from "~/components/Icons";
+import {
+  HelpCircleIcon,
+  PasteIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
@@ -72,18 +78,6 @@ export function SetupWallet() {
         const capabilities = [...info.methods] as Nip47Capability[];
         if (info.notifications?.length) {
           capabilities.push("notifications");
-        }
-        if (
-          !REQUIRED_CAPABILITIES.every((capability) =>
-            capabilities.includes(capability),
-          )
-        ) {
-          const missing = REQUIRED_CAPABILITIES.filter(
-            (capability) => !capabilities.includes(capability),
-          );
-          throw new Error(
-            `Missing required capabilities: ${missing.join(", ")}`,
-          );
         }
 
         console.info("NWC connected", info);
@@ -164,13 +158,13 @@ export function SetupWallet() {
                 router.replace("/");
               }}
             >
-              <X className="text-foreground" />
+              <XIcon className="text-foreground" />
             </Pressable>
           ) : (
             <Dialog>
               <DialogTrigger asChild>
                 <TouchableOpacity>
-                  <HelpCircle className="text-foreground" />
+                  <HelpCircleIcon className="text-foreground" />
                 </TouchableOpacity>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -220,7 +214,7 @@ export function SetupWallet() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <ClipboardPaste className="text-secondary-foreground" />
+              <PasteIcon className="text-secondary-foreground" />
               <Text className="text-secondary-foreground">Paste</Text>
             </Button>
           </View>
@@ -245,6 +239,19 @@ export function SetupWallet() {
                 returnKeyType="done"
               />
             </View>
+            {capabilities &&
+              !REQUIRED_CAPABILITIES.every((capability) =>
+                capabilities.includes(capability),
+              ) && (
+                <Alert
+                  type="warn"
+                  title="Alby Go might not work as expected"
+                  description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
+                    (capability) => !capabilities.includes(capability),
+                  ).join(", ")}`}
+                  icon={TriangleAlertIcon}
+                />
+              )}
             <Button size="lg" onPress={addWallet} disabled={!name}>
               <Text>Finish</Text>
             </Button>

@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { Settings2, Wallet2 } from "~/components/Icons";
+import { SettingsIcon, WalletIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
 import Toast from "react-native-toast-message";
@@ -43,7 +43,7 @@ export function Wallets() {
                 )}
               >
                 <View className="flex flex-row gap-4 items-center flex-shrink">
-                  <Wallet2 className="text-foreground" />
+                  <WalletIcon className="text-muted-foreground" />
                   <Text
                     className={cn("text-xl pr-16", active && "font-semibold2")}
                     numberOfLines={1}
@@ -59,7 +59,11 @@ export function Wallets() {
                     asChild
                   >
                     <TouchableOpacity>
-                      <Settings2 className="text-foreground w-32 h-32" />
+                      <SettingsIcon
+                        className="text-foreground"
+                        width={18}
+                        height={18}
+                      />
                     </TouchableOpacity>
                   </Link>
                 )}

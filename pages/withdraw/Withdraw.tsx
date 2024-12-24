@@ -5,17 +5,11 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { AlertCircle, ClipboardPaste, Wallet2 } from "~/components/Icons";
+import { PasteIcon, WalletIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
@@ -186,7 +180,7 @@ export function Withdraw() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <ClipboardPaste className="text-secondary-foreground" />
+                  <PasteIcon className="text-secondary-foreground" />
                   <Text numberOfLines={1}>Paste</Text>
                 </Button>
               </View>
@@ -265,7 +259,7 @@ export function Withdraw() {
                 )}
                 <View className="p-6 bg-background">
                   <View className="flex flex-row items-center justify-center gap-2 mb-4 px-4">
-                    <Wallet2 className="text-muted-foreground" />
+                    <WalletIcon className="text-muted-foreground" />
                     <Text
                       numberOfLines={1}
                       ellipsizeMode="tail"
@@ -274,29 +268,6 @@ export function Withdraw() {
                       {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
                     </Text>
                   </View>
-                  {lnurlDetails.minWithdrawable !==
-                    lnurlDetails.maxWithdrawable && (
-                    <Card className="mb-4">
-                      <CardContent className="flex flex-row items-center gap-4">
-                        <AlertCircle className="text-muted-foreground" />
-                        <View className="flex flex-1 flex-col">
-                          <CardTitle>Withdraw Limit</CardTitle>
-                          <CardDescription>
-                            Enter an amount between{" "}
-                            <Text className="font-bold2 text-sm">
-                              {Math.floor(lnurlDetails.minWithdrawable / 1000)}{" "}
-                              sats
-                            </Text>{" "}
-                            and{" "}
-                            <Text className="font-bold2 text-sm">
-                              {Math.floor(lnurlDetails.maxWithdrawable / 1000)}{" "}
-                              sats
-                            </Text>
-                          </CardDescription>
-                        </View>
-                      </CardContent>
-                    </Card>
-                  )}
                   <Button
                     size="lg"
                     className="flex flex-row gap-2"

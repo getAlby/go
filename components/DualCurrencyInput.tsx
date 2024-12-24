@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { SwapIcon } from "~/components/Icons";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import {
   CURSOR_COLOR,
@@ -9,7 +10,6 @@ import {
 } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
-import { RefreshCw } from "./Icons";
 import { Input } from "./ui/input";
 import { Text } from "./ui/text";
 
@@ -88,7 +88,7 @@ export function DualCurrencyInput({
           <Text className="font-semibold2 text-2xl text-muted-foreground">
             {inputMode === "fiat" ? fiatCurrency : "sats"}
           </Text>
-          <RefreshCw className="text-muted-foreground" width={16} height={16} />
+          <SwapIcon className="text-muted-foreground" width={16} height={16} />
         </View>
       </TouchableOpacity>
       {

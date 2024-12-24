@@ -6,7 +6,7 @@ import { Image, Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { ArchiveRestore, Copy, Share2, ZapIcon } from "~/components/Icons";
+import { CopyIcon, ShareIcon, WithdrawIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
@@ -209,7 +209,7 @@ export function Receive() {
                 router.push("/withdraw");
               }}
             >
-              <ArchiveRestore className="text-muted-foreground" />
+              <WithdrawIcon className="text-muted-foreground" />
               <Text>Withdraw</Text>
             </Button>
           </View>
@@ -267,7 +267,7 @@ export function Receive() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <Share2 className="text-muted-foreground" />
+              <ShareIcon className="text-muted-foreground" />
               <Text>Share</Text>
             </Button>
             {!enterCustomAmount && invoice && (
@@ -276,7 +276,7 @@ export function Receive() {
                 onPress={copy}
                 className="flex-1 flex flex-col gap-2"
               >
-                <Copy className="text-muted-foreground" />
+                <CopyIcon className="text-muted-foreground" />
                 <Text>Copy</Text>
               </Button>
             )}
@@ -298,7 +298,7 @@ export function Receive() {
                   router.push("/withdraw");
                 }}
               >
-                <ArchiveRestore className="text-muted-foreground" />
+                <WithdrawIcon className="text-muted-foreground" />
                 <Text>Withdraw</Text>
               </Button>
             )}

@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ChevronUp, Settings2 } from "~/components/Icons";
+import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,7 +21,6 @@ import AlbyBanner from "~/components/AlbyBanner";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
-import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
@@ -68,7 +67,7 @@ export function Home() {
         right={() => (
           <Link href="/settings" asChild>
             <TouchableOpacity>
-              <Settings2 className="text-foreground" />
+              <SettingsIcon className="text-foreground" />
             </TouchableOpacity>
           </Link>
         )}
@@ -132,12 +131,11 @@ export function Home() {
         </ScrollView>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
-            <Button
-              variant="secondary"
-              className="p-10 rounded-full aspect-square"
-            >
-              <ChevronUp className="text-muted-foreground" size={32} />
-            </Button>
+            <ChevronUpIcon
+              className="text-muted-foreground"
+              width={32}
+              height={32}
+            />
           </Link>
         </View>
         <View className="flex flex-row gap-6 mt-10">

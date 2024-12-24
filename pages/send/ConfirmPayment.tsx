@@ -3,17 +3,12 @@ import { Invoice } from "@getalby/lightning-tools";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";
-import { TriangleAlert, Wallet2, ZapIcon } from "~/components/Icons";
+import Alert from "~/components/Alert";
+import { AlertCircleIcon, WalletIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useTransactions } from "~/hooks/useTransactions";
@@ -119,7 +114,7 @@ export function ConfirmPayment() {
       </View>
       <View className="p-6 bg-background">
         <View className="flex flex-row items-center justify-center gap-2 mb-4 px-4">
-          <Wallet2 className="text-muted-foreground" />
+          <WalletIcon className="text-muted-foreground" />
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"
@@ -131,20 +126,14 @@ export function ConfirmPayment() {
         {transactions?.transactions.some(
           (transaction) => transaction.state === "pending",
         ) && (
-          <Link href="/transactions" className="mb-6" asChild>
+          <Link href="/transactions" asChild>
             <Pressable>
-              <Card className="w-full">
-                <CardContent className="flex flex-row items-center gap-4">
-                  <TriangleAlert className="text-muted-foreground" />
-                  <View className="flex flex-1 flex-col">
-                    <CardTitle>One or more pending payments</CardTitle>
-                    <CardDescription>
-                      Please check your transaction list before paying to ensure
-                      you do not make a payment twice.
-                    </CardDescription>
-                  </View>
-                </CardContent>
-              </Card>
+              <Alert
+                type="info"
+                title="One or more pending payments"
+                description="Please check your transaction list before paying to ensure you do not make a payment twice."
+                icon={AlertCircleIcon}
+              />
             </Pressable>
           </Link>
         )}
