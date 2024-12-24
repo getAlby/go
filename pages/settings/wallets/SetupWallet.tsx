@@ -7,11 +7,22 @@ import React from "react";
 import { Pressable, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
-import { ClipboardPaste, HelpCircle, X } from "~/components/Icons";
+import {
+  ClipboardPaste,
+  HelpCircle,
+  TriangleAlert,
+  X,
+} from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "~/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -72,18 +83,6 @@ export function SetupWallet() {
         const capabilities = [...info.methods] as Nip47Capability[];
         if (info.notifications?.length) {
           capabilities.push("notifications");
-        }
-        if (
-          !REQUIRED_CAPABILITIES.every((capability) =>
-            capabilities.includes(capability),
-          )
-        ) {
-          const missing = REQUIRED_CAPABILITIES.filter(
-            (capability) => !capabilities.includes(capability),
-          );
-          throw new Error(
-            `Missing required capabilities: ${missing.join(", ")}`,
-          );
         }
 
         console.info("NWC connected", info);
@@ -245,6 +244,27 @@ export function SetupWallet() {
                 returnKeyType="done"
               />
             </View>
+            {capabilities &&
+              !REQUIRED_CAPABILITIES.every((capability) =>
+                capabilities.includes(capability),
+              ) && (
+                <Card className="w-full mb-5 bg-orange-50 border-orange-100">
+                  <CardContent className="flex flex-row items-center gap-4">
+                    <TriangleAlert className="text-orange-700" />
+                    <View className="flex flex-1 flex-col">
+                      <CardTitle className="text-orange-700">
+                        Alby Go might not work as expected
+                      </CardTitle>
+                      <CardDescription className="text-orange-700">
+                        Missing capabilities:&nbsp;
+                        {REQUIRED_CAPABILITIES.filter(
+                          (capability) => !capabilities.includes(capability),
+                        ).join(", ")}
+                      </CardDescription>
+                    </View>
+                  </CardContent>
+                </Card>
+              )}
             <Button size="lg" onPress={addWallet} disabled={!name}>
               <Text>Finish</Text>
             </Button>
