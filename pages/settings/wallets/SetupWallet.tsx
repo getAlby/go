@@ -248,12 +248,14 @@ export function SetupWallet() {
               !REQUIRED_CAPABILITIES.every((capability) =>
                 capabilities.includes(capability),
               ) && (
-                <Card className="w-full mb-5">
+                <Card className="w-full mb-5 bg-orange-50 border-orange-100">
                   <CardContent className="flex flex-row items-center gap-4">
-                    <TriangleAlert className="text-muted-foreground" />
+                    <TriangleAlert className="text-orange-700" />
                     <View className="flex flex-1 flex-col">
-                      <CardTitle>Alby Go might not work as expected</CardTitle>
-                      <CardDescription>
+                      <CardTitle className="text-orange-700">
+                        Alby Go might not work as expected
+                      </CardTitle>
+                      <CardDescription className="text-orange-700">
                         Missing capabilities:&nbsp;
                         {REQUIRED_CAPABILITIES.filter(
                           (capability) => !capabilities.includes(capability),

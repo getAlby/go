@@ -24,15 +24,17 @@ export function EditWallet() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   return (
-    <View className="flex-1 flex flex-col p-3 gap-3">
+    <View className="flex-1 flex flex-col p-4 gap-4">
       <Screen title="Edit Wallet" />
       {/* TODO: Do not allow notifications to be toggled without notifications capability */}
-      <Card>
+      <Card className="bg-orange-50 border-orange-100 my-2">
         <CardContent className="flex flex-row items-center gap-4">
-          <TriangleAlert className="text-muted-foreground" />
+          <TriangleAlert className="text-orange-700" />
           <View className="flex flex-1 flex-col">
-            <CardTitle>This wallet might not work as expected</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-orange-700">
+              This wallet might not work as expected
+            </CardTitle>
+            <CardDescription className="text-orange-700">
               Missing capabilities:&nbsp;
               {REQUIRED_CAPABILITIES.filter(
                 (capability) =>
