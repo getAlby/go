@@ -1,14 +1,9 @@
 import React from "react";
 import { Text, View } from "react-native";
+import Alert from "~/components/Alert";
 import { TriangleAlertIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
@@ -36,23 +31,14 @@ export function Security() {
         </View>
       ) : (
         <>
-          {!isSupported && (
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex flex-row gap-3 items-center">
-                  <TriangleAlertIcon
-                    className="text-foreground"
-                    width={16}
-                    height={16}
-                  />
-                  <Text> Setup Device Security</Text>
-                </CardTitle>
-                <CardDescription>
-                  To protect your wallet, please set up a phone lock in your
-                  device settings first.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          {isSupported && (
+            <Alert
+              type="info"
+              title="Setup Device Security"
+              description="To protect your wallet, please set up a phone lock in your
+                  device settings first."
+              icon={TriangleAlertIcon}
+            />
           )}
           <View className="flex-1">
             <View className="flex-row items-center justify-between gap-2">

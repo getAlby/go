@@ -1,13 +1,19 @@
 import { nwc } from "@getalby/sdk";
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
 import { Pressable, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
-import { HelpCircleIcon, PasteIcon, XIcon } from "~/components/Icons";
+import {
+  HelpCircleIcon,
+  PasteIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
@@ -28,6 +34,9 @@ import { REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 
 export function SetupWallet() {
+  const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
+    nwcUrl: string;
+  }>();
   const wallets = useAppStore((store) => store.wallets);
   const walletIdWithConnection = wallets.findIndex(
     (wallet) => wallet.nostrWalletConnectUrl,
@@ -39,6 +48,7 @@ export function SetupWallet() {
   const [capabilities, setCapabilities] =
     React.useState<nwc.Nip47Capability[]>();
   const [name, setName] = React.useState("");
+  const [startScanning, setStartScanning] = React.useState(false);
 
   const handleScanned = (data: string) => {
     return connect(data);
@@ -56,47 +66,43 @@ export function SetupWallet() {
     connect(nostrWalletConnectUrl);
   }
 
-  async function connect(nostrWalletConnectUrl: string) {
-    try {
-      setConnecting(true);
-      // make sure connection is valid
-      const nwcClient = new nwc.NWCClient({
-        nostrWalletConnectUrl,
-      });
-      const info = await nwcClient.getInfo();
-      const capabilities = [...info.methods] as Nip47Capability[];
-      if (info.notifications?.length) {
-        capabilities.push("notifications");
+  const connect = React.useCallback(
+    async (nostrWalletConnectUrl: string): Promise<boolean> => {
+      try {
+        setConnecting(true);
+        // make sure connection is valid
+        const nwcClient = new nwc.NWCClient({
+          nostrWalletConnectUrl,
+        });
+        const info = await nwcClient.getInfo();
+        const capabilities = [...info.methods] as Nip47Capability[];
+        if (info.notifications?.length) {
+          capabilities.push("notifications");
+        }
+
+        console.info("NWC connected", info);
+
+        setNostrWalletConnectUrl(nostrWalletConnectUrl);
+        setCapabilities(capabilities);
+        setName(nwcClient.lud16 || "");
+
+        Toast.show({
+          type: "success",
+          text1: "Connection successful",
+          text2: "Please set your wallet name to finish",
+          position: "top",
+        });
+        setConnecting(false);
+        return true;
+      } catch (error) {
+        console.error(error);
+        errorToast(error);
       }
-      if (
-        !REQUIRED_CAPABILITIES.every((capability) =>
-          capabilities.includes(capability),
-        )
-      ) {
-        const missing = REQUIRED_CAPABILITIES.filter(
-          (capability) => !capabilities.includes(capability),
-        );
-        throw new Error(`Missing required capabilities: ${missing.join(", ")}`);
-      }
-
-      console.info("NWC connected", info);
-
-      setNostrWalletConnectUrl(nostrWalletConnectUrl);
-      setCapabilities(capabilities);
-      setName(nwcClient.lud16 || "");
-
-      Toast.show({
-        type: "success",
-        text1: "Connection successful",
-        text2: "Please set your wallet name to finish",
-        position: "top",
-      });
-    } catch (error) {
-      console.error(error);
-      errorToast(error);
-    }
-    setConnecting(false);
-  }
+      setConnecting(false);
+      return false;
+    },
+    [],
+  );
 
   const addWallet = () => {
     if (!nostrWalletConnectUrl) {
@@ -121,6 +127,22 @@ export function SetupWallet() {
 
     router.replace("/");
   };
+
+  React.useEffect(() => {
+    if (nwcUrlFromSchemeLink) {
+      (async () => {
+        const result = await connect(nwcUrlFromSchemeLink);
+        // Delay the camera to show the error message
+        if (!result) {
+          setTimeout(() => {
+            setStartScanning(true);
+          }, 2000);
+        }
+      })();
+    } else {
+      setStartScanning(true);
+    }
+  }, [connect, nwcUrlFromSchemeLink]);
 
   return (
     <>
@@ -182,7 +204,10 @@ export function SetupWallet() {
         </View>
       ) : !nostrWalletConnectUrl ? (
         <>
-          <QRCodeScanner onScanned={handleScanned} startScanning />
+          <QRCodeScanner
+            onScanned={handleScanned}
+            startScanning={startScanning}
+          />
           <View className="flex flex-row items-stretch justify-center gap-4 p-6">
             <Button
               onPress={paste}
@@ -214,6 +239,19 @@ export function SetupWallet() {
                 returnKeyType="done"
               />
             </View>
+            {capabilities &&
+              !REQUIRED_CAPABILITIES.every((capability) =>
+                capabilities.includes(capability),
+              ) && (
+                <Alert
+                  type="warn"
+                  title="Alby Go might not work as expected"
+                  description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
+                    (capability) => !capabilities.includes(capability),
+                  ).join(", ")}`}
+                  icon={TriangleAlertIcon}
+                />
+              )}
             <Button size="lg" onPress={addWallet} disabled={!name}>
               <Text>Finish</Text>
             </Button>

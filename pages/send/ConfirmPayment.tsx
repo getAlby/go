@@ -2,18 +2,13 @@ import { Invoice } from "@getalby/lightning-tools";
 
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View } from "react-native";
-import { TriangleAlert, ZapIcon } from "~/components/Icons";
+import { Pressable, View } from "react-native";
+import Alert from "~/components/Alert";
+import { AlertCircleIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useTransactions } from "~/hooks/useTransactions";
@@ -119,19 +114,15 @@ export function ConfirmPayment() {
         {!transactions?.transactions.some(
           (transaction) => transaction.state === "pending",
         ) && (
-          <Link href="/transactions" className="mb-6">
-            <Card className="w-full">
-              <CardContent className="flex flex-row items-center gap-4">
-                <TriangleAlert className="text-muted-foreground" />
-                <View className="flex flex-1 flex-col">
-                  <CardTitle>One or more pending payments</CardTitle>
-                  <CardDescription>
-                    Please check your transaction list before paying to ensure
-                    you do not make a payment twice.
-                  </CardDescription>
-                </View>
-              </CardContent>
-            </Card>
+          <Link href="/transactions" asChild>
+            <Pressable>
+              <Alert
+                type="info"
+                title="One or more pending payments"
+                description="Please check your transaction list before paying to ensure you do not make a payment twice."
+                icon={AlertCircleIcon}
+              />
+            </Pressable>
           </Link>
         )}
         <Button

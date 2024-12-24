@@ -2,7 +2,12 @@ import { router } from "expo-router";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
 
-const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
+const SUPPORTED_SCHEMES = [
+  "lightning:",
+  "bitcoin:",
+  "alby:",
+  "nostr+walletconnect:",
+];
 
 // Register exp scheme for testing during development
 // https://docs.expo.dev/guides/linking/#creating-urls
@@ -22,6 +27,19 @@ export const handleLink = async (url: string) => {
 
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
+    if (parsedUrl.protocol === "nostr+walletconnect:") {
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+      console.info("Navigating to wallet setup");
+      router.push({
+        pathname: "/settings/wallets/setup",
+        params: {
+          nwcUrl: protocol + hostname + search,
+        },
+      });
+      return;
+    }
 
     if (parsedUrl.protocol === "exp:") {
       if (!parsedUrl.pathname) {

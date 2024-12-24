@@ -9,6 +9,7 @@ import {
   SATS_REGEX,
 } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 import { Input } from "./ui/input";
 import { Text } from "./ui/text";
 
@@ -17,6 +18,8 @@ type DualCurrencyInputProps = {
   setAmount(amount: string): void;
   autoFocus?: boolean;
   readOnly?: boolean;
+  max?: number;
+  min?: number;
 };
 
 export function DualCurrencyInput({
@@ -24,6 +27,8 @@ export function DualCurrencyInput({
   setAmount,
   autoFocus = false,
   readOnly = false,
+  max,
+  min,
 }: DualCurrencyInputProps) {
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
@@ -61,7 +66,11 @@ export function DualCurrencyInput({
   return (
     <View className="w-full flex flex-col items-center justify-center gap-5">
       <Input
-        className="w-full border-transparent bg-transparent text-center mt-3"
+        className={cn(
+          "w-full border-transparent bg-transparent text-center mt-3",
+          ((max && Number(amount) > max) || (min && Number(amount) < min)) &&
+            "text-destructive",
+        )}
         placeholder="0"
         keyboardType={inputMode === "sats" ? "number-pad" : "decimal-pad"}
         value={inputMode === "sats" ? amount : fiatAmount}
