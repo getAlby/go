@@ -125,7 +125,9 @@ export function SetupWallet() {
       position: "top",
     });
 
-    router.replace("/");
+    if (router.canDismiss()) {
+      router.dismissAll();
+    }
   };
 
   React.useEffect(() => {
@@ -155,7 +157,9 @@ export function SetupWallet() {
                 useAppStore
                   .getState()
                   .setSelectedWalletId(walletIdWithConnection);
-                router.replace("/");
+                if (router.canDismiss()) {
+                  router.dismissAll();
+                }
               }}
             >
               <XIcon className="text-foreground" />
