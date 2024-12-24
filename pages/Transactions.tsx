@@ -9,7 +9,7 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import { X } from "~/components/Icons";
+import { XIcon } from "~/components/Icons";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
@@ -78,7 +78,7 @@ export function Transactions() {
               router.back();
             }}
           >
-            <X className="text-foreground" />
+            <XIcon className="text-foreground" />
           </Pressable>
         )}
       />

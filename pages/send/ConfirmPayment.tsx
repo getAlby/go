@@ -4,7 +4,7 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
-import { AlertCircle, ZapIcon } from "~/components/Icons";
+import { AlertCircleIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
@@ -120,7 +120,7 @@ export function ConfirmPayment() {
                 type="info"
                 title="One or more pending payments"
                 description="Please check your transaction list before paying to ensure you do not make a payment twice."
-                icon={AlertCircle}
+                icon={AlertCircleIcon}
               />
             </Pressable>
           </Link>

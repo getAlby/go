@@ -1,5 +1,5 @@
-import { LucideIcon } from "lucide-react-native";
 import { View } from "react-native";
+import { SvgProps } from "react-native-svg";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import { cn } from "~/lib/utils";
 
 type Props = {
   type: "error" | "warn" | "info";
-  icon: LucideIcon;
+  icon: React.FunctionComponent<SvgProps>;
   title: string;
   description: string;
   className?: string;
@@ -37,7 +37,7 @@ function Alert({ title, description, type, icon: Icon, className }: Props) {
       )}
     >
       <CardContent className="flex flex-row items-center gap-4">
-        <Icon className={textColor} />
+        <Icon className={textColor} width={24} height={24} />
         <View className="flex flex-1 flex-col">
           <CardTitle className={textColor}>{title}</CardTitle>
           <CardDescription className={textColor}>{description}</CardDescription>

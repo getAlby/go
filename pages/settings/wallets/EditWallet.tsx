@@ -5,10 +5,10 @@ import Toast from "react-native-toast-message";
 import * as Clipboard from "expo-clipboard";
 import Alert from "~/components/Alert";
 import {
-  ArchiveRestore,
-  Trash2,
-  TriangleAlert,
-  Wallet2,
+  ExportIcon,
+  TrashIcon,
+  TriangleAlertIcon,
+  WalletIcon,
   ZapIcon,
 } from "~/components/Icons";
 import Screen from "~/components/Screen";
@@ -40,7 +40,7 @@ export function EditWallet() {
                 capability,
               ),
           ).join(", ")}`}
-          icon={TriangleAlert}
+          icon={TriangleAlertIcon}
           className="mb-0"
         />
       )}
@@ -48,7 +48,7 @@ export function EditWallet() {
         <Pressable>
           <Card className="w-full">
             <CardContent className="flex flex-row items-center gap-4">
-              <Wallet2 className="text-muted-foreground" />
+              <WalletIcon className="text-muted-foreground" />
               <View className="flex flex-1 flex-col">
                 <CardTitle>Wallet Name</CardTitle>
                 <CardDescription>
@@ -110,7 +110,7 @@ export function EditWallet() {
       >
         <Card className="w-full">
           <CardContent className="flex flex-row items-center gap-4">
-            <ArchiveRestore className="text-muted-foreground" />
+            <ExportIcon className="text-muted-foreground" />
             <View className="flex flex-1 flex-col">
               <CardTitle>Export Wallet</CardTitle>
               <CardDescription>
@@ -146,7 +146,7 @@ export function EditWallet() {
       >
         <Card className="w-full">
           <CardContent className="flex flex-row items-center gap-4">
-            <Trash2 className="text-muted-foreground" />
+            <TrashIcon className="text-muted-foreground" />
             <View className="flex flex-1 flex-col">
               <CardTitle>Delete Wallet</CardTitle>
               <CardDescription>

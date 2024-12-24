@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import Alert from "~/components/Alert";
-import { AlertCircle } from "~/components/Icons";
+import { TriangleAlertIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Label } from "~/components/ui/label";
@@ -37,7 +37,7 @@ export function Security() {
               title="Setup Device Security"
               description="To protect your wallet, please set up a phone lock in your
                   device settings first."
-              icon={AlertCircle}
+              icon={TriangleAlertIcon}
             />
           )}
           <View className="flex-1">

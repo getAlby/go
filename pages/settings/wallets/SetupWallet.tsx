@@ -9,10 +9,10 @@ import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
-  ClipboardPaste,
-  HelpCircle,
-  TriangleAlert,
-  X,
+  HelpCircleIcon,
+  PasteIcon,
+  TriangleAlertIcon,
+  XIcon,
 } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
@@ -158,13 +158,13 @@ export function SetupWallet() {
                 router.replace("/");
               }}
             >
-              <X className="text-foreground" />
+              <XIcon className="text-foreground" />
             </Pressable>
           ) : (
             <Dialog>
               <DialogTrigger asChild>
                 <TouchableOpacity>
-                  <HelpCircle className="text-foreground" />
+                  <HelpCircleIcon className="text-foreground" />
                 </TouchableOpacity>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -214,7 +214,7 @@ export function SetupWallet() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <ClipboardPaste className="text-secondary-foreground" />
+              <PasteIcon className="text-secondary-foreground" />
               <Text className="text-secondary-foreground">Paste</Text>
             </Button>
           </View>
@@ -249,7 +249,7 @@ export function SetupWallet() {
                   description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
                     (capability) => !capabilities.includes(capability),
                   ).join(", ")}`}
-                  icon={TriangleAlert}
+                  icon={TriangleAlertIcon}
                 />
               )}
             <Button size="lg" onPress={addWallet} disabled={!name}>
