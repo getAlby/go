@@ -1,8 +1,9 @@
 import { Link, router } from "expo-router";
-import { Alert, Pressable, View } from "react-native";
+import { Pressable, Alert as RNAlert, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import * as Clipboard from "expo-clipboard";
+import Alert from "~/components/Alert";
 import {
   ArchiveRestore,
   Trash2,
@@ -27,25 +28,22 @@ export function EditWallet() {
     <View className="flex-1 flex flex-col p-4 gap-4">
       <Screen title="Edit Wallet" />
       {/* TODO: Do not allow notifications to be toggled without notifications capability */}
-      <Card className="bg-orange-50 border-orange-100 my-2">
-        <CardContent className="flex flex-row items-center gap-4">
-          <TriangleAlert className="text-orange-700" />
-          <View className="flex flex-1 flex-col">
-            <CardTitle className="text-orange-700">
-              This wallet might not work as expected
-            </CardTitle>
-            <CardDescription className="text-orange-700">
-              Missing capabilities:&nbsp;
-              {REQUIRED_CAPABILITIES.filter(
-                (capability) =>
-                  !(wallets[selectedWalletId].nwcCapabilities || []).includes(
-                    capability,
-                  ),
-              ).join(", ")}
-            </CardDescription>
-          </View>
-        </CardContent>
-      </Card>
+      {!REQUIRED_CAPABILITIES.every((capability) =>
+        (wallets[selectedWalletId].nwcCapabilities || []).includes(capability),
+      ) && (
+        <Alert
+          type="warn"
+          title="This wallet might not work as expected"
+          description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
+            (capability) =>
+              !(wallets[selectedWalletId].nwcCapabilities || []).includes(
+                capability,
+              ),
+          ).join(", ")}`}
+          icon={TriangleAlert}
+          className="mb-0"
+        />
+      )}
       <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">
@@ -81,7 +79,7 @@ export function EditWallet() {
       </Link>
       <Pressable
         onPress={() => {
-          Alert.alert(
+          RNAlert.alert(
             "Export Wallet",
             "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
             [
@@ -125,7 +123,7 @@ export function EditWallet() {
       </Pressable>
       <Pressable
         onPress={() => {
-          Alert.alert(
+          RNAlert.alert(
             "Delete Wallet",
             "Are you sure you want to delete your wallet? This cannot be undone.",
             [
