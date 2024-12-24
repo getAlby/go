@@ -1,9 +1,9 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import {
-  AtomIcon,
   BitcoinIcon,
   FingerprintIcon,
+  OnboardingIcon,
   ResetIcon,
   SignOutIcon,
   ThemeIcon,
@@ -103,7 +103,7 @@ export function Settings() {
                   useAppStore.getState().setOnboarded(false);
                 }}
               >
-                <AtomIcon className="text-muted-foreground" />
+                <OnboardingIcon className="text-muted-foreground" />
                 <Text className="font-medium2 text-xl">Open Onboarding</Text>
               </TouchableOpacity>
               <TouchableOpacity

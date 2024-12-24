@@ -21,7 +21,6 @@ import AlbyBanner from "~/components/AlbyBanner";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
-import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
@@ -132,16 +131,11 @@ export function Home() {
         </ScrollView>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
-            <Button
-              variant="secondary"
-              className="p-10 rounded-full aspect-square"
-            >
-              <ChevronUpIcon
-                className="text-muted-foreground"
-                width={32}
-                height={32}
-              />
-            </Button>
+            <ChevronUpIcon
+              className="text-muted-foreground"
+              width={32}
+              height={32}
+            />
           </Link>
         </View>
         <View className="flex flex-row gap-6 mt-10">

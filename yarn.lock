@@ -1633,10 +1633,10 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.1.1.tgz#1ec17e2edbec25c8306d424ecfbf13c7de1aaa31"
   integrity sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==
 
-"@popicons/react-native@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@popicons/react-native/-/react-native-0.0.16.tgz#a16d3592709fef87c389822df9a96029d1d71910"
-  integrity sha512-eO+Tf9ovQVx6hxjmTby4nU3t1pVzvigxb5mO1BtCNl52Z9PkSOid+9pDsu9LWmfJBV6h7KP+H9CDyM10nBDd5A==
+"@popicons/react-native@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@popicons/react-native/-/react-native-0.0.20.tgz#0bb9d84f63a8057e918c86a8f809e101b95eb35b"
+  integrity sha512-oBTQ6DNBA4NGEnODr/IhGujcDVZPgKB0uXNYEkrg9znsCYN/CZC1CTyoKnQzQSnmsZj/7+JLFd0TpUD7v1DCug==
 
 "@radix-ui/primitive@1.1.0":
   version "1.1.0"
@@ -6589,11 +6589,6 @@ lru-cache@^5.1.1:
   integrity sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==
   dependencies:
     yallist "^3.0.2"
-
-lucide-react-native@^0.376.0:
-  version "0.376.0"
-  resolved "https://registry.yarnpkg.com/lucide-react-native/-/lucide-react-native-0.376.0.tgz#e66640581eb290911956e64cf11bc62d791f64b8"
-  integrity sha512-Mo+w+cCkVpy8AeMQk9si8oLomaCsOsPi4WHR9oFm9YHz3I9nFvVdiMIUNvuWLSL5dPD1i+AVzn0ahpNFviEPlQ==
 
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"

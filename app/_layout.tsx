@@ -125,5 +125,3 @@ function useConnectionChecker() {
     }
   }, [error?.message]);
 }
-
-global.React = React;

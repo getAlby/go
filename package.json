@@ -27,7 +27,7 @@
   "dependencies": {
     "@getalby/lightning-tools": "^5.1.1",
     "@getalby/sdk": "^3.8.2",
-    "@popicons/react-native": "^0.0.16",
+    "@popicons/react-native": "^0.0.20",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@rn-primitives/dialog": "^1.0.3",
     "@rn-primitives/portal": "^1.0.3",
@@ -49,7 +49,6 @@
     "expo-secure-store": "~14.0.0",
     "expo-status-bar": "~2.0.0",
     "lottie-react-native": "7.1.0",
-    "lucide-react-native": "^0.376.0",
     "message-port-polyfill": "^0.2.0",
     "nativewind": "^4.0.1",
     "react": "18.3.1",

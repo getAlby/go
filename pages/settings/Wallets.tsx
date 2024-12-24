@@ -61,8 +61,8 @@ export function Wallets() {
                     <TouchableOpacity>
                       <SettingsIcon
                         className="text-foreground"
-                        width={128}
-                        height={128}
+                        width={18}
+                        height={18}
                       />
                     </TouchableOpacity>
                   </Link>

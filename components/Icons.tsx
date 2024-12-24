@@ -1,6 +1,5 @@
 import {
   PopiconsCircleExclamationLine as AlertCircleIcon,
-  PopiconsAtomSolid as AtomIcon,
   PopiconsBitcoinSolid as BitcoinIcon,
   PopiconsAddressBookSolid as BookUserIcon,
   PopiconsCameraWebOffSolid as CameraOffIcon,
@@ -13,6 +12,7 @@ import {
   PopiconsCircleInfoLine as HelpCircleIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
+  PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
   PopiconsReloadLine as RefreshIcon,
   PopiconsReloadSolid as ResetIcon,
@@ -24,6 +24,7 @@ import {
   PopiconsBinSolid as TrashIcon,
   PopiconsTriangleExclamationLine as TriangleAlertIcon,
   PopiconsWalletHorizontalOpenSolid as WalletIcon,
+  PopiconsDownloadSolid as WithdrawIcon,
   PopiconsCircleXLine as XCircleIcon,
   PopiconsXSolid as XIcon,
   PopiconsBoltSolid as ZapIcon,
@@ -44,7 +45,6 @@ function interopIcon(icon: React.FunctionComponent<SvgProps>) {
 }
 
 interopIcon(AlertCircleIcon);
-interopIcon(AtomIcon);
 interopIcon(BitcoinIcon);
 interopIcon(BookUserIcon);
 interopIcon(CameraOffIcon);
@@ -57,6 +57,7 @@ interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
 interopIcon(MoveDownIcon);
 interopIcon(MoveUpIcon);
+interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
 interopIcon(RefreshIcon);
 interopIcon(ResetIcon);
@@ -68,13 +69,13 @@ interopIcon(ThemeIcon);
 interopIcon(TrashIcon);
 interopIcon(TriangleAlertIcon);
 interopIcon(WalletIcon);
+interopIcon(WithdrawIcon);
 interopIcon(XCircleIcon);
 interopIcon(XIcon);
 interopIcon(ZapIcon);
 
 export {
   AlertCircleIcon,
-  AtomIcon,
   BitcoinIcon,
   BookUserIcon,
   CameraOffIcon,
@@ -87,6 +88,7 @@ export {
   HelpCircleIcon,
   MoveDownIcon,
   MoveUpIcon,
+  OnboardingIcon,
   PasteIcon,
   RefreshIcon,
   ResetIcon,
@@ -98,6 +100,7 @@ export {
   TrashIcon,
   TriangleAlertIcon,
   WalletIcon,
+  WithdrawIcon,
   XCircleIcon,
   XIcon,
   ZapIcon,

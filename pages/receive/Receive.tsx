@@ -6,7 +6,7 @@ import { Image, Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { CopyIcon, ExportIcon, ShareIcon, ZapIcon } from "~/components/Icons";
+import { CopyIcon, ShareIcon, WithdrawIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
@@ -209,7 +209,7 @@ export function Receive() {
                 router.push("/withdraw");
               }}
             >
-              <ExportIcon className="text-muted-foreground" />
+              <WithdrawIcon className="text-muted-foreground" />
               <Text>Withdraw</Text>
             </Button>
           </View>
@@ -298,7 +298,7 @@ export function Receive() {
                   router.push("/withdraw");
                 }}
               >
-                <ExportIcon className="text-muted-foreground" />
+                <WithdrawIcon className="text-muted-foreground" />
                 <Text>Withdraw</Text>
               </Button>
             )}
