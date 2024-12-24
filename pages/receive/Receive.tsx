@@ -88,21 +88,21 @@ export function Receive() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
               onPress={() => {
-                router.push("/receive/invoice");
-              }}
-            >
-              <ZapIcon className="text-muted-foreground" />
-              <Text>Invoice</Text>
-            </Button>
-            <Button
-              variant="secondary"
-              className="flex-1 flex flex-col gap-2"
-              onPress={() => {
                 router.push("/receive/withdraw");
               }}
             >
               <ArchiveRestore className="text-muted-foreground" />
               <Text>Withdraw</Text>
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+              onPress={() => {
+                router.push("/receive/invoice");
+              }}
+            >
+              <ZapIcon className="text-muted-foreground" />
+              <Text>Invoice</Text>
             </Button>
           </View>
         </>
