@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Link, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
 import React, { useState } from "react";
 import {
@@ -23,6 +23,8 @@ import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { useAppStore } from "~/lib/state/appStore";
 
 dayjs.extend(relativeTime);
 
@@ -39,6 +41,8 @@ export function Home() {
   const [balanceState, setBalanceState] = useState<BalanceState>(
     BalanceState.SATS,
   );
+  const wallets = useAppStore((store) => store.wallets);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
 
   useFocusEffect(() => {
     reloadBalance();
@@ -89,6 +93,21 @@ export function Home() {
               onPress={switchBalanceState}
               className="w-full flex flex-col items-center justify-center gap-4"
             >
+              {wallets.length && (
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push("/settings/wallets");
+                  }}
+                >
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    className="text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                  >
+                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                  </Text>
+                </TouchableOpacity>
+              )}
               <View className="w-full flex flex-row justify-center items-center gap-2">
                 {balance && !refreshingBalance ? (
                   <>
@@ -107,7 +126,7 @@ export function Home() {
                     </Text>
                   </>
                 ) : (
-                  <Skeleton className="w-48 h-12" />
+                  <Skeleton className="w-48 h-10" />
                 )}
               </View>
               <View className="flex justify-center items-center">
@@ -122,7 +141,7 @@ export function Home() {
                       ) + " sats"}
                   </Text>
                 ) : (
-                  <Skeleton className="w-32 h-10" />
+                  <Skeleton className="w-32 h-8" />
                 )}
               </View>
             </TouchableOpacity>
