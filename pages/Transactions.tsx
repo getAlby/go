@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { XIcon } from "~/components/Icons";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
+import PendingTransactionIcon from "~/components/icons/PendingTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
@@ -126,7 +127,10 @@ export function Transactions() {
                 )}
               >
                 <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
-                  {transaction.state !== "failed" && (
+                  {!(
+                    transaction.state === "failed" ||
+                    transaction.state === "pending"
+                  ) && (
                     <>
                       {transaction.type === "incoming" && (
                         <ReceivedTransactionIcon />
@@ -135,6 +139,9 @@ export function Transactions() {
                         <SentTransactionIcon />
                       )}
                     </>
+                  )}
+                  {transaction.state === "pending" && (
+                    <PendingTransactionIcon />
                   )}
                   {transaction.state === "failed" && <FailedTransactionIcon />}
                 </View>
