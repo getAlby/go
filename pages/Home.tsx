@@ -47,12 +47,16 @@ export function Home() {
   };
 
   function switchBalanceState(): void {
-    if (balanceDisplayMode === "sats") {
-      useAppStore.getState().setBalanceDisplayMode("fiat");
-    } else if (balanceDisplayMode === "fiat") {
-      useAppStore.getState().setBalanceDisplayMode("hidden");
-    } else {
-      useAppStore.getState().setBalanceDisplayMode("sats");
+    switch (balanceDisplayMode) {
+      case "sats":
+        useAppStore.getState().setBalanceDisplayMode("fiat");
+        break;
+      case "fiat":
+        useAppStore.getState().setBalanceDisplayMode("hidden");
+        break;
+      default:
+        useAppStore.getState().setBalanceDisplayMode("sats");
+        break;
     }
   }
 
