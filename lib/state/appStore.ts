@@ -13,8 +13,10 @@ interface AppState {
   readonly isSecurityEnabled: boolean;
   readonly isOnboarded: boolean;
   readonly theme: Theme;
+  readonly balanceDisplayMode: BalanceDisplayMode;
   setUnlocked: (unlocked: boolean) => void;
   setTheme: (theme: Theme) => void;
+  setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   updateCurrentWallet(wallet: Partial<Wallet>): void;
@@ -37,9 +39,11 @@ const fiatCurrencyKey = "fiatCurrency";
 const hasOnboardedKey = "hasOnboarded";
 const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
+const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
 export const lastActiveTimeKey = "lastActiveTime";
 
+export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
 export type Theme = "system" | "light" | "dark";
 
 type Wallet = {
@@ -169,6 +173,9 @@ export const useAppStore = create<AppState>()((set, get) => {
     secureStorage.getItem(isSecurityEnabledKey) === "true";
 
   const theme = (secureStorage.getItem(themeKey) as Theme) || "system";
+  const balanceDisplayMode =
+    (secureStorage.getItem(balanceDisplayModeKey) as BalanceDisplayMode) ||
+    "sats";
 
   const initialWallets = loadWallets();
   return {
@@ -179,6 +186,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     isSecurityEnabled,
     theme,
+    balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
     updateCurrentWallet,
@@ -190,6 +198,10 @@ export const useAppStore = create<AppState>()((set, get) => {
     setTheme: (theme) => {
       secureStorage.setItem(themeKey, theme);
       set({ theme });
+    },
+    setBalanceDisplayMode: (balanceDisplayMode) => {
+      secureStorage.setItem(balanceDisplayModeKey, balanceDisplayMode);
+      set({ balanceDisplayMode });
     },
     setOnboarded: (isOnboarded) => {
       if (isOnboarded) {

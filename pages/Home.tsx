@@ -28,19 +28,11 @@ import { useAppStore } from "~/lib/state/appStore";
 
 dayjs.extend(relativeTime);
 
-enum BalanceState {
-  SATS = 1,
-  FIAT = 2,
-  HIDDEN = 3,
-}
-
 export function Home() {
   const { data: balance, mutate: reloadBalance } = useBalance();
   const [refreshingBalance, setRefreshingBalance] = useState(false);
   const getFiatAmount = useGetFiatAmount();
-  const [balanceState, setBalanceState] = useState<BalanceState>(
-    BalanceState.SATS,
-  );
+  const balanceDisplayMode = useAppStore((store) => store.balanceDisplayMode);
   const wallets = useAppStore((store) => store.wallets);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
 
@@ -55,12 +47,12 @@ export function Home() {
   };
 
   function switchBalanceState(): void {
-    if (balanceState === BalanceState.SATS) {
-      setBalanceState(BalanceState.FIAT);
-    } else if (balanceState === BalanceState.FIAT) {
-      setBalanceState(BalanceState.HIDDEN);
+    if (balanceDisplayMode === "sats") {
+      useAppStore.getState().setBalanceDisplayMode("fiat");
+    } else if (balanceDisplayMode === "fiat") {
+      useAppStore.getState().setBalanceDisplayMode("hidden");
     } else {
-      setBalanceState(BalanceState.SATS);
+      useAppStore.getState().setBalanceDisplayMode("sats");
     }
   }
 
@@ -112,17 +104,17 @@ export function Home() {
                 {balance && !refreshingBalance ? (
                   <>
                     <Text className="text-foreground text-5xl font-bold2">
-                      {balanceState === BalanceState.SATS &&
+                      {balanceDisplayMode === "sats" &&
                         new Intl.NumberFormat().format(
                           Math.floor(balance.balance / 1000),
                         )}
-                      {balanceState === BalanceState.FIAT &&
+                      {balanceDisplayMode === "fiat" &&
                         getFiatAmount &&
                         getFiatAmount(Math.floor(balance.balance / 1000))}
-                      {balanceState === BalanceState.HIDDEN && "****"}
+                      {balanceDisplayMode === "hidden" && "****"}
                     </Text>
                     <Text className="text-muted-foreground text-3xl font-semibold2">
-                      {balanceState === BalanceState.SATS && "sats"}
+                      {balanceDisplayMode === "sats" && "sats"}
                     </Text>
                   </>
                 ) : (
@@ -132,10 +124,10 @@ export function Home() {
               <View className="flex justify-center items-center">
                 {balance && !refreshingBalance ? (
                   <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                    {balanceState === BalanceState.SATS &&
+                    {balanceDisplayMode === "sats" &&
                       getFiatAmount &&
                       getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceState === BalanceState.FIAT &&
+                    {balanceDisplayMode === "fiat" &&
                       new Intl.NumberFormat().format(
                         Math.floor(balance.balance / 1000),
                       ) + " sats"}
