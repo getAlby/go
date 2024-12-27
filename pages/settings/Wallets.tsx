@@ -1,4 +1,5 @@
 import { Link, router } from "expo-router";
+import React from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { SettingsIcon, WalletIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
@@ -14,12 +15,14 @@ export function Wallets() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   return (
-    <View className="flex-1 flex flex-col">
+    <>
       <Screen title="Manage Wallets" />
-      <View className="flex-1 px-6 py-3">
+      <View className="h-full flex px-6">
         <FlatList
           className="flex flex-col"
           data={wallets}
+          contentContainerStyle={{ flexGrow: 1 }}
+          ListFooterComponentStyle={{ marginTop: "auto" }}
           renderItem={(item) => {
             const active = item.index === selectedWalletId;
 
@@ -68,19 +71,21 @@ export function Wallets() {
               </TouchableOpacity>
             );
           }}
+          ListFooterComponent={
+            <View className="py-6">
+              <Button
+                size="lg"
+                onPress={() => {
+                  router.dismissAll();
+                  router.push("/settings/wallets/setup");
+                }}
+              >
+                <Text>Connect a Wallet</Text>
+              </Button>
+            </View>
+          }
         />
       </View>
-      <View className="p-6">
-        <Button
-          size="lg"
-          onPress={() => {
-            router.dismissAll();
-            router.push("/settings/wallets/setup");
-          }}
-        >
-          <Text>Connect a Wallet</Text>
-        </Button>
-      </View>
-    </View>
+    </>
   );
 }
