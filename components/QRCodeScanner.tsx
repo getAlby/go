@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 interface QRCodeScannerProps {
-  onScanned: (data: string) => void;
+  onScanned: (data: string) => Promise<boolean>;
   startScanning: boolean;
 }
 
@@ -49,11 +49,11 @@ function QRCodeScanner({
     setScanning(status === "granted");
   }
 
-  const handleScanned = (data: string) => {
+  const handleScanned = async (data: string) => {
     if (isScanning) {
       console.info(`Bar code with data ${data} has been scanned!`);
-      onScanned(data);
-      setScanning(false);
+      const result = await onScanned(data);
+      setScanning(!result);
     }
   };
 
