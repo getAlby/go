@@ -31,7 +31,7 @@ export function Security() {
         </View>
       ) : (
         <>
-          {isSupported && (
+          {!isSupported && (
             <Alert
               type="info"
               title="Setup Device Security"
