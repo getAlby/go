@@ -52,21 +52,19 @@ export function Wallets() {
                     {item.item.name || DEFAULT_WALLET_NAME}
                   </Text>
                 </View>
-                {active && (
-                  <Link
-                    href={`/settings/wallets/${selectedWalletId}`}
-                    className="absolute right-4"
-                    asChild
-                  >
-                    <TouchableOpacity>
-                      <SettingsIcon
-                        className="text-foreground"
-                        width={18}
-                        height={18}
-                      />
-                    </TouchableOpacity>
-                  </Link>
-                )}
+                <Link
+                  href={`/settings/wallets/${item.index}`}
+                  className="absolute right-4"
+                  asChild
+                >
+                  <TouchableOpacity>
+                    <SettingsIcon
+                      className="text-muted-foreground"
+                      width={18}
+                      height={18}
+                    />
+                  </TouchableOpacity>
+                </Link>
               </TouchableOpacity>
             );
           }}

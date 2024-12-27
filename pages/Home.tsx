@@ -71,7 +71,7 @@ export function Home() {
         right={() => (
           <Link href="/settings" asChild>
             <TouchableOpacity>
-              <SettingsIcon className="text-foreground" />
+              <SettingsIcon className="text-muted-foreground" />
             </TouchableOpacity>
           </Link>
         )}
@@ -93,7 +93,7 @@ export function Home() {
               onPress={switchBalanceState}
               className="w-full flex flex-col items-center justify-center gap-4"
             >
-              {wallets.length && (
+              {wallets.length > 1 && (
                 <TouchableOpacity
                   onPress={() => {
                     router.push("/settings/wallets");
@@ -149,7 +149,7 @@ export function Home() {
           </View>
         </ScrollView>
         <View className="flex items-center justify-center">
-          <Link href="/transactions" asChild>
+          <Link href="/transactions">
             <ChevronUpIcon
               className="text-muted-foreground"
               width={32}
