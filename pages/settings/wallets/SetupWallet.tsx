@@ -128,6 +128,7 @@ export function SetupWallet() {
     if (router.canDismiss()) {
       router.dismissAll();
     }
+    router.replace("/");
   };
 
   React.useEffect(() => {
@@ -160,6 +161,7 @@ export function SetupWallet() {
                 if (router.canDismiss()) {
                   router.dismissAll();
                 }
+                router.replace("/");
               }}
             >
               <XIcon className="text-foreground" />
