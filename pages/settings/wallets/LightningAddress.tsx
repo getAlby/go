@@ -1,5 +1,5 @@
 import { LightningAddress } from "@getalby/lightning-tools";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -13,19 +13,20 @@ import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function SetLightningAddress() {
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const { id } = useLocalSearchParams() as { id: string };
+  const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
   const [lightningAddress, setLightningAddress] = React.useState("");
   React.useEffect(() => {
-    setLightningAddress(wallets[selectedWalletId].lightningAddress || "");
-  }, [wallets, selectedWalletId]);
+    setLightningAddress(wallets[walletId].lightningAddress || "");
+  }, [wallets, walletId]);
   const [isLoading, setLoading] = React.useState(false);
 
   const updateLightningAddress = async () => {
     setLoading(true);
     try {
       if (lightningAddress) {
-        const nwcClient = useAppStore.getState().nwcClient;
+        const nwcClient = useAppStore.getState().getNWCClient(walletId);
         if (!nwcClient) {
           throw new Error("NWC client not connected");
         }
@@ -53,7 +54,7 @@ export function SetLightningAddress() {
         }
       }
 
-      useAppStore.getState().updateCurrentWallet({ lightningAddress });
+      useAppStore.getState().updateWallet({ lightningAddress }, walletId);
       Toast.show({
         type: "success",
         text1: "Lightning address updated",

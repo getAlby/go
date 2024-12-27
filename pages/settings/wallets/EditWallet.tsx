@@ -1,8 +1,7 @@
-import { Link, router } from "expo-router";
+import * as Clipboard from "expo-clipboard";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { Pressable, Alert as RNAlert, View } from "react-native";
 import Toast from "react-native-toast-message";
-
-import * as Clipboard from "expo-clipboard";
 import Alert from "~/components/Alert";
 import {
   ExportIcon,
@@ -22,29 +21,30 @@ import { DEFAULT_WALLET_NAME, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function EditWallet() {
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const { id } = useLocalSearchParams() as { id: string };
   const wallets = useAppStore((store) => store.wallets);
+
+  let walletId = parseInt(id);
+
   return (
     <View className="flex-1 flex flex-col p-4 gap-4">
       <Screen title="Edit Wallet" />
       {/* TODO: Do not allow notifications to be toggled without notifications capability */}
       {!REQUIRED_CAPABILITIES.every((capability) =>
-        (wallets[selectedWalletId].nwcCapabilities || []).includes(capability),
+        (wallets[walletId]?.nwcCapabilities || []).includes(capability),
       ) && (
         <Alert
           type="warn"
           title="This wallet might not work as expected"
           description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
             (capability) =>
-              !(wallets[selectedWalletId].nwcCapabilities || []).includes(
-                capability,
-              ),
+              !(wallets[walletId]?.nwcCapabilities || []).includes(capability),
           ).join(", ")}`}
           icon={TriangleAlertIcon}
           className="mb-0"
         />
       )}
-      <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
+      <Link href={`/settings/wallets/${walletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">
             <CardContent className="flex flex-row items-center gap-4">
@@ -52,17 +52,14 @@ export function EditWallet() {
               <View className="flex flex-1 flex-col">
                 <CardTitle>Wallet Name</CardTitle>
                 <CardDescription>
-                  {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                  {wallets[walletId]?.name || DEFAULT_WALLET_NAME}
                 </CardDescription>
               </View>
             </CardContent>
           </Card>
         </Pressable>
       </Link>
-      <Link
-        href={`/settings/wallets/${selectedWalletId}/lightning-address`}
-        asChild
-      >
+      <Link href={`/settings/wallets/${walletId}/lightning-address`} asChild>
         <Pressable>
           <Card className="w-full">
             <CardContent className="flex flex-row items-center gap-4">
@@ -134,7 +131,7 @@ export function EditWallet() {
               {
                 text: "Confirm",
                 onPress: () => {
-                  useAppStore.getState().removeCurrentWallet();
+                  useAppStore.getState().removeWallet(walletId);
                   if (wallets.length !== 1) {
                     router.back();
                   }

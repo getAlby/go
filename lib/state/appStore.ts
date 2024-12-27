@@ -18,9 +18,10 @@ interface AppState {
   setTheme: (theme: Theme) => void;
   setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
+  getNWCClient: (walletId: number) => NWCClient | undefined;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
-  updateCurrentWallet(wallet: Partial<Wallet>): void;
-  removeCurrentWallet(): void;
+  updateWallet(wallet: Partial<Wallet>, walletId?: number): void;
+  removeWallet(walletId?: number): void;
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
@@ -93,25 +94,22 @@ function loadAddressBookEntries(): AddressBookEntry[] {
 }
 
 export const useAppStore = create<AppState>()((set, get) => {
-  const updateCurrentWallet = (walletUpdate: Partial<Wallet>) => {
-    const selectedWalletId = get().selectedWalletId;
+  const updateWallet = (walletUpdate: Partial<Wallet>, walletId?: number) => {
+    walletId = walletId ?? get().selectedWalletId;
     const wallets = [...get().wallets];
 
     const wallet: Wallet = {
-      ...(wallets[selectedWalletId] || {}),
+      ...(wallets[walletId] || {}),
       ...walletUpdate,
     };
-    secureStorage.setItem(
-      getWalletKey(selectedWalletId),
-      JSON.stringify(wallet),
-    );
-    wallets[selectedWalletId] = wallet;
+    secureStorage.setItem(getWalletKey(walletId), JSON.stringify(wallet));
+    wallets[walletId] = wallet;
     set({
       wallets,
     });
   };
 
-  const removeCurrentWallet = () => {
+  const removeWallet = (walletId?: number) => {
     const wallets = [...get().wallets];
     if (wallets.length <= 1) {
       // set to initial wallet status
@@ -127,9 +125,10 @@ export const useAppStore = create<AppState>()((set, get) => {
       return;
     }
     const selectedWalletId = get().selectedWalletId;
+    walletId = walletId ?? selectedWalletId;
 
     // move existing wallets down one
-    for (let i = selectedWalletId; i < wallets.length - 1; i++) {
+    for (let i = walletId; i < wallets.length - 1; i++) {
       const nextWallet = secureStorage.getItem(getWalletKey(i + 1));
       if (!nextWallet) {
         throw new Error("Next wallet not found");
@@ -139,9 +138,14 @@ export const useAppStore = create<AppState>()((set, get) => {
 
     secureStorage.removeItem(getWalletKey(wallets.length - 1));
 
-    get().setSelectedWalletId(0);
+    if (walletId === selectedWalletId) {
+      get().setSelectedWalletId(0);
+    } else if (walletId < selectedWalletId) {
+      get().setSelectedWalletId(selectedWalletId - 1);
+    }
+
     set({
-      wallets: wallets.filter((_, i) => i !== selectedWalletId),
+      wallets: wallets.filter((_, i) => i !== walletId),
     });
   };
 
@@ -189,9 +193,10 @@ export const useAppStore = create<AppState>()((set, get) => {
     balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
-    updateCurrentWallet,
-    removeCurrentWallet,
+    updateWallet,
+    removeWallet,
     removeAddressBookEntry,
+    getNWCClient,
     setUnlocked: (unlocked) => {
       set({ unlocked });
     },

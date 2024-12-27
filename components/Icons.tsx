@@ -16,7 +16,7 @@ import {
   PopiconsClipboardTextSolid as PasteIcon,
   PopiconsReloadLine as RefreshIcon,
   PopiconsReloadSolid as ResetIcon,
-  PopiconsSettingsMinimalLine as SettingsIcon,
+  PopiconsSettingsMinimalSolid as SettingsIcon,
   PopiconsShareSolid as ShareIcon,
   PopiconsLogoutSolid as SignOutIcon,
   PopiconsLoopSolid as SwapIcon,
