@@ -91,6 +91,7 @@ export function Home() {
             >
               {wallets.length > 1 && (
                 <TouchableOpacity
+                  className="w-full"
                   onPress={() => {
                     router.push("/settings/wallets");
                   }}
@@ -98,7 +99,7 @@ export function Home() {
                   <Text
                     numberOfLines={1}
                     ellipsizeMode="tail"
-                    className="text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                    className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
                   >
                     {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
                   </Text>
@@ -117,9 +118,11 @@ export function Home() {
                         getFiatAmount(Math.floor(balance.balance / 1000))}
                       {balanceDisplayMode === "hidden" && "****"}
                     </Text>
-                    <Text className="text-muted-foreground text-3xl font-semibold2">
-                      {balanceDisplayMode === "sats" && "sats"}
-                    </Text>
+                    {balanceDisplayMode === "sats" && (
+                      <Text className="text-muted-foreground text-3xl font-semibold2">
+                        sats
+                      </Text>
+                    )}
                   </>
                 ) : (
                   <Skeleton className="w-48 h-10" />
