@@ -147,12 +147,14 @@ export function Home() {
           </View>
         </ScrollView>
         <View className="flex items-center justify-center">
-          <Link href="/transactions">
-            <ChevronUpIcon
-              className="text-muted-foreground"
-              width={32}
-              height={32}
-            />
+          <Link href="/transactions" asChild>
+            <TouchableOpacity>
+              <ChevronUpIcon
+                className="text-muted-foreground"
+                width={32}
+                height={32}
+              />
+            </TouchableOpacity>
           </Link>
         </View>
         <View className="flex flex-row gap-6 mt-10">
