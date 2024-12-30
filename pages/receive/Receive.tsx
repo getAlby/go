@@ -2,7 +2,7 @@ import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
-import { Image, Share, TouchableOpacity, View } from "react-native";
+import { Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
@@ -218,16 +218,7 @@ export function Receive() {
       {!enterCustomAmount && (invoice.length || lightningAddress) && (
         <>
           <View className="flex-1 justify-center items-center gap-8">
-            <View className="justify-center">
-              <QRCode value={invoice || lightningAddress || ""} />
-              <View className="absolute self-center p-2 rounded-2xl bg-white">
-                <Image
-                  source={require("../../assets/icon.png")}
-                  className="w-20 h-20 rounded-xl"
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
+            <QRCode value={invoice || lightningAddress || ""} />
             <View className="flex flex-col items-center justify-center gap-2">
               {invoice ? (
                 <View className="flex flex-row items-end">
