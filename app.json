@@ -7,14 +7,17 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#0B0930"
-    },
     "newArchEnabled": true,
     "assetBundlePatterns": ["**/*"],
     "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0B0930",
+          "image": "./assets/icon.png",
+          "imageWidth": "150"
+        }
+      ],
       [
         "expo-local-authentication",
         {
