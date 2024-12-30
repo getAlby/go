@@ -6,7 +6,8 @@ import {
 } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 import * as Font from "expo-font";
-import { Slot, SplashScreen } from "expo-router";
+import { Slot } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
@@ -80,7 +81,7 @@ export default function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
-        SplashScreen.hideAsync();
+        SplashScreen.hide();
       }
     };
 
