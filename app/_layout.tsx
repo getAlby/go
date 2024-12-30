@@ -69,10 +69,14 @@ export default function RootLayout() {
   const loadTheme = React.useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       const theme = useAppStore.getState().theme;
-      setColorScheme(theme);
+      if (theme) {
+        setColorScheme(theme);
+      } else {
+        useAppStore.getState().setTheme(isDarkColorScheme ? "dark" : "light");
+      }
       resolve();
     });
-  }, [setColorScheme]);
+  }, [isDarkColorScheme, setColorScheme]);
 
   React.useEffect(() => {
     const init = async () => {
