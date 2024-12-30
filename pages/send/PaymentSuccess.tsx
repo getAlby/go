@@ -1,6 +1,7 @@
 import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { LNURLPaymentSuccessAction } from "lib/lnurl";
+import React from "react";
 import { ScrollView, View } from "react-native";
 import { Tick } from "~/animations/Tick";
 import { Receiver } from "~/components/Receiver";
