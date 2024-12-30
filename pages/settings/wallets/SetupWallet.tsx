@@ -4,7 +4,7 @@ import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
-import { Pressable, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
@@ -153,8 +153,8 @@ export function SetupWallet() {
         title="Setup Wallet Connection"
         right={() =>
           walletIdWithConnection !== -1 ? (
-            <Pressable
-              onPress={() => {
+            <TouchableOpacity
+              onPressIn={() => {
                 useAppStore
                   .getState()
                   .setSelectedWalletId(walletIdWithConnection);
@@ -165,7 +165,7 @@ export function SetupWallet() {
               }}
             >
               <XIcon className="text-foreground" />
-            </Pressable>
+            </TouchableOpacity>
           ) : (
             <Dialog>
               <DialogTrigger asChild>

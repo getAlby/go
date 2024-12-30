@@ -65,11 +65,13 @@ export function Home() {
       <Screen
         title=""
         right={() => (
-          <Link href="/settings" asChild>
-            <TouchableOpacity>
-              <SettingsIcon className="text-muted-foreground" />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity
+            onPressIn={() => {
+              router.push("/settings");
+            }}
+          >
+            <SettingsIcon className="text-muted-foreground" />
+          </TouchableOpacity>
         )}
       />
       <View className="h-full flex p-6">

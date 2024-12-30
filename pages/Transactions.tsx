@@ -75,7 +75,7 @@ export function Transactions() {
         animation="slide_from_bottom"
         right={() => (
           <Pressable
-            onPress={() => {
+            onPressIn={() => {
               router.back();
             }}
           >
