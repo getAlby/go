@@ -12,7 +12,7 @@ interface AppState {
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
   readonly isOnboarded: boolean;
-  readonly theme: Theme;
+  readonly theme?: Theme;
   readonly balanceDisplayMode: BalanceDisplayMode;
   setUnlocked: (unlocked: boolean) => void;
   setTheme: (theme: Theme) => void;
@@ -45,7 +45,7 @@ const isSecurityEnabledKey = "isSecurityEnabled";
 export const lastActiveTimeKey = "lastActiveTime";
 
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
-export type Theme = "system" | "light" | "dark";
+export type Theme = "light" | "dark";
 
 type Wallet = {
   name?: string;
@@ -176,7 +176,7 @@ export const useAppStore = create<AppState>()((set, get) => {
   const isSecurityEnabled =
     secureStorage.getItem(isSecurityEnabledKey) === "true";
 
-  const theme = (secureStorage.getItem(themeKey) as Theme) || "system";
+  const theme = (secureStorage.getItem(themeKey) as Theme) || null;
   const balanceDisplayMode =
     (secureStorage.getItem(balanceDisplayModeKey) as BalanceDisplayMode) ||
     "sats";
