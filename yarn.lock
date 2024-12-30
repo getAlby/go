@@ -4563,10 +4563,25 @@ expo-secure-store@~14.0.0:
   resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-14.0.0.tgz#cf6eb7f73e619f8907d5a073e2f438927b5fc2ab"
   integrity sha512-VyhtRFXP+7hQmHhKlHIOWid1Q/IRpM7Uif32tZHLZHvQ6FNz2cUkr26XWGvCa7btYbrR6OL++FBFZYjbIcRZTw==
 
+expo-splash-screen@^0.29.18:
+  version "0.29.18"
+  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.29.18.tgz#96ccce3d5a03389a9061743903b0a77c22a16796"
+  integrity sha512-bTBY+LF6YtYen2j60yGNh2SX/tG4UXZAyBCMMriOSiZZ7LSCs3ARyEufaSiWk+ckWShTeMqItOnaAN/CAF8MJA==
+  dependencies:
+    "@expo/prebuild-config" "^8.0.23"
+
 expo-status-bar@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-2.0.0.tgz#dd99adc2ace12a24c92718cd0f97b93347103393"
   integrity sha512-vxxdpvpNDMTEc5uTiIrbTvySKKUsOACmfl8OZuUdjNle05oGqwtq3v5YObwym/njSByjoyuZX8UpXBZnxvarwQ==
+
+expo-system-ui@~4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-4.0.6.tgz#23d172e346dbe478f31e36019c2570242e7c0762"
+  integrity sha512-JWmw0aaNIB8YxA6bXgH6nClyledZaAG5VNzoRvmXT4+j3MY4waAHSSSdVV71bUgjchT/2KOAcibZ/EeosJONug==
+  dependencies:
+    "@react-native/normalize-colors" "0.76.5"
+    debug "^4.3.2"
 
 expo@~52.0.20:
   version "52.0.23"

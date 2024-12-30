@@ -6,7 +6,8 @@ import {
 } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 import * as Font from "expo-font";
-import { Slot, SplashScreen } from "expo-router";
+import { Slot } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
@@ -69,10 +70,14 @@ export default function RootLayout() {
   const loadTheme = React.useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       const theme = useAppStore.getState().theme;
-      setColorScheme(theme);
+      if (theme) {
+        setColorScheme(theme);
+      } else {
+        useAppStore.getState().setTheme(isDarkColorScheme ? "dark" : "light");
+      }
       resolve();
     });
-  }, [setColorScheme]);
+  }, [isDarkColorScheme, setColorScheme]);
 
   React.useEffect(() => {
     const init = async () => {
@@ -80,7 +85,7 @@ export default function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
-        SplashScreen.hideAsync();
+        SplashScreen.hide();
       }
     };
 
