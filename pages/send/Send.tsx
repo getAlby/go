@@ -132,7 +132,20 @@ export function Send() {
           return true;
         } else {
           // Check if this is a valid invoice
-          new Invoice({ pr: text });
+          const invoice = new Invoice({ pr: text });
+
+          if (invoice.satoshi === 0) {
+            router.replace({
+              pathname: "/send/0-amount",
+              params: {
+                invoice: text,
+                originalText,
+                comment: invoice.description,
+              },
+            });
+            return true;
+          }
+
           router.replace({
             pathname: "/send/confirm",
             params: { invoice: text, originalText },
