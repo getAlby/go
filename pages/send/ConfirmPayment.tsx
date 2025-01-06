@@ -18,17 +18,22 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
   const { data: transactions } = useTransactions();
-  const { invoice, originalText, comment, successAction } =
+  const { invoice, originalText, comment, successAction, amount } =
     useLocalSearchParams() as {
       invoice: string;
       originalText: string;
       comment: string;
       successAction: string;
+      amount?: string;
     };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const decodedInvoice = new Invoice({
+    pr: invoice,
+  });
+  const amountToPaySats = amount ? +amount : decodedInvoice.satoshi;
 
   async function pay() {
     setLoading(true);
@@ -39,6 +44,7 @@ export function ConfirmPayment() {
       }
       const response = await nwcClient.payInvoice({
         invoice,
+        amount: amount ? amountToPaySats * 1000 : undefined,
       });
 
       console.info("payInvoice Response", response);
@@ -54,7 +60,7 @@ export function ConfirmPayment() {
           preimage: response.preimage,
           originalText,
           invoice,
-          amount: decodedInvoice.satoshi,
+          amount: amountToPaySats,
           successAction,
         },
       });
@@ -65,9 +71,6 @@ export function ConfirmPayment() {
     setLoading(false);
   }
 
-  const decodedInvoice = new Invoice({
-    pr: invoice,
-  });
   return (
     <>
       <Screen title="Confirm Payment" />
@@ -75,9 +78,7 @@ export function ConfirmPayment() {
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
             <Text className="text-5xl font-bold2 text-foreground">
-              {new Intl.NumberFormat().format(
-                Math.ceil(decodedInvoice.satoshi),
-              )}
+              {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
             </Text>
             <Text className="text-3xl font-bold2 text-muted-foreground">
               sats
@@ -85,7 +86,7 @@ export function ConfirmPayment() {
           </View>
           {getFiatAmount && (
             <Text className="text-center text-muted-foreground text-3xl font-semibold2">
-              {getFiatAmount(decodedInvoice.satoshi)}
+              {getFiatAmount(amountToPaySats)}
             </Text>
           )}
         </View>
