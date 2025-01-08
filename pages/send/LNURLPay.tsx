@@ -52,6 +52,24 @@ export function LNURLPay() {
       if (comment) {
         callback.searchParams.append("comment", comment);
       }
+      let recipientDescription = "";
+      try {
+        recipientDescription =
+          (
+            JSON.parse(decodeURIComponent(lnurlDetails.metadata)) as string[][]
+          ).find((t) => t[0] === "text/plain")?.[1] || "";
+      } catch (error) {
+        console.error("failed to parse recipient description", error);
+      }
+      let recipientIdentifier = "";
+      try {
+        recipientIdentifier =
+          (
+            JSON.parse(decodeURIComponent(lnurlDetails.metadata)) as string[][]
+          ).find((t) => t[0] === "text/identifier")?.[1] || "";
+      } catch (error) {
+        console.error("failed to parse recipient identifier", error);
+      }
       //callback.searchParams.append("payerdata", JSON.stringify({ test: 1 }));
       const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
       //console.log("Got pay request", lnurlPayInfo.pr);
@@ -60,6 +78,8 @@ export function LNURLPay() {
         params: {
           invoice: lnurlPayInfo.pr,
           originalText,
+          recipientDescription,
+          recipientIdentifier,
           comment,
           successAction: lnurlPayInfo.successAction
             ? JSON.stringify(lnurlPayInfo.successAction)

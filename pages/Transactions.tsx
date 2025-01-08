@@ -110,83 +110,107 @@ export function Transactions() {
               setPage(page + 1);
             }
           }}
-          renderItem={({ item: transaction }) => (
-            <Pressable
-              key={transaction.payment_hash}
-              onPress={() =>
-                router.navigate({
-                  pathname: "/transaction",
-                  params: { transactionJSON: JSON.stringify(transaction) },
-                })
-              }
-            >
-              <View
-                className={cn(
-                  "flex flex-row items-center gap-3 px-6 py-2 my-2",
-                  transaction.state === "pending" && "animate-pulse",
-                )}
+          renderItem={({ item: transaction }) => {
+            // TODO: extract typings
+            // TODO: review "description" field
+            const metadata = transaction.metadata as
+              | {
+                  recipient_data?: {
+                    identifier?: string;
+                    description?: string;
+                  };
+                }
+              | undefined;
+
+            return (
+              <Pressable
+                key={transaction.payment_hash}
+                onPress={() =>
+                  router.navigate({
+                    pathname: "/transaction",
+                    params: { transactionJSON: JSON.stringify(transaction) },
+                  })
+                }
               >
-                <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
-                  {!(
-                    transaction.state === "failed" ||
-                    transaction.state === "pending"
-                  ) && (
-                    <>
-                      {transaction.type === "incoming" && (
-                        <ReceivedTransactionIcon />
-                      )}
-                      {transaction.type === "outgoing" && (
-                        <SentTransactionIcon />
-                      )}
-                    </>
+                <View
+                  className={cn(
+                    "flex flex-row items-center gap-3 px-6 py-2 my-2",
+                    transaction.state === "pending" && "animate-pulse",
                   )}
-                  {transaction.state === "pending" && (
-                    <PendingTransactionIcon />
-                  )}
-                  {transaction.state === "failed" && <FailedTransactionIcon />}
-                </View>
-                <View className="flex flex-col flex-1">
-                  <View className="flex flex-row flex-1 items-center gap-2">
-                    <Text numberOfLines={1} className="font-medium2 text-lg">
-                      {transaction.type === "incoming"
-                        ? "Received"
-                        : transaction.state === "failed"
-                          ? "Failed"
-                          : transaction.state === "pending"
-                            ? "Sending"
-                            : "Sent"}
+                >
+                  <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
+                    {!(
+                      transaction.state === "failed" ||
+                      transaction.state === "pending"
+                    ) && (
+                      <>
+                        {transaction.type === "incoming" && (
+                          <ReceivedTransactionIcon />
+                        )}
+                        {transaction.type === "outgoing" && (
+                          <SentTransactionIcon />
+                        )}
+                      </>
+                    )}
+                    {transaction.state === "pending" && (
+                      <PendingTransactionIcon />
+                    )}
+                    {transaction.state === "failed" && (
+                      <FailedTransactionIcon />
+                    )}
+                  </View>
+                  <View className="flex flex-col flex-1">
+                    <View className="flex flex-row flex-1 items-center gap-2">
+                      <Text numberOfLines={1} className="font-medium2 text-lg">
+                        {transaction.type === "incoming"
+                          ? "Received"
+                          : transaction.state === "failed"
+                            ? "Failed"
+                            : transaction.state === "pending"
+                              ? "Sending"
+                              : "Sent"}
+                      </Text>
+                      <Text className="text-muted-foreground text-sm">
+                        {dayjs
+                          .unix(
+                            transaction.settled_at || transaction.created_at,
+                          )
+                          .fromNow()}
+                      </Text>
+                    </View>
+                    {(transaction.description ||
+                      metadata?.recipient_data?.description) && (
+                      <Text numberOfLines={1}>
+                        {transaction.description ||
+                          metadata?.recipient_data?.description}
+                      </Text>
+                    )}
+                  </View>
+                  <View>
+                    <Text
+                      className={cn(
+                        "text-right font-medium2 text-lg",
+                        transaction.type === "incoming"
+                          ? "text-receive"
+                          : "text-foreground",
+                      )}
+                    >
+                      {transaction.type === "incoming" ? "+" : "-"}{" "}
+                      {Math.floor(transaction.amount / 1000)}
+                      <Text className="text-muted-foreground text-lg">
+                        {" "}
+                        sats
+                      </Text>
                     </Text>
-                    <Text className="text-muted-foreground text-sm">
-                      {dayjs
-                        .unix(transaction.settled_at || transaction.created_at)
-                        .fromNow()}
+                    <Text className="text-right text-sm text-muted-foreground font-medium2">
+                      {getFiatAmount &&
+                        getFiatAmount(Math.floor(transaction.amount / 1000))}
                     </Text>
                   </View>
-                  {transaction.description && (
-                    <Text numberOfLines={1}>{transaction.description}</Text>
-                  )}
                 </View>
-                <View>
-                  <Text
-                    className={cn(
-                      "text-right font-medium2 text-lg",
-                      transaction.type === "incoming"
-                        ? "text-receive"
-                        : "text-foreground",
-                    )}
-                  >
-                    {transaction.type === "incoming" ? "+" : "-"}{" "}
-                    {Math.floor(transaction.amount / 1000)}
-                    <Text className="text-muted-foreground text-lg"> sats</Text>
-                  </Text>
-                  <Text className="text-right text-sm text-muted-foreground font-medium2">
-                    {getFiatAmount &&
-                      getFiatAmount(Math.floor(transaction.amount / 1000))}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-          )}
+              </Pressable>
+            );
+          }}
         />
       ) : !transactionsLoaded ? (
         <ScrollView className="mt-3">
