@@ -59,6 +59,7 @@ export function ConfirmPayment() {
             identifier: recipientIdentifier,
             description: recipientDescription,
           },
+          comment,
         },
       });
 

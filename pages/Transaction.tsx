@@ -66,6 +66,7 @@ export function Transaction() {
     | {
         payer_data?: { name?: string };
         recipient_data?: { identifier?: string; description?: string };
+        comment?: string;
       }
     | undefined;
 
@@ -166,6 +167,12 @@ export function Transaction() {
                 "-"
               }
             />
+            {metadata?.comment && (
+              <TransactionDetailRow
+                title="Comment"
+                content={metadata.comment}
+              />
+            )}
 
             {boostagram && <PodcastingInfo boost={boostagram} />}
 
