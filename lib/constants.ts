@@ -45,3 +45,5 @@ export const REQUIRED_CAPABILITIES: Nip47Capability[] = [
 export const SATS_REGEX = /^\d*$/;
 
 export const FIAT_REGEX = /^\d*(\.\d{0,2})?$/;
+
+export const BOLT11_REGEX = /.*?((lnbcrt|lntb|lnbc)([0-9]{1,}[a-z0-9]+){1})/;

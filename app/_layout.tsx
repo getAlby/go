@@ -1,13 +1,18 @@
-import { Theme, ThemeProvider } from "@react-navigation/native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  Theme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 import * as Font from "expo-font";
-import { Slot, SplashScreen } from "expo-router";
+import { Slot } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import PolyfillCrypto from "react-native-webview-crypto";
 import { SWRConfig } from "swr";
 import { toastConfig } from "~/components/ToastConfig";
 import { NotificationProvider } from "~/context/Notification";
@@ -21,11 +26,11 @@ import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 const LIGHT_THEME: Theme = {
-  dark: false,
+  ...DefaultTheme,
   colors: NAV_THEME.light,
 };
 const DARK_THEME: Theme = {
-  dark: true,
+  ...DarkTheme,
   colors: NAV_THEME.dark,
 };
 
@@ -66,10 +71,14 @@ export default function RootLayout() {
   const loadTheme = React.useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       const theme = useAppStore.getState().theme;
-      setColorScheme(theme);
+      if (theme) {
+        setColorScheme(theme);
+      } else {
+        useAppStore.getState().setTheme(isDarkColorScheme ? "dark" : "light");
+      }
       resolve();
     });
-  }, [setColorScheme]);
+  }, [isDarkColorScheme, setColorScheme]);
 
   React.useEffect(() => {
     const init = async () => {
@@ -77,7 +86,7 @@ export default function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
-        SplashScreen.hideAsync();
+        SplashScreen.hide();
       }
     };
 
@@ -93,8 +102,10 @@ export default function RootLayout() {
       <NotificationProvider>
         <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
           <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <PolyfillCrypto />
-          <SafeAreaView className="w-full h-full bg-background">
+          <SafeAreaView
+            className="w-full h-full bg-background"
+            edges={["left", "right", "bottom"]}
+          >
             <UserInactivityProvider>
               <SessionProvider>
                 <Slot />

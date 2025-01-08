@@ -12,7 +12,7 @@ export function useHandleLinking() {
 
   useEffect(() => {
     // Do not process any deep links until the user is onboarded and authenticated
-    // This prevents redirect loops between the deep link and /unlock
+    // This prevents redirect loops between the deep link and /unlock, /onboarding
     if (!hasSession || !isOnboarded || !wallets.length) {
       return;
     }

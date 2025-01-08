@@ -13,22 +13,25 @@ interface AppState {
   readonly isSecurityEnabled: boolean;
   readonly isNotificationsEnabled: boolean;
   readonly isOnboarded: boolean;
-  readonly theme: Theme;
   readonly expoPushToken: string;
+  readonly theme?: Theme;
+  readonly balanceDisplayMode: BalanceDisplayMode;
   setUnlocked: (unlocked: boolean) => void;
   setTheme: (theme: Theme) => void;
+  setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setExpoPushToken: (expoPushToken: string) => void;
+  getNWCClient: (walletId: number) => NWCClient | undefined;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
-  updateWallet(walletId: number, walletUpdate: Partial<Wallet>): void;
-  updateCurrentWallet(wallet: Partial<Wallet>): void;
-  removeCurrentWallet(): void;
+  updateWallet(wallet: Partial<Wallet>, walletId?: number): void;
+  removeWallet(walletId?: number): void;
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
   setNotificationsEnabled(notificationsEnabled: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
+  removeAddressBookEntry: (index: number) => void;
   reset(): void;
   getLastAlbyPayment(): Date | null;
   updateLastAlbyPayment(): void;
@@ -42,11 +45,13 @@ const hasOnboardedKey = "hasOnboarded";
 const expoPushTokenKey = "expoPushToken";
 const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
+const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
 const isNotificationsEnabledKey = "isNotificationsEnabled";
 export const lastActiveTimeKey = "lastActiveTime";
 
-export type Theme = "system" | "light" | "dark";
+export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
+export type Theme = "light" | "dark";
 
 type Wallet = {
   name?: string;
@@ -96,11 +101,10 @@ function loadAddressBookEntries(): AddressBookEntry[] {
 }
 
 export const useAppStore = create<AppState>()((set, get) => {
-  const updateWallet = (walletId: number, walletUpdate: Partial<Wallet>) => {
-    if (walletId < 0) {
-      return;
-    }
+  const updateWallet = (walletUpdate: Partial<Wallet>, walletId?: number) => {
+    walletId = walletId ?? get().selectedWalletId;
     const wallets = [...get().wallets];
+
     const wallet: Wallet = {
       ...(wallets[walletId] || {}),
       ...walletUpdate,
@@ -112,25 +116,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     });
   };
 
-  const updateCurrentWallet = (walletUpdate: Partial<Wallet>) => {
-    const selectedWalletId = get().selectedWalletId;
-    const wallets = [...get().wallets];
-
-    const wallet: Wallet = {
-      ...(wallets[selectedWalletId] || {}),
-      ...walletUpdate,
-    };
-    secureStorage.setItem(
-      getWalletKey(selectedWalletId),
-      JSON.stringify(wallet),
-    );
-    wallets[selectedWalletId] = wallet;
-    set({
-      wallets,
-    });
-  };
-
-  const removeCurrentWallet = () => {
+  const removeWallet = (walletId?: number) => {
     const wallets = [...get().wallets];
     if (wallets.length <= 1) {
       // set to initial wallet status
@@ -146,9 +132,10 @@ export const useAppStore = create<AppState>()((set, get) => {
       return;
     }
     const selectedWalletId = get().selectedWalletId;
+    walletId = walletId ?? selectedWalletId;
 
     // move existing wallets down one
-    for (let i = selectedWalletId; i < wallets.length - 1; i++) {
+    for (let i = walletId; i < wallets.length - 1; i++) {
       const nextWallet = secureStorage.getItem(getWalletKey(i + 1));
       if (!nextWallet) {
         throw new Error("Next wallet not found");
@@ -158,10 +145,35 @@ export const useAppStore = create<AppState>()((set, get) => {
 
     secureStorage.removeItem(getWalletKey(wallets.length - 1));
 
-    get().setSelectedWalletId(0);
+    if (walletId === selectedWalletId) {
+      get().setSelectedWalletId(0);
+    } else if (walletId < selectedWalletId) {
+      get().setSelectedWalletId(selectedWalletId - 1);
+    }
+
     set({
-      wallets: wallets.filter((_, i) => i !== selectedWalletId),
+      wallets: wallets.filter((_, i) => i !== walletId),
     });
+  };
+
+  const removeAddressBookEntry = (index: number) => {
+    const addressBookEntries = [...get().addressBookEntries];
+    if (index < 0 || index >= addressBookEntries.length) {
+      return;
+    }
+
+    addressBookEntries.splice(index, 1);
+
+    for (let i = index; i < addressBookEntries.length; i++) {
+      secureStorage.setItem(
+        getAddressBookEntryKey(i),
+        JSON.stringify(addressBookEntries[i]),
+      );
+    }
+
+    secureStorage.removeItem(getAddressBookEntryKey(addressBookEntries.length));
+
+    set({ addressBookEntries });
   };
 
   const initialSelectedWalletId = +(
@@ -171,7 +183,10 @@ export const useAppStore = create<AppState>()((set, get) => {
   const isSecurityEnabled =
     secureStorage.getItem(isSecurityEnabledKey) === "true";
 
-  const theme = (secureStorage.getItem(themeKey) as Theme) || "system";
+  const theme = (secureStorage.getItem(themeKey) as Theme) || null;
+  const balanceDisplayMode =
+    (secureStorage.getItem(balanceDisplayModeKey) as BalanceDisplayMode) ||
+    "sats";
 
   const initialWallets = loadWallets();
   return {
@@ -184,18 +199,24 @@ export const useAppStore = create<AppState>()((set, get) => {
     isNotificationsEnabled:
       secureStorage.getItem(isNotificationsEnabledKey) === "true",
     theme,
+    balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
     expoPushToken: "",
     updateWallet,
-    updateCurrentWallet,
-    removeCurrentWallet,
+    removeWallet,
+    removeAddressBookEntry,
+    getNWCClient,
     setUnlocked: (unlocked) => {
       set({ unlocked });
     },
     setTheme: (theme) => {
       secureStorage.setItem(themeKey, theme);
       set({ theme });
+    },
+    setBalanceDisplayMode: (balanceDisplayMode) => {
+      secureStorage.setItem(balanceDisplayModeKey, balanceDisplayMode);
+      set({ balanceDisplayMode });
     },
     setOnboarded: (isOnboarded) => {
       if (isOnboarded) {

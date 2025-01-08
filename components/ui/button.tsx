@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { TextClassContext } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
 
@@ -77,7 +77,10 @@ const Button = React.forwardRef<
       {!variant || variant === "default" ? (
         <View
           style={[
-            { borderRadius: size === "lg" ? 16 : 4, elevation: 2 },
+            {
+              borderRadius: size === "lg" ? 16 : 4,
+              backgroundColor: "white",
+            },
             shadows.small,
           ]}
         >
@@ -104,10 +107,7 @@ const Button = React.forwardRef<
             props.disabled && "opacity-50 web:pointer-events-none",
             buttonVariants({ variant, size, className }),
           )}
-          style={[
-            { elevation: variant === "ghost" ? 0 : 2 },
-            variant === "ghost" ? undefined : shadows.small,
-          ]}
+          style={[variant === "ghost" ? {} : shadows.small]}
           ref={ref}
           role="button"
           {...props}
@@ -121,16 +121,22 @@ Button.displayName = "Button";
 export { Button, buttonTextVariants, buttonVariants };
 export type { ButtonProps };
 
-// NOTE: only applies on iOS
 const shadows = StyleSheet.create({
   small: {
-    // TODO: check dark mode
-    shadowColor: "black",
-    shadowOpacity: 0.15,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowRadius: 2,
+    ...Platform.select({
+      // make sure bg color is applied to avoid RCTView errors
+      ios: {
+        shadowColor: "black",
+        shadowOpacity: 0.15,
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
 });

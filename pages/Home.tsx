@@ -1,10 +1,18 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Link, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { ChevronUp, Settings2 } from "~/components/Icons";
+import {
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,36 +21,42 @@ import AlbyBanner from "~/components/AlbyBanner";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
-import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { useAppStore } from "~/lib/state/appStore";
 
 dayjs.extend(relativeTime);
 
-enum BalanceState {
-  SATS = 1,
-  FIAT = 2,
-  HIDDEN = 3,
-}
-
 export function Home() {
   const { data: balance, mutate: reloadBalance } = useBalance();
+  const [refreshingBalance, setRefreshingBalance] = useState(false);
   const getFiatAmount = useGetFiatAmount();
-  const [balanceState, setBalanceState] = useState<BalanceState>(
-    BalanceState.SATS,
-  );
+  const balanceDisplayMode = useAppStore((store) => store.balanceDisplayMode);
+  const wallets = useAppStore((store) => store.wallets);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
 
   useFocusEffect(() => {
     reloadBalance();
   });
 
+  const refreshBalance = async () => {
+    setRefreshingBalance(true);
+    await reloadBalance();
+    setRefreshingBalance(false);
+  };
+
   function switchBalanceState(): void {
-    if (balanceState === BalanceState.SATS) {
-      setBalanceState(BalanceState.FIAT);
-    } else if (balanceState === BalanceState.FIAT) {
-      setBalanceState(BalanceState.HIDDEN);
-    } else {
-      setBalanceState(BalanceState.SATS);
+    switch (balanceDisplayMode) {
+      case "sats":
+        useAppStore.getState().setBalanceDisplayMode("fiat");
+        break;
+      case "fiat":
+        useAppStore.getState().setBalanceDisplayMode("hidden");
+        break;
+      default:
+        useAppStore.getState().setBalanceDisplayMode("sats");
+        break;
     }
   }
 
@@ -51,66 +65,99 @@ export function Home() {
       <Screen
         title=""
         right={() => (
-          <Link href="/settings" asChild>
-            <TouchableOpacity>
-              <Settings2 className="text-foreground" />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity
+            onPressIn={() => {
+              router.push("/settings");
+            }}
+          >
+            <SettingsIcon className="text-muted-foreground" />
+          </TouchableOpacity>
         )}
       />
       <View className="h-full flex p-6">
-        <View className="grow flex flex-col items-center justify-center gap-4">
-          <TouchableOpacity
-            onPress={switchBalanceState}
-            className="w-full flex flex-col items-center justify-center gap-4"
-          >
-            <View className="w-full flex flex-row justify-center items-center gap-2">
-              {balance ? (
-                <>
-                  <Text className="text-foreground text-5xl font-bold2">
-                    {balanceState === BalanceState.SATS &&
-                      new Intl.NumberFormat().format(
-                        Math.floor(balance.balance / 1000),
-                      )}
-                    {balanceState === BalanceState.FIAT &&
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshingBalance}
+              onRefresh={refreshBalance}
+              progressViewOffset={128}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="flex-1"
+        >
+          <View className="grow flex flex-col items-center justify-center gap-4">
+            <TouchableOpacity
+              onPress={switchBalanceState}
+              className="w-full flex flex-col items-center justify-center gap-4"
+            >
+              {wallets.length > 1 && (
+                <TouchableOpacity
+                  className="w-full"
+                  onPress={() => {
+                    router.push("/settings/wallets");
+                  }}
+                >
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                  >
+                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              <View className="w-full flex flex-row justify-center items-center gap-2">
+                {balance && !refreshingBalance ? (
+                  <>
+                    <Text className="text-foreground text-5xl font-bold2">
+                      {balanceDisplayMode === "sats" &&
+                        new Intl.NumberFormat().format(
+                          Math.floor(balance.balance / 1000),
+                        )}
+                      {balanceDisplayMode === "fiat" &&
+                        getFiatAmount &&
+                        getFiatAmount(Math.floor(balance.balance / 1000))}
+                      {balanceDisplayMode === "hidden" && "****"}
+                    </Text>
+                    {balanceDisplayMode === "sats" && (
+                      <Text className="text-muted-foreground text-3xl font-semibold2">
+                        sats
+                      </Text>
+                    )}
+                  </>
+                ) : (
+                  <Skeleton className="w-48 h-10" />
+                )}
+              </View>
+              <View className="flex justify-center items-center">
+                {balance && !refreshingBalance ? (
+                  <Text className="text-center text-3xl text-muted-foreground font-semibold2">
+                    {balanceDisplayMode === "sats" &&
                       getFiatAmount &&
                       getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceState === BalanceState.HIDDEN && "****"}
+                    {balanceDisplayMode === "fiat" &&
+                      new Intl.NumberFormat().format(
+                        Math.floor(balance.balance / 1000),
+                      ) + " sats"}
                   </Text>
-                  <Text className="text-muted-foreground text-3xl font-semibold2">
-                    {balanceState === BalanceState.SATS && "sats"}
-                  </Text>
-                </>
-              ) : (
-                <Skeleton className="w-48 h-12" />
-              )}
-            </View>
-            <View className="flex justify-center items-center">
-              {balance ? (
-                <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                  {balanceState === BalanceState.SATS &&
-                    getFiatAmount &&
-                    getFiatAmount(Math.floor(balance.balance / 1000))}
-                  {balanceState === BalanceState.FIAT &&
-                    new Intl.NumberFormat().format(
-                      Math.floor(balance.balance / 1000),
-                    ) + " sats"}
-                </Text>
-              ) : (
-                <Skeleton className="w-32 h-10" />
-              )}
-            </View>
-          </TouchableOpacity>
-          {new Date().getDate() === 21 && <AlbyBanner />}
-        </View>
+                ) : (
+                  <Skeleton className="w-32 h-8" />
+                )}
+              </View>
+            </TouchableOpacity>
+            {new Date().getDate() === 21 && <AlbyBanner />}
+          </View>
+        </ScrollView>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
-            <Button
-              variant="secondary"
-              className="p-10 rounded-full aspect-square"
-            >
-              <ChevronUp className="text-muted-foreground" size={32} />
-            </Button>
+            <TouchableOpacity>
+              <ChevronUpIcon
+                className="text-muted-foreground"
+                width={32}
+                height={32}
+              />
+            </TouchableOpacity>
           </Link>
         </View>
         <View className="flex flex-row gap-6 mt-10">
@@ -137,7 +184,14 @@ function MainButton({
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
           className="flex-1 aspect-square rounded-xl flex"
-          style={shadows.large}
+          style={{
+            ...shadows.large,
+            ...(pressed
+              ? {
+                  transform: "scale(0.98)",
+                }
+              : {}),
+          }}
           onPressIn={() => setPressed(true)}
           onPressOut={() => setPressed(false)}
         >
@@ -150,14 +204,8 @@ function MainButton({
               flex: 1,
               padding: 6,
               borderRadius: 24,
-              elevation: 2,
               justifyContent: "center",
               alignItems: "center",
-              ...(pressed
-                ? {
-                    transform: "scale(0.98)",
-                  }
-                : {}),
             }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
@@ -173,16 +221,24 @@ function MainButton({
   );
 }
 
-// NOTE: only applies on iOS
 const shadows = StyleSheet.create({
   large: {
-    // TODO: check dark mode
-    shadowColor: "black",
-    shadowOpacity: 0.15,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowRadius: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOpacity: 0.15,
+        shadowOffset: {
+          width: 5,
+          height: 5,
+        },
+        shadowRadius: 4,
+        borderRadius: 24,
+        backgroundColor: "white",
+      },
+      android: {
+        borderRadius: 24,
+        elevation: 2,
+      },
+    }),
   },
 });

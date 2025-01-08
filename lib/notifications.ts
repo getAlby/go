@@ -46,9 +46,12 @@ export async function registerWalletNotifications(
 
     if (response.ok) {
       const responseData = await response.json();
-      useAppStore.getState().updateWallet(walletId, {
-        pushId: responseData.subscriptionId,
-      });
+      useAppStore.getState().updateWallet(
+        {
+          pushId: responseData.subscriptionId,
+        },
+        walletId,
+      );
     } else {
       new Error(`Error: ${response.status} ${response.statusText}`);
     }
@@ -65,6 +68,7 @@ export async function registerWalletNotifications(
     try {
       await storeWalletInfo(nwcClient.publicKey, walletData);
     } catch (storageError) {
+      console.error(storageError);
       errorToast(new Error("Failed to save wallet data"));
     }
   } catch (error) {

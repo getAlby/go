@@ -5,11 +5,12 @@ export default ({ config }) => {
     ...config,
     name: "Alby Go",
     slug: "alby-mobile",
-    version: "1.7.1",
-    scheme: ["bitcoin", "lightning", "alby"],
+    version: "1.8.1",
+    scheme: ["lightning", "bitcoin", "alby", "nostr+walletconnect"],
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
+    newArchEnabled: true,
     splash: {
       image: "./assets/splash.png",
       resizeMode: "cover",
@@ -28,6 +29,14 @@ export default ({ config }) => {
         {
           mode: "production",
           iosNSEFilePath: "./assets/NotificationService.m",
+        },
+      ],
+      [
+        "expo-splash-screen",
+        {
+          backgroundColor: "#0B0930",
+          image: "./assets/icon.png",
+          imageWidth: "150",
         },
       ],
       [
@@ -71,8 +80,10 @@ export default ({ config }) => {
         usesNonExemptEncryption: false,
       },
       infoPlist: {
+        LSMinimumSystemVersion: "12.0",
         UIBackgroundModes: ["remote-notification"],
       },
+      userInterfaceStyle: "automatic",
     },
     android: {
       package: "com.getalby.mobile",
@@ -80,8 +91,14 @@ export default ({ config }) => {
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundImage: "./assets/adaptive-icon-bg.png",
+        monochromeImage: "./assets/monochromatic.png",
       },
-      permissions: ["android.permission.CAMERA"],
+      permissions: [
+        "android.permission.CAMERA",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+      ],
+      userInterfaceStyle: "automatic",
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
     },
     extra: {
