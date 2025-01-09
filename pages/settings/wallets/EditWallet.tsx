@@ -26,18 +26,22 @@ import { removeWalletInfo } from "~/lib/walletInfo";
 export function EditWallet() {
   const { id } = useLocalSearchParams() as { id: string };
   const wallets = useAppStore((store) => store.wallets);
+  const isNotificationsEnabled = useAppStore(
+    (store) => store.isNotificationsEnabled,
+  );
 
   let walletId = parseInt(id);
 
   const onDeleteWallet = async () => {
     try {
       useAppStore.getState().removeWallet(walletId);
-      await deregisterWalletNotifications(wallets[walletId].pushId);
-      const nwcClient = useAppStore.getState().getNWCClient(walletId);
-      if (!nwcClient) {
-        throw new Error("Couldn't remove wallet info");
+      if (isNotificationsEnabled) {
+        await deregisterWalletNotifications(wallets[walletId].pushId);
+        const nwcClient = useAppStore.getState().getNWCClient(walletId);
+        if (nwcClient) {
+          await removeWalletInfo(nwcClient?.publicKey ?? "", walletId);
+        }
       }
-      await removeWalletInfo(nwcClient?.publicKey ?? "", walletId);
     } catch (error) {
       errorToast(error);
     }

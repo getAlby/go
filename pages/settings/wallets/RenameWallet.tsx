@@ -15,6 +15,9 @@ export function RenameWallet() {
   const { id } = useLocalSearchParams() as { id: string };
   const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
+  const isNotificationsEnabled = useAppStore(
+    (store) => store.isNotificationsEnabled,
+  );
 
   const [walletName, setWalletName] = React.useState(
     wallets[walletId].name || "",
@@ -27,12 +30,13 @@ export function RenameWallet() {
       },
       walletId,
     );
-    const nwcClient = useAppStore.getState().getNWCClient(walletId);
-    if (nwcClient) {
-      // TODO: do not store if notifications are not enabled
-      await storeWalletInfo(nwcClient?.publicKey ?? "", {
-        name: walletName,
-      });
+    if (isNotificationsEnabled) {
+      const nwcClient = useAppStore.getState().getNWCClient(walletId);
+      if (nwcClient) {
+        await storeWalletInfo(nwcClient?.publicKey ?? "", {
+          name: walletName,
+        });
+      }
     }
     Toast.show({
       type: "success",
