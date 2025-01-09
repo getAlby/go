@@ -2,6 +2,7 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as ExpoNotifications from "expo-notifications";
 import { Platform } from "react-native";
+import Toast from "react-native-toast-message";
 import { errorToast } from "~/lib/errorToast";
 import { registerWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
@@ -53,7 +54,13 @@ export async function registerForPushNotificationsAsync(): Promise<boolean> {
 
       for (let i = 0; i < wallets.length; i++) {
         const wallet = wallets[i];
-        // TODO: return false if this fails
+        if (!(wallet.nwcCapabilities || []).includes("notifications")) {
+          Toast.show({
+            type: "info",
+            text1: `${wallet.name} does not have notifications capability`,
+          });
+          continue;
+        }
         await registerWalletNotifications(
           wallet.nostrWalletConnectUrl ?? "",
           i,
