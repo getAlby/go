@@ -35,7 +35,10 @@ export function EditWallet() {
   const onDeleteWallet = async () => {
     try {
       useAppStore.getState().removeWallet(walletId);
-      if (isNotificationsEnabled) {
+      if (
+        isNotificationsEnabled &&
+        (wallets[walletId].nwcCapabilities || []).includes("notifications")
+      ) {
         await deregisterWalletNotifications(wallets[walletId].pushId);
         const nwcClient = useAppStore.getState().getNWCClient(walletId);
         if (nwcClient) {

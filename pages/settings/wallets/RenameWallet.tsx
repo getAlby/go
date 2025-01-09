@@ -30,7 +30,10 @@ export function RenameWallet() {
       },
       walletId,
     );
-    if (isNotificationsEnabled) {
+    if (
+      isNotificationsEnabled &&
+      (wallets[walletId].nwcCapabilities || []).includes("notifications")
+    ) {
       const nwcClient = useAppStore.getState().getNWCClient(walletId);
       if (nwcClient) {
         await storeWalletInfo(nwcClient?.publicKey ?? "", {
