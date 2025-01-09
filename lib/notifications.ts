@@ -4,7 +4,7 @@ import { NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { computeSharedSecret } from "~/lib/sharedSecret";
 import { useAppStore } from "~/lib/state/appStore";
-import { storeWalletInfo } from "~/lib/storeWalletInfo";
+import { storeWalletInfo } from "~/lib/walletInfo";
 
 export async function registerWalletNotifications(
   nwcUrl: string,

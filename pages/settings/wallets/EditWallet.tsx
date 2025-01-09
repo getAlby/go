@@ -21,7 +21,7 @@ import { DEFAULT_WALLET_NAME, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
-import { removeWalletInfo } from "~/lib/storeWalletInfo";
+import { removeWalletInfo } from "~/lib/walletInfo";
 
 export function EditWallet() {
   const { id } = useLocalSearchParams() as { id: string };

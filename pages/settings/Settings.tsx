@@ -21,8 +21,8 @@ import { useSession } from "~/hooks/useSession";
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
-import { removeAllInfo } from "~/lib/storeWalletInfo";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { removeAllInfo } from "~/lib/walletInfo";
 
 export function Settings() {
   const wallets = useAppStore((store) => store.wallets);

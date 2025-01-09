@@ -9,7 +9,7 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
-import { storeWalletInfo } from "~/lib/storeWalletInfo";
+import { storeWalletInfo } from "~/lib/walletInfo";
 
 export function RenameWallet() {
   const { id } = useLocalSearchParams() as { id: string };
