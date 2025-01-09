@@ -126,7 +126,7 @@ NSData* dataFromHexString(NSString *hexString) {
   }
 
   NSString *notificationType = parsedContent[@"notification_type"];
-  if (![notificationType isEqualToString:@"payment_received"]) {
+  if (![notificationType isEqualToString:@"payment_sent"] && ![notificationType isEqualToString:@"payment_received"]) {
     self.contentHandler(nil);
     return;
   }
@@ -146,7 +146,7 @@ NSData* dataFromHexString(NSString *hexString) {
   }
 
   double amountInSats = [amountNumber doubleValue] / 1000.0;
-  NSString *deepLink = [NSString stringWithFormat:@"alby://payment_received?transaction=%@&wallet_id=%@", encodedTransaction, walletId.stringValue];
+  NSString *deepLink = [NSString stringWithFormat:@"alby://%@?transaction=%@&wallet_id=%@", notificationType, encodedTransaction, walletId.stringValue];
 
   NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy];
   if (!newUserInfo) {
@@ -162,7 +162,11 @@ NSData* dataFromHexString(NSString *hexString) {
   self.bestAttemptContent.userInfo = newUserInfo;
 
   self.bestAttemptContent.title = walletName;
-  self.bestAttemptContent.body = [NSString stringWithFormat:@"You just received %.0f sats ⚡️", amountInSats];
+  if ([notificationType isEqualToString:@"payment_sent"]) {
+    self.bestAttemptContent.body = [NSString stringWithFormat:@"You just sent %.0f sats ⚡️", amountInSats];
+  } else {
+    self.bestAttemptContent.body = [NSString stringWithFormat:@"You just received %.0f sats ⚡️", amountInSats];
+  }
   self.contentHandler(self.bestAttemptContent);
 }
 

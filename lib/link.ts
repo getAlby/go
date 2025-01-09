@@ -63,7 +63,7 @@ export const handleLink = async (url: string) => {
 
     console.info("Navigating to", fullUrl);
 
-    if (hostname === "payment_received") {
+    if (hostname === "payment_sent" || hostname === "payment_received") {
       const urlParams = new URLSearchParams(search);
       const walletId = urlParams.get("wallet_id");
       const transaction = urlParams.get("transaction");

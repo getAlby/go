@@ -82,7 +82,7 @@ class MessagingService : FirebaseMessagingService() {
         }
 
         val notificationType = json.optString("notification_type", "")
-        if (notificationType != "payment_received") {
+        if (notificationType != "payment_sent" && notificationType != "payment_received") {
             return
         }
 
@@ -90,10 +90,15 @@ class MessagingService : FirebaseMessagingService() {
         val amount = notification.optInt("amount", 0) / 1000
         val transaction = notification.toString()
 
-        val notificationText = "You have received $amount sats ⚡️"
+        var notificationText = ""
+        if (notificationType == "payment_sent") {
+            notificationText = "You have sent $amount sats ⚡️"
+        } else {
+            notificationText = "You have received $amount sats ⚡️"
+        }
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("alby://payment_received?transaction=${Uri.encode(transaction)}&wallet_id=${walletInfo.id}")
+            data = Uri.parse("alby://${notificationType}?transaction=${Uri.encode(transaction)}&wallet_id=${walletInfo.id}")
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 

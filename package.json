@@ -42,7 +42,7 @@
     "dayjs": "^1.11.10",
     "expo-device": "~6.0.2",
     "expo-notification-service-extension-plugin": "^1.0.1",
-    "expo-notifications": "~0.28.19",
+    "expo-notifications": "~0.29.11",
     "expo": "~52.0.20",
     "expo-camera": "~16.0.10",
     "expo-clipboard": "~7.0.0",
