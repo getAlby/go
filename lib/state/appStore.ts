@@ -301,9 +301,6 @@ export const useAppStore = create<AppState>()((set, get) => {
       // clear security enabled status
       secureStorage.removeItem(isSecurityEnabledKey);
 
-      // clear security enabled status
-      secureStorage.removeItem(isNotificationsEnabledKey);
-
       // clear onboarding status
       secureStorage.removeItem(hasOnboardedKey);
 
