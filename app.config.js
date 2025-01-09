@@ -11,11 +11,6 @@ export default ({ config }) => {
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
-    splash: {
-      image: "./assets/splash.png",
-      resizeMode: "cover",
-      backgroundColor: "#0F0C40",
-    },
     assetBundlePatterns: ["**/*"],
     plugins: [
       [
