@@ -9,14 +9,45 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { storeWalletInfo } from "~/lib/walletInfo";
 
 export function RenameWallet() {
   const { id } = useLocalSearchParams() as { id: string };
   const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
+  const isNotificationsEnabled = useAppStore(
+    (store) => store.isNotificationsEnabled,
+  );
+
   const [walletName, setWalletName] = React.useState(
     wallets[walletId].name || "",
   );
+
+  const onRenameWallet = async () => {
+    useAppStore.getState().updateWallet(
+      {
+        name: walletName,
+      },
+      walletId,
+    );
+    if (
+      isNotificationsEnabled &&
+      (wallets[walletId].nwcCapabilities || []).includes("notifications")
+    ) {
+      const nwcClient = useAppStore.getState().getNWCClient(walletId);
+      if (nwcClient) {
+        await storeWalletInfo(nwcClient?.publicKey ?? "", {
+          name: walletName,
+        });
+      }
+    }
+    Toast.show({
+      type: "success",
+      text1: "Wallet name updated",
+    });
+    router.back();
+  };
+
   return (
     <DismissableKeyboardView>
       <View className="flex-1 flex flex-col p-6 gap-3">
@@ -33,22 +64,7 @@ export function RenameWallet() {
             // aria-errormessage="inputError"
           />
         </View>
-        <Button
-          size="lg"
-          onPress={() => {
-            useAppStore.getState().updateWallet(
-              {
-                name: walletName,
-              },
-              walletId,
-            );
-            Toast.show({
-              type: "success",
-              text1: "Wallet name updated",
-            });
-            router.back();
-          }}
-        >
+        <Button size="lg" onPress={onRenameWallet}>
           <Text>Save</Text>
         </Button>
       </View>

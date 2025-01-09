@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { SWRConfig } from "swr";
 import { toastConfig } from "~/components/ToastConfig";
+import { NotificationProvider } from "~/context/Notification";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { useInfo } from "~/hooks/useInfo";
@@ -98,26 +99,28 @@ export default function RootLayout() {
 
   return (
     <SWRConfig value={swrConfiguration}>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <SafeAreaView
-          className="w-full h-full bg-background"
-          edges={["left", "right", "bottom"]}
-        >
-          <UserInactivityProvider>
-            <SessionProvider>
-              <Slot />
-            </SessionProvider>
-          </UserInactivityProvider>
-          <Toast
-            config={toastConfig}
-            position="bottom"
-            bottomOffset={140}
-            topOffset={140}
-          />
-          <PortalHost />
-        </SafeAreaView>
-      </ThemeProvider>
+      <NotificationProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+          <SafeAreaView
+            className="w-full h-full bg-background"
+            edges={["left", "right", "bottom"]}
+          >
+            <UserInactivityProvider>
+              <SessionProvider>
+                <Slot />
+              </SessionProvider>
+            </UserInactivityProvider>
+            <Toast
+              config={toastConfig}
+              position="bottom"
+              bottomOffset={140}
+              topOffset={140}
+            />
+            <PortalHost />
+          </SafeAreaView>
+        </ThemeProvider>
+      </NotificationProvider>
     </SWRConfig>
   );
 }

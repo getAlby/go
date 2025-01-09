@@ -11,13 +11,16 @@ interface AppState {
   readonly wallets: Wallet[];
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
+  readonly isNotificationsEnabled: boolean;
   readonly isOnboarded: boolean;
+  readonly expoPushToken: string;
   readonly theme?: Theme;
   readonly balanceDisplayMode: BalanceDisplayMode;
   setUnlocked: (unlocked: boolean) => void;
   setTheme: (theme: Theme) => void;
   setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
+  setExpoPushToken: (expoPushToken: string) => void;
   getNWCClient: (walletId: number) => NWCClient | undefined;
   setNWCClient: (nwcClient: NWCClient | undefined) => void;
   updateWallet(wallet: Partial<Wallet>, walletId?: number): void;
@@ -25,6 +28,7 @@ interface AppState {
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
+  setNotificationsEnabled(notificationsEnabled: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   removeAddressBookEntry: (index: number) => void;
@@ -38,10 +42,12 @@ const addressBookEntryKeyPrefix = "addressBookEntry";
 const selectedWalletIdKey = "selectedWalletId";
 const fiatCurrencyKey = "fiatCurrency";
 const hasOnboardedKey = "hasOnboarded";
+const expoPushTokenKey = "expoPushToken";
 const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
 const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
+const isNotificationsEnabledKey = "isNotificationsEnabled";
 export const lastActiveTimeKey = "lastActiveTime";
 
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
@@ -52,6 +58,7 @@ type Wallet = {
   nostrWalletConnectUrl?: string;
   lightningAddress?: string;
   nwcCapabilities?: Nip47Capability[];
+  pushId?: string;
 };
 
 type AddressBookEntry = {
@@ -189,10 +196,13 @@ export const useAppStore = create<AppState>()((set, get) => {
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     isSecurityEnabled,
+    isNotificationsEnabled:
+      secureStorage.getItem(isNotificationsEnabledKey) === "true",
     theme,
     balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
+    expoPushToken: "",
     updateWallet,
     removeWallet,
     removeAddressBookEntry,
@@ -216,12 +226,22 @@ export const useAppStore = create<AppState>()((set, get) => {
       }
       set({ isOnboarded });
     },
+    setExpoPushToken: (expoPushToken) => {
+      secureStorage.setItem(expoPushTokenKey, expoPushToken);
+      set({ expoPushToken });
+    },
     setNWCClient: (nwcClient) => set({ nwcClient }),
     setSecurityEnabled: (isEnabled) => {
       secureStorage.setItem(isSecurityEnabledKey, isEnabled.toString());
       set({
         isSecurityEnabled: isEnabled,
         ...(!isEnabled ? { unlocked: true } : {}),
+      });
+    },
+    setNotificationsEnabled: (isEnabled) => {
+      secureStorage.setItem(isNotificationsEnabledKey, isEnabled.toString());
+      set({
+        isNotificationsEnabled: isEnabled,
       });
     },
     setFiatCurrency: (fiatCurrency) => {
@@ -289,6 +309,12 @@ export const useAppStore = create<AppState>()((set, get) => {
 
       // set to initial wallet status
       secureStorage.setItem(selectedWalletIdKey, "0");
+
+      // clear notifications enabled status
+      secureStorage.removeItem(isNotificationsEnabledKey);
+
+      // clear expo push notifications token
+      secureStorage.removeItem(expoPushTokenKey);
 
       set({
         nwcClient: undefined,

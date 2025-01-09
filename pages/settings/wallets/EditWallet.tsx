@@ -18,13 +18,40 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { DEFAULT_WALLET_NAME, REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
+import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
+import { removeWalletInfo } from "~/lib/walletInfo";
 
 export function EditWallet() {
   const { id } = useLocalSearchParams() as { id: string };
   const wallets = useAppStore((store) => store.wallets);
+  const isNotificationsEnabled = useAppStore(
+    (store) => store.isNotificationsEnabled,
+  );
 
   let walletId = parseInt(id);
+
+  const onDeleteWallet = async () => {
+    try {
+      useAppStore.getState().removeWallet(walletId);
+      if (
+        isNotificationsEnabled &&
+        (wallets[walletId].nwcCapabilities || []).includes("notifications")
+      ) {
+        await deregisterWalletNotifications(wallets[walletId].pushId);
+        const nwcClient = useAppStore.getState().getNWCClient(walletId);
+        if (nwcClient) {
+          await removeWalletInfo(nwcClient?.publicKey ?? "", walletId);
+        }
+      }
+    } catch (error) {
+      errorToast(error);
+    }
+    if (wallets.length !== 1) {
+      router.back();
+    }
+  };
 
   return (
     <View className="flex-1 flex flex-col p-4 gap-4">
@@ -130,12 +157,7 @@ export function EditWallet() {
               },
               {
                 text: "Confirm",
-                onPress: () => {
-                  useAppStore.getState().removeWallet(walletId);
-                  if (wallets.length !== 1) {
-                    router.back();
-                  }
-                },
+                onPress: onDeleteWallet,
               },
             ],
           );
