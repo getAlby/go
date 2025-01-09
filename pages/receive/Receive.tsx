@@ -1,12 +1,12 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
-import { Image, Share, TouchableOpacity, View } from "react-native";
+import { Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { ArchiveRestore, Copy, Share2, ZapIcon } from "~/components/Icons";
+import { CopyIcon, ShareIcon, WithdrawIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
@@ -179,7 +179,8 @@ export function Receive() {
       {!enterCustomAmount && !invoice && !lightningAddress && (
         <>
           <View className="flex-1 h-full flex flex-col items-center justify-center gap-5">
-            <ZapIcon className="text-foreground" size={64} />
+            {/* TODO: re-add when we have a way to create a lightning address for new users */}
+            {/* <ZapIcon className="text-foreground" size={64} />
             <Text className="text-2xl max-w-64 text-center">
               Receive quickly with a Lightning Address
             </Text>
@@ -190,16 +191,26 @@ export function Receive() {
               <Button variant="secondary">
                 <Text>Set Lightning Address</Text>
               </Button>
-            </Link>
+            </Link> */}
           </View>
-          <View className="p-6">
+          <View className="flex flex-row gap-3 p-6">
             <Button
               variant="secondary"
               onPress={() => setEnterCustomAmount(true)}
-              className="flex flex-col gap-2"
+              className="flex-1 flex flex-col gap-2"
             >
               <ZapIcon className="text-muted-foreground" />
               <Text>Invoice</Text>
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+              onPress={() => {
+                router.push("/withdraw");
+              }}
+            >
+              <WithdrawIcon className="text-muted-foreground" />
+              <Text>Withdraw</Text>
             </Button>
           </View>
         </>
@@ -207,16 +218,7 @@ export function Receive() {
       {!enterCustomAmount && (invoice.length || lightningAddress) && (
         <>
           <View className="flex-1 justify-center items-center gap-8">
-            <View className="justify-center">
-              <QRCode value={invoice || lightningAddress || ""} />
-              <View className="absolute self-center p-2 rounded-2xl bg-white">
-                <Image
-                  source={require("../../assets/icon.png")}
-                  className="w-20 h-20 rounded-xl"
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
+            <QRCode value={invoice || lightningAddress || ""} />
             <View className="flex flex-col items-center justify-center gap-2">
               {invoice ? (
                 <View className="flex flex-row items-end">
@@ -256,7 +258,7 @@ export function Receive() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <Share2 className="text-muted-foreground" />
+              <ShareIcon className="text-muted-foreground" />
               <Text>Share</Text>
             </Button>
             {!enterCustomAmount && invoice && (
@@ -265,7 +267,7 @@ export function Receive() {
                 onPress={copy}
                 className="flex-1 flex flex-col gap-2"
               >
-                <Copy className="text-muted-foreground" />
+                <CopyIcon className="text-muted-foreground" />
                 <Text>Copy</Text>
               </Button>
             )}
@@ -287,7 +289,7 @@ export function Receive() {
                   router.push("/withdraw");
                 }}
               >
-                <ArchiveRestore className="text-muted-foreground" />
+                <WithdrawIcon className="text-muted-foreground" />
                 <Text>Withdraw</Text>
               </Button>
             )}

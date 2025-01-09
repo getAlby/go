@@ -5,15 +5,17 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { ClipboardPaste } from "~/components/Icons";
+import { PasteIcon, WalletIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function Withdraw() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -21,10 +23,22 @@ export function Withdraw() {
   const [isLoading, setLoading] = React.useState(false);
   const [loadingConfirm, setLoadingConfirm] = React.useState(false);
   const [startScanning, setStartScanning] = React.useState(false);
+  const wallets = useAppStore((store) => store.wallets);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
 
   const [valueSat, setValueSat] = React.useState("");
   const [lnurlDetails, setLnurlDetails] =
     React.useState<LNURLWithdrawServiceResponse>();
+
+  const isAmountInvalid = React.useMemo(() => {
+    if (!lnurlDetails) {
+      return true;
+    }
+    const min = Math.floor(lnurlDetails.minWithdrawable / 1000);
+    const max = Math.floor(lnurlDetails.maxWithdrawable / 1000);
+
+    return Number(valueSat) < min || Number(valueSat) > max;
+  }, [valueSat, lnurlDetails]);
 
   // Delay starting the QR scanner if url has valid lnurl withdraw info
   useEffect(() => {
@@ -109,17 +123,6 @@ export function Withdraw() {
         return;
       }
 
-      if (Number(valueSat) < lnurlDetails.minWithdrawable / 1000) {
-        throw new Error(
-          `Amount below minimum limit of ${lnurlDetails.minWithdrawable} sats`,
-        );
-      }
-      if (Number(valueSat) > lnurlDetails.maxWithdrawable / 1000) {
-        throw new Error(
-          `Amount exceeds maximum limit of ${lnurlDetails.maxWithdrawable} sats.`,
-        );
-      }
-
       setLoadingConfirm(true);
 
       const nwcClient = useAppStore.getState().nwcClient;
@@ -177,7 +180,7 @@ export function Withdraw() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <ClipboardPaste className="text-secondary-foreground" />
+                  <PasteIcon className="text-secondary-foreground" />
                   <Text numberOfLines={1}>Paste</Text>
                 </Button>
               </View>
@@ -222,8 +225,28 @@ export function Withdraw() {
                     <DualCurrencyInput
                       amount={valueSat}
                       setAmount={setValueSat}
+                      min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
+                      max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
                       autoFocus
                     />
+                    <View className="w-full">
+                      <Text
+                        className={cn(
+                          "text-muted-foreground text-center font-semibold2",
+                          valueSat && isAmountInvalid ? "text-destructive" : "",
+                        )}
+                      >
+                        Between{" "}
+                        {new Intl.NumberFormat().format(
+                          Math.floor(lnurlDetails.minWithdrawable / 1000),
+                        )}
+                        {" and "}
+                        {new Intl.NumberFormat().format(
+                          Math.floor(lnurlDetails.maxWithdrawable / 1000),
+                        )}{" "}
+                        sats
+                      </Text>
+                    </View>
                     <View className="flex flex-col gap-2 items-center">
                       <Text className="text-muted-foreground text-center font-semibold2">
                         Description
@@ -234,12 +257,22 @@ export function Withdraw() {
                     </View>
                   </View>
                 )}
-                <View className="p-6">
+                <View className="p-6 bg-background">
+                  <View className="flex flex-row items-center justify-center gap-2 mb-4 px-4">
+                    <WalletIcon className="text-muted-foreground" />
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      className="text-muted-foreground font-medium2 text-xl"
+                    >
+                      {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                    </Text>
+                  </View>
                   <Button
                     size="lg"
                     className="flex flex-row gap-2"
                     onPress={confirm}
-                    disabled={loadingConfirm}
+                    disabled={loadingConfirm || isAmountInvalid}
                   >
                     {loadingConfirm && (
                       <Loading className="text-primary-foreground" />

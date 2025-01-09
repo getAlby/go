@@ -1,7 +1,13 @@
 import { router } from "expo-router";
-import { lnurl } from "./lnurl";
+import { BOLT11_REGEX } from "./constants";
+import { lnurl as lnurlLib } from "./lnurl";
 
-const SUPPORTED_SCHEMES = ["lightning:", "bitcoin:", "alby:"];
+const SUPPORTED_SCHEMES = [
+  "lightning:",
+  "bitcoin:",
+  "alby:",
+  "nostr+walletconnect:",
+];
 
 // Register exp scheme for testing during development
 // https://docs.expo.dev/guides/linking/#creating-urls
@@ -21,6 +27,19 @@ export const handleLink = async (url: string) => {
 
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
+    if (parsedUrl.protocol === "nostr+walletconnect:") {
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+      console.info("Navigating to wallet setup");
+      router.push({
+        pathname: "/settings/wallets/setup",
+        params: {
+          nwcUrl: protocol + hostname + search,
+        },
+      });
+      return;
+    }
 
     if (parsedUrl.protocol === "exp:") {
       if (!parsedUrl.pathname) {
@@ -44,27 +63,63 @@ export const handleLink = async (url: string) => {
 
     console.info("Navigating to", fullUrl);
 
-    const lnurlValue = lnurl.findLnurl(fullUrl);
-    if (lnurlValue) {
-      const lnurlDetails = await lnurl.getDetails(lnurlValue);
+    if (hostname === "payment_received") {
+      const urlParams = new URLSearchParams(search);
+      const walletId = urlParams.get("wallet_id");
+      const transaction = urlParams.get("transaction");
+      if (!transaction || !walletId) {
+        return;
+      }
+      const transactionJSON = decodeURIComponent(transaction);
+      router.push({
+        pathname: "/transaction",
+        params: { transactionJSON, walletId },
+      });
+      return;
+    }
+
+    const schemePattern = new RegExp(
+      `^(${SUPPORTED_SCHEMES.map((s) => s.replace(":", "")).join("|")}):`,
+    );
+    const trimmedUrl = fullUrl.replace(schemePattern, "");
+
+    // Check for LNURLs
+    const lnurl = lnurlLib.findLnurl(trimmedUrl);
+    if (lnurl) {
+      const lnurlDetails = await lnurlLib.getDetails(lnurl);
 
       if (lnurlDetails.tag === "withdrawRequest") {
         router.push({
           pathname: "/withdraw",
           params: {
-            url: fullUrl,
+            url: lnurl,
+          },
+        });
+        return;
+      }
+
+      if (lnurlDetails.tag === "payRequest") {
+        router.push({
+          pathname: "/send",
+          params: {
+            url: lnurl,
           },
         });
         return;
       }
     }
 
-    router.push({
-      pathname: "/send",
-      params: {
-        url: fullUrl,
-      },
-    });
+    // Check for BOLT-11 invoices (including BIP-21 unified QRs)
+    const bolt11Match = trimmedUrl.match(BOLT11_REGEX);
+    if (bolt11Match) {
+      const bolt11 = bolt11Match[1];
+      router.push({
+        pathname: "/send",
+        params: {
+          url: bolt11,
+        },
+      });
+    }
   } else {
     // Redirect the user to the home screen
     // if no match was found

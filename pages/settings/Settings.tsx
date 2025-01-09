@@ -1,14 +1,14 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import {
-  Bell,
-  Bitcoin,
-  Egg,
-  Fingerprint,
-  LogOut,
-  Palette,
-  Power,
-  Wallet2,
+  BitcoinIcon,
+  FingerprintIcon,
+  NotificationIcon,
+  OnboardingIcon,
+  ResetIcon,
+  SignOutIcon,
+  ThemeIcon,
+  WalletIcon,
 } from "~/components/Icons";
 
 import Constants from "expo-constants";
@@ -19,10 +19,13 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
 import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
+import { removeAllInfo } from "~/lib/storeWalletInfo";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 export function Settings() {
+  const wallets = useAppStore((store) => store.wallets);
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(__DEV__);
@@ -36,7 +39,7 @@ export function Settings() {
       <View className="flex-1 flex flex-col gap-6">
         <Link href="/settings/wallets" asChild>
           <TouchableOpacity className="flex flex-row items-center gap-4">
-            <Wallet2 className="text-foreground" />
+            <WalletIcon className="text-muted-foreground" />
             <Text className="font-medium2 text-xl text-foreground">
               Wallets
             </Text>
@@ -52,7 +55,7 @@ export function Settings() {
 
         <Link href="/settings/fiat-currency" asChild>
           <TouchableOpacity className="flex flex-row gap-4">
-            <Bitcoin className="text-foreground" />
+            <BitcoinIcon className="text-muted-foreground" />
             <Text className="text-foreground font-medium2 text-xl">
               Fiat Currency
             </Text>
@@ -62,9 +65,18 @@ export function Settings() {
           </TouchableOpacity>
         </Link>
 
+        <Link href="/settings/notifications" asChild>
+          <TouchableOpacity className="flex flex-row gap-4">
+            <NotificationIcon className="text-muted-foreground" />
+            <Text className="text-foreground font-medium2 text-xl">
+              Notifications
+            </Text>
+          </TouchableOpacity>
+        </Link>
+
         <Link href="/settings/security" asChild>
           <TouchableOpacity className="flex flex-row gap-4">
-            <Fingerprint className="text-foreground" />
+            <FingerprintIcon className="text-muted-foreground" />
             <Text className="text-foreground font-medium2 text-xl">
               Security
             </Text>
@@ -75,7 +87,7 @@ export function Settings() {
           className="flex flex-row gap-4"
           onPress={toggleColorScheme}
         >
-          <Palette className="text-foreground" />
+          <ThemeIcon className="text-muted-foreground" />
           <Text className="text-foreground font-medium2 text-xl">Theme</Text>
           <Text className="text-muted-foreground text-xl">
             ({colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)})
@@ -94,7 +106,7 @@ export function Settings() {
                   signOut();
                 }}
               >
-                <LogOut className="text-foreground" />
+                <SignOutIcon className="text-muted-foreground" />
                 <Text className="font-medium2 text-xl">Sign out</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -104,17 +116,8 @@ export function Settings() {
                   useAppStore.getState().setOnboarded(false);
                 }}
               >
-                <Egg className="text-foreground" />
-                <Text className="font-medium2 text-xl">Onboarding</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="flex flex-row gap-4"
-                onPress={() => {
-                  router.push("/notifications");
-                }}
-              >
-                <Bell className="text-foreground" />
-                <Text className="font-medium2 text-xl">Notifications</Text>
+                <OnboardingIcon className="text-muted-foreground" />
+                <Text className="font-medium2 text-xl">Open Onboarding</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex flex-row gap-4"
@@ -129,7 +132,11 @@ export function Settings() {
                       },
                       {
                         text: "Confirm",
-                        onPress: () => {
+                        onPress: async () => {
+                          for (const wallet of wallets) {
+                            await deregisterWalletNotifications(wallet.pushId);
+                          }
+                          await removeAllInfo();
                           router.dismissAll();
                           useAppStore.getState().reset();
                         },
@@ -138,7 +145,7 @@ export function Settings() {
                   );
                 }}
               >
-                <Power className="text-destructive" />
+                <ResetIcon className="text-destructive" />
                 <Text className="text-destructive font-medium2 text-xl">
                   Reset Wallet
                 </Text>
