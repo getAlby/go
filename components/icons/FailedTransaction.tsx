@@ -8,11 +8,11 @@ const FailedTransactionIcon = (props: SvgProps) => {
   const colors = {
     light: {
       rectFill: "#FEE2E2",
-      pathStroke: "#FB7185",
+      pathStroke: "#EF4444",
     },
     dark: {
       rectFill: "#450A0A",
-      pathStroke: "#DC2626",
+      pathStroke: "#4C0519",
     },
   };
 

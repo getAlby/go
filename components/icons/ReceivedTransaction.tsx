@@ -7,12 +7,12 @@ const ReceivedTransactionIcon = (props: SvgProps) => {
 
   const colors = {
     light: {
-      rectFill: "#DBFBE6",
-      pathStroke: "#22C45E",
+      rectFill: "#DCFCE7",
+      pathStroke: "#22C55E",
     },
     dark: {
       rectFill: "#022C22",
-      pathStroke: "#10B981",
+      pathStroke: "#14B8A6",
     },
   };
 
