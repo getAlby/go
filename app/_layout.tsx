@@ -13,6 +13,7 @@ import { swrConfiguration } from "lib/swr";
 import * as React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { setupLightningIntentHandlers } from "~/lib/appIntents/LightningIntents";
 import { SWRConfig } from "swr";
 import { toastConfig } from "~/components/ToastConfig";
 import { UserInactivityProvider } from "~/context/UserInactivity";
@@ -82,6 +83,7 @@ export default function RootLayout() {
   React.useEffect(() => {
     const init = async () => {
       try {
+        setupLightningIntentHandlers();
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
