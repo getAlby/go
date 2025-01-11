@@ -25,6 +25,47 @@
         }
       ],
       [
+        "expo-ios-app-intents",
+        {
+          "intents": [
+            {
+              "name": "MakeInvoice",
+              "title": "Create Lightning Invoice",
+              "description": "Generate a new lightning network invoice",
+              "resultType": "String",
+              "parameters": [
+                {
+                  "name": "Amount",
+                  "type": "Int",
+                  "description": "Amount in satoshis",
+                  "required": true
+                },
+                {
+                  "name": "Description",
+                  "type": "String",
+                  "description": "Invoice description",
+                  "required": false
+                }
+              ]
+            },
+            {
+              "name": "LookupInvoice",
+              "title": "Lookup Lightning Invoice",
+              "description": "Look up the status of a lightning network invoice",
+              "resultType": "String",
+              "parameters": [
+                {
+                  "name": "Invoice",
+                  "type": "String",
+                  "description": "The invoice",
+                  "required": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      [
         "expo-camera",
         {
           "cameraPermission": "Allow Alby Go to use the camera to scan wallet connection and payment QR codes",
