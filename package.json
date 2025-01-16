@@ -25,6 +25,9 @@
     "test:ci": "jest"
   },
   "dependencies": {
+    "@alevy97/react-native-userdefaults": "^0.2.2",
+    "@getalby/expo-shared-preferences": "^0.0.1",
+    "@noble/curves": "^1.6.0",
     "@getalby/lightning-tools": "^5.1.2",
     "@getalby/sdk": "^3.8.2",
     "@popicons/react-native": "^0.0.20",
@@ -37,6 +40,9 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.10",
+    "expo-device": "~6.0.2",
+    "expo-notification-service-extension-plugin": "^1.0.1",
+    "expo-notifications": "~0.29.11",
     "expo": "~52.0.20",
     "expo-camera": "~16.0.10",
     "expo-clipboard": "~7.0.0",
@@ -73,6 +79,7 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-typescript": "^7.24.7",
+    "@expo/config-plugins": "^8.0.10",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/react-native": "^12.7.2",
     "@types/jest": "^29.5.13",
