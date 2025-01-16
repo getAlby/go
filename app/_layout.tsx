@@ -24,6 +24,7 @@ import { NAV_THEME } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -68,6 +69,15 @@ export default function RootLayout() {
     }
   }
 
+  async function checkAndPromptForNotifications() {
+    const isEnabled = useAppStore.getState().isNotificationsEnabled;
+    // prompt the user to enable notifications on first open
+    if (isEnabled === null) {
+      const enabled = await registerForPushNotificationsAsync();
+      useAppStore.getState().setNotificationsEnabled(enabled);
+    }
+  }
+
   const loadTheme = React.useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       const theme = useAppStore.getState().theme;
@@ -86,6 +96,7 @@ export default function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
+        await checkAndPromptForNotifications();
         SplashScreen.hide();
       }
     };

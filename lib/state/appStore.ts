@@ -11,7 +11,7 @@ interface AppState {
   readonly wallets: Wallet[];
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
-  readonly isNotificationsEnabled: boolean;
+  readonly isNotificationsEnabled: boolean | null;
   readonly isOnboarded: boolean;
   readonly expoPushToken: string;
   readonly theme?: Theme;
@@ -28,7 +28,7 @@ interface AppState {
   setFiatCurrency(fiatCurrency: string): void;
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
-  setNotificationsEnabled(notificationsEnabled: boolean): void;
+  setNotificationsEnabled(notificationsEnabled: boolean | null): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   removeAddressBookEntry: (index: number) => void;
@@ -196,8 +196,9 @@ export const useAppStore = create<AppState>()((set, get) => {
     nwcClient: getNWCClient(initialSelectedWalletId),
     fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
     isSecurityEnabled,
-    isNotificationsEnabled:
-      secureStorage.getItem(isNotificationsEnabledKey) === "true",
+    isNotificationsEnabled: secureStorage.getItem(isNotificationsEnabledKey)
+      ? secureStorage.getItem(isNotificationsEnabledKey) === "true"
+      : null,
     theme,
     balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
@@ -239,7 +240,11 @@ export const useAppStore = create<AppState>()((set, get) => {
       });
     },
     setNotificationsEnabled: (isEnabled) => {
-      secureStorage.setItem(isNotificationsEnabledKey, isEnabled.toString());
+      if (isEnabled === null) {
+        secureStorage.removeItem(isNotificationsEnabledKey);
+      } else {
+        secureStorage.setItem(isNotificationsEnabledKey, isEnabled.toString());
+      }
       set({
         isNotificationsEnabled: isEnabled,
       });

@@ -22,11 +22,12 @@ export function Notifications() {
           </Label>
           <Switch
             disabled={isLoading}
-            checked={isEnabled}
+            checked={!!isEnabled}
             onCheckedChange={async (checked) => {
               setLoading(true);
-              if (checked) {
-                checked = await registerForPushNotificationsAsync();
+              let enabled: boolean | null = checked;
+              if (enabled) {
+                enabled = await registerForPushNotificationsAsync();
               } else {
                 const wallets = useAppStore.getState().wallets;
                 for (const wallet of wallets) {
@@ -35,7 +36,7 @@ export function Notifications() {
                 await removeAllInfo();
                 useAppStore.getState().setExpoPushToken("");
               }
-              useAppStore.getState().setNotificationsEnabled(checked);
+              useAppStore.getState().setNotificationsEnabled(enabled);
               setLoading(false);
             }}
             nativeID="security"

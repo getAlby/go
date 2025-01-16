@@ -7,7 +7,9 @@ import { errorToast } from "~/lib/errorToast";
 import { registerWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 
-export async function registerForPushNotificationsAsync(): Promise<boolean> {
+export async function registerForPushNotificationsAsync(): Promise<
+  boolean | null
+> {
   if (Platform.OS === "android") {
     ExpoNotifications.setNotificationChannelAsync("default", {
       name: "default",
@@ -27,12 +29,13 @@ export async function registerForPushNotificationsAsync(): Promise<boolean> {
       const { status } = await ExpoNotifications.requestPermissionsAsync();
       finalStatus = status;
     }
-    if (finalStatus !== "granted") {
-      errorToast(
-        new Error(
-          "Permission not granted to get push token for push notification",
-        ),
-      );
+    if (finalStatus === "undetermined") {
+      return null;
+    }
+    if (finalStatus === "denied") {
+      if (existingStatus === "denied") {
+        errorToast(new Error("Enable app notifications in device settings"));
+      }
       return false;
     }
     const projectId =
