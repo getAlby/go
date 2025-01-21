@@ -1,4 +1,5 @@
 import withMessagingServicePlugin from "./plugins/android/withMessageServicePlugin";
+import withOpenSSLPlugin from "./plugins/ios/withOpenSSLPlugin";
 
 export default ({ config }) => {
   return {
@@ -19,6 +20,7 @@ export default ({ config }) => {
           androidFMSFilePath: "./assets/android/MessagingService.kt",
         },
       ],
+      [withOpenSSLPlugin],
       [
         "expo-notification-service-extension-plugin",
         {
