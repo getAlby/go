@@ -7,6 +7,7 @@ type FetchArgs = Parameters<typeof fetch>;
 
 const fetcher = async (...args: FetchArgs) => {
   const nwcClient = useAppStore.getState().nwcClient;
+  const currentWalletId = useAppStore.getState().selectedWalletId;
   if (!nwcClient) {
     throw new Error("No NWC client");
   }
@@ -20,10 +21,16 @@ const fetcher = async (...args: FetchArgs) => {
       offset: (page - 1) * TRANSACTIONS_PAGE_SIZE,
       unpaid_outgoing: true,
     });
+    if (currentWalletId !== useAppStore.getState().selectedWalletId) {
+      return;
+    }
     return transactions;
   } catch (error) {
-    errorToast(error);
-    throw error;
+    console.error(error);
+    if (currentWalletId === useAppStore.getState().selectedWalletId) {
+      errorToast(error);
+      throw error;
+    }
   }
 };
 
