@@ -20,6 +20,7 @@ type WalletInfo = {
   name: string;
   sharedSecret: string;
   id: number;
+  version: string;
 };
 
 type Wallets = {

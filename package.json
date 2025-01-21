@@ -31,7 +31,7 @@
     "@getalby/expo-shared-preferences": "^0.0.1",
     "@noble/curves": "^1.6.0",
     "@getalby/lightning-tools": "^5.1.2",
-    "@getalby/sdk": "^3.8.2",
+    "@getalby/sdk": "^3.9.0",
     "@popicons/react-native": "^0.0.20",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@rn-primitives/dialog": "^1.0.3",

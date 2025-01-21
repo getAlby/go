@@ -2,7 +2,7 @@ import { nwc } from "@getalby/sdk";
 import { Platform } from "react-native";
 import { IS_EXPO_GO, NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
-import { computeSharedSecret } from "~/lib/sharedSecret";
+import { computeSharedSecret, getConversationKey } from "~/lib/sharedSecret";
 import { useAppStore } from "~/lib/state/appStore";
 import { storeWalletInfo } from "~/lib/walletInfo";
 
@@ -19,6 +19,9 @@ export async function registerWalletNotifications(
     nostrWalletConnectUrl: nwcUrl,
   });
 
+  const walletServiceInfo = await nwcClient.getWalletServiceInfo();
+  const isNip44 = walletServiceInfo.versions.includes("1.0");
+
   const pushToken = useAppStore.getState().expoPushToken;
   if (!pushToken) {
     errorToast(new Error("Push token is not set"));
@@ -31,6 +34,7 @@ export async function registerWalletNotifications(
     connectionPubkey: nwcClient.publicKey,
     walletPubkey: nwcClient.walletPubkey,
     isIOS: Platform.OS === "ios",
+    ...(isNip44 ? { version: "1.0" } : {}),
   };
 
   try {
@@ -58,11 +62,11 @@ export async function registerWalletNotifications(
 
     const walletData = {
       name: walletName ?? "",
-      sharedSecret: computeSharedSecret(
-        nwcClient.walletPubkey,
-        nwcClient.secret ?? "",
-      ),
+      sharedSecret: isNip44
+        ? getConversationKey(nwcClient.walletPubkey, nwcClient.secret ?? "")
+        : computeSharedSecret(nwcClient.walletPubkey, nwcClient.secret ?? ""),
       id: walletId,
+      version: isNip44 ? "1.0" : "0.0",
     };
 
     try {
