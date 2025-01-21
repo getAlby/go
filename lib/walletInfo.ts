@@ -4,6 +4,9 @@ import { SUITE_NAME } from "~/lib/constants";
 let UserDefaults: any;
 let SharedPreferences: any;
 
+// this is done because accessing values stored from expo-secure-store
+// is quite difficult and we do not wish to complicate the notification
+// service extension (ios) or messaging service (android)
 if (Platform.OS === "ios") {
   UserDefaults =
     require("@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios").default;

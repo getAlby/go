@@ -21,62 +21,63 @@ export async function registerForPushNotificationsAsync(): Promise<
     });
   }
 
-  if (Device.isDevice) {
-    const { status: existingStatus } =
-      await ExpoNotifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await ExpoNotifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus === "undetermined") {
-      return null;
-    }
-    if (finalStatus === "denied") {
-      if (existingStatus === "denied") {
-        errorToast(new Error("Enable app notifications in device settings"));
-      }
-      return false;
-    }
-    const projectId =
-      Constants?.expoConfig?.extra?.eas?.projectId ??
-      Constants?.easConfig?.projectId;
-    if (!projectId) {
-      errorToast(new Error("Project ID not found"));
-    }
-    try {
-      const pushToken = (
-        await ExpoNotifications.getExpoPushTokenAsync({
-          projectId,
-        })
-      ).data;
-
-      useAppStore.getState().setExpoPushToken(pushToken);
-
-      const wallets = useAppStore.getState().wallets;
-
-      for (let i = 0; i < wallets.length; i++) {
-        const wallet = wallets[i];
-        if (!(wallet.nwcCapabilities || []).includes("notifications")) {
-          Toast.show({
-            type: "info",
-            text1: `${wallet.name} does not have notifications capability`,
-          });
-          continue;
-        }
-        await registerWalletNotifications(
-          wallet.nostrWalletConnectUrl ?? "",
-          i,
-          wallet.name,
-        );
-      }
-
-      return true;
-    } catch (error) {
-      errorToast(error);
-    }
-  } else {
+  if (!Device.isDevice) {
     errorToast("Must use physical device for push notifications");
+    return false;
+  }
+
+  const { status: existingStatus } =
+    await ExpoNotifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+  if (existingStatus !== "granted") {
+    const { status } = await ExpoNotifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+  if (finalStatus === "undetermined") {
+    return null;
+  }
+  if (finalStatus === "denied") {
+    if (existingStatus === "denied") {
+      errorToast(new Error("Enable app notifications in device settings"));
+    }
+    return false;
+  }
+  const projectId =
+    Constants?.expoConfig?.extra?.eas?.projectId ??
+    Constants?.easConfig?.projectId;
+  if (!projectId) {
+    errorToast(new Error("Project ID not found"));
+  }
+  try {
+    const pushToken = (
+      await ExpoNotifications.getExpoPushTokenAsync({
+        projectId,
+      })
+    ).data;
+
+    useAppStore.getState().setExpoPushToken(pushToken);
+
+    const wallets = useAppStore.getState().wallets;
+
+    for (let i = 0; i < wallets.length; i++) {
+      const wallet = wallets[i];
+      if (!(wallet.nwcCapabilities || []).includes("notifications")) {
+        Toast.show({
+          type: "info",
+          text1: `${wallet.name} does not have notifications capability`,
+        });
+        continue;
+      }
+      await registerWalletNotifications(
+        wallet.nostrWalletConnectUrl ?? "",
+        i,
+        wallet.name,
+      );
+    }
+
+    return true;
+  } catch (error) {
+    errorToast(error);
   }
 
   return false;

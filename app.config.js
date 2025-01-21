@@ -1,4 +1,4 @@
-import withMessagingServicePlugin from "./plugins/withMessageServicePlugin";
+import withMessagingServicePlugin from "./plugins/android/withMessageServicePlugin";
 
 export default ({ config }) => {
   return {
@@ -16,14 +16,14 @@ export default ({ config }) => {
       [
         withMessagingServicePlugin,
         {
-          androidFMSFilePath: "./assets/MessagingService.kt",
+          androidFMSFilePath: "./assets/android/MessagingService.kt",
         },
       ],
       [
         "expo-notification-service-extension-plugin",
         {
           mode: "production",
-          iosNSEFilePath: "./assets/NotificationService.m",
+          iosNSEFilePath: "./assets/ios/NotificationService.m",
         },
       ],
       [
