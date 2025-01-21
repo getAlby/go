@@ -7,12 +7,12 @@ const PendingTransactionIcon = (props: SvgProps) => {
 
   const colors = {
     light: {
-      rectFill: "#DAE9FD",
-      pathStroke: "#3B81F5",
+      rectFill: "#DBEAFE",
+      pathStroke: "#3B82F6",
     },
     dark: {
-      rectFill: "#1E3A89",
-      pathStroke: "#3B81F5",
+      rectFill: "#082F49",
+      pathStroke: "#0EA5E9",
     },
   };
 
