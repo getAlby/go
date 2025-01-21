@@ -92,15 +92,22 @@ function modifyAndroidManifest(config) {
 }
 
 function modifyAppBuildGradle(config) {
-  const buildGradle = config.modResults.contents;
-  const dependency = `implementation("com.google.firebase:firebase-messaging:23.2.1")`;
+  let buildGradle = config.modResults.contents;
+  const firebaseDependency = `implementation("com.google.firebase:firebase-messaging:23.2.1")`;
 
-  if (!buildGradle.includes(dependency)) {
-    const pattern = /dependencies\s?{/;
-    config.modResults.contents = buildGradle.replace(pattern, (match) => {
-      return `${match}\n    ${dependency}`;
+  if (!buildGradle.includes(firebaseDependency)) {
+    buildGradle = buildGradle.replace(/dependencies\s?{/, (match) => {
+      return `${match}\n    ${firebaseDependency}`;
     });
   }
 
+  const bcDependency = `implementation("org.bouncycastle:bcprov-jdk15to18:1.76")`;
+  if (!buildGradle.includes(bcDependency)) {
+    buildGradle = buildGradle.replace(/dependencies\s?{/, (match) => {
+      return `${match}\n    ${bcDependency}`;
+    });
+  }
+
+  config.modResults.contents = buildGradle;
   return config;
 }

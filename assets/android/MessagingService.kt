@@ -19,13 +19,18 @@ import java.nio.charset.Charset
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import java.io.ByteArrayOutputStream
+import org.bouncycastle.crypto.engines.ChaCha7539Engine
+import org.bouncycastle.crypto.params.KeyParameter
+import org.bouncycastle.crypto.params.ParametersWithIV
 
 class MessagingService : FirebaseMessagingService() {
 
     data class WalletInfo(
         val name: String,
         val sharedSecret: String,
-        val id: Int
+        val id: Int,
+        val version: String = "0.0"
     )
 
     private fun getWalletInfo(context: Context, key: String): WalletInfo? {
@@ -37,7 +42,8 @@ class MessagingService : FirebaseMessagingService() {
           WalletInfo(
               name = walletJson.optString("name", "Alby Go"),
               sharedSecret = walletJson.optString("sharedSecret", ""),
-              id = walletJson.optInt("id", -1)
+              id = walletJson.optInt("id", -1),
+              version = walletJson.optString("version", "0.0")
           )
       } catch (e: Exception) {
           e.printStackTrace()
@@ -73,7 +79,7 @@ class MessagingService : FirebaseMessagingService() {
         val sharedSecretBytes = hexStringToByteArray(walletInfo.sharedSecret)
         val walletName = walletInfo.name
 
-        val decryptedContent = decrypt(encryptedContent, sharedSecretBytes) ?: return
+        val decryptedContent = decrypt(encryptedContent, sharedSecretBytes, walletInfo.version) ?: return
 
         val json = try {
             JSONObject(decryptedContent)
@@ -132,7 +138,15 @@ class MessagingService : FirebaseMessagingService() {
       return sharedPreferences.getString("${key}_name", null)
     }
 
-    private fun decrypt(content: String, key: ByteArray): String? {
+    private fun decrypt(content: String, key: ByteArray, version: String): String? {
+        return if (version == "1.0") {
+            decryptNip44(content, key)
+        } else {
+            decryptNip04(content, key)
+        }
+    }
+
+    private fun decryptNip04(content: String, key: ByteArray): String? {
         val parts = content.split("?iv=")
         if (parts.size < 2) {
             return null
@@ -154,6 +168,122 @@ class MessagingService : FirebaseMessagingService() {
         }
     }
 
+    private fun decryptNip44(b64CiphertextWrapped: String, conversationKey: ByteArray): String? {
+        val decoded = try {
+            Base64.decode(b64CiphertextWrapped, Base64.DEFAULT)
+        } catch (e: Exception) {
+            return null
+        }
+
+        if (decoded.size < 99 || decoded.size > 65603) {
+            return null
+        }
+
+        if (decoded[0].toInt() != 2) {
+            return null
+        }
+
+        val nonce = decoded.copyOfRange(1, 33)
+        val ciphertext = decoded.copyOfRange(33, decoded.size - 32)
+        val givenMac = decoded.copyOfRange(decoded.size - 32, decoded.size)
+
+        val (cc20key, cc20nonce, hmacKey) = messageKeys(conversationKey, nonce)
+
+        val expectedMac = sha256Hmac(hmacKey, ciphertext, nonce)
+        if (expectedMac == null || !expectedMac.contentEquals(givenMac)) {
+            return null
+        }
+
+        val padded = chacha20(cc20key, cc20nonce, ciphertext) ?: return null
+        if (padded.size < 2) {
+            return null
+        }
+
+        val unpaddedLen = ((padded[0].toInt() and 0xFF) shl 8) or
+                          (padded[1].toInt() and 0xFF)
+
+        if (unpaddedLen < 1 || unpaddedLen > 65535) {
+            return null
+        }
+
+        val requiredSize = 2 + calcPadding(unpaddedLen)
+        if (padded.size != requiredSize) {
+            return null
+        }
+
+        val messageBytes = padded.copyOfRange(2, 2 + unpaddedLen)
+        return String(messageBytes, Charsets.UTF_8)
+    }
+
+    private fun messageKeys(conversationKey: ByteArray, nonce: ByteArray): Triple<ByteArray, ByteArray, ByteArray> {
+        val hkdfBytes = hkdfExpandSha256(conversationKey, nonce, 32 + 12 + 32) 
+        val cc20key = hkdfBytes.copyOfRange(0, 32)
+        val cc20nonce = hkdfBytes.copyOfRange(32, 32 + 12)
+        val hmacKey = hkdfBytes.copyOfRange(44, 44 + 32)
+        return Triple(cc20key, cc20nonce, hmacKey)
+    }
+
+    private fun chacha20(key: ByteArray, nonce: ByteArray, message: ByteArray): ByteArray? {
+        return try {
+            val engine = ChaCha7539Engine()
+            engine.init(true, ParametersWithIV(KeyParameter(key), nonce))
+
+            val output = ByteArray(message.size)
+            engine.processBytes(message, 0, message.size, output, 0)
+            output
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun sha256Hmac(key: ByteArray, ciphertext: ByteArray, nonce: ByteArray): ByteArray? {
+        return try {
+            val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+            val secretKey = SecretKeySpec(key, "HmacSHA256")
+            mac.init(secretKey)
+            mac.update(nonce)
+            mac.update(ciphertext)
+            mac.doFinal()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun calcPadding(msgSize: Int): Int {
+        if (msgSize <= 32) return 32
+
+        val s = msgSize - 1
+        val highestBit = 32 - Integer.numberOfLeadingZeros(s)
+        val nextPowTwo = 1 shl highestBit
+        val chunk = kotlin.math.max(32, nextPowTwo / 8)
+        val blocks = (s / chunk) + 1
+        return chunk * blocks
+    }
+
+    private fun hkdfExpandSha256(prk: ByteArray, info: ByteArray, outLen: Int): ByteArray {
+        val hashLen = 32
+        val n = (outLen + hashLen - 1) / hashLen
+        var t = ByteArray(0)
+        val okm = ByteArrayOutputStream()
+
+        for (i in 1..n) {
+            val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+            val keySpec = SecretKeySpec(prk, "HmacSHA256")
+            mac.init(keySpec)
+
+            mac.update(t)
+            mac.update(info)
+            mac.update(i.toByte())
+
+            t = mac.doFinal()
+            okm.write(t)
+        }
+
+        val result = okm.toByteArray()
+        return if (result.size > outLen) result.copyOf(outLen) else result
+    }
+
     private fun hexStringToByteArray(s: String): ByteArray {
         val len = s.length
         val data = ByteArray(len / 2)
@@ -165,7 +295,7 @@ class MessagingService : FirebaseMessagingService() {
         }
         return data
     }
-    
+
     // private fun wakeApp() {
     //   @Suppress("DEPRECATION")
     //   val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
