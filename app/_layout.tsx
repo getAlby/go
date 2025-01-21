@@ -20,7 +20,7 @@ import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { useInfo } from "~/hooks/useInfo";
 import { SessionProvider } from "~/hooks/useSession";
-import { NAV_THEME } from "~/lib/constants";
+import { IS_EXPO_GO, NAV_THEME } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -96,7 +96,9 @@ export default function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
-        await checkAndPromptForNotifications();
+        if (!IS_EXPO_GO) {
+          await checkAndPromptForNotifications();
+        }
         SplashScreen.hide();
       }
     };

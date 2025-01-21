@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-import { SUITE_NAME } from "~/lib/constants";
+import { IS_EXPO_GO, SUITE_NAME } from "~/lib/constants";
 
 let UserDefaults: any;
 let SharedPreferences: any;
@@ -7,11 +7,13 @@ let SharedPreferences: any;
 // this is done because accessing values stored from expo-secure-store
 // is quite difficult and we do not wish to complicate the notification
 // service extension (ios) or messaging service (android)
-if (Platform.OS === "ios") {
-  UserDefaults =
-    require("@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios").default;
-} else {
-  SharedPreferences = require("@getalby/expo-shared-preferences");
+if (!IS_EXPO_GO) {
+  if (Platform.OS === "ios") {
+    UserDefaults =
+      require("@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios").default;
+  } else {
+    SharedPreferences = require("@getalby/expo-shared-preferences");
+  }
 }
 
 type WalletInfo = {
@@ -28,9 +30,10 @@ export async function storeWalletInfo(
   publicKey: string,
   walletData: Partial<WalletInfo>,
 ) {
-  if (!publicKey) {
+  if (IS_EXPO_GO || !publicKey) {
     return;
   }
+
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
     const wallets = (await groupDefaults.get("wallets")) || {};
@@ -51,9 +54,10 @@ export async function storeWalletInfo(
 }
 
 export async function removeWalletInfo(publicKey: string, walletId: number) {
-  if (!publicKey) {
+  if (IS_EXPO_GO || !publicKey) {
     return;
   }
+
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
     const wallets = await groupDefaults.get("wallets");
@@ -85,6 +89,10 @@ export async function removeWalletInfo(publicKey: string, walletId: number) {
 }
 
 export async function removeAllInfo() {
+  if (IS_EXPO_GO) {
+    return;
+  }
+
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
     await groupDefaults.removeAll();

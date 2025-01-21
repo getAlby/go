@@ -1,38 +1,46 @@
-import * as ExpoNotifications from "expo-notifications";
 import { useEffect, useRef } from "react";
+import { IS_EXPO_GO } from "~/lib/constants";
 import { handleLink } from "~/lib/link";
 import { useAppStore } from "~/lib/state/appStore";
 
-ExpoNotifications.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-    };
-  },
-});
+let ExpoNotifications: any;
+
+if (!IS_EXPO_GO) {
+  ExpoNotifications = require("expo-notifications");
+
+  ExpoNotifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      };
+    },
+  });
+}
 
 export const NotificationProvider = ({ children }: any) => {
-  const responseListener = useRef<ExpoNotifications.Subscription>();
+  const responseListener = useRef<any>();
   const isNotificationsEnabled = useAppStore(
     (store) => store.isNotificationsEnabled,
   );
 
   useEffect(() => {
-    if (!isNotificationsEnabled) {
+    if (IS_EXPO_GO || !isNotificationsEnabled) {
       return;
     }
 
     // this is for iOS only as tapping the notifications
     // directly open the deep link on android
     responseListener.current =
-      ExpoNotifications.addNotificationResponseReceivedListener((response) => {
-        const deepLink = response.notification.request.content.data.deepLink;
-        if (deepLink) {
-          handleLink(deepLink);
-        }
-      });
+      ExpoNotifications.addNotificationResponseReceivedListener(
+        (response: any) => {
+          const deepLink = response.notification.request.content.data.deepLink;
+          if (deepLink) {
+            handleLink(deepLink);
+          }
+        },
+      );
 
     return () => {
       responseListener.current &&

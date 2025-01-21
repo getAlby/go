@@ -1,4 +1,5 @@
 import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import Constants, { ExecutionEnvironment } from "expo-constants";
 
 export const NAV_THEME = {
   light: {
@@ -47,3 +48,6 @@ export const SATS_REGEX = /^\d*$/;
 export const FIAT_REGEX = /^\d*(\.\d{0,2})?$/;
 
 export const BOLT11_REGEX = /.*?((lnbcrt|lntb|lnbc)([0-9]{1,}[a-z0-9]+){1})/;
+
+export const IS_EXPO_GO =
+  Constants.executionEnvironment === ExecutionEnvironment.StoreClient;

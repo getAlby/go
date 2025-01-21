@@ -1,6 +1,6 @@
 import { nwc } from "@getalby/sdk";
 import { Platform } from "react-native";
-import { NOSTR_API_URL } from "~/lib/constants";
+import { IS_EXPO_GO, NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { computeSharedSecret } from "~/lib/sharedSecret";
 import { useAppStore } from "~/lib/state/appStore";
@@ -11,7 +11,7 @@ export async function registerWalletNotifications(
   walletId: number,
   walletName?: string,
 ) {
-  if (!nwcUrl) {
+  if (IS_EXPO_GO || !nwcUrl) {
     return;
   }
 
@@ -77,7 +77,7 @@ export async function registerWalletNotifications(
 }
 
 export async function deregisterWalletNotifications(pushId?: string) {
-  if (!pushId) {
+  if (IS_EXPO_GO || !pushId) {
     return;
   }
   try {
