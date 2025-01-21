@@ -98,7 +98,7 @@ class MessagingService : FirebaseMessagingService() {
         }
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("alby://${notificationType}?transaction=${Uri.encode(transaction)}&wallet_id=${walletInfo.id}")
+            data = Uri.parse("alby://payment_notification?transaction=${Uri.encode(transaction)}&wallet_id=${walletInfo.id}")
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 

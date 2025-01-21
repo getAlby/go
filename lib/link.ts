@@ -63,7 +63,9 @@ export const handleLink = async (url: string) => {
 
     console.info("Navigating to", fullUrl);
 
-    if (hostname === "payment_sent" || hostname === "payment_received") {
+    // Opening the notification executes the linking code
+    // We set the hostname on the notification deeplink so that it can be handled separately
+    if (hostname === "payment_notification") {
       const urlParams = new URLSearchParams(search);
       const walletId = urlParams.get("wallet_id");
       const transaction = urlParams.get("transaction");
