@@ -118,8 +118,7 @@
     }
 
     double amountInSats = [amountNumber doubleValue] / 1000.0;
-    NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&wallet_id=%@", notificationType,
-                                  encodedTransaction,
+    NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&wallet_id=%@", encodedTransaction,
                                   walletId.stringValue];
 
     NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy] ?: [NSMutableDictionary dictionary];
