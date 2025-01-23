@@ -27,6 +27,9 @@ type Wallets = {
   [publicKey: string]: Partial<WalletInfo>;
 };
 
+// TODO: In the future when we deprecate NIP-04 and stop
+// support for version 0.0 we would have display wallets
+// using 0.0 as deprecated and write a migration
 export async function storeWalletInfo(
   publicKey: string,
   walletData: Partial<WalletInfo>,
