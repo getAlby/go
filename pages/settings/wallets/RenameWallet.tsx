@@ -9,6 +9,7 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { getPubkeyFromNWCUrl } from "~/lib/utils";
 import { storeWalletInfo } from "~/lib/walletInfo";
 
 export function RenameWallet() {
@@ -34,9 +35,11 @@ export function RenameWallet() {
       isNotificationsEnabled &&
       (wallets[walletId].nwcCapabilities || []).includes("notifications")
     ) {
-      const nwcClient = useAppStore.getState().getNWCClient(walletId);
-      if (nwcClient) {
-        await storeWalletInfo(nwcClient?.publicKey ?? "", {
+      const pubkey = getPubkeyFromNWCUrl(
+        wallets[walletId].nostrWalletConnectUrl ?? "",
+      );
+      if (pubkey) {
+        await storeWalletInfo(pubkey, {
           name: walletName,
         });
       }

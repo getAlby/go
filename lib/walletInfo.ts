@@ -34,7 +34,7 @@ export async function storeWalletInfo(
   publicKey: string,
   walletData: Partial<WalletInfo>,
 ) {
-  if (IS_EXPO_GO || !publicKey) {
+  if (IS_EXPO_GO) {
     return;
   }
 
@@ -58,7 +58,7 @@ export async function storeWalletInfo(
 }
 
 export async function removeWalletInfo(publicKey: string, walletId: number) {
-  if (IS_EXPO_GO || !publicKey) {
+  if (IS_EXPO_GO) {
     return;
   }
 

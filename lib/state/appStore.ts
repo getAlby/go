@@ -53,7 +53,7 @@ export const lastActiveTimeKey = "lastActiveTime";
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
 export type Theme = "light" | "dark";
 
-type Wallet = {
+export type Wallet = {
   name?: string;
   nostrWalletConnectUrl?: string;
   lightningAddress?: string;

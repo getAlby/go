@@ -1,23 +1,31 @@
-import { nwc } from "@getalby/sdk";
 import { Platform } from "react-native";
+import Toast from "react-native-toast-message";
 import { IS_EXPO_GO, NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
-import { computeSharedSecret, getConversationKey } from "~/lib/sharedSecret";
-import { useAppStore } from "~/lib/state/appStore";
-import { storeWalletInfo } from "~/lib/walletInfo";
+import { useAppStore, Wallet } from "~/lib/state/appStore";
+import {
+  computeSharedSecret,
+  getConversationKey,
+  getPubkeyFromNWCUrl,
+} from "~/lib/utils";
+import { removeWalletInfo, storeWalletInfo } from "~/lib/walletInfo";
 
 export async function registerWalletNotifications(
-  nwcUrl: string,
+  wallet: Wallet,
   walletId: number,
-  walletName?: string,
 ) {
-  if (IS_EXPO_GO || !nwcUrl) {
-    return;
+  if (!(wallet.nwcCapabilities || []).includes("notifications")) {
+    Toast.show({
+      type: "info",
+      text1: `${wallet.name} does not have notifications capability`,
+    });
   }
 
-  const nwcClient = new nwc.NWCClient({
-    nostrWalletConnectUrl: nwcUrl,
-  });
+  const nwcClient = useAppStore.getState().getNWCClient(walletId);
+
+  if (IS_EXPO_GO || !nwcClient) {
+    return;
+  }
 
   const walletServiceInfo = await nwcClient.getWalletServiceInfo();
   const isNip44 = walletServiceInfo.versions.includes("1.0");
@@ -61,7 +69,7 @@ export async function registerWalletNotifications(
     }
 
     const walletData = {
-      name: walletName ?? "",
+      name: wallet.name ?? "",
       sharedSecret: isNip44
         ? getConversationKey(nwcClient.walletPubkey, nwcClient.secret ?? "")
         : computeSharedSecret(nwcClient.walletPubkey, nwcClient.secret ?? ""),
@@ -80,18 +88,37 @@ export async function registerWalletNotifications(
   }
 }
 
-export async function deregisterWalletNotifications(pushId?: string) {
-  if (IS_EXPO_GO || !pushId) {
+export async function deregisterWalletNotifications(
+  wallet: Wallet,
+  walletId: number,
+) {
+  if (IS_EXPO_GO || !wallet.pushId) {
     return;
   }
   try {
-    const response = await fetch(`${NOSTR_API_URL}/subscriptions/${pushId}`, {
-      method: "DELETE",
-    });
+    // TODO: wallets with the same secret if added will have the same token,
+    // hence deregistering one might make others not work but will show
+    // as ON because their push ids are not removed from the wallet store
+    const response = await fetch(
+      `${NOSTR_API_URL}/subscriptions/${wallet.pushId}`,
+      {
+        method: "DELETE",
+      },
+    );
     if (!response.ok) {
       errorToast(
         new Error("Failed to deregister push notification subscription"),
       );
+    }
+    useAppStore.getState().updateWallet(
+      {
+        pushId: "",
+      },
+      walletId,
+    );
+    const pubkey = getPubkeyFromNWCUrl(wallet.nostrWalletConnectUrl ?? "");
+    if (pubkey) {
+      await removeWalletInfo(pubkey, walletId);
     }
   } catch (error) {
     errorToast(error);

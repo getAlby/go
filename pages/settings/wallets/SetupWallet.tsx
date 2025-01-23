@@ -50,6 +50,7 @@ export function SetupWallet() {
     React.useState<nwc.Nip47Capability[]>();
   const [name, setName] = React.useState("");
   const [startScanning, setStartScanning] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleScanned = (data: string) => {
     return connect(data);
@@ -106,26 +107,25 @@ export function SetupWallet() {
   );
 
   const addWallet = async () => {
-    if (!nostrWalletConnectUrl) {
+    if (isLoading || !nostrWalletConnectUrl) {
       return;
     }
+    setIsLoading(true);
 
     const nwcClient = new nwc.NWCClient({ nostrWalletConnectUrl });
-    useAppStore.getState().addWallet({
+
+    const wallet = {
       nostrWalletConnectUrl,
       nwcCapabilities: capabilities,
       name: name,
       lightningAddress: nwcClient.lud16 || "",
-    });
+    };
+    useAppStore.getState().addWallet(wallet);
 
     const isNotificationsEnabled =
       useAppStore.getState().isNotificationsEnabled;
     if (isNotificationsEnabled) {
-      await registerWalletNotifications(
-        nostrWalletConnectUrl,
-        wallets.length,
-        name,
-      );
+      await registerWalletNotifications(wallet, wallets.length);
     }
 
     useAppStore.getState().setNWCClient(nwcClient);
@@ -141,6 +141,7 @@ export function SetupWallet() {
       router.dismissAll();
     }
     router.replace("/");
+    setIsLoading(false);
   };
 
   React.useEffect(() => {
@@ -270,7 +271,13 @@ export function SetupWallet() {
                   icon={TriangleAlertIcon}
                 />
               )}
-            <Button size="lg" onPress={addWallet} disabled={!name}>
+            <Button
+              size="lg"
+              className="flex flex-row gap-2"
+              onPress={addWallet}
+              disabled={!name || isLoading}
+            >
+              {isLoading && <Loading className="text-primary-foreground" />}
               <Text>Finish</Text>
             </Button>
           </View>

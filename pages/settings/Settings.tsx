@@ -133,8 +133,8 @@ export function Settings() {
                       {
                         text: "Confirm",
                         onPress: async () => {
-                          for (const wallet of wallets) {
-                            await deregisterWalletNotifications(wallet.pushId);
+                          for (const [id, wallet] of wallets.entries()) {
+                            await deregisterWalletNotifications(wallet, id);
                           }
                           await removeAllInfo();
                           router.dismissAll();
