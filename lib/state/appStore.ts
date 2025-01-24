@@ -203,7 +203,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
-    expoPushToken: "",
+    expoPushToken: secureStorage.getItem(expoPushTokenKey) || "",
     updateWallet,
     removeWallet,
     removeAddressBookEntry,
