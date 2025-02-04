@@ -6,23 +6,47 @@ import { errorToast } from "~/lib/errorToast";
 import { registerWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 
+async function getPushTokenWithTimeout({
+  projectId,
+  timeoutMs = 3000,
+}: {
+  projectId: string;
+  timeoutMs?: number;
+}): Promise<string> {
+  let timeoutId: ReturnType<typeof setTimeout>;
+
+  const tokenPromise = ExpoNotifications.getExpoPushTokenAsync({
+    projectId,
+  }).then((result) => {
+    clearTimeout(timeoutId);
+    return result.data;
+  });
+
+  const timeoutPromise = new Promise<string>((_resolve, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error("FCM not available or not responding")),
+      timeoutMs,
+    );
+  });
+
+  return await Promise.race([tokenPromise, timeoutPromise]);
+}
+
 export async function registerForPushNotificationsAsync(): Promise<
   boolean | null
 > {
+  if (!Device.isDevice) {
+    errorToast("Must use physical device for push notifications");
+    return false;
+  }
+
   if (Platform.OS === "android") {
     ExpoNotifications.setNotificationChannelAsync("default", {
       name: "default",
       importance: ExpoNotifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-      enableLights: true,
       enableVibrate: true,
     });
-  }
-
-  if (!Device.isDevice) {
-    errorToast("Must use physical device for push notifications");
-    return false;
   }
 
   const { status: existingStatus } =
@@ -48,11 +72,9 @@ export async function registerForPushNotificationsAsync(): Promise<
     errorToast(new Error("Project ID not found"));
   }
   try {
-    const pushToken = (
-      await ExpoNotifications.getExpoPushTokenAsync({
-        projectId,
-      })
-    ).data;
+    const pushToken = await getPushTokenWithTimeout({
+      projectId,
+    });
 
     useAppStore.getState().setExpoPushToken(pushToken);
 

@@ -34,10 +34,6 @@ export async function storeWalletInfo(
   publicKey: string,
   walletData: Partial<WalletInfo>,
 ) {
-  if (IS_EXPO_GO) {
-    return;
-  }
-
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
     const wallets = (await groupDefaults.get("wallets")) || {};
@@ -58,49 +54,46 @@ export async function storeWalletInfo(
 }
 
 export async function removeWalletInfo(publicKey: string, walletId: number) {
-  if (IS_EXPO_GO) {
-    return;
-  }
-
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
-    const wallets = await groupDefaults.get("wallets");
+    let wallets = await groupDefaults.get("wallets");
     await groupDefaults.set("wallets", wallets);
-    if (wallets && wallets[publicKey]) {
-      delete wallets[publicKey];
-      for (const key in wallets) {
-        const wallet = wallets[key];
-        if (wallet && wallet.id && wallet.id > walletId) {
-          wallet.id -= 1;
-        }
-      }
+    if (wallets) {
+      wallets = removeWallet(wallets, publicKey, walletId);
       await groupDefaults.set("wallets", wallets);
     }
   } else {
     const walletsString = await SharedPreferences.getItemAsync("wallets");
-    const wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
-    if (wallets[publicKey]) {
-      delete wallets[publicKey];
-      for (const key in wallets) {
-        const wallet = wallets[key];
-        if (wallet && wallet.id && wallet.id > walletId) {
-          wallet.id -= 1;
-        }
-      }
+    let wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
+    if (wallets) {
+      wallets = removeWallet(wallets, publicKey, walletId);
       await SharedPreferences.setItemAsync("wallets", JSON.stringify(wallets));
     }
   }
 }
 
 export async function removeAllInfo() {
-  if (IS_EXPO_GO) {
-    return;
-  }
-
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
     await groupDefaults.removeAll();
   } else {
     await SharedPreferences.deleteItemAsync("wallets");
   }
+}
+
+function removeWallet(
+  wallets: Wallets,
+  publicKey: string,
+  walletId: number,
+): Wallets {
+  if (wallets && wallets[publicKey]) {
+    delete wallets[publicKey];
+    for (const key in wallets) {
+      const wallet = wallets[key];
+      if (wallet && wallet.id && wallet.id > walletId) {
+        wallet.id -= 1;
+      }
+    }
+  }
+  return wallets;
 }

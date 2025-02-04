@@ -20,7 +20,11 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { DEFAULT_WALLET_NAME, REQUIRED_CAPABILITIES } from "~/lib/constants";
+import {
+  DEFAULT_WALLET_NAME,
+  IS_EXPO_GO,
+  REQUIRED_CAPABILITIES,
+} from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
@@ -38,8 +42,8 @@ export function EditWallet() {
   const onDeleteWallet = async () => {
     setIsDeleting(true);
     try {
-      const wallet = wallets[walletId];
-      if (isNotificationsEnabled) {
+      if (!IS_EXPO_GO && isNotificationsEnabled) {
+        const wallet = wallets[walletId];
         await deregisterWalletNotifications(wallet, walletId);
       }
       useAppStore.getState().removeWallet(walletId);

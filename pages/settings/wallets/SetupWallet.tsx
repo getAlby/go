@@ -30,7 +30,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
-import { REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { registerWalletNotifications } from "~/lib/notifications";
 
@@ -122,10 +122,12 @@ export function SetupWallet() {
     };
     useAppStore.getState().addWallet(wallet);
 
-    const isNotificationsEnabled =
-      useAppStore.getState().isNotificationsEnabled;
-    if (isNotificationsEnabled) {
-      await registerWalletNotifications(wallet, wallets.length);
+    if (!IS_EXPO_GO) {
+      const isNotificationsEnabled =
+        useAppStore.getState().isNotificationsEnabled;
+      if (isNotificationsEnabled) {
+        await registerWalletNotifications(wallet, wallets.length);
+      }
     }
 
     useAppStore.getState().setNWCClient(nwcClient);

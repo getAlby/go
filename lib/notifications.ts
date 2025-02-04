@@ -1,6 +1,5 @@
 import { Platform } from "react-native";
-import Toast from "react-native-toast-message";
-import { IS_EXPO_GO, NOSTR_API_URL } from "~/lib/constants";
+import { NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore, Wallet } from "~/lib/state/appStore";
 import {
@@ -14,38 +13,33 @@ export async function registerWalletNotifications(
   wallet: Wallet,
   walletId: number,
 ) {
-  if (!(wallet.nwcCapabilities || []).includes("notifications")) {
-    Toast.show({
-      type: "info",
-      text1: `${wallet.name} does not have notifications capability`,
-    });
-  }
-
-  const nwcClient = useAppStore.getState().getNWCClient(walletId);
-
-  if (IS_EXPO_GO || !nwcClient) {
-    return;
-  }
-
-  const walletServiceInfo = await nwcClient.getWalletServiceInfo();
-  const isNip44 = walletServiceInfo.versions.includes("1.0");
-
-  const pushToken = useAppStore.getState().expoPushToken;
-  if (!pushToken) {
-    errorToast(new Error("Push token is not set"));
-    return;
-  }
-
-  const body = {
-    pushToken,
-    relayUrl: nwcClient.relayUrl,
-    connectionPubkey: nwcClient.publicKey,
-    walletPubkey: nwcClient.walletPubkey,
-    isIOS: Platform.OS === "ios",
-    ...(isNip44 ? { version: "1.0" } : {}),
-  };
-
   try {
+    if (!(wallet.nwcCapabilities || []).includes("notifications")) {
+      throw new Error(`${wallet.name} does not have notifications capability`);
+    }
+
+    const nwcClient = useAppStore.getState().getNWCClient(walletId);
+    if (!nwcClient) {
+      return;
+    }
+
+    const walletServiceInfo = await nwcClient.getWalletServiceInfo();
+    const isNip44 = walletServiceInfo.versions.includes("1.0");
+
+    const pushToken = useAppStore.getState().expoPushToken;
+    if (!pushToken) {
+      throw new Error("Push token is not set");
+    }
+
+    const body = {
+      pushToken,
+      relayUrl: nwcClient.relayUrl,
+      connectionPubkey: nwcClient.publicKey,
+      walletPubkey: nwcClient.walletPubkey,
+      isIOS: Platform.OS === "ios",
+      ...(isNip44 ? { version: "1.0" } : {}),
+    };
+
     const response = await fetch(`${NOSTR_API_URL}/nip47/notifications/push`, {
       method: "POST",
       headers: {
@@ -92,7 +86,7 @@ export async function deregisterWalletNotifications(
   wallet: Wallet,
   walletId: number,
 ) {
-  if (IS_EXPO_GO || !wallet.pushId) {
+  if (!wallet.pushId) {
     return;
   }
   try {
@@ -105,10 +99,9 @@ export async function deregisterWalletNotifications(
         method: "DELETE",
       },
     );
+    // FIXME: if deregistering fails, app will keep receiving notifications from the server
     if (!response.ok) {
-      errorToast(
-        new Error("Failed to deregister push notification subscription"),
-      );
+      throw new Error("Failed to deregister push notifications");
     }
     useAppStore.getState().updateWallet(
       {

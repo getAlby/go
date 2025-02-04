@@ -7,7 +7,7 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { DEFAULT_WALLET_NAME, IS_EXPO_GO } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { getPubkeyFromNWCUrl } from "~/lib/utils";
 import { storeWalletInfo } from "~/lib/walletInfo";
@@ -31,10 +31,8 @@ export function RenameWallet() {
       },
       walletId,
     );
-    if (
-      isNotificationsEnabled &&
-      (wallets[walletId].nwcCapabilities || []).includes("notifications")
-    ) {
+
+    if (!IS_EXPO_GO && isNotificationsEnabled && wallets[walletId].pushId) {
       const pubkey = getPubkeyFromNWCUrl(
         wallets[walletId].nostrWalletConnectUrl ?? "",
       );

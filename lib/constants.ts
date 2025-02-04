@@ -22,8 +22,6 @@ export const NAV_THEME = {
 
 export const SUITE_NAME = "group.com.getalby.mobile.nse";
 
-export const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
-
 export const INACTIVITY_THRESHOLD = 5 * 60 * 1000;
 
 export const CURSOR_COLOR = "hsl(47 100% 72%)";

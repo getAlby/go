@@ -69,6 +69,7 @@ export default function RootLayout() {
     }
   }
 
+  // TODO: Do not prompt the user at all if FCM is disabled
   async function checkAndPromptForNotifications() {
     const isEnabled = useAppStore.getState().isNotificationsEnabled;
     // prompt the user to enable notifications on first open
