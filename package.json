@@ -27,7 +27,7 @@
   "dependencies": {
     "@getalby/lightning-tools": "^5.1.2",
     "@getalby/sdk": "^3.8.2",
-    "@popicons/react-native": "^0.0.20",
+    "@popicons/react-native": "^0.0.22",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@rn-primitives/dialog": "^1.0.3",
     "@rn-primitives/portal": "^1.0.3",

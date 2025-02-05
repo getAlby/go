@@ -11,10 +11,12 @@ import {
   PopiconsUploadSolid as ExportIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
   PopiconsCircleInfoLine as HelpCircleIcon,
+  PopiconsLinkExternalSolid as LinkIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
+  PopiconsQrCodeMinimalSolid as QRIcon,
   PopiconsReloadLine as RefreshIcon,
   PopiconsReloadSolid as ResetIcon,
   PopiconsFullscreenSolid as ScanIcon,
@@ -58,10 +60,12 @@ interopIcon(EditIcon);
 interopIcon(ExportIcon);
 interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
+interopIcon(LinkIcon);
 interopIcon(MoveDownIcon);
 interopIcon(MoveUpIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
+interopIcon(QRIcon);
 interopIcon(RefreshIcon);
 interopIcon(ResetIcon);
 interopIcon(ScanIcon);
@@ -91,10 +95,12 @@ export {
   ExportIcon,
   FingerprintIcon,
   HelpCircleIcon,
+  LinkIcon,
   MoveDownIcon,
   MoveUpIcon,
   OnboardingIcon,
   PasteIcon,
+  QRIcon,
   RefreshIcon,
   ResetIcon,
   ScanIcon,

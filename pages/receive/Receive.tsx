@@ -62,9 +62,7 @@ export function Receive() {
               <TouchableOpacity
                 className="px-2 py-4 mr-2"
                 onPressIn={() => {
-                  router.push(
-                    `/settings/wallets/${selectedWalletId}/lightning-address`,
-                  );
+                  router.push("/receive/lightning-address");
                 }}
               >
                 <AddressIcon className="text-foreground" />
