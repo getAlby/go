@@ -1,4 +1,5 @@
 import {
+  PopiconsAtSymbolSolid as AddressIcon,
   PopiconsCircleExclamationLine as AlertCircleIcon,
   PopiconsBitcoinSolid as BitcoinIcon,
   PopiconsAddressBookSolid as BookUserIcon,
@@ -16,6 +17,7 @@ import {
   PopiconsClipboardTextSolid as PasteIcon,
   PopiconsReloadLine as RefreshIcon,
   PopiconsReloadSolid as ResetIcon,
+  PopiconsFullscreenSolid as ScanIcon,
   PopiconsSettingsMinimalSolid as SettingsIcon,
   PopiconsShareSolid as ShareIcon,
   PopiconsLogoutSolid as SignOutIcon,
@@ -44,6 +46,7 @@ function interopIcon(icon: React.FunctionComponent<SvgProps>) {
   });
 }
 
+interopIcon(AddressIcon);
 interopIcon(AlertCircleIcon);
 interopIcon(BitcoinIcon);
 interopIcon(BookUserIcon);
@@ -61,6 +64,7 @@ interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
 interopIcon(RefreshIcon);
 interopIcon(ResetIcon);
+interopIcon(ScanIcon);
 interopIcon(SettingsIcon);
 interopIcon(ShareIcon);
 interopIcon(SignOutIcon);
@@ -75,6 +79,7 @@ interopIcon(XIcon);
 interopIcon(ZapIcon);
 
 export {
+  AddressIcon,
   AlertCircleIcon,
   BitcoinIcon,
   BookUserIcon,
@@ -92,6 +97,7 @@ export {
   PasteIcon,
   RefreshIcon,
   ResetIcon,
+  ScanIcon,
   SettingsIcon,
   ShareIcon,
   SignOutIcon,

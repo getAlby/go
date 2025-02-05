@@ -2,14 +2,13 @@ import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
-import { Image, View } from "react-native";
+import { Image, Share, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { CopyIcon } from "~/components/Icons";
+import { CopyIcon, ShareIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
-import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
@@ -23,13 +22,10 @@ export function CreateInvoice() {
   const [invoice, setInvoice] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
-  const wallets = useAppStore((store) => store.wallets);
-  const lightningAddress = wallets[selectedWalletId].lightningAddress;
 
   function generateInvoice(amount?: number) {
     if (!amount) {
-      console.error("0-amount invoices are currently not supported");
+      errorToast(new Error("0-amount invoices are currently not supported"));
       return;
     }
     (async () => {
@@ -56,7 +52,7 @@ export function CreateInvoice() {
   }
 
   function copy() {
-    const text = invoice || lightningAddress;
+    const text = invoice;
     if (!text) {
       errorToast(new Error("Nothing to copy"));
       return;
@@ -66,6 +62,21 @@ export function CreateInvoice() {
       type: "success",
       text1: "Copied to clipboard",
     });
+  }
+
+  async function share() {
+    const message = invoice;
+    try {
+      if (!message) {
+        throw new Error("no lightning address set");
+      }
+      await Share.share({
+        message,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+      errorToast(error);
+    }
   }
 
   React.useEffect(() => {
@@ -102,7 +113,7 @@ export function CreateInvoice() {
           }
           ++pollCount;
         } catch (error) {
-          console.error("Failed to list transactions", error);
+          console.error("Failed to poll for incoming transaction", error);
         }
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
@@ -114,7 +125,6 @@ export function CreateInvoice() {
 
   return (
     <>
-      <Screen title="Invoice" animation="slide_from_left" />
       {invoice ? (
         <>
           <View className="flex-1 justify-center items-center gap-8">
@@ -122,7 +132,7 @@ export function CreateInvoice() {
               <QRCode value={invoice} />
               <View className="absolute self-center p-2 rounded-2xl bg-white">
                 <Image
-                  source={require("../../assets/icon.png")}
+                  source={require("../assets/icon.png")}
                   className="w-20 h-20 rounded-xl"
                   resizeMode="contain"
                 />
@@ -149,6 +159,14 @@ export function CreateInvoice() {
             </View>
           </View>
           <View className="flex flex-row gap-3 p-6">
+            <Button
+              onPress={share}
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+            >
+              <ShareIcon className="text-muted-foreground" />
+              <Text>Share</Text>
+            </Button>
             <Button
               variant="secondary"
               onPress={copy}

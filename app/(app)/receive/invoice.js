@@ -1,5 +1,5 @@
-import { CreateInvoice } from "../../../pages/receive/CreateInvoice";
+import { Invoice } from "../../../pages/receive/Invoice";
 
 export default function Page() {
-  return <CreateInvoice />;
+  return <Invoice />;
 }

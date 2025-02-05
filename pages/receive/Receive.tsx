@@ -1,18 +1,19 @@
 import * as Clipboard from "expo-clipboard";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
-import { Pressable, Share, TouchableOpacity, View } from "react-native";
+import { Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { ShareIcon, WithdrawIcon, ZapIcon } from "~/components/Icons";
+import { CreateInvoice } from "~/components/CreateInvoice";
+import {
+  AddressIcon,
+  ScanIcon,
+  ShareIcon,
+  WithdrawIcon,
+  ZapIcon,
+} from "~/components/Icons";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
@@ -52,8 +53,37 @@ export function Receive() {
 
   return (
     <>
-      <Screen title="Receive" animation="slide_from_left" />
-      {lightningAddress ? (
+      <Screen
+        title="Receive"
+        animation="slide_from_left"
+        right={() =>
+          !lightningAddress && (
+            <>
+              <TouchableOpacity
+                className="px-2 py-4 mr-2"
+                onPressIn={() => {
+                  router.push(
+                    `/settings/wallets/${selectedWalletId}/lightning-address`,
+                  );
+                }}
+              >
+                <AddressIcon className="text-foreground" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="px-2 py-4"
+                onPressIn={() => {
+                  router.push("receive/withdraw");
+                }}
+              >
+                <ScanIcon className="text-foreground" />
+              </TouchableOpacity>
+            </>
+          )
+        }
+      />
+      {!lightningAddress ? (
+        <CreateInvoice />
+      ) : (
         <>
           <View className="flex-1 justify-center items-center gap-8">
             <QRCode value={lightningAddress} />
@@ -95,41 +125,6 @@ export function Receive() {
               <ZapIcon className="text-muted-foreground" />
               <Text>Invoice</Text>
             </Button>
-          </View>
-        </>
-      ) : (
-        <>
-          <View className="flex-1 flex flex-col p-3 gap-3">
-            <Link href="/receive/invoice" asChild>
-              <Pressable>
-                <Card className="w-full">
-                  <CardContent className="flex flex-row items-center gap-4">
-                    <ZapIcon className="text-muted-foreground" />
-                    <View className="flex flex-1 flex-col">
-                      <CardTitle>Lightning invoice</CardTitle>
-                      <CardDescription>
-                        Request instant and specific amount bitcoin payments
-                      </CardDescription>
-                    </View>
-                  </CardContent>
-                </Card>
-              </Pressable>
-            </Link>
-            <Link href="/receive/withdraw" asChild>
-              <Pressable>
-                <Card className="w-full">
-                  <CardContent className="flex flex-row items-center gap-4">
-                    <WithdrawIcon className="text-muted-foreground" />
-                    <View className="flex flex-1 flex-col">
-                      <CardTitle>Redeem</CardTitle>
-                      <CardDescription>
-                        Withdraw a bitcoin voucher instantly via an LNURL code
-                      </CardDescription>
-                    </View>
-                  </CardContent>
-                </Card>
-              </Pressable>
-            </Link>
           </View>
         </>
       )}
