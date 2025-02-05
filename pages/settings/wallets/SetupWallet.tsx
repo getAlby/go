@@ -164,12 +164,10 @@ export function SetupWallet() {
               <TouchableOpacity onPressIn={() => setShowHelp(true)}>
                 <HelpCircleIcon className="text-foreground" />
               </TouchableOpacity>
-              {showHelp && (
-                <HelpModal
-                  visible={showHelp}
-                  onClose={() => setShowHelp(false)}
-                />
-              )}
+              <HelpModal
+                visible={showHelp}
+                onClose={() => setShowHelp(false)}
+              />
             </>
           )
         }
