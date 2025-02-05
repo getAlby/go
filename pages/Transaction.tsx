@@ -13,6 +13,7 @@ import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 type TLVRecord = {
@@ -37,11 +38,18 @@ type Boostagram = {
 };
 
 export function Transaction() {
-  const { transactionJSON } = useLocalSearchParams() as unknown as {
+  const { transactionJSON, walletId } = useLocalSearchParams() as unknown as {
     transactionJSON: string;
+    walletId?: string;
   };
   const transaction: Nip47Transaction = JSON.parse(transactionJSON);
   const getFiatAmount = useGetFiatAmount();
+
+  React.useEffect(() => {
+    if (walletId) {
+      useAppStore.getState().setSelectedWalletId(Number(walletId));
+    }
+  }, [walletId]);
 
   const boostagram = React.useMemo(() => {
     let parsedBoostagram;

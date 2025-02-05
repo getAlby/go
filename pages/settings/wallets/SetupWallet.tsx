@@ -30,8 +30,9 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
-import { REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import { registerWalletNotifications } from "~/lib/notifications";
 
 export function SetupWallet() {
   const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
@@ -49,6 +50,7 @@ export function SetupWallet() {
     React.useState<nwc.Nip47Capability[]>();
   const [name, setName] = React.useState("");
   const [startScanning, setStartScanning] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleScanned = (data: string) => {
     return connect(data);
@@ -104,18 +106,30 @@ export function SetupWallet() {
     [],
   );
 
-  const addWallet = () => {
-    if (!nostrWalletConnectUrl) {
+  const addWallet = async () => {
+    if (isLoading || !nostrWalletConnectUrl) {
       return;
     }
+    setIsLoading(true);
 
     const nwcClient = new nwc.NWCClient({ nostrWalletConnectUrl });
-    useAppStore.getState().addWallet({
+
+    const wallet = {
       nostrWalletConnectUrl,
       nwcCapabilities: capabilities,
       name: name,
       lightningAddress: nwcClient.lud16 || "",
-    });
+    };
+    useAppStore.getState().addWallet(wallet);
+
+    if (!IS_EXPO_GO) {
+      const isNotificationsEnabled =
+        useAppStore.getState().isNotificationsEnabled;
+      if (isNotificationsEnabled) {
+        await registerWalletNotifications(wallet, wallets.length);
+      }
+    }
+
     useAppStore.getState().setNWCClient(nwcClient);
 
     Toast.show({
@@ -129,6 +143,7 @@ export function SetupWallet() {
       router.dismissAll();
     }
     router.replace("/");
+    setIsLoading(false);
   };
 
   React.useEffect(() => {
@@ -258,7 +273,13 @@ export function SetupWallet() {
                   icon={TriangleAlertIcon}
                 />
               )}
-            <Button size="lg" onPress={addWallet} disabled={!name}>
+            <Button
+              size="lg"
+              className="flex flex-row gap-2"
+              onPress={addWallet}
+              disabled={!name || isLoading}
+            >
+              {isLoading && <Loading className="text-primary-foreground" />}
               <Text>Finish</Text>
             </Button>
           </View>

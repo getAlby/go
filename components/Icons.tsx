@@ -12,6 +12,7 @@ import {
   PopiconsCircleInfoLine as HelpCircleIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
+  PopiconsNotificationSquareSolid as NotificationIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
   PopiconsReloadLine as RefreshIcon,
@@ -57,6 +58,7 @@ interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
 interopIcon(MoveDownIcon);
 interopIcon(MoveUpIcon);
+interopIcon(NotificationIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
 interopIcon(RefreshIcon);
@@ -88,6 +90,7 @@ export {
   HelpCircleIcon,
   MoveDownIcon,
   MoveUpIcon,
+  NotificationIcon,
   OnboardingIcon,
   PasteIcon,
   RefreshIcon,

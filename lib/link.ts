@@ -63,6 +63,23 @@ export const handleLink = async (url: string) => {
 
     console.info("Navigating to", fullUrl);
 
+    // Opening the notification executes the linking code
+    // We set the hostname on the notification deeplink so that it can be handled separately
+    if (hostname === "payment_notification") {
+      const urlParams = new URLSearchParams(search);
+      const walletId = urlParams.get("wallet_id");
+      const transaction = urlParams.get("transaction");
+      if (!transaction || !walletId) {
+        return;
+      }
+      const transactionJSON = decodeURIComponent(transaction);
+      router.push({
+        pathname: "/transaction",
+        params: { transactionJSON, walletId },
+      });
+      return;
+    }
+
     const schemePattern = new RegExp(
       `^(${SUPPORTED_SCHEMES.map((s) => s.replace(":", "")).join("|")}):`,
     );
