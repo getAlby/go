@@ -9,8 +9,9 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import { X } from "~/components/Icons";
+import { XIcon } from "~/components/Icons";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
+import PendingTransactionIcon from "~/components/icons/PendingTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
@@ -74,11 +75,11 @@ export function Transactions() {
         animation="slide_from_bottom"
         right={() => (
           <Pressable
-            onPress={() => {
+            onPressIn={() => {
               router.back();
             }}
           >
-            <X className="text-foreground" />
+            <XIcon className="text-foreground" />
           </Pressable>
         )}
       />
@@ -126,7 +127,10 @@ export function Transactions() {
                 )}
               >
                 <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
-                  {transaction.state !== "failed" && (
+                  {!(
+                    transaction.state === "failed" ||
+                    transaction.state === "pending"
+                  ) && (
                     <>
                       {transaction.type === "incoming" && (
                         <ReceivedTransactionIcon />
@@ -135,6 +139,9 @@ export function Transactions() {
                         <SentTransactionIcon />
                       )}
                     </>
+                  )}
+                  {transaction.state === "pending" && (
+                    <PendingTransactionIcon />
                   )}
                   {transaction.state === "failed" && <FailedTransactionIcon />}
                 </View>

@@ -2,14 +2,21 @@ import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { CameraOffIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { FocusableCamera } from "./FocusableCamera";
-import { CameraOff } from "./Icons";
 import Loading from "./Loading";
 
+const styles = StyleSheet.create({
+  icon: {
+    width: 64,
+    height: 64,
+  },
+});
+
 interface QRCodeScannerProps {
-  onScanned: (data: string) => void;
+  onScanned: (data: string) => Promise<boolean>;
   startScanning: boolean;
 }
 
@@ -42,11 +49,11 @@ function QRCodeScanner({
     setScanning(status === "granted");
   }
 
-  const handleScanned = (data: string) => {
+  const handleScanned = async (data: string) => {
     if (isScanning) {
       console.info(`Bar code with data ${data} has been scanned!`);
-      onScanned(data);
-      setScanning(false);
+      const result = await onScanned(data);
+      setScanning(!result);
     }
   };
 
@@ -63,7 +70,7 @@ function QRCodeScanner({
         <>
           {!isScanning && permissionStatus === PermissionStatus.DENIED && (
             <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
-              <CameraOff className="text-foreground" size={64} />
+              <CameraOffIcon className="text-foreground" style={styles.icon} />
               <Text className="text-2xl text-foreground text-center">
                 Camera Permission Denied
               </Text>

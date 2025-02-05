@@ -6,7 +6,7 @@ import { Image, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { Copy } from "~/components/Icons";
+import { CopyIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
@@ -154,7 +154,7 @@ export function CreateInvoice() {
               onPress={copy}
               className="flex-1 flex flex-col gap-2"
             >
-              <Copy className="text-muted-foreground" />
+              <CopyIcon className="text-muted-foreground" />
               <Text>Copy</Text>
             </Button>
           </View>

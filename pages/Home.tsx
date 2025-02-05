@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Link, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
 import React, { useState } from "react";
 import {
@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ChevronUp, Settings2 } from "~/components/Icons";
+import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,25 +21,20 @@ import AlbyBanner from "~/components/AlbyBanner";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
-import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { useAppStore } from "~/lib/state/appStore";
 
 dayjs.extend(relativeTime);
-
-enum BalanceState {
-  SATS = 1,
-  FIAT = 2,
-  HIDDEN = 3,
-}
 
 export function Home() {
   const { data: balance, mutate: reloadBalance } = useBalance();
   const [refreshingBalance, setRefreshingBalance] = useState(false);
   const getFiatAmount = useGetFiatAmount();
-  const [balanceState, setBalanceState] = useState<BalanceState>(
-    BalanceState.SATS,
-  );
+  const balanceDisplayMode = useAppStore((store) => store.balanceDisplayMode);
+  const wallets = useAppStore((store) => store.wallets);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
 
   useFocusEffect(() => {
     reloadBalance();
@@ -52,12 +47,16 @@ export function Home() {
   };
 
   function switchBalanceState(): void {
-    if (balanceState === BalanceState.SATS) {
-      setBalanceState(BalanceState.FIAT);
-    } else if (balanceState === BalanceState.FIAT) {
-      setBalanceState(BalanceState.HIDDEN);
-    } else {
-      setBalanceState(BalanceState.SATS);
+    switch (balanceDisplayMode) {
+      case "sats":
+        useAppStore.getState().setBalanceDisplayMode("fiat");
+        break;
+      case "fiat":
+        useAppStore.getState().setBalanceDisplayMode("hidden");
+        break;
+      default:
+        useAppStore.getState().setBalanceDisplayMode("sats");
+        break;
     }
   }
 
@@ -66,11 +65,13 @@ export function Home() {
       <Screen
         title=""
         right={() => (
-          <Link href="/settings" asChild>
-            <TouchableOpacity>
-              <Settings2 className="text-foreground" />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity
+            onPressIn={() => {
+              router.push("/settings");
+            }}
+          >
+            <SettingsIcon className="text-muted-foreground" />
+          </TouchableOpacity>
         )}
       />
       <View className="h-full flex p-6">
@@ -90,40 +91,58 @@ export function Home() {
               onPress={switchBalanceState}
               className="w-full flex flex-col items-center justify-center gap-4"
             >
+              {wallets.length > 1 && (
+                <TouchableOpacity
+                  className="w-full"
+                  onPress={() => {
+                    router.push("/settings/wallets");
+                  }}
+                >
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                  >
+                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                  </Text>
+                </TouchableOpacity>
+              )}
               <View className="w-full flex flex-row justify-center items-center gap-2">
                 {balance && !refreshingBalance ? (
                   <>
                     <Text className="text-foreground text-5xl font-bold2">
-                      {balanceState === BalanceState.SATS &&
+                      {balanceDisplayMode === "sats" &&
                         new Intl.NumberFormat().format(
                           Math.floor(balance.balance / 1000),
                         )}
-                      {balanceState === BalanceState.FIAT &&
+                      {balanceDisplayMode === "fiat" &&
                         getFiatAmount &&
                         getFiatAmount(Math.floor(balance.balance / 1000))}
-                      {balanceState === BalanceState.HIDDEN && "****"}
+                      {balanceDisplayMode === "hidden" && "****"}
                     </Text>
-                    <Text className="text-muted-foreground text-3xl font-semibold2">
-                      {balanceState === BalanceState.SATS && "sats"}
-                    </Text>
+                    {balanceDisplayMode === "sats" && (
+                      <Text className="text-muted-foreground text-3xl font-semibold2">
+                        sats
+                      </Text>
+                    )}
                   </>
                 ) : (
-                  <Skeleton className="w-48 h-12" />
+                  <Skeleton className="w-48 h-10" />
                 )}
               </View>
               <View className="flex justify-center items-center">
                 {balance && !refreshingBalance ? (
                   <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                    {balanceState === BalanceState.SATS &&
+                    {balanceDisplayMode === "sats" &&
                       getFiatAmount &&
                       getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceState === BalanceState.FIAT &&
+                    {balanceDisplayMode === "fiat" &&
                       new Intl.NumberFormat().format(
                         Math.floor(balance.balance / 1000),
                       ) + " sats"}
                   </Text>
                 ) : (
-                  <Skeleton className="w-32 h-10" />
+                  <Skeleton className="w-32 h-8" />
                 )}
               </View>
             </TouchableOpacity>
@@ -132,12 +151,13 @@ export function Home() {
         </ScrollView>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
-            <Button
-              variant="secondary"
-              className="p-10 rounded-full aspect-square"
-            >
-              <ChevronUp className="text-muted-foreground" size={32} />
-            </Button>
+            <TouchableOpacity>
+              <ChevronUpIcon
+                className="text-muted-foreground"
+                width={32}
+                height={32}
+              />
+            </TouchableOpacity>
           </Link>
         </View>
         <View className="flex flex-row gap-6 mt-10">

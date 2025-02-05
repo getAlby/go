@@ -1,14 +1,13 @@
-import { Link, router } from "expo-router";
-import { Alert, Pressable, Text, View } from "react-native";
-import Toast from "react-native-toast-message";
-
-import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
 import * as Clipboard from "expo-clipboard";
+import { Link, router, useLocalSearchParams } from "expo-router";
+import { Pressable, Alert as RNAlert, View } from "react-native";
+import Toast from "react-native-toast-message";
+import Alert from "~/components/Alert";
 import {
-  ArchiveRestore,
-  Trash2,
-  TriangleAlert,
-  Wallet2,
+  ExportIcon,
+  TrashIcon,
+  TriangleAlertIcon,
+  WalletIcon,
   ZapIcon,
 } from "~/components/Icons";
 import Screen from "~/components/Screen";
@@ -18,49 +17,49 @@ import {
   CardDescription,
   CardTitle,
 } from "~/components/ui/card";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { DEFAULT_WALLET_NAME, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function EditWallet() {
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const { id } = useLocalSearchParams() as { id: string };
   const wallets = useAppStore((store) => store.wallets);
+
+  let walletId = parseInt(id);
+
   return (
-    <View className="flex-1 flex flex-col p-3 gap-3">
+    <View className="flex-1 flex flex-col p-4 gap-4">
       <Screen title="Edit Wallet" />
-      {(["notifications", "list_transactions"] as Nip47Capability[]).map(
-        (capability) =>
-          (wallets[selectedWalletId].nwcCapabilities || []).indexOf(
-            capability,
-          ) < 0 && (
-            <Card key={capability} className="border-destructive">
-              <CardContent className="flex flex-row items-center gap-4">
-                <TriangleAlert className="text-destructive" />
-                <Text className="text-foreground">
-                  Your wallet does not support {capability}
-                </Text>
-              </CardContent>
-            </Card>
-          ),
+      {/* TODO: Do not allow notifications to be toggled without notifications capability */}
+      {!REQUIRED_CAPABILITIES.every((capability) =>
+        (wallets[walletId]?.nwcCapabilities || []).includes(capability),
+      ) && (
+        <Alert
+          type="warn"
+          title="This wallet might not work as expected"
+          description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
+            (capability) =>
+              !(wallets[walletId]?.nwcCapabilities || []).includes(capability),
+          ).join(", ")}`}
+          icon={TriangleAlertIcon}
+          className="mb-0"
+        />
       )}
-      <Link href={`/settings/wallets/${selectedWalletId}/name`} asChild>
+      <Link href={`/settings/wallets/${walletId}/name`} asChild>
         <Pressable>
           <Card className="w-full">
             <CardContent className="flex flex-row items-center gap-4">
-              <Wallet2 className="text-muted-foreground" />
+              <WalletIcon className="text-muted-foreground" />
               <View className="flex flex-1 flex-col">
                 <CardTitle>Wallet Name</CardTitle>
                 <CardDescription>
-                  {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                  {wallets[walletId]?.name || DEFAULT_WALLET_NAME}
                 </CardDescription>
               </View>
             </CardContent>
           </Card>
         </Pressable>
       </Link>
-      <Link
-        href={`/settings/wallets/${selectedWalletId}/lightning-address`}
-        asChild
-      >
+      <Link href={`/settings/wallets/${walletId}/lightning-address`} asChild>
         <Pressable>
           <Card className="w-full">
             <CardContent className="flex flex-row items-center gap-4">
@@ -77,7 +76,7 @@ export function EditWallet() {
       </Link>
       <Pressable
         onPress={() => {
-          Alert.alert(
+          RNAlert.alert(
             "Export Wallet",
             "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
             [
@@ -108,7 +107,7 @@ export function EditWallet() {
       >
         <Card className="w-full">
           <CardContent className="flex flex-row items-center gap-4">
-            <ArchiveRestore className="text-muted-foreground" />
+            <ExportIcon className="text-muted-foreground" />
             <View className="flex flex-1 flex-col">
               <CardTitle>Export Wallet</CardTitle>
               <CardDescription>
@@ -121,7 +120,7 @@ export function EditWallet() {
       </Pressable>
       <Pressable
         onPress={() => {
-          Alert.alert(
+          RNAlert.alert(
             "Delete Wallet",
             "Are you sure you want to delete your wallet? This cannot be undone.",
             [
@@ -132,7 +131,7 @@ export function EditWallet() {
               {
                 text: "Confirm",
                 onPress: () => {
-                  useAppStore.getState().removeCurrentWallet();
+                  useAppStore.getState().removeWallet(walletId);
                   if (wallets.length !== 1) {
                     router.back();
                   }
@@ -144,7 +143,7 @@ export function EditWallet() {
       >
         <Card className="w-full">
           <CardContent className="flex flex-row items-center gap-4">
-            <Trash2 className="text-muted-foreground" />
+            <TrashIcon className="text-muted-foreground" />
             <View className="flex flex-1 flex-col">
               <CardTitle>Delete Wallet</CardTitle>
               <CardDescription>

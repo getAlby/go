@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -11,10 +11,11 @@ import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function RenameWallet() {
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const { id } = useLocalSearchParams() as { id: string };
+  const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
   const [walletName, setWalletName] = React.useState(
-    wallets[selectedWalletId].name || "",
+    wallets[walletId].name || "",
   );
   return (
     <DismissableKeyboardView>
@@ -35,9 +36,12 @@ export function RenameWallet() {
         <Button
           size="lg"
           onPress={() => {
-            useAppStore.getState().updateCurrentWallet({
-              name: walletName,
-            });
+            useAppStore.getState().updateWallet(
+              {
+                name: walletName,
+              },
+              walletId,
+            );
             Toast.show({
               type: "success",
               text1: "Wallet name updated",

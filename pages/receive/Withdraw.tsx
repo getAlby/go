@@ -5,19 +5,14 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
-import { AlertCircle, ClipboardPaste } from "~/components/Icons";
+import { PasteIcon, WalletIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
@@ -28,6 +23,8 @@ export function Withdraw() {
   const [isLoading, setLoading] = React.useState(false);
   const [loadingConfirm, setLoadingConfirm] = React.useState(false);
   const [startScanning, setStartScanning] = React.useState(false);
+  const wallets = useAppStore((store) => store.wallets);
+  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
 
   const [valueSat, setValueSat] = React.useState("");
   const [lnurlDetails, setLnurlDetails] =
@@ -183,7 +180,7 @@ export function Withdraw() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <ClipboardPaste className="text-secondary-foreground" />
+                  <PasteIcon className="text-secondary-foreground" />
                   <Text numberOfLines={1}>Paste</Text>
                 </Button>
               </View>
@@ -260,30 +257,17 @@ export function Withdraw() {
                     </View>
                   </View>
                 )}
-                <View className="p-6">
-                  {lnurlDetails.minWithdrawable !==
-                    lnurlDetails.maxWithdrawable && (
-                    <Card className="mb-4">
-                      <CardContent className="flex flex-row items-center gap-4">
-                        <AlertCircle className="text-muted-foreground" />
-                        <View className="flex flex-1 flex-col">
-                          <CardTitle>Withdraw Limit</CardTitle>
-                          <CardDescription>
-                            Enter an amount between{" "}
-                            <Text className="font-bold2 text-sm">
-                              {Math.floor(lnurlDetails.minWithdrawable / 1000)}{" "}
-                              sats
-                            </Text>{" "}
-                            and{" "}
-                            <Text className="font-bold2 text-sm">
-                              {Math.floor(lnurlDetails.maxWithdrawable / 1000)}{" "}
-                              sats
-                            </Text>
-                          </CardDescription>
-                        </View>
-                      </CardContent>
-                    </Card>
-                  )}
+                <View className="p-6 bg-background">
+                  <View className="flex flex-row items-center justify-center gap-2 mb-4 px-4">
+                    <WalletIcon className="text-muted-foreground" />
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      className="text-muted-foreground font-medium2 text-xl"
+                    >
+                      {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                    </Text>
+                  </View>
                   <Button
                     size="lg"
                     className="flex flex-row gap-2"

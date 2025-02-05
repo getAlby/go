@@ -1,6 +1,7 @@
 import { Link, router } from "expo-router";
+import React from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { Settings2, Wallet2 } from "~/components/Icons";
+import { SettingsIcon, WalletIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
 import Toast from "react-native-toast-message";
@@ -14,12 +15,14 @@ export function Wallets() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   return (
-    <View className="flex-1 flex flex-col">
+    <>
       <Screen title="Manage Wallets" />
-      <View className="flex-1 px-6 py-3">
+      <View className="h-full flex px-6">
         <FlatList
           className="flex flex-col"
           data={wallets}
+          contentContainerStyle={{ flexGrow: 1 }}
+          ListFooterComponentStyle={{ marginTop: "auto" }}
           renderItem={(item) => {
             const active = item.index === selectedWalletId;
 
@@ -43,7 +46,7 @@ export function Wallets() {
                 )}
               >
                 <View className="flex flex-row gap-4 items-center flex-shrink">
-                  <Wallet2 className="text-foreground" />
+                  <WalletIcon className="text-muted-foreground" />
                   <Text
                     className={cn("text-xl pr-16", active && "font-semibold2")}
                     numberOfLines={1}
@@ -52,33 +55,37 @@ export function Wallets() {
                     {item.item.name || DEFAULT_WALLET_NAME}
                   </Text>
                 </View>
-                {active && (
-                  <Link
-                    href={`/settings/wallets/${selectedWalletId}`}
-                    className="absolute right-4"
-                    asChild
-                  >
-                    <TouchableOpacity>
-                      <Settings2 className="text-foreground w-32 h-32" />
-                    </TouchableOpacity>
-                  </Link>
-                )}
+                <Link
+                  href={`/settings/wallets/${item.index}`}
+                  className="absolute right-4"
+                  asChild
+                >
+                  <TouchableOpacity>
+                    <SettingsIcon
+                      className="text-muted-foreground"
+                      width={18}
+                      height={18}
+                    />
+                  </TouchableOpacity>
+                </Link>
               </TouchableOpacity>
             );
           }}
+          ListFooterComponent={
+            <View className="py-6">
+              <Button
+                size="lg"
+                onPress={() => {
+                  router.dismissAll();
+                  router.push("/settings/wallets/setup");
+                }}
+              >
+                <Text>Connect a Wallet</Text>
+              </Button>
+            </View>
+          }
         />
       </View>
-      <View className="p-6">
-        <Button
-          size="lg"
-          onPress={() => {
-            router.dismissAll();
-            router.push("/settings/wallets/setup");
-          }}
-        >
-          <Text>Connect a Wallet</Text>
-        </Button>
-      </View>
-    </View>
+    </>
   );
 }

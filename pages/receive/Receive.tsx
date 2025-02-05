@@ -1,9 +1,9 @@
 import * as Clipboard from "expo-clipboard";
 import { Link, router } from "expo-router";
 import React from "react";
-import { Image, Pressable, Share, TouchableOpacity, View } from "react-native";
+import { Pressable, Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { ArchiveRestore, Share2, ZapIcon } from "~/components/Icons";
+import { ShareIcon, WithdrawIcon, ZapIcon } from "~/components/Icons";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -56,16 +56,7 @@ export function Receive() {
       {lightningAddress ? (
         <>
           <View className="flex-1 justify-center items-center gap-8">
-            <View className="justify-center">
-              <QRCode value={lightningAddress} />
-              <View className="absolute self-center p-2 rounded-2xl bg-white">
-                <Image
-                  source={require("../../assets/icon.png")}
-                  className="w-20 h-20 rounded-xl"
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
+            <QRCode value={lightningAddress} />
             <View className="flex flex-col items-center justify-center gap-2">
               <TouchableOpacity onPress={copy}>
                 <Text className="text-foreground text-xl font-medium2">
@@ -81,7 +72,7 @@ export function Receive() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <Share2 className="text-muted-foreground" />
+              <ShareIcon className="text-muted-foreground" />
               <Text>Share</Text>
             </Button>
             <Button
@@ -91,7 +82,7 @@ export function Receive() {
                 router.push("/receive/withdraw");
               }}
             >
-              <ArchiveRestore className="text-muted-foreground" />
+              <WithdrawIcon className="text-muted-foreground" />
               <Text>Withdraw</Text>
             </Button>
             <Button
@@ -109,19 +100,6 @@ export function Receive() {
       ) : (
         <>
           <View className="flex-1 flex flex-col p-3 gap-3">
-            {/* TODO: re-add when we have a way to create a lightning address for new users */}
-            {/* <ZapIcon className="text-foreground" size={64} />
-            <Text className="text-2xl max-w-64 text-center">
-              Receive quickly with a Lightning Address
-            </Text>
-            <Link
-              href={`/settings/wallets/${selectedWalletId}/lightning-address`}
-              asChild
-            >
-              <Button variant="secondary">
-                <Text>Set Lightning Address</Text>
-              </Button>
-            </Link> */}
             <Link href="/receive/invoice" asChild>
               <Pressable>
                 <Card className="w-full">
@@ -141,7 +119,7 @@ export function Receive() {
               <Pressable>
                 <Card className="w-full">
                   <CardContent className="flex flex-row items-center gap-4">
-                    <ArchiveRestore className="text-muted-foreground" />
+                    <WithdrawIcon className="text-muted-foreground" />
                     <View className="flex flex-1 flex-col">
                       <CardTitle>Redeem</CardTitle>
                       <CardDescription>
