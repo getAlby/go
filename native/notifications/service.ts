@@ -85,7 +85,10 @@ export async function registerForPushNotificationsAsync(): Promise<
       await registerWalletNotifications(wallet, i);
     }
 
-    return useAppStore.getState().wallets.some((wallet) => wallet.pushId);
+    return (
+      wallets.length === 0 ||
+      useAppStore.getState().wallets.some((wallet) => wallet.pushId)
+    );
   } catch (error) {
     errorToast(error);
   }
