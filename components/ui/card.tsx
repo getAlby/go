@@ -33,13 +33,13 @@ CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<
   TextRef,
-  React.ComponentPropsWithoutRef<typeof Text>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof Text> & { wrapText?: boolean }
+>(({ className, wrapText = false, ...props }, ref) => (
   <Text
     role="heading"
     aria-level={3}
     ref={ref}
-    numberOfLines={1}
+    numberOfLines={wrapText ? undefined : 1}
     ellipsizeMode="tail"
     className={cn(
       "text-xl text-card-foreground font-semibold2 leading-none tracking-tight",

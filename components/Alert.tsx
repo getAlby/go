@@ -39,7 +39,9 @@ function Alert({ title, description, type, icon: Icon, className }: Props) {
       <CardContent className="flex flex-row items-center gap-4">
         <Icon className={textColor} width={24} height={24} />
         <View className="flex flex-1 flex-col">
-          <CardTitle className={textColor}>{title}</CardTitle>
+          <CardTitle className={textColor} wrapText>
+            {title}
+          </CardTitle>
           <CardDescription className={textColor}>{description}</CardDescription>
         </View>
       </CardContent>
