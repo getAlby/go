@@ -5,6 +5,7 @@ import {
   FingerprintIcon,
   NotificationIcon,
   OnboardingIcon,
+  PinIcon,
   ResetIcon,
   SignOutIcon,
   ThemeIcon,
@@ -99,6 +100,15 @@ export function Settings() {
             ({colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)})
           </Text>
         </TouchableOpacity>
+
+        <Link href="/settings/bitcoin-map" asChild>
+          <TouchableOpacity className="flex flex-row gap-4">
+            <PinIcon className="text-muted-foreground" />
+            <Text className="text-foreground font-medium2 text-xl">
+              Bitcoin Map
+            </Text>
+          </TouchableOpacity>
+        </Link>
 
         {developerMode && (
           <>

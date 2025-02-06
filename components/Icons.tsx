@@ -15,6 +15,7 @@ import {
   PopiconsNotificationSquareSolid as NotificationIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
+  PopiconsPinSolid as PinIcon,
   PopiconsReloadLine as RefreshIcon,
   PopiconsReloadSolid as ResetIcon,
   PopiconsSettingsMinimalSolid as SettingsIcon,
@@ -61,6 +62,7 @@ interopIcon(MoveUpIcon);
 interopIcon(NotificationIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
+interopIcon(PinIcon);
 interopIcon(RefreshIcon);
 interopIcon(ResetIcon);
 interopIcon(SettingsIcon);
@@ -93,6 +95,7 @@ export {
   NotificationIcon,
   OnboardingIcon,
   PasteIcon,
+  PinIcon,
   RefreshIcon,
   ResetIcon,
   SettingsIcon,
