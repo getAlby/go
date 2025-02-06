@@ -7,16 +7,48 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { DEFAULT_WALLET_NAME, IS_EXPO_GO } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { getPubkeyFromNWCUrl } from "~/lib/utils";
+import { storeWalletInfo } from "~/lib/walletInfo";
 
 export function RenameWallet() {
   const { id } = useLocalSearchParams() as { id: string };
   const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
+  const isNotificationsEnabled = useAppStore(
+    (store) => store.isNotificationsEnabled,
+  );
+
   const [walletName, setWalletName] = React.useState(
     wallets[walletId].name || "",
   );
+
+  const onRenameWallet = async () => {
+    useAppStore.getState().updateWallet(
+      {
+        name: walletName,
+      },
+      walletId,
+    );
+
+    if (!IS_EXPO_GO && isNotificationsEnabled && wallets[walletId].pushId) {
+      const pubkey = getPubkeyFromNWCUrl(
+        wallets[walletId].nostrWalletConnectUrl ?? "",
+      );
+      if (pubkey) {
+        await storeWalletInfo(pubkey, {
+          name: walletName,
+        });
+      }
+    }
+    Toast.show({
+      type: "success",
+      text1: "Wallet name updated",
+    });
+    router.back();
+  };
+
   return (
     <DismissableKeyboardView>
       <View className="flex-1 flex flex-col p-6 gap-3">
@@ -33,22 +65,7 @@ export function RenameWallet() {
             // aria-errormessage="inputError"
           />
         </View>
-        <Button
-          size="lg"
-          onPress={() => {
-            useAppStore.getState().updateWallet(
-              {
-                name: walletName,
-              },
-              walletId,
-            );
-            Toast.show({
-              type: "success",
-              text1: "Wallet name updated",
-            });
-            router.back();
-          }}
-        >
+        <Button size="lg" onPress={onRenameWallet}>
           <Text>Save</Text>
         </Button>
       </View>

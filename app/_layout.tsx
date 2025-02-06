@@ -15,14 +15,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { SWRConfig } from "swr";
 import { toastConfig } from "~/components/ToastConfig";
+import { NotificationProvider } from "~/context/Notification";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { useInfo } from "~/hooks/useInfo";
 import { SessionProvider } from "~/hooks/useSession";
-import { NAV_THEME } from "~/lib/constants";
+import { IS_EXPO_GO, NAV_THEME } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -67,6 +69,16 @@ export default function RootLayout() {
     }
   }
 
+  // TODO: Do not prompt the user at all if FCM is disabled
+  async function checkAndPromptForNotifications() {
+    const isEnabled = useAppStore.getState().isNotificationsEnabled;
+    // prompt the user to enable notifications on first open
+    if (isEnabled === null) {
+      const enabled = await registerForPushNotificationsAsync();
+      useAppStore.getState().setNotificationsEnabled(enabled);
+    }
+  }
+
   const loadTheme = React.useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       const theme = useAppStore.getState().theme;
@@ -85,6 +97,9 @@ export default function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
+        if (!IS_EXPO_GO) {
+          await checkAndPromptForNotifications();
+        }
         SplashScreen.hide();
       }
     };
@@ -98,26 +113,28 @@ export default function RootLayout() {
 
   return (
     <SWRConfig value={swrConfiguration}>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <SafeAreaView
-          className="w-full h-full bg-background"
-          edges={["left", "right", "bottom"]}
-        >
-          <UserInactivityProvider>
-            <SessionProvider>
-              <Slot />
-            </SessionProvider>
-          </UserInactivityProvider>
-          <Toast
-            config={toastConfig}
-            position="bottom"
-            bottomOffset={140}
-            topOffset={140}
-          />
-          <PortalHost />
-        </SafeAreaView>
-      </ThemeProvider>
+      <NotificationProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+          <SafeAreaView
+            className="w-full h-full bg-background"
+            edges={["left", "right", "bottom"]}
+          >
+            <UserInactivityProvider>
+              <SessionProvider>
+                <Slot />
+              </SessionProvider>
+            </UserInactivityProvider>
+            <Toast
+              config={toastConfig}
+              position="bottom"
+              bottomOffset={140}
+              topOffset={140}
+            />
+            <PortalHost />
+          </SafeAreaView>
+        </ThemeProvider>
+      </NotificationProvider>
     </SWRConfig>
   );
 }
