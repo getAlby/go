@@ -171,13 +171,21 @@ export function SetupWallet() {
                 }
                 router.replace("/");
               }}
+              className="-mr-4 px-6"
             >
-              <XIcon className="text-foreground" />
+              <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
           ) : (
             <>
-              <TouchableOpacity onPressIn={() => setShowHelp(true)}>
-                <HelpCircleIcon className="text-foreground" />
+              <TouchableOpacity
+                onPressIn={() => setShowHelp(true)}
+                className="-mr-4 px-6"
+              >
+                <HelpCircleIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
               </TouchableOpacity>
               <HelpModal
                 visible={showHelp}
