@@ -33,7 +33,7 @@ jobs:
         run: printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > ./google-services.json
 
       - name: 🚀 Build app
-        run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
+        run: eas build --non-interactive --platform android --local --profile production_apk --output=./app-release.apk
         env:
           GOOGLE_SERVICES_JSON: "/home/runner/work/go/go/google-services.json"
 
