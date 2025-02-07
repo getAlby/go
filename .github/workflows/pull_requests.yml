@@ -30,7 +30,7 @@ jobs:
         run: yarn install
 
       - name: 🏗 Create google-services.json file
-        run: printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > ./google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > ./google-services.json
 
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
