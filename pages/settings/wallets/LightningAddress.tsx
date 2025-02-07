@@ -40,7 +40,7 @@ export function SetLightningAddress() {
           <Alert
             type="warn"
             title="Only add lightning address you own"
-            description="This feature does not create a new lightning address for you. It adds existing address to your Receive page."
+            description="This feature does not create a new lightning address for you. It adds an existing address to your Receive page."
             icon={AlertCircleIcon}
             className="mb-0"
           />
