@@ -69,8 +69,13 @@ export function Home() {
             onPressIn={() => {
               router.push("/settings");
             }}
+            className="-mr-4 px-6"
           >
-            <SettingsIcon className="text-muted-foreground" />
+            <SettingsIcon
+              className="text-muted-foreground"
+              width={24}
+              height={24}
+            />
           </TouchableOpacity>
         )}
       />
@@ -151,7 +156,7 @@ export function Home() {
         </ScrollView>
         <View className="flex items-center justify-center">
           <Link href="/transactions" asChild>
-            <TouchableOpacity>
+            <TouchableOpacity className="p-4">
               <ChevronUpIcon
                 className="text-muted-foreground"
                 width={32}

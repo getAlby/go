@@ -39,7 +39,6 @@ const CardTitle = React.forwardRef<
     role="heading"
     aria-level={3}
     ref={ref}
-    numberOfLines={1}
     ellipsizeMode="tail"
     className={cn(
       "text-xl text-card-foreground font-semibold2 leading-none tracking-tight",

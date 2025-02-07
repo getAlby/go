@@ -14,6 +14,7 @@ import {
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
+  PopiconsNotificationSquareSolid as NotificationIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
   PopiconsQrCodeMinimalSolid as QRIcon,
@@ -63,6 +64,7 @@ interopIcon(HelpCircleIcon);
 interopIcon(LinkIcon);
 interopIcon(MoveDownIcon);
 interopIcon(MoveUpIcon);
+interopIcon(NotificationIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
 interopIcon(QRIcon);
@@ -98,6 +100,7 @@ export {
   LinkIcon,
   MoveDownIcon,
   MoveUpIcon,
+  NotificationIcon,
   OnboardingIcon,
   PasteIcon,
   QRIcon,
