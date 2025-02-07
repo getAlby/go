@@ -37,7 +37,7 @@ jobs:
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
         env:
-          GOOGLE_SERVICES_JSON: "./android/app/google-services.json"
+          GOOGLE_SERVICES_JSON: "./android/google-services.json"
 
       - name: 🧪 Run tests
         run: yarn test:ci
