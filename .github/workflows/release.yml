@@ -52,10 +52,15 @@ jobs:
       - name: 📦 Install dependencies
         run: yarn install
 
+      - name: 📁 Copy google-services.json file
+        run: |
+          mkdir -p android/app
+          printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
+
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile production_apk --output=./app-release.apk
         env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          GOOGLE_SERVICES_JSON: "./android/app/google-services.json"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
