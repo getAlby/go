@@ -29,8 +29,13 @@ jobs:
       - name: 📦 Install dependencies
         run: yarn install
 
+      - name: 🏗 Create google-services.json file
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > ./google-services.json
+
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
+        env:
+          GOOGLE_SERVICES_JSON: "/home/runner/work/go/go/google-services.json"
 
       - name: 🧪 Run tests
         run: yarn test:ci
