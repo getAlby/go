@@ -2079,14 +2079,6 @@
   dependencies:
     nanoid "3.3.8"
 
-"@react-navigation/stack@^7.1.1":
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-7.1.1.tgz#0ae8902c5d72573a3c178b3fd19a65cc1971ad16"
-  integrity sha512-CBTKQlIkELp05zRiTAv5Pa7OMuCpKyBXcdB3PGMN2Mm55/5MkDsA1IaZorp/6TsVCdllITD6aTbGX/HA/88A6w==
-  dependencies:
-    "@react-navigation/elements" "^2.2.5"
-    color "^4.2.3"
-
 "@remix-run/node@^2.12.0":
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/@remix-run/node/-/node-2.15.0.tgz#e64e2b14ca5ce4628021b7384d45992df118218f"

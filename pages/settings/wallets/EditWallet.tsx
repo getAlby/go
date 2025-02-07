@@ -5,11 +5,11 @@ import { Pressable, Alert as RNAlert, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import {
+  AddressIcon,
   ExportIcon,
   TrashIcon,
   TriangleAlertIcon,
   WalletIcon,
-  ZapIcon,
 } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
@@ -105,7 +105,7 @@ export function EditWallet() {
             <Pressable>
               <Card className="w-full">
                 <CardContent className="flex flex-row items-center gap-4">
-                  <ZapIcon className="text-muted-foreground" />
+                  <AddressIcon className="text-muted-foreground" />
                   <View className="flex flex-1 flex-col">
                     <CardTitle>Lightning Address</CardTitle>
                     <CardDescription>
