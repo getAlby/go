@@ -60,20 +60,28 @@ export function Receive() {
           !lightningAddress && (
             <>
               <TouchableOpacity
-                className="px-2 py-4 mr-2"
+                className="px-4"
                 onPressIn={() => {
                   router.push("/receive/lightning-address");
                 }}
               >
-                <AddressIcon className="text-foreground" />
+                <AddressIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
               </TouchableOpacity>
               <TouchableOpacity
-                className="px-2 py-4"
+                className="-mr-2 px-4"
                 onPressIn={() => {
                   router.push("receive/withdraw");
                 }}
               >
-                <ScanIcon className="text-foreground" />
+                <ScanIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
               </TouchableOpacity>
             </>
           )
