@@ -55,7 +55,7 @@ jobs:
       - name: 📁 Copy google-services.json file
         run: |
           mkdir -p android
-          printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/google-services.json
+          printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > ./android/google-services.json
 
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile production_apk --output=./app-release.apk
