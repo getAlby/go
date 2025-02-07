@@ -16,6 +16,8 @@ import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { runOnJS } from "react-native-reanimated";
 import { SvgProps } from "react-native-svg";
 import AlbyBanner from "~/components/AlbyBanner";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
@@ -60,6 +62,29 @@ export function Home() {
     }
   }
 
+  function handleSwipe(direction: "left" | "right") {
+    if (!wallets.length) {
+      return;
+    }
+    let newId = selectedWalletId;
+    if (direction === "left") {
+      newId = (selectedWalletId + 1) % wallets.length;
+    } else {
+      newId = (selectedWalletId - 1 + wallets.length) % wallets.length;
+    }
+    useAppStore.getState().setSelectedWalletId(newId);
+    refreshBalance();
+  }
+
+  const swipeGesture = Gesture.Pan().onEnd((evt) => {
+    const threshold = 50;
+    if (evt.translationX < -threshold) {
+      runOnJS(handleSwipe)("left");
+    } else if (evt.translationX > threshold) {
+      runOnJS(handleSwipe)("right");
+    }
+  });
+
   return (
     <>
       <Screen
@@ -74,97 +99,99 @@ export function Home() {
           </TouchableOpacity>
         )}
       />
-      <View className="h-full flex p-6">
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshingBalance}
-              onRefresh={refreshBalance}
-              progressViewOffset={128}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-          contentContainerClassName="flex-1"
-        >
-          <View className="grow flex flex-col items-center justify-center gap-4">
-            <TouchableOpacity
-              onPress={switchBalanceState}
-              className="w-full flex flex-col items-center justify-center gap-4"
-            >
-              {wallets.length > 1 && (
-                <TouchableOpacity
-                  className="w-full"
-                  onPress={() => {
-                    router.push("/settings/wallets");
-                  }}
-                >
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+      <GestureDetector gesture={swipeGesture}>
+        <View className="h-full flex p-6">
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshingBalance}
+                onRefresh={refreshBalance}
+                progressViewOffset={128}
+              />
+            }
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="flex-1"
+          >
+            <View className="grow flex flex-col items-center justify-center gap-4">
+              <TouchableOpacity
+                onPress={switchBalanceState}
+                className="w-full flex flex-col items-center justify-center gap-4"
+              >
+                {wallets.length > 1 && (
+                  <TouchableOpacity
+                    className="w-full"
+                    onPress={() => {
+                      router.push("/settings/wallets");
+                    }}
                   >
-                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              <View className="w-full flex flex-row justify-center items-center gap-2">
-                {balance && !refreshingBalance ? (
-                  <>
-                    <Text className="text-foreground text-5xl font-bold2">
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                    >
+                      {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                <View className="w-full flex flex-row justify-center items-center gap-2">
+                  {balance && !refreshingBalance ? (
+                    <>
+                      <Text className="text-foreground text-5xl font-bold2">
+                        {balanceDisplayMode === "sats" &&
+                          new Intl.NumberFormat().format(
+                            Math.floor(balance.balance / 1000),
+                          )}
+                        {balanceDisplayMode === "fiat" &&
+                          getFiatAmount &&
+                          getFiatAmount(Math.floor(balance.balance / 1000))}
+                        {balanceDisplayMode === "hidden" && "****"}
+                      </Text>
+                      {balanceDisplayMode === "sats" && (
+                        <Text className="text-muted-foreground text-3xl font-semibold2">
+                          sats
+                        </Text>
+                      )}
+                    </>
+                  ) : (
+                    <Skeleton className="w-48 h-10" />
+                  )}
+                </View>
+                <View className="flex justify-center items-center">
+                  {balance && !refreshingBalance ? (
+                    <Text className="text-center text-3xl text-muted-foreground font-semibold2">
                       {balanceDisplayMode === "sats" &&
-                        new Intl.NumberFormat().format(
-                          Math.floor(balance.balance / 1000),
-                        )}
-                      {balanceDisplayMode === "fiat" &&
                         getFiatAmount &&
                         getFiatAmount(Math.floor(balance.balance / 1000))}
-                      {balanceDisplayMode === "hidden" && "****"}
+                      {balanceDisplayMode === "fiat" &&
+                        new Intl.NumberFormat().format(
+                          Math.floor(balance.balance / 1000),
+                        ) + " sats"}
                     </Text>
-                    {balanceDisplayMode === "sats" && (
-                      <Text className="text-muted-foreground text-3xl font-semibold2">
-                        sats
-                      </Text>
-                    )}
-                  </>
-                ) : (
-                  <Skeleton className="w-48 h-10" />
-                )}
-              </View>
-              <View className="flex justify-center items-center">
-                {balance && !refreshingBalance ? (
-                  <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                    {balanceDisplayMode === "sats" &&
-                      getFiatAmount &&
-                      getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceDisplayMode === "fiat" &&
-                      new Intl.NumberFormat().format(
-                        Math.floor(balance.balance / 1000),
-                      ) + " sats"}
-                  </Text>
-                ) : (
-                  <Skeleton className="w-32 h-8" />
-                )}
-              </View>
-            </TouchableOpacity>
-            {new Date().getDate() === 21 && <AlbyBanner />}
+                  ) : (
+                    <Skeleton className="w-32 h-8" />
+                  )}
+                </View>
+              </TouchableOpacity>
+              {new Date().getDate() === 21 && <AlbyBanner />}
+            </View>
+          </ScrollView>
+          <View className="flex items-center justify-center">
+            <Link href="/transactions" asChild>
+              <TouchableOpacity>
+                <ChevronUpIcon
+                  className="text-muted-foreground"
+                  width={32}
+                  height={32}
+                />
+              </TouchableOpacity>
+            </Link>
           </View>
-        </ScrollView>
-        <View className="flex items-center justify-center">
-          <Link href="/transactions" asChild>
-            <TouchableOpacity>
-              <ChevronUpIcon
-                className="text-muted-foreground"
-                width={32}
-                height={32}
-              />
-            </TouchableOpacity>
-          </Link>
+          <View className="flex flex-row gap-6 mt-10">
+            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
+          </View>
         </View>
-        <View className="flex flex-row gap-6 mt-10">
-          <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
-          <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
-        </View>
-      </View>
+      </GestureDetector>
     </>
   );
 }
