@@ -3,7 +3,7 @@ name: Release tag
 on:
   push:
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   draft_release:
@@ -22,7 +22,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           draft: true
-#          prerelease: true
+  #          prerelease: true
 
   build_android:
     needs: [draft_release]
@@ -54,6 +54,8 @@ jobs:
 
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile production_apk --output=./app-release.apk
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -71,7 +73,6 @@ jobs:
           asset_path: ./app-release.apk
           asset_name: alby-go-${{ github.ref_name }}-android.apk
           asset_content_type: application/vnd.android.package-archive
-
 #  publish-release:
 #    needs: [release, build_android]
 #    runs-on: ubuntu-latest
