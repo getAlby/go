@@ -30,22 +30,12 @@ jobs:
         run: yarn install
 
       - name: 🏗 Create google-services.json file
-        run: |
-          mkdir -p android/app
-          printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > ./google-services.json
-
-      - name: 🛰 Debug file paths
-        run: |
-          echo ">>> Current working directory: $(pwd)"
-          echo ">>> Directory tree under $(pwd):"
-          ls -R
-          echo ">>> Looking specifically for google-services.json in this directory..."
-          find . -name google-services.json -print
+        run: printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > ./google-services.json
 
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
         env:
-          GOOGLE_SERVICES_JSON: "./google-services.json"
+          GOOGLE_SERVICES_JSON: "/home/runner/work/go/go/google-services.json"
 
       - name: 🧪 Run tests
         run: yarn test:ci
