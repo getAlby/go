@@ -1,11 +1,12 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import Alert from "~/components/Alert";
 import { TriangleAlertIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
+import { Text } from "~/components/ui/text";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
@@ -50,7 +51,9 @@ export function Security() {
                 nativeID="security"
                 disabled={isSupported}
               >
-                <Text className="text-lg">Require phone lock to access</Text>
+                <Text className="text-lg font-medium2">
+                  Require phone lock to access
+                </Text>
               </Label>
               <Switch
                 checked={isEnabled}
