@@ -1,6 +1,7 @@
 import React from "react";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { Modal, TouchableOpacity, View } from "react-native";
 import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
 
 type HelpModalProps = {
   visible: boolean;
@@ -25,7 +26,7 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
           <Text className="text-xl text-foreground font-bold2 mb-2">
             Connect Your Wallet
           </Text>
-          <View className="flex flex-col gap-2 mb-4">
+          <View className="flex flex-col mb-4">
             <Text className="text-muted-foreground">
               Follow these steps to connect Alby Go to your Hub:
             </Text>
