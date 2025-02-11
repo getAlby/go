@@ -57,15 +57,11 @@ export function Wallets() {
                 </View>
                 <Link
                   href={`/settings/wallets/${item.index}`}
-                  className="absolute right-4"
+                  className="absolute right-0"
                   asChild
                 >
-                  <TouchableOpacity>
-                    <SettingsIcon
-                      className="text-muted-foreground"
-                      width={18}
-                      height={18}
-                    />
+                  <TouchableOpacity className="p-6">
+                    <SettingsIcon className="text-muted-foreground" />
                   </TouchableOpacity>
                 </Link>
               </TouchableOpacity>
