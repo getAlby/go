@@ -7,6 +7,8 @@ const SUPPORTED_SCHEMES = [
   "bitcoin:",
   "alby:",
   "nostr+walletconnect:",
+  "nostrnwc:",
+  "nostrnwc+alby:",
 ];
 
 // Register exp scheme for testing during development
@@ -27,6 +29,34 @@ export const handleLink = async (url: string) => {
 
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
+    if (parsedUrl.protocol.startsWith("nostrnwc")) {
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+
+      const params = new URLSearchParams(search);
+      const appname = params.get("appname");
+      const rawCallback = params.get("callback");
+      const rawAppIcon = params.get("appicon");
+      if (!appname || !rawCallback || !rawAppIcon) {
+        return;
+      }
+
+      const appicon = decodeURIComponent(rawAppIcon);
+      const callback = decodeURIComponent(rawCallback);
+
+      console.info("Navigating to NWA flow");
+      router.push({
+        pathname: "/settings/wallets/connect",
+        params: {
+          appicon,
+          appname,
+          callback,
+        },
+      });
+      return;
+    }
+
     if (parsedUrl.protocol === "nostr+walletconnect:") {
       if (router.canDismiss()) {
         router.dismissAll();
