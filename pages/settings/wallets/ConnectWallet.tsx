@@ -128,7 +128,6 @@ export function ConnectWallet() {
           </TouchableOpacity>
         )}
       />
-      {/* TODO: CHECK IF PEOPLE CAN EXECUTE SCRIPTS FROM THE IMAGE URL */}
       <View className="flex-1 justify-center items-center gap-8 p-6">
         <View className="flex flex-row items-center justify-center gap-8">
           <View className="flex items-center">
