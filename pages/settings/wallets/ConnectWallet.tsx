@@ -1,9 +1,9 @@
 import { bytesToHex } from "@noble/hashes/utils";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
-import { ChevronRightIcon, ConnectIcon, XIcon } from "~/components/Icons";
+import { ConnectIcon, XIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -12,6 +12,7 @@ import { openURL } from "expo-linking";
 import { Tick } from "~/animations/Tick";
 import { WalletIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
@@ -22,6 +23,7 @@ export function ConnectWallet() {
     appname: string;
     callback: string;
   }>();
+  const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
@@ -77,7 +79,7 @@ export function ConnectWallet() {
         pubkey,
         name: appname,
         budget: {
-          budget: 10_000_000,
+          budget: 100_000,
           renewal_period: "monthly",
         },
         methods: [
@@ -172,21 +174,19 @@ export function ConnectWallet() {
             <View className="flex-1 flex mt-4 gap-8 justify-center">
               <View>
                 {/* TODO: REPLACE WITH A PROPER COMPONENT */}
-                <TouchableOpacity className="flex flex-row border-2 border-muted justify-between items-center rounded-2xl pl-6 pr-16 py-4">
+                <TouchableOpacity className="flex flex-row border-2 border-muted justify-between items-center rounded-2xl p-6 py-4">
                   <Text className="text-xl font-medium2">Monthly budget</Text>
                   <View>
                     <Text className="text-right text-lg text-foreground font-medium2">
-                      100 000 sats
+                      {new Intl.NumberFormat().format(+100_000) + " sats"}
                     </Text>
-                    <Text className="text-right text-sm text-muted-foreground">
-                      ~$10.52
-                    </Text>
+                    {getFiatAmount && (
+                      <Text className="text-right text-sm text-muted-foreground">
+                        {getFiatAmount(+100_000)}
+                      </Text>
+                    )}
                   </View>
-                  <Link
-                    href={`/settings/wallets`}
-                    className="absolute right-0"
-                    asChild
-                  >
+                  {/* <Link href="/" className="absolute right-0" asChild>
                     <TouchableOpacity className="p-4">
                       <ChevronRightIcon
                         className="text-muted-foreground"
@@ -194,7 +194,7 @@ export function ConnectWallet() {
                         height={24}
                       />
                     </TouchableOpacity>
-                  </Link>
+                  </Link> */}
                 </TouchableOpacity>
                 <Text className="mt-4 text-center text-foreground">
                   You can edit permissions and revoke access at any time in your
