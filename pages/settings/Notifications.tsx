@@ -1,9 +1,10 @@
 import React from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
+import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import {
   deregisterWalletNotifications,
@@ -24,7 +25,7 @@ export function Notifications() {
       <View className="flex-1">
         <View className="flex-row items-center justify-between gap-2 px-6">
           <Label nativeID="notifications">
-            <Text className="text-lg">Show app notifications</Text>
+            <Text className="text-lg font-medium2">Show app notifications</Text>
           </Label>
           {isLoading ? (
             <Loading className="h-8 mr-4" />
@@ -57,8 +58,8 @@ export function Notifications() {
         </View>
         {wallets.length > 1 && (
           <>
-            <View>
-              <Text className="text-lg text-center px-8 my-6">
+            <View className="px-8 my-6">
+              <Text className="text-lg text-center text-muted-foreground">
                 Choose from which wallets you want to receive app notifications
               </Text>
             </View>
@@ -111,7 +112,7 @@ function WalletNotificationSwitch({
   return (
     <View className="flex-row items-center justify-between gap-2 mb-6">
       <Label nativeID={`notifications-${index}`}>
-        <Text className="text-lg">{wallet.name}</Text>
+        <Text className="text-lg font-medium2">{wallet.name}</Text>
       </Label>
       {isLoading ? (
         <Loading className="h-8 mr-4" />

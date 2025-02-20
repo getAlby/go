@@ -16,7 +16,7 @@ export function ReceiveSuccess() {
   });
   return (
     <View className="flex-1 flex flex-col">
-      <Screen title="Receive successful" />
+      <Screen title="Receive successful" animation="slide_from_left" />
       <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
         <View className="flex-1 w-full">
           <Tick />

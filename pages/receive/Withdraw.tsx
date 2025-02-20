@@ -160,7 +160,7 @@ export function Withdraw() {
 
   return (
     <>
-      <Screen title="Withdraw" />
+      <Screen title="Withdraw" animation="slide_from_left" />
       {isLoading && (
         <View className="flex-1 flex flex-col items-center justify-center">
           <Loading className="text-primary-foreground" />
