@@ -72,8 +72,8 @@ export function Home() {
     } else {
       newId = (selectedWalletId - 1 + wallets.length) % wallets.length;
     }
+    // SWR detects the key change and updates the balance
     useAppStore.getState().setSelectedWalletId(newId);
-    refreshBalance();
   }
 
   const swipeGesture = Gesture.Pan().onEnd((evt) => {
