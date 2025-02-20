@@ -7,6 +7,7 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { XIcon } from "~/components/Icons";
@@ -74,13 +75,14 @@ export function Transactions() {
         title="Transactions"
         animation="slide_from_bottom"
         right={() => (
-          <Pressable
+          <TouchableOpacity
             onPressIn={() => {
               router.back();
             }}
+            className="-mr-4 px-6"
           >
-            <XIcon className="text-foreground" />
-          </Pressable>
+            <XIcon className="text-muted-foreground" width={24} height={24} />
+          </TouchableOpacity>
         )}
       />
       {allTransactions && allTransactions.length ? (

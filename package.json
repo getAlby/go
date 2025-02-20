@@ -1,6 +1,6 @@
 {
   "name": "alby-go",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "main": "./index.js",
   "scripts": {
     "start": "expo start",
@@ -32,7 +32,7 @@
     "@getalby/lightning-tools": "^5.1.2",
     "@getalby/sdk": "^3.9.0",
     "@noble/curves": "^1.6.0",
-    "@popicons/react-native": "^0.0.20",
+    "@popicons/react-native": "^0.0.22",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@rn-primitives/dialog": "^1.0.3",
     "@rn-primitives/portal": "^1.0.3",
