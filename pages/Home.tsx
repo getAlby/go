@@ -18,6 +18,7 @@ import { Text } from "~/components/ui/text";
 import { LinearGradient } from "expo-linear-gradient";
 import { SvgProps } from "react-native-svg";
 import AlbyBanner from "~/components/AlbyBanner";
+import { GestureWrapper } from "~/components/GestureWrapper";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
@@ -60,6 +61,20 @@ export function Home() {
     }
   }
 
+  function handleSwipe(direction: "left" | "right") {
+    if (!wallets.length) {
+      return;
+    }
+    let newId = selectedWalletId;
+    if (direction === "left") {
+      newId = (selectedWalletId + 1) % wallets.length;
+    } else {
+      newId = (selectedWalletId - 1 + wallets.length) % wallets.length;
+    }
+    // SWR detects the key change and updates the balance
+    useAppStore.getState().setSelectedWalletId(newId);
+  }
+
   return (
     <>
       <Screen
@@ -92,65 +107,70 @@ export function Home() {
           contentContainerClassName="flex-1"
         >
           <View className="grow flex flex-col items-center justify-center gap-4">
-            <TouchableOpacity
-              onPress={switchBalanceState}
-              className="w-full flex flex-col items-center justify-center gap-4"
+            <GestureWrapper
+              onSwipe={handleSwipe}
+              shouldWiggle={wallets.length > 1}
             >
-              {wallets.length > 1 && (
-                <TouchableOpacity
-                  className="w-full"
-                  onPress={() => {
-                    router.push("/settings/wallets");
-                  }}
-                >
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+              <TouchableOpacity
+                onPress={switchBalanceState}
+                className="w-full flex flex-col items-center justify-center gap-4"
+              >
+                {wallets.length > 1 && (
+                  <TouchableOpacity
+                    className="w-full"
+                    onPress={() => {
+                      router.push("/settings/wallets");
+                    }}
                   >
-                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              <View className="w-full flex flex-row justify-center items-center gap-2">
-                {balance && !refreshingBalance ? (
-                  <>
-                    <Text className="text-foreground text-5xl font-bold2">
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                    >
+                      {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                <View className="flex flex-row justify-center items-center gap-2">
+                  {balance && !refreshingBalance ? (
+                    <>
+                      <Text className="text-foreground text-5xl font-bold2">
+                        {balanceDisplayMode === "sats" &&
+                          new Intl.NumberFormat().format(
+                            Math.floor(balance.balance / 1000),
+                          )}
+                        {balanceDisplayMode === "fiat" &&
+                          getFiatAmount &&
+                          getFiatAmount(Math.floor(balance.balance / 1000))}
+                        {balanceDisplayMode === "hidden" && "****"}
+                      </Text>
+                      {balanceDisplayMode === "sats" && (
+                        <Text className="text-muted-foreground text-3xl font-semibold2">
+                          sats
+                        </Text>
+                      )}
+                    </>
+                  ) : (
+                    <Skeleton className="w-48 h-10" />
+                  )}
+                </View>
+                <View className="flex justify-center items-center">
+                  {balance && !refreshingBalance ? (
+                    <Text className="text-center text-3xl text-muted-foreground font-semibold2">
                       {balanceDisplayMode === "sats" &&
-                        new Intl.NumberFormat().format(
-                          Math.floor(balance.balance / 1000),
-                        )}
-                      {balanceDisplayMode === "fiat" &&
                         getFiatAmount &&
                         getFiatAmount(Math.floor(balance.balance / 1000))}
-                      {balanceDisplayMode === "hidden" && "****"}
+                      {balanceDisplayMode === "fiat" &&
+                        new Intl.NumberFormat().format(
+                          Math.floor(balance.balance / 1000),
+                        ) + " sats"}
                     </Text>
-                    {balanceDisplayMode === "sats" && (
-                      <Text className="text-muted-foreground text-3xl font-semibold2">
-                        sats
-                      </Text>
-                    )}
-                  </>
-                ) : (
-                  <Skeleton className="w-48 h-10" />
-                )}
-              </View>
-              <View className="flex justify-center items-center">
-                {balance && !refreshingBalance ? (
-                  <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                    {balanceDisplayMode === "sats" &&
-                      getFiatAmount &&
-                      getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceDisplayMode === "fiat" &&
-                      new Intl.NumberFormat().format(
-                        Math.floor(balance.balance / 1000),
-                      ) + " sats"}
-                  </Text>
-                ) : (
-                  <Skeleton className="w-32 h-8" />
-                )}
-              </View>
-            </TouchableOpacity>
+                  ) : (
+                    <Skeleton className="w-32 h-8" />
+                  )}
+                </View>
+              </TouchableOpacity>
+            </GestureWrapper>
             {new Date().getDate() === 21 && <AlbyBanner />}
           </View>
         </ScrollView>
