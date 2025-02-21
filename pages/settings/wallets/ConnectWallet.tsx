@@ -1,17 +1,16 @@
 import { bytesToHex } from "@noble/hashes/utils";
+import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import React from "react";
-import { Image, TouchableOpacity, View } from "react-native";
-import { ConnectIcon, XIcon } from "~/components/Icons";
+import { Animated, Easing, Image, TouchableOpacity, View } from "react-native";
+
+import { Tick } from "~/animations/Tick";
+import { WalletIcon, XIcon } from "~/components/Icons";
+import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-
-import { openURL } from "expo-linking";
-import { Tick } from "~/animations/Tick";
-import { WalletIcon } from "~/components/Icons";
-import Loading from "~/components/Loading";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
@@ -32,6 +31,31 @@ export function ConnectWallet() {
   const [redirectCountdown, setRedirectCountdown] = React.useState<
     number | null
   >(null);
+
+  const leftPlugAnim = React.useRef(new Animated.Value(0)).current;
+  const rightPlugAnim = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    if (nwcUrl) {
+      Animated.parallel([
+        Animated.timing(leftPlugAnim, {
+          toValue: 5,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.ease,
+        }),
+        Animated.timing(rightPlugAnim, {
+          toValue: -15,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.ease,
+        }),
+      ]).start();
+    } else {
+      leftPlugAnim.setValue(0);
+      rightPlugAnim.setValue(0);
+    }
+  }, [nwcUrl, leftPlugAnim, rightPlugAnim]);
 
   React.useEffect(() => {
     if (redirectCountdown === null || !nwcUrl) {
@@ -70,8 +94,8 @@ export function ConnectWallet() {
       if (!nwcClient) {
         throw new Error("NWC client not connected");
       }
-      let secretKey = generateSecretKey();
-      let pubkey = getPublicKey(secretKey);
+      const secretKey = generateSecretKey();
+      const pubkey = getPublicKey(secretKey);
       {
         /* TODO: REPLACE WITH BUDGET INFO (AND METHODS?) */
       }
@@ -129,7 +153,7 @@ export function ConnectWallet() {
         )}
       />
       <View className="flex-1 justify-center items-center gap-8 p-6">
-        <View className="flex flex-row items-center justify-center gap-8">
+        <View className="flex flex-row items-center justify-center">
           <View className="flex items-center">
             <View className="shadow">
               <Image
@@ -139,11 +163,36 @@ export function ConnectWallet() {
             </View>
             <Text className="text-xl font-semibold2">Alby Hub</Text>
           </View>
-          <ConnectIcon
-            className="text-muted-foreground rotate-45 mb-4"
-            width={30}
-            height={30}
-          />
+
+          <View className="z-[-1] relative w-36 h-16 mb-4 items-center justify-center">
+            <Animated.Image
+              resizeMode="contain"
+              source={require("../../../assets/left-plug.png")}
+              className="absolute w-20 h-20"
+              style={{
+                left: -10,
+                transform: [
+                  {
+                    translateX: leftPlugAnim,
+                  },
+                ],
+              }}
+            />
+            <Animated.Image
+              resizeMode="contain"
+              source={require("../../../assets/right-plug.png")}
+              className="absolute w-20 h-20"
+              style={{
+                right: -20,
+                transform: [
+                  {
+                    translateX: rightPlugAnim,
+                  },
+                ],
+              }}
+            />
+          </View>
+
           <View className="flex items-center">
             <View className="shadow">
               <Image

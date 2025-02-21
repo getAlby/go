@@ -7,7 +7,6 @@ import {
   PopiconsCircleCheckLine as CheckCircleIcon,
   PopiconsChevronRightSolid as ChevronRightIcon,
   PopiconsChevronTopLine as ChevronUpIcon,
-  PopiconsPlugSolid as ConnectIcon,
   PopiconsCopySolid as CopyIcon,
   PopiconsEditSolid as EditIcon,
   PopiconsUploadSolid as ExportIcon,
@@ -59,7 +58,6 @@ interopIcon(CameraOffIcon);
 interopIcon(CheckCircleIcon);
 interopIcon(ChevronUpIcon);
 interopIcon(ChevronRightIcon);
-interopIcon(ConnectIcon);
 interopIcon(CopyIcon);
 interopIcon(EditIcon);
 interopIcon(ExportIcon);
@@ -97,7 +95,6 @@ export {
   CheckCircleIcon,
   ChevronRightIcon,
   ChevronUpIcon,
-  ConnectIcon,
   CopyIcon,
   EditIcon,
   ExportIcon,
