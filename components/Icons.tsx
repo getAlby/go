@@ -5,6 +5,7 @@ import {
   PopiconsAddressBookSolid as BookUserIcon,
   PopiconsCameraWebOffSolid as CameraOffIcon,
   PopiconsCircleCheckLine as CheckCircleIcon,
+  PopiconsChevronRightSolid as ChevronRightIcon,
   PopiconsChevronTopLine as ChevronUpIcon,
   PopiconsCopySolid as CopyIcon,
   PopiconsEditSolid as EditIcon,
@@ -56,6 +57,7 @@ interopIcon(BookUserIcon);
 interopIcon(CameraOffIcon);
 interopIcon(CheckCircleIcon);
 interopIcon(ChevronUpIcon);
+interopIcon(ChevronRightIcon);
 interopIcon(CopyIcon);
 interopIcon(EditIcon);
 interopIcon(ExportIcon);
@@ -91,6 +93,7 @@ export {
   BookUserIcon,
   CameraOffIcon,
   CheckCircleIcon,
+  ChevronRightIcon,
   ChevronUpIcon,
   CopyIcon,
   EditIcon,
