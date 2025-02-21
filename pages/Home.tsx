@@ -16,10 +16,9 @@ import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { runOnJS } from "react-native-reanimated";
 import { SvgProps } from "react-native-svg";
 import AlbyBanner from "~/components/AlbyBanner";
+import { GestureWrapper } from "~/components/GestureWrapper";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
@@ -76,15 +75,6 @@ export function Home() {
     useAppStore.getState().setSelectedWalletId(newId);
   }
 
-  const swipeGesture = Gesture.Pan().onEnd((evt) => {
-    const threshold = 50;
-    if (evt.translationX < -threshold) {
-      runOnJS(handleSwipe)("left");
-    } else if (evt.translationX > threshold) {
-      runOnJS(handleSwipe)("right");
-    }
-  });
-
   return (
     <>
       <Screen
@@ -104,20 +94,23 @@ export function Home() {
           </TouchableOpacity>
         )}
       />
-      <GestureDetector gesture={swipeGesture}>
-        <View className="h-full flex p-6">
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshingBalance}
-                onRefresh={refreshBalance}
-                progressViewOffset={128}
-              />
-            }
-            showsVerticalScrollIndicator={false}
-            contentContainerClassName="flex-1"
-          >
-            <View className="grow flex flex-col items-center justify-center gap-4">
+      <View className="h-full flex p-6">
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshingBalance}
+              onRefresh={refreshBalance}
+              progressViewOffset={128}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="flex-1"
+        >
+          <View className="grow flex flex-col items-center justify-center gap-4">
+            <GestureWrapper
+              onSwipe={handleSwipe}
+              shouldWiggle={wallets.length > 1}
+            >
               <TouchableOpacity
                 onPress={switchBalanceState}
                 className="w-full flex flex-col items-center justify-center gap-4"
@@ -138,7 +131,7 @@ export function Home() {
                     </Text>
                   </TouchableOpacity>
                 )}
-                <View className="w-full flex flex-row justify-center items-center gap-2">
+                <View className="flex flex-row justify-center items-center gap-2">
                   {balance && !refreshingBalance ? (
                     <>
                       <Text className="text-foreground text-5xl font-bold2">
@@ -177,26 +170,26 @@ export function Home() {
                   )}
                 </View>
               </TouchableOpacity>
-              {new Date().getDate() === 21 && <AlbyBanner />}
-            </View>
-          </ScrollView>
-          <View className="flex items-center justify-center">
-            <Link href="/transactions" asChild>
-              <TouchableOpacity className="p-4">
-                <ChevronUpIcon
-                  className="text-muted-foreground"
-                  width={32}
-                  height={32}
-                />
-              </TouchableOpacity>
-            </Link>
+            </GestureWrapper>
+            {new Date().getDate() === 21 && <AlbyBanner />}
           </View>
-          <View className="flex flex-row gap-6 mt-10">
-            <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
-            <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
-          </View>
+        </ScrollView>
+        <View className="flex items-center justify-center">
+          <Link href="/transactions" asChild>
+            <TouchableOpacity className="p-4">
+              <ChevronUpIcon
+                className="text-muted-foreground"
+                width={32}
+                height={32}
+              />
+            </TouchableOpacity>
+          </Link>
         </View>
-      </GestureDetector>
+        <View className="flex flex-row gap-6 mt-10">
+          <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
+          <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
+        </View>
+      </View>
     </>
   );
 }
