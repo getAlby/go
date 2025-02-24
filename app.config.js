@@ -67,6 +67,7 @@ export default ({ config }) => {
           icon: "./assets/notification.png",
         },
       ],
+      "expo-location",
       "expo-router",
       "expo-secure-store",
     ],
