@@ -992,7 +992,7 @@
   resolved "https://registry.yarnpkg.com/@expo/config-types/-/config-types-52.0.4.tgz#6ff4fbbfd0d09894d8c50d15a89816cc2d9d2531"
   integrity sha512-oMGrb2o3niVCIfjnIHFrOoiDA9jGb0lc3G4RI1UiO//KjULBaQr3QTBoKDzZQwMqDV1AgYgSr9mgEcnX3LqhIg==
 
-"@expo/config@~10.0.10", "@expo/config@~10.0.9":
+"@expo/config@~10.0.10":
   version "10.0.10"
   resolved "https://registry.yarnpkg.com/@expo/config/-/config-10.0.10.tgz#8d0a70b3f201bf1de32d81765f34c4aae2df55a5"
   integrity sha512-wI9/iam3Irk99ADGM/FyD7YrrEibIZXR4huSZiU5zt9o3dASOKhqepiNJex4YPiktLfKhYrpSEJtwno1g0SrgA==
@@ -1089,7 +1089,7 @@
     temp-dir "~2.0.0"
     unique-string "~2.0.0"
 
-"@expo/json-file@^9.0.1", "@expo/json-file@^9.0.2", "@expo/json-file@~9.0.1", "@expo/json-file@~9.0.2":
+"@expo/json-file@^9.0.2", "@expo/json-file@~9.0.1", "@expo/json-file@~9.0.2":
   version "9.0.2"
   resolved "https://registry.yarnpkg.com/@expo/json-file/-/json-file-9.0.2.tgz#ec508c2ad17490e0c664c9d7e2ae0ce65915d3ed"
   integrity sha512-yAznIUrybOIWp3Uax7yRflB0xsEpvIwIEqIjao9SGi2Gaa+N0OamWfe0fnXBSWF+2zzF4VvqwT4W5zwelchfgw==
@@ -5921,13 +5921,13 @@ jest-environment-node@^29.6.3, jest-environment-node@^29.7.0:
     jest-mock "^29.7.0"
     jest-util "^29.7.0"
 
-jest-expo@~52.0.4:
-  version "52.0.4"
-  resolved "https://registry.yarnpkg.com/jest-expo/-/jest-expo-52.0.4.tgz#d8316fdcaa9c43fc7f57f2585251cf6f665b888e"
-  integrity sha512-6+MDQnpwWi3Cka+GvzncCEw8y8LTLiulf9RMII9MZMmML68dRp+njYvZQQutRkF+WwVZLM2id59puYAsKBL1Qg==
+jest-expo@~52.0.5:
+  version "52.0.5"
+  resolved "https://registry.yarnpkg.com/jest-expo/-/jest-expo-52.0.5.tgz#4c86ab1021b1b7307441157dc3dab9125960f88f"
+  integrity sha512-2jjdE81tWxH5PPe5SGR9rxLZbPtuM7ihEL+43xlJIjgxcplsMpFV9Nb8r5h3IpG+aVDjMiQXqF25n9dqqD09OQ==
   dependencies:
-    "@expo/config" "~10.0.9"
-    "@expo/json-file" "^9.0.1"
+    "@expo/config" "~10.0.10"
+    "@expo/json-file" "^9.0.2"
     "@jest/create-cache-key-function" "^29.2.1"
     "@jest/globals" "^29.2.1"
     babel-jest "^29.2.1"
