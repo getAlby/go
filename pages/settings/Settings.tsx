@@ -59,7 +59,7 @@ export function Settings() {
         </Link>
 
         <Link href="/settings/fiat-currency" asChild>
-          <TouchableOpacity className="flex flex-row gap-4">
+          <TouchableOpacity className="flex flex-row gap-4 items-center">
             <BitcoinIcon className="text-muted-foreground" />
             <Text className="text-foreground font-medium2 text-xl">
               Fiat Currency
@@ -72,7 +72,7 @@ export function Settings() {
 
         {!IS_EXPO_GO && (
           <Link href="/settings/notifications" asChild>
-            <TouchableOpacity className="flex flex-row gap-4">
+            <TouchableOpacity className="flex flex-row gap-4 items-center">
               <NotificationIcon className="text-muted-foreground" />
               <Text className="text-foreground font-medium2 text-xl">
                 Notifications
@@ -82,7 +82,7 @@ export function Settings() {
         )}
 
         <Link href="/settings/security" asChild>
-          <TouchableOpacity className="flex flex-row gap-4">
+          <TouchableOpacity className="flex flex-row gap-4 items-center">
             <FingerprintIcon className="text-muted-foreground" />
             <Text className="text-foreground font-medium2 text-xl">
               Security
@@ -91,7 +91,7 @@ export function Settings() {
         </Link>
 
         <TouchableOpacity
-          className="flex flex-row gap-4"
+          className="flex flex-row gap-4 items-center"
           onPress={toggleColorScheme}
         >
           <ThemeIcon className="text-muted-foreground" />
@@ -102,7 +102,7 @@ export function Settings() {
         </TouchableOpacity>
 
         <Link href="/settings/bitcoin-map" asChild>
-          <TouchableOpacity className="flex flex-row gap-4">
+          <TouchableOpacity className="flex flex-row gap-4 items-center">
             <PinIcon className="text-muted-foreground" />
             <Text className="text-foreground font-medium2 text-xl">
               Bitcoin Map
@@ -117,7 +117,7 @@ export function Settings() {
                 Developer mode
               </Text>
               <TouchableOpacity
-                className="flex flex-row gap-4"
+                className="flex flex-row gap-4 items-center"
                 onPress={() => {
                   signOut();
                 }}
@@ -126,7 +126,7 @@ export function Settings() {
                 <Text className="font-medium2 text-xl">Sign out</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row gap-4"
+                className="flex flex-row gap-4 items-center"
                 onPress={() => {
                   router.dismissAll();
                   useAppStore.getState().setOnboarded(false);
@@ -136,7 +136,7 @@ export function Settings() {
                 <Text className="font-medium2 text-xl">Open Onboarding</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row gap-4"
+                className="flex flex-row gap-4 items-center"
                 onPress={() => {
                   Alert.alert(
                     "Reset",
