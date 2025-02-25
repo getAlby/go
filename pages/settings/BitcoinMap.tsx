@@ -44,7 +44,7 @@ export function BitcoinMap() {
       ) : (
         <WebView
           source={{ uri: mapUrl }}
-          className="flex-1 bg-blue-100"
+          className="flex-1"
           geolocationEnabled
         />
       )}
