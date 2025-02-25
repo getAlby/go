@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Animated, Easing, ViewProps } from "react-native";
+import { Animated, Easing, TextProps } from "react-native";
 import { cn } from "~/lib/utils";
 
 const duration = 1000;
 
-function Skeleton({ className, ...props }: Omit<ViewProps, "style">) {
+function Skeleton({ className, ...props }: Omit<TextProps, "style">) {
   const opacity = React.useRef(new Animated.Value(1)).current;
 
   React.useEffect(() => {
@@ -29,7 +29,7 @@ function Skeleton({ className, ...props }: Omit<ViewProps, "style">) {
   }, [opacity]);
 
   return (
-    <Animated.View
+    <Animated.Text
       style={{ opacity }}
       className={cn("rounded-md bg-muted", className)}
       {...props}

@@ -199,12 +199,12 @@ export function Transactions() {
             >
               <Skeleton className="rounded-full w-12 h-12" />
               <View className="flex flex-col flex-1 gap-2">
-                <Skeleton className="w-32 h-4" />
-                <Skeleton className="w-16 h-4" />
+                <Skeleton className="w-32 text-sm" />
+                <Skeleton className="w-16 text-sm" />
               </View>
               <View className="flex items-end gap-2">
-                <Skeleton className="w-16 h-4" />
-                <Skeleton className="w-8 h-4" />
+                <Skeleton className="w-16 text-sm" />
+                <Skeleton className="w-8 text-xs" />
               </View>
             </View>
           ))}

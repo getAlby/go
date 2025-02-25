@@ -132,7 +132,7 @@ export function Home() {
                     )}
                   </>
                 ) : (
-                  <Skeleton className="w-48 h-[48px]" />
+                  <Skeleton className="w-48 text-5xl" />
                 )}
               </View>
               <View className="flex justify-center items-center">
@@ -147,7 +147,7 @@ export function Home() {
                       ) + " sats"}
                   </Text>
                 ) : (
-                  <Skeleton className="w-32 h-[30px]" />
+                  <Skeleton className="w-32 text-3xl" />
                 )}
               </View>
             </TouchableOpacity>
