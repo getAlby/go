@@ -195,14 +195,15 @@ export function Transactions() {
           {[...Array(20)].map((e, i) => (
             <View
               key={i}
-              className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4"
+              className="flex flex-row items-center gap-3 px-6 py-2 my-2"
             >
-              <Skeleton className="rounded-full w-10 h-10" />
-              <View className="flex flex-col flex-1 gap-1">
+              <Skeleton className="rounded-full w-12 h-12" />
+              <View className="flex flex-col flex-1 gap-2">
                 <Skeleton className="w-32 h-4" />
                 <Skeleton className="w-16 h-4" />
               </View>
-              <View className="flex items-center">
+              <View className="flex items-end gap-2">
+                <Skeleton className="w-16 h-4" />
                 <Skeleton className="w-8 h-4" />
               </View>
             </View>
