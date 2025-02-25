@@ -7973,14 +7973,15 @@ react-native-css-interop@0.1.22:
     lightningcss "^1.27.0"
     semver "^7.6.3"
 
-react-native-gesture-handler@^2.23.0:
-  version "2.23.0"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.23.0.tgz#f0e77bc6bce94a976ae7917abc748b7b4ce6a490"
-  integrity sha512-xtkdIU4S4uc4J2WO4hy7AXxD/1M8Be2yOrLdPTuWKAOF3KyL0D0xSdvuaWhI+GdZCNQQisj9kvbnMQGGb9XZNQ==
+react-native-gesture-handler@~2.20.2:
+  version "2.20.2"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.20.2.tgz#73844c8e9c417459c2f2981bc4d8f66ba8a5ee66"
+  integrity sha512-HqzFpFczV4qCnwKlvSAvpzEXisL+Z9fsR08YV5LfJDkzuArMhBu2sOoSPUF/K62PCoAb+ObGlTC83TKHfUd0vg==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
+    prop-types "^15.7.2"
 
 react-native-get-random-values@^1.9.0:
   version "1.11.0"
