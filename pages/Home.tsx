@@ -91,27 +91,27 @@ export function Home() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName="flex-1"
         >
-          <View className="grow flex flex-col items-center justify-center gap-4">
+          <View className="grow flex flex-col items-center justify-center gap-5">
+            {wallets.length > 1 && (
+              <TouchableOpacity
+                className="w-full"
+                onPress={() => {
+                  router.push("/settings/wallets");
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                >
+                  {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                </Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={switchBalanceState}
-              className="w-full flex flex-col items-center justify-center gap-4"
+              className="w-full flex flex-col items-center justify-center gap-3"
             >
-              {wallets.length > 1 && (
-                <TouchableOpacity
-                  className="w-full"
-                  onPress={() => {
-                    router.push("/settings/wallets");
-                  }}
-                >
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
-                  >
-                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
-                  </Text>
-                </TouchableOpacity>
-              )}
               <View className="w-full flex flex-row justify-center items-center gap-2">
                 {balance && !refreshingBalance ? (
                   <>
