@@ -68,6 +68,16 @@ export function Transaction() {
     return parsedBoostagram;
   }, [transaction.metadata]);
 
+  // TODO: extract typings
+  // TODO: review "description" field
+  const metadata = transaction.metadata as
+    | {
+        payer_data?: { name?: string };
+        recipient_data?: { identifier?: string; description?: string };
+        comment?: string;
+      }
+    | undefined;
+
   return (
     <View className="flex-1 flex flex-col gap-3">
       <Screen title="Transaction" />
@@ -138,6 +148,18 @@ export function Transaction() {
             )}
           </View>
           <View className="flex flex-col gap-4 w-full mt-10">
+            {metadata?.recipient_data?.identifier && (
+              <TransactionDetailRow
+                title="To"
+                content={metadata.recipient_data.identifier}
+              />
+            )}
+            {metadata?.payer_data?.name && (
+              <TransactionDetailRow
+                title="From"
+                content={metadata.payer_data.name}
+              />
+            )}
             <TransactionDetailRow
               title="Date & Time"
               content={dayjs
@@ -146,8 +168,19 @@ export function Transaction() {
             />
             <TransactionDetailRow
               title="Description"
-              content={transaction.description || "-"}
+              content={
+                // TODO: should this description be merged on Alby Hub side?
+                transaction.description ||
+                metadata?.recipient_data?.description ||
+                "-"
+              }
             />
+            {metadata?.comment && (
+              <TransactionDetailRow
+                title="Comment"
+                content={metadata.comment}
+              />
+            )}
 
             {boostagram && <PodcastingInfo boost={boostagram} />}
 
@@ -175,6 +208,13 @@ export function Transaction() {
               <TransactionDetailRow
                 title="Preimage"
                 content={transaction.preimage}
+                copy
+              />
+            )}
+            {transaction.metadata && (
+              <TransactionDetailRow
+                title="Metadata"
+                content={JSON.stringify(transaction.metadata, null, 2)}
                 copy
               />
             )}
