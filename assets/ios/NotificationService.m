@@ -130,9 +130,9 @@
     self.bestAttemptContent.title    = walletName;
 
     if ([notificationType isEqualToString:@"payment_sent"]) {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"You just sent %.0f sats ⚡️", amountInSats];
+        self.bestAttemptContent.body = [NSString stringWithFormat:@"You sent %.0f sats ⚡️", amountInSats];
     } else {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"You just received %.0f sats ⚡️", amountInSats];
+        self.bestAttemptContent.body = [NSString stringWithFormat:@"You received %.0f sats ⚡️", amountInSats];
     }
 
     self.contentHandler(self.bestAttemptContent);

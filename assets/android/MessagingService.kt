@@ -98,9 +98,9 @@ class MessagingService : FirebaseMessagingService() {
 
         var notificationText = ""
         if (notificationType == "payment_sent") {
-            notificationText = "You have sent $amount sats ⚡️"
+            notificationText = "You sent $amount sats ⚡️"
         } else {
-            notificationText = "You have received $amount sats ⚡️"
+            notificationText = "You received $amount sats ⚡️"
         }
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
