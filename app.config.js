@@ -14,6 +14,8 @@ export default ({ config }) => {
       "nostr+walletconnect",
       "nostrnwc",
       "nostrnwc+alby",
+      "nostr+walletauth:",
+      "nostr+walletauth+alby:",
     ],
     orientation: "portrait",
     icon: "./assets/icon.png",

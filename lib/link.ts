@@ -1,3 +1,4 @@
+import { nwa } from "@getalby/sdk";
 import { router } from "expo-router";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
@@ -9,6 +10,8 @@ const SUPPORTED_SCHEMES = [
   "nostr+walletconnect:",
   "nostrnwc:",
   "nostrnwc+alby:",
+  "nostr+walletauth:",
+  "nostr+walletauth+alby:",
 ];
 
 // Register exp scheme for testing during development
@@ -19,16 +22,35 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
 
 export const handleLink = async (url: string) => {
   if (!url) {
+    console.error("no url to handle");
     return;
   }
+  console.info("handling link", url);
 
   const parsedUrl = new URL(url);
   if (!parsedUrl.protocol) {
+    console.error("no protocol in URL", url);
     return;
   }
 
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
+    if (parsedUrl.protocol.startsWith("nostr+walletauth")) {
+      const nwaClient = nwa.NWAClient.parseWalletAuthUrl(url);
+
+      // TODO: add extra parameters
+      router.push({
+        pathname: "/settings/wallets/connect",
+        params: {
+          pubkey: nwaClient.appPubkey,
+          appicon: nwaClient.icon,
+          appname: nwaClient.name,
+          callback: nwaClient.returnTo,
+        },
+      });
+      return;
+    }
+
     if (parsedUrl.protocol.startsWith("nostrnwc")) {
       if (router.canDismiss()) {
         router.dismissAll();
@@ -153,6 +175,7 @@ export const handleLink = async (url: string) => {
       });
     }
   } else {
+    console.error("Unsupported scheme", url);
     // Redirect the user to the home screen
     // if no match was found
     router.replace({

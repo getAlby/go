@@ -17,10 +17,11 @@ import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConnectWallet() {
-  const { appicon, appname, callback } = useLocalSearchParams<{
+  let { appicon, appname, callback, pubkey } = useLocalSearchParams<{
     appicon: string;
     appname: string;
     callback: string;
+    pubkey?: string;
   }>();
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
@@ -94,19 +95,22 @@ export function ConnectWallet() {
       if (!nwcClient) {
         throw new Error("NWC client not connected");
       }
-      const secretKey = generateSecretKey();
-      const pubkey = getPublicKey(secretKey);
+
+      let secretKey: string | undefined;
+      if (!pubkey) {
+        const secretKeyBytes = generateSecretKey();
+        secretKey = bytesToHex(secretKeyBytes);
+        pubkey = getPublicKey(secretKeyBytes);
+      }
       {
         /* TODO: REPLACE WITH BUDGET INFO (AND METHODS?) */
       }
       const response = await nwcClient.createConnection({
         pubkey,
         name: appname,
-        budget: {
-          budget: 100_000,
-          renewal_period: "monthly",
-        },
-        methods: [
+        max_amount: 100_000_000,
+        budget_renewal: "monthly",
+        request_methods: [
           "get_info",
           "get_balance",
           "get_budget",
@@ -121,9 +125,10 @@ export function ConnectWallet() {
 
       console.info("createConnection response", response);
 
-      const newUrl = `nostr+walletconnect://${response.wallet_pubkey}?secret=${bytesToHex(
-        secretKey,
-      )}&relay=${nwcClient.relayUrl}`;
+      // TODO: this is not needed for NWA flow
+      const newUrl = `nostr+walletconnect://${response.wallet_pubkey}?secret=${
+        secretKey
+      }&relay=${nwcClient.relayUrl}`;
 
       setNwcUrl(newUrl);
       setRedirectCountdown(5);

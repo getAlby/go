@@ -30,7 +30,7 @@
     "@alevy97/react-native-userdefaults": "^0.2.2",
     "@getalby/expo-shared-preferences": "^0.0.1",
     "@getalby/lightning-tools": "^5.1.2",
-    "@getalby/sdk": "^3.9.0",
+    "@getalby/sdk": "^4.1.0-beta.6",
     "@noble/curves": "^1.6.0",
     "@popicons/react-native": "^0.0.22",
     "@react-native-async-storage/async-storage": "1.23.1",

@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
+import { handleLink } from "~/lib/link";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{
@@ -52,6 +53,11 @@ export function Send() {
       if (!text) {
         errorToast(new Error("Your clipboard is empty."));
         return false;
+      }
+
+      if (text.startsWith("nostr+walletauth") /* can have : or +alby: */) {
+        handleLink(text);
+        return true;
       }
 
       // Some apps use uppercased LIGHTNING: prefixes
