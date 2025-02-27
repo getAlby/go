@@ -118,7 +118,11 @@ export function Transactions() {
               onPress={() =>
                 router.navigate({
                   pathname: "/transaction",
-                  params: { transactionJSON: JSON.stringify(transaction) },
+                  params: {
+                    transactionJSON: encodeURIComponent(
+                      JSON.stringify(transaction),
+                    ),
+                  },
                 })
               }
             >
