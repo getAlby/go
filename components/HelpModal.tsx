@@ -22,7 +22,7 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="w-4/5 max-w-[425px] bg-background border border-border p-6 rounded-lg z-10">
+        <View className="w-4/5 max-w-[425px] bg-background border border-border p-6 rounded-2xl z-10">
           <Text className="text-xl text-foreground font-bold2 mb-2">
             Connect Your Wallet
           </Text>

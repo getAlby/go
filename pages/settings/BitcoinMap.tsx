@@ -1,7 +1,9 @@
 import * as Location from "expo-location";
 import React from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { WebView } from "react-native-webview";
+import BTCMapModal from "~/components/BTCMapModal";
+import { HelpCircleIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 
@@ -9,6 +11,7 @@ import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 
 export function BitcoinMap() {
+  const [showModal, setShowModal] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [mapUrl, setMapUrl] = React.useState("https://btcmap.org/map");
 
@@ -34,7 +37,27 @@ export function BitcoinMap() {
 
   return (
     <View className="flex-1">
-      <Screen title="Bitcoin Map" />
+      <Screen
+        title="Bitcoin Map"
+        right={() => (
+          <>
+            <TouchableOpacity
+              onPressIn={() => setShowModal(true)}
+              className="-mr-4 px-6"
+            >
+              <HelpCircleIcon
+                className="text-muted-foreground"
+                width={24}
+                height={24}
+              />
+            </TouchableOpacity>
+            <BTCMapModal
+              visible={showModal}
+              onClose={() => setShowModal(false)}
+            />
+          </>
+        )}
+      />
 
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
