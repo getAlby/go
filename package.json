@@ -51,6 +51,7 @@
     "expo-linear-gradient": "~14.0.2",
     "expo-linking": "~7.0.5",
     "expo-local-authentication": "~15.0.2",
+    "expo-location": "^18.0.7",
     "expo-notification-service-extension-plugin": "^1.0.1",
     "expo-notifications": "~0.29.13",
     "expo-router": "~4.0.17",
