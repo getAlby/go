@@ -160,7 +160,7 @@ export function Withdraw() {
 
   return (
     <>
-      <Screen title="Withdraw" animation="slide_from_left" />
+      <Screen title="Redeem" animation="slide_from_left" />
       {isLoading && (
         <View className="flex-1 flex flex-col items-center justify-center">
           <Loading className="text-primary-foreground" />
@@ -180,7 +180,7 @@ export function Withdraw() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <PasteIcon className="text-secondary-foreground" />
+                  <PasteIcon className="text-muted-foreground" />
                   <Text numberOfLines={1}>Paste</Text>
                 </Button>
               </View>
