@@ -1,4 +1,5 @@
 import { nwa } from "@getalby/sdk";
+import { NWAOptions } from "@getalby/sdk/dist/NWAClient";
 import { router } from "expo-router";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
@@ -36,16 +37,17 @@ export const handleLink = async (url: string) => {
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
     if (parsedUrl.protocol.startsWith("nostr+walletauth")) {
-      const nwaClient = nwa.NWAClient.parseWalletAuthUrl(url);
+      // FIXME: why does this throw an error?
+      /*if (router.canDismiss()) {
+        router.dismissAll();
+      }*/
+      const nwaOptions = nwa.NWAClient.parseWalletAuthUrl(url);
 
-      // TODO: add extra parameters
       router.push({
         pathname: "/settings/wallets/connect",
         params: {
-          pubkey: nwaClient.appPubkey,
-          appicon: nwaClient.icon,
-          appname: nwaClient.name,
-          callback: nwaClient.returnTo,
+          options: JSON.stringify(nwaOptions),
+          flow: "nwa",
         },
       });
       return;
@@ -71,9 +73,12 @@ export const handleLink = async (url: string) => {
       router.push({
         pathname: "/settings/wallets/connect",
         params: {
-          appicon,
-          appname,
-          callback,
+          options: JSON.stringify({
+            icon: appicon,
+            name: appname,
+            returnTo: callback,
+          } as NWAOptions),
+          flow: "deeplink",
         },
       });
       return;

@@ -1,3 +1,4 @@
+import { NWAOptions } from "@getalby/sdk/dist/NWAClient";
 import { bytesToHex } from "@noble/hashes/utils";
 import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
@@ -17,12 +18,36 @@ import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function ConnectWallet() {
-  let { appicon, appname, callback, pubkey } = useLocalSearchParams<{
-    appicon: string;
-    appname: string;
-    callback: string;
-    pubkey?: string;
+  let { options: optionsJSON, flow } = useLocalSearchParams<{
+    options: string;
+    flow: "nwa" | "deeplink";
   }>();
+  const options = JSON.parse(optionsJSON) as Partial<NWAOptions>;
+  const {
+    appPubkey,
+    name,
+    icon,
+    returnTo,
+    notificationTypes,
+    expiresAt,
+    isolated,
+    metadata,
+  } = options;
+  let pubkey = appPubkey;
+  const budgetRenewal = options.budgetRenewal || "monthly";
+  const requestMethods = options.requestMethods || [
+    "get_info",
+    "get_balance",
+    "get_budget",
+    "make_invoice",
+    "pay_invoice",
+    "lookup_invoice",
+    "list_transactions",
+    "sign_message",
+  ];
+  const maxAmount = options.maxAmount || 100_000_000;
+  const satsAmount = maxAmount / 1000;
+
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
@@ -63,11 +88,14 @@ export function ConnectWallet() {
       return;
     }
 
-    if (redirectCountdown === 0) {
+    if (redirectCountdown === 0 && returnTo) {
       (async () => {
-        const callbackUrl = `${callback}?value=${nwcUrl}`;
+        let callbackUrl = new URL(returnTo);
+        if (flow === "deeplink") {
+          callbackUrl.searchParams.set("value", nwcUrl);
+        }
         try {
-          await openURL(callbackUrl);
+          await openURL(callbackUrl.toString());
         } catch (error) {
           console.error(error);
           errorToast(
@@ -86,7 +114,7 @@ export function ConnectWallet() {
       setRedirectCountdown((prev) => (prev ? prev - 1 : prev));
     }, 1000);
     return () => clearTimeout(timer);
-  }, [redirectCountdown, nwcUrl, callback]);
+  }, [redirectCountdown, nwcUrl, returnTo, flow]);
 
   const confirm = async () => {
     setLoading(true);
@@ -102,25 +130,17 @@ export function ConnectWallet() {
         secretKey = bytesToHex(secretKeyBytes);
         pubkey = getPublicKey(secretKeyBytes);
       }
-      {
-        /* TODO: REPLACE WITH BUDGET INFO (AND METHODS?) */
-      }
+
       const response = await nwcClient.createConnection({
         pubkey,
-        name: appname,
-        max_amount: 100_000_000,
-        budget_renewal: "monthly",
-        request_methods: [
-          "get_info",
-          "get_balance",
-          "get_budget",
-          "make_invoice",
-          "pay_invoice",
-          "lookup_invoice",
-          "list_transactions",
-          "sign_message",
-        ],
-        metadata: null,
+        name: name as string,
+        max_amount: maxAmount,
+        budget_renewal: budgetRenewal,
+        request_methods: requestMethods,
+        notification_types: notificationTypes,
+        expires_at: expiresAt,
+        isolated,
+        metadata,
       });
 
       console.info("createConnection response", response);
@@ -158,18 +178,20 @@ export function ConnectWallet() {
         )}
       />
       <View className="flex-1 justify-center items-center gap-8 p-6">
-        <View className="flex flex-row items-center justify-center">
-          <View className="flex items-center">
+        <View className="flex flex-row items-start justify-center">
+          <View className="flex items-center flex-1">
             <View className="shadow">
               <Image
                 source={require("../../../assets/hub.png")}
                 className="my-4 rounded-2xl w-20 h-20"
               />
             </View>
-            <Text className="text-xl font-semibold2">Alby Hub</Text>
+            <Text className="text-xl font-semibold2 w-40 text-center">
+              Alby Hub
+            </Text>
           </View>
 
-          <View className="z-[-1] relative w-36 h-16 mb-4 items-center justify-center">
+          <View className="z-[-1] relative w-36 h-28 mb-4 items-center justify-center">
             <Animated.Image
               resizeMode="contain"
               source={require("../../../assets/left-plug.png")}
@@ -188,7 +210,7 @@ export function ConnectWallet() {
               source={require("../../../assets/right-plug.png")}
               className="absolute w-20 h-20"
               style={{
-                right: -20,
+                right: -10,
                 transform: [
                   {
                     translateX: rightPlugAnim,
@@ -198,14 +220,16 @@ export function ConnectWallet() {
             />
           </View>
 
-          <View className="flex items-center">
+          <View className="flex items-center flex-1">
             <View className="shadow">
               <Image
-                source={{ uri: appicon }}
-                className="my-4 rounded-2xl shadow-md w-20 h-20"
+                source={{ uri: icon }}
+                className="my-4 rounded-2xl shadow-md w-20 h-20 bg-gray-300"
               />
             </View>
-            <Text className="text-xl font-semibold2">{appname}</Text>
+            <Text className="text-xl font-semibold2 w-40 text-center">
+              {name}
+            </Text>
           </View>
         </View>
         {nwcUrl ? (
@@ -219,27 +243,52 @@ export function ConnectWallet() {
         ) : (
           <>
             <Text className="text-xl text-center text-foreground">
-              <Text className="text-xl font-semibold2">{appname}</Text> is
-              requesting to access your wallet{" "}
-              <Text className="text-xl font-semibold2">Alby Hub</Text> for
-              in-app payments.
+              <Text className="text-xl font-semibold2">{name}</Text> is
+              requesting access to your{" "}
+              <Text className="text-xl font-semibold2">Alby Hub</Text>.
             </Text>
+            <Text className="text-xl text-center text-foreground">
+              Requested methods:{" "}
+              <Text className="text-xl font-semibold2 p-8">
+                {requestMethods?.join(", ") || "all methods"}
+              </Text>
+            </Text>
+            {notificationTypes && (
+              <Text className="text-xl text-center text-foreground">
+                Requested notification types:{" "}
+                <Text className="text-xl font-semibold2 p-8">
+                  {notificationTypes.join(", ")}
+                </Text>
+              </Text>
+            )}
+            {isolated && (
+              <Text className="text-xl text-center text-foreground font-semibold2">
+                isolated connection
+              </Text>
+            )}
             <View className="flex-1 flex mt-4 gap-8 justify-center">
               <View>
-                {/* TODO: REPLACE WITH A PROPER COMPONENT */}
-                <TouchableOpacity className="flex flex-row border-2 border-muted justify-between items-center rounded-2xl p-6 py-4">
-                  <Text className="text-xl font-medium2">Monthly budget</Text>
-                  <View>
-                    <Text className="text-right text-lg text-foreground font-medium2">
-                      {new Intl.NumberFormat().format(+100_000) + " sats"}
+                {requestMethods.some((method) => method.includes("pay_")) && (
+                  <TouchableOpacity className="flex flex-row border-2 border-muted justify-between items-center rounded-2xl p-6 py-4">
+                    <Text className="text-xl font-medium2">
+                      {budgetRenewal !== "never" && (
+                        <Text className="text-xl font-medium2 capitalize">
+                          {budgetRenewal || "Monthly"}{" "}
+                        </Text>
+                      )}
+                      budget
                     </Text>
-                    {getFiatAmount && (
-                      <Text className="text-right text-sm text-muted-foreground">
-                        {getFiatAmount(+100_000)}
+                    <View>
+                      <Text className="text-right text-lg text-foreground font-medium2">
+                        {new Intl.NumberFormat().format(satsAmount) + " sats"}
                       </Text>
-                    )}
-                  </View>
-                  {/* <Link href="/" className="absolute right-0" asChild>
+                      {getFiatAmount && (
+                        <Text className="text-right text-sm text-muted-foreground">
+                          {getFiatAmount(satsAmount)}
+                        </Text>
+                      )}
+                    </View>
+                    {/* <Link href="/" className="absolute right-0" asChild>
                     <TouchableOpacity className="p-4">
                       <ChevronRightIcon
                         className="text-muted-foreground"
@@ -248,11 +297,27 @@ export function ConnectWallet() {
                       />
                     </TouchableOpacity>
                   </Link> */}
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                )}
+                {!!expiresAt && (
+                  <Text className="text-center mt-4">
+                    Expires {new Date(expiresAt * 1000).toDateString()}
+                  </Text>
+                )}
                 <Text className="mt-4 text-center text-foreground">
                   You can edit permissions and revoke access at any time in your
                   Alby Hub settings.
                 </Text>
+                {returnTo && (
+                  <Text className="mt-4 text-center text-foreground">
+                    You will return to {returnTo} after confirming
+                  </Text>
+                )}
+                {!!metadata && (
+                  <Text className="mt-4 text-center text-foreground">
+                    Metadata: {JSON.stringify(metadata)}
+                  </Text>
+                )}
               </View>
             </View>
           </>
