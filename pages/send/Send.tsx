@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
+import { convertMerchantQRToLightningAddress } from "~/lib/merchants";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{
@@ -74,6 +75,13 @@ export function Send() {
           text = text.substring("lightning:".length);
         }
 
+        // convert picknpay QRs to lightning addresses
+        const merchantLightningAddress =
+          convertMerchantQRToLightningAddress(text);
+        if (merchantLightningAddress) {
+          text = merchantLightningAddress;
+        }
+
         const lnurlValue = lnurl.findLnurl(text);
         console.info("Checked lnurl value", text, lnurlValue);
         if (lnurlValue) {
@@ -101,23 +109,16 @@ export function Send() {
             lnurlDetails.minSendable === lnurlDetails.maxSendable &&
             !lnurlDetails.commentAllowed
           ) {
-            try {
-              const callback = new URL(lnurlDetails.callback);
-              callback.searchParams.append(
-                "amount",
-                lnurlDetails.minSendable.toString(),
-              );
-              const lnurlPayInfo = await lnurl.getPayRequest(
-                callback.toString(),
-              );
-              router.push({
-                pathname: "/send/confirm",
-                params: { invoice: lnurlPayInfo.pr, originalText },
-              });
-            } catch (error) {
-              console.error(error);
-              errorToast(error);
-            }
+            const callback = new URL(lnurlDetails.callback);
+            callback.searchParams.append(
+              "amount",
+              lnurlDetails.minSendable.toString(),
+            );
+            const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
+            router.replace({
+              pathname: "/send/confirm",
+              params: { invoice: lnurlPayInfo.pr, originalText },
+            });
           } else {
             router.replace({
               pathname: "/send/lnurl-pay",
