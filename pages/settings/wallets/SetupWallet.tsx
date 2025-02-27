@@ -212,8 +212,8 @@ export function SetupWallet() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <PasteIcon className="text-secondary-foreground" />
-              <Text className="text-secondary-foreground">Paste</Text>
+              <PasteIcon className="text-muted-foreground" />
+              <Text className="text-muted-foreground">Paste</Text>
             </Button>
           </View>
         </>

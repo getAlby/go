@@ -10,7 +10,7 @@ import {
   PopiconsEditSolid as EditIcon,
   PopiconsUploadSolid as ExportIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
-  PopiconsCircleInfoLine as HelpCircleIcon,
+  PopiconsCircleInfoSolid as HelpCircleIcon,
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
