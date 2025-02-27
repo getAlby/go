@@ -30,7 +30,6 @@ import {
   PopiconsBinSolid as TrashIcon,
   PopiconsTriangleExclamationLine as TriangleAlertIcon,
   PopiconsWalletHorizontalOpenSolid as WalletIcon,
-  PopiconsDownloadSolid as WithdrawIcon,
   PopiconsCircleXLine as XCircleIcon,
   PopiconsXSolid as XIcon,
   PopiconsBoltSolid as ZapIcon,
@@ -81,7 +80,6 @@ interopIcon(ThemeIcon);
 interopIcon(TrashIcon);
 interopIcon(TriangleAlertIcon);
 interopIcon(WalletIcon);
-interopIcon(WithdrawIcon);
 interopIcon(XCircleIcon);
 interopIcon(XIcon);
 interopIcon(ZapIcon);
@@ -118,7 +116,6 @@ export {
   TrashIcon,
   TriangleAlertIcon,
   WalletIcon,
-  WithdrawIcon,
   XCircleIcon,
   XIcon,
   ZapIcon,

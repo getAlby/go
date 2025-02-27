@@ -205,7 +205,7 @@ export function Send() {
                   className="flex flex-col gap-2 flex-1"
                 >
                   <EditIcon className="text-muted-foreground" />
-                  <Text numberOfLines={1}>Manual</Text>
+                  <Text numberOfLines={1}>Amount</Text>
                 </Button>
                 <Button
                   variant="secondary"
