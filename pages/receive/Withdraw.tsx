@@ -170,6 +170,11 @@ export function Withdraw() {
         <>
           {!lnurlDetails && (
             <>
+              <View className="p-4">
+                <Text className="text-lg text-center font-medium2 text-secondary-foreground">
+                  Scan a LNURL QR code to withdraw
+                </Text>
+              </View>
               <QRCodeScanner
                 onScanned={handleScanned}
                 startScanning={startScanning}
