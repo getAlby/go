@@ -68,7 +68,7 @@ export function ConnectWallet() {
   const [connectionCreated, setConnectionCreated] = React.useState(false);
 
   React.useEffect(() => {
-    if (redirectCountdown === null || !deeplinkConnectionSecret) {
+    if (redirectCountdown === undefined) {
       return;
     }
 
