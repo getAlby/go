@@ -75,12 +75,13 @@ export function ConnectWallet() {
     if (redirectCountdown === 0) {
       (async () => {
         if (returnTo) {
-          let callbackUrl = new URL(returnTo);
+          let url = new URL(returnTo);
           if (deeplinkConnectionSecret) {
-            callbackUrl.searchParams.set("value", deeplinkConnectionSecret);
+            url.searchParams.set("value", deeplinkConnectionSecret);
           }
           try {
-            await openURL(callbackUrl.toString());
+            console.info("opening URL", url.toString());
+            await openURL(url.toString());
           } catch (error) {
             console.error(error);
             errorToast(
