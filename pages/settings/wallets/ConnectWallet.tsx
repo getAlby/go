@@ -156,7 +156,7 @@ export function ConnectWallet() {
   return (
     <>
       <Screen
-        title={connectionCreated ? "Wallet Connected" : "Connect Wallet"}
+        title={connectionCreated ? "App Connected" : "Connect App"}
         right={() => (
           <TouchableOpacity
             onPressIn={() => {
