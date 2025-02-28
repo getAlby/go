@@ -22,7 +22,6 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { useInfo } from "~/hooks/useInfo";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
@@ -57,7 +56,6 @@ export function ConnectWallet() {
   ];
   const maxAmount = options.maxAmount || 100_000_000;
   const satsAmount = maxAmount / 1000;
-  const { data: info } = useInfo();
 
   const [isCreatingConnection, setCreatingConnection] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
@@ -149,8 +147,11 @@ export function ConnectWallet() {
     setCreatingConnection(false);
   };
 
-  const supportsCreateConnection = info?.methods.includes("create_connection");
-  const isLoading = !info;
+  const supportsCreateConnection = useAppStore
+    .getState()
+    .wallets[
+      useAppStore.getState().selectedWalletId
+    ]?.nwcCapabilities?.includes("create_connection");
 
   return (
     <>
@@ -170,13 +171,8 @@ export function ConnectWallet() {
           </TouchableOpacity>
         )}
       />
-      {isLoading && (
-        <View className="flex-1 justify-center items-center">
-          <Loading className="text-muted-foreground" />
-        </View>
-      )}
-      {!isLoading && !supportsCreateConnection && <NotSupportedView />}
-      {!isLoading && supportsCreateConnection && (
+      {!supportsCreateConnection && <NotSupportedView />}
+      {supportsCreateConnection && (
         <>
           <View className="flex-1 justify-center items-center gap-8 p-6">
             <PlugView
