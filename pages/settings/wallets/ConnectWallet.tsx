@@ -262,11 +262,14 @@ function ConnectView({
             onPress={closeModal}
             className="absolute inset-0"
           />
-          <View className="w-4/5 max-h-[80vh] max-w-[425px] bg-background border border-border p-6 rounded-lg z-10">
-            <ScrollView>
+          <View className="w-4/5 max-h-[80vh] max-w-[425px] bg-background border border-border rounded-2xl z-10">
+            <View className="flex-row items-center justify-center relative p-6">
+              <Text className="text-xl font-bold2 text-foreground">
+                Connection Details
+              </Text>
               <TouchableOpacity
                 onPress={closeModal}
-                className="absolute top-0 right-0 z-10"
+                className="absolute right-0 p-4"
               >
                 <XIcon
                   className="text-muted-foreground"
@@ -274,11 +277,10 @@ function ConnectView({
                   height={24}
                 />
               </TouchableOpacity>
-              <View className="flex flex-col gap-8">
-                <Text className="text-xl text-foreground font-bold2 text-center">
-                  Connection Details
-                </Text>
-                <Text className="text-xl text-center text-foreground mt-8">
+            </View>
+            <ScrollView className="px-6">
+              <View className="pb-6 flex flex-col gap-8">
+                <Text className="text-xl text-center text-foreground mt-4">
                   Requested methods:{" "}
                   <Text className="text-xl font-semibold2 p-8">
                     {requestMethods?.join(", ") || "all methods"}
