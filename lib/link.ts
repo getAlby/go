@@ -37,13 +37,25 @@ export const handleLink = async (url: string) => {
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
     if (parsedUrl.protocol.startsWith("nostr+walletauth")) {
-      // FIXME: why does this throw an error?
-      /*if (router.canDismiss()) {
-        router.dismissAll();
-      }*/
+      if (router.canGoBack()) {
+        try {
+          router.back();
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          // ignore
+        }
+      }
+      if (router.canDismiss()) {
+        try {
+          router.dismissAll();
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          // ignore
+        }
+      }
       const nwaOptions = nwa.NWAClient.parseWalletAuthUrl(url);
 
-      router.push({
+      router.replace({
         pathname: "/settings/wallets/connect",
         params: {
           options: JSON.stringify(nwaOptions),
