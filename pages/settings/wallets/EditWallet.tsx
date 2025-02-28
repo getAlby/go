@@ -121,6 +121,7 @@ export function EditWallet() {
               RNAlert.alert(
                 "Export Wallet",
                 "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
+
                 [
                   {
                     text: "Cancel",
@@ -129,6 +130,23 @@ export function EditWallet() {
                   {
                     text: "Confirm",
                     onPress: () => {
+                      const isSuperuser = useAppStore
+                        .getState()
+                        .wallets[
+                          walletId
+                        ].nwcCapabilities?.includes("create_connection");
+
+                      if (isSuperuser) {
+                        Toast.show({
+                          type: "error",
+                          text1:
+                            "Connection Secret with One Tap Connections cannot be exported",
+                          text2:
+                            "Please create a new connection from Alby Hub instead",
+                        });
+                        return;
+                      }
+
                       const nwcUrl =
                         useAppStore.getState().wallets[
                           useAppStore.getState().selectedWalletId
