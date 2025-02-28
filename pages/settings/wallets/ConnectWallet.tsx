@@ -16,6 +16,7 @@ import {
 
 import { Tick } from "~/animations/Tick";
 import { WalletIcon, XIcon } from "~/components/Icons";
+import NWCIcon from "~/components/icons/NWCIcon";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -465,10 +466,16 @@ function PlugView({
 
       <View className="flex items-center flex-1">
         <View className="shadow">
-          <Image
-            source={{ uri: icon }}
-            className="my-4 rounded-2xl shadow-md w-20 h-20 bg-gray-300"
-          />
+          {icon ? (
+            <Image
+              source={{ uri: icon }}
+              className="my-4 rounded-2xl w-20 h-20 bg-white"
+            />
+          ) : (
+            <View className="my-4 rounded-2xl w-20 h-20 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+              <NWCIcon width={40} height={40} opacity={0.5} />
+            </View>
+          )}
         </View>
         <Text className="text-xl font-semibold2 w-40 text-center">
           {name || "New App"}

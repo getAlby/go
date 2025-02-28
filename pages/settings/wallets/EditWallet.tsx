@@ -6,11 +6,11 @@ import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import {
   AddressIcon,
-  ExportIcon,
   TrashIcon,
   TriangleAlertIcon,
   WalletIcon,
 } from "~/components/Icons";
+import NWCIcon from "~/components/icons/NWCIcon";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import {
@@ -167,7 +167,7 @@ export function EditWallet() {
           >
             <Card className="w-full">
               <CardContent className="flex flex-row items-center gap-4">
-                <ExportIcon className="text-muted-foreground" />
+                <NWCIcon />
                 <View className="flex flex-1 flex-col">
                   <CardTitle>Export Wallet</CardTitle>
                   <CardDescription>
