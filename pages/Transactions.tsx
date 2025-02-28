@@ -118,7 +118,11 @@ export function Transactions() {
               onPress={() =>
                 router.navigate({
                   pathname: "/transaction",
-                  params: { transactionJSON: JSON.stringify(transaction) },
+                  params: {
+                    transactionJSON: encodeURIComponent(
+                      JSON.stringify(transaction),
+                    ),
+                  },
                 })
               }
             >
@@ -128,7 +132,7 @@ export function Transactions() {
                   transaction.state === "pending" && "animate-pulse",
                 )}
               >
-                <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
+                <View className="w-[44px] h-[44px] bg-muted rounded-full flex flex-col items-center justify-center">
                   {!(
                     transaction.state === "failed" ||
                     transaction.state === "pending"
@@ -148,7 +152,7 @@ export function Transactions() {
                   {transaction.state === "failed" && <FailedTransactionIcon />}
                 </View>
                 <View className="flex flex-col flex-1">
-                  <View className="flex flex-row flex-1 items-center gap-2">
+                  <View className="flex flex-row items-center gap-2">
                     <Text numberOfLines={1} className="font-medium2 text-lg">
                       {transaction.type === "incoming"
                         ? "Received"
@@ -195,15 +199,16 @@ export function Transactions() {
           {[...Array(20)].map((e, i) => (
             <View
               key={i}
-              className="flex flex-row items-center text-sm gap-x-6 px-4 mb-4"
+              className="flex flex-row items-center gap-3 px-6 py-2 my-2"
             >
-              <Skeleton className="rounded-full w-10 h-10" />
-              <View className="flex flex-col flex-1 gap-1">
-                <Skeleton className="w-32 h-4" />
-                <Skeleton className="w-16 h-4" />
+              <Skeleton className="rounded-full w-[44px] h-[44px]" />
+              <View className="flex flex-col flex-1">
+                <Skeleton className="w-32 text-lg" />
+                <Skeleton className="w-16 text-base" />
               </View>
-              <View className="flex items-center">
-                <Skeleton className="w-8 h-4" />
+              <View className="flex items-end">
+                <Skeleton className="w-16 text-lg" />
+                <Skeleton className="w-8 text-sm" />
               </View>
             </View>
           ))}

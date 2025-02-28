@@ -4,13 +4,8 @@ import React from "react";
 import { Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { CreateInvoice } from "~/components/CreateInvoice";
-import {
-  AddressIcon,
-  ScanIcon,
-  ShareIcon,
-  WithdrawIcon,
-  ZapIcon,
-} from "~/components/Icons";
+import { AddressIcon, EditIcon, ScanIcon, ShareIcon } from "~/components/Icons";
+import RedeemIcon from "~/components/icons/RedeemIcon";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -104,22 +99,22 @@ export function Receive() {
 
           <View className="flex flex-row gap-3 p-6">
             <Button
-              onPress={share}
-              variant="secondary"
-              className="flex-1 flex flex-col gap-2"
-            >
-              <ShareIcon className="text-muted-foreground" />
-              <Text>Share</Text>
-            </Button>
-            <Button
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
               onPress={() => {
                 router.push("/receive/withdraw");
               }}
             >
-              <WithdrawIcon className="text-muted-foreground" />
-              <Text>Withdraw</Text>
+              <RedeemIcon className="text-muted-foreground" />
+              <Text numberOfLines={1}>Redeem</Text>
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex-1 flex flex-col gap-2"
+              onPress={share}
+            >
+              <ShareIcon className="text-muted-foreground" />
+              <Text numberOfLines={1}>Share</Text>
             </Button>
             <Button
               variant="secondary"
@@ -128,8 +123,8 @@ export function Receive() {
                 router.push("/receive/invoice");
               }}
             >
-              <ZapIcon className="text-muted-foreground" />
-              <Text>Invoice</Text>
+              <EditIcon className="text-muted-foreground" />
+              <Text numberOfLines={1}>Amount</Text>
             </Button>
           </View>
         </>

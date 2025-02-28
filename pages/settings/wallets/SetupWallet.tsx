@@ -202,6 +202,11 @@ export function SetupWallet() {
         </View>
       ) : !nostrWalletConnectUrl ? (
         <>
+          <View className="p-4">
+            <Text className="text-lg text-center font-medium2 text-secondary-foreground">
+              Scan a NWC connection secret to add a wallet
+            </Text>
+          </View>
           <QRCodeScanner
             onScanned={handleScanned}
             startScanning={startScanning}
@@ -212,8 +217,8 @@ export function SetupWallet() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <PasteIcon className="text-secondary-foreground" />
-              <Text className="text-secondary-foreground">Paste</Text>
+              <PasteIcon className="text-muted-foreground" />
+              <Text>Paste</Text>
             </Button>
           </View>
         </>

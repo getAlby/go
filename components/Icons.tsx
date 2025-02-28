@@ -11,13 +11,14 @@ import {
   PopiconsEditSolid as EditIcon,
   PopiconsUploadSolid as ExportIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
-  PopiconsCircleInfoLine as HelpCircleIcon,
+  PopiconsCircleInfoSolid as HelpCircleIcon,
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
   PopiconsNotificationSquareSolid as NotificationIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
+  PopiconsPinSolid as PinIcon,
   PopiconsQrCodeMinimalSolid as QRIcon,
   PopiconsReloadLine as RefreshIcon,
   PopiconsReloadSolid as ResetIcon,
@@ -30,7 +31,6 @@ import {
   PopiconsBinSolid as TrashIcon,
   PopiconsTriangleExclamationLine as TriangleAlertIcon,
   PopiconsWalletHorizontalOpenSolid as WalletIcon,
-  PopiconsDownloadSolid as WithdrawIcon,
   PopiconsCircleXLine as XCircleIcon,
   PopiconsXSolid as XIcon,
   PopiconsBoltSolid as ZapIcon,
@@ -69,6 +69,7 @@ interopIcon(MoveUpIcon);
 interopIcon(NotificationIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
+interopIcon(PinIcon);
 interopIcon(QRIcon);
 interopIcon(RefreshIcon);
 interopIcon(ResetIcon);
@@ -81,7 +82,6 @@ interopIcon(ThemeIcon);
 interopIcon(TrashIcon);
 interopIcon(TriangleAlertIcon);
 interopIcon(WalletIcon);
-interopIcon(WithdrawIcon);
 interopIcon(XCircleIcon);
 interopIcon(XIcon);
 interopIcon(ZapIcon);
@@ -106,6 +106,7 @@ export {
   NotificationIcon,
   OnboardingIcon,
   PasteIcon,
+  PinIcon,
   QRIcon,
   RefreshIcon,
   ResetIcon,
@@ -118,7 +119,6 @@ export {
   TrashIcon,
   TriangleAlertIcon,
   WalletIcon,
-  WithdrawIcon,
   XCircleIcon,
   XIcon,
   ZapIcon,

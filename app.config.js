@@ -6,7 +6,7 @@ export default ({ config }) => {
     ...config,
     name: "Alby Go",
     slug: "alby-mobile",
-    version: "1.9.0",
+    version: "1.10.0",
     scheme: [
       "lightning",
       "bitcoin",
@@ -76,6 +76,7 @@ export default ({ config }) => {
           icon: "./assets/notification.png",
         },
       ],
+      "expo-location",
       "expo-router",
       "expo-secure-store",
     ],

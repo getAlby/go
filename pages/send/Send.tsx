@@ -14,6 +14,7 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { handleLink } from "~/lib/link";
+import { convertMerchantQRToLightningAddress } from "~/lib/merchants";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{
@@ -80,6 +81,13 @@ export function Send() {
           text = text.substring("lightning:".length);
         }
 
+        // convert picknpay QRs to lightning addresses
+        const merchantLightningAddress =
+          convertMerchantQRToLightningAddress(text);
+        if (merchantLightningAddress) {
+          text = merchantLightningAddress;
+        }
+
         const lnurlValue = lnurl.findLnurl(text);
         console.info("Checked lnurl value", text, lnurlValue);
         if (lnurlValue) {
@@ -107,23 +115,16 @@ export function Send() {
             lnurlDetails.minSendable === lnurlDetails.maxSendable &&
             !lnurlDetails.commentAllowed
           ) {
-            try {
-              const callback = new URL(lnurlDetails.callback);
-              callback.searchParams.append(
-                "amount",
-                lnurlDetails.minSendable.toString(),
-              );
-              const lnurlPayInfo = await lnurl.getPayRequest(
-                callback.toString(),
-              );
-              router.push({
-                pathname: "/send/confirm",
-                params: { invoice: lnurlPayInfo.pr, originalText },
-              });
-            } catch (error) {
-              console.error(error);
-              errorToast(error);
-            }
+            const callback = new URL(lnurlDetails.callback);
+            callback.searchParams.append(
+              "amount",
+              lnurlDetails.minSendable.toString(),
+            );
+            const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
+            router.replace({
+              pathname: "/send/confirm",
+              params: { invoice: lnurlPayInfo.pr, originalText },
+            });
           } else {
             router.replace({
               pathname: "/send/lnurl-pay",
@@ -210,7 +211,7 @@ export function Send() {
                   className="flex flex-col gap-2 flex-1"
                 >
                   <EditIcon className="text-muted-foreground" />
-                  <Text numberOfLines={1}>Manual</Text>
+                  <Text numberOfLines={1}>Amount</Text>
                 </Button>
                 <Button
                   variant="secondary"
