@@ -399,13 +399,13 @@ function PlugView({
     if (connectionCreated) {
       Animated.parallel([
         Animated.timing(leftPlugAnim, {
-          toValue: 5,
+          toValue: 15,
           duration: 500,
           useNativeDriver: true,
           easing: Easing.ease,
         }),
         Animated.timing(rightPlugAnim, {
-          toValue: -5,
+          toValue: -15,
           duration: 500,
           useNativeDriver: true,
           easing: Easing.ease,
@@ -435,9 +435,9 @@ function PlugView({
         <Animated.Image
           resizeMode="contain"
           source={require("../../../assets/left-plug.png")}
-          className="absolute w-20 h-20"
+          className="absolute w-28 h-28"
           style={{
-            left: -10,
+            left: -45,
             transform: [
               {
                 translateX: leftPlugAnim,
@@ -448,9 +448,9 @@ function PlugView({
         <Animated.Image
           resizeMode="contain"
           source={require("../../../assets/right-plug.png")}
-          className="absolute w-20 h-20"
+          className="absolute w-28 h-28"
           style={{
-            right: -10,
+            right: -45,
             transform: [
               {
                 translateX: rightPlugAnim,
