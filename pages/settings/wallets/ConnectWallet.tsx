@@ -72,19 +72,21 @@ export function ConnectWallet() {
       return;
     }
 
-    if (redirectCountdown === 0 && returnTo) {
+    if (redirectCountdown === 0) {
       (async () => {
-        let callbackUrl = new URL(returnTo);
-        if (deeplinkConnectionSecret) {
-          callbackUrl.searchParams.set("value", deeplinkConnectionSecret);
-        }
-        try {
-          await openURL(callbackUrl.toString());
-        } catch (error) {
-          console.error(error);
-          errorToast(
-            new Error("Couldn't open URL, do you have the app installed?"),
-          );
+        if (returnTo) {
+          let callbackUrl = new URL(returnTo);
+          if (deeplinkConnectionSecret) {
+            callbackUrl.searchParams.set("value", deeplinkConnectionSecret);
+          }
+          try {
+            await openURL(callbackUrl.toString());
+          } catch (error) {
+            console.error(error);
+            errorToast(
+              new Error("Couldn't open URL, do you have the app installed?"),
+            );
+          }
         }
         if (router.canDismiss()) {
           router.dismissAll();
