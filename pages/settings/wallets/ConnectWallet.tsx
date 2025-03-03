@@ -138,7 +138,7 @@ export function ConnectWallet() {
           }&relay=${nwcClient.relayUrl}`,
         );
       }
-      setRedirectCountdown(5);
+      setRedirectCountdown(3);
       setConnectionCreated(true);
     } catch (error) {
       console.error(error);
