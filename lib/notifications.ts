@@ -37,6 +37,8 @@ export async function registerWalletNotifications(
       connectionPubkey: nwcClient.publicKey,
       walletPubkey: nwcClient.walletPubkey,
       isIOS: Platform.OS === "ios",
+      // This is for http-nostr to know the encryption
+      // TODO: replace with nip44 flag
       ...(isNip44 ? { version: "1.0" } : {}),
     };
 
@@ -68,6 +70,8 @@ export async function registerWalletNotifications(
         ? getConversationKey(nwcClient.walletPubkey, nwcClient.secret ?? "")
         : computeSharedSecret(nwcClient.walletPubkey, nwcClient.secret ?? ""),
       id: walletId,
+      // This is for Alby Go's notification service to know the encryption
+      // "1.0" is nip44_v2, "0.0" is nip04
       version: isNip44 ? "1.0" : "0.0",
     };
 
