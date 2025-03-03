@@ -24,7 +24,7 @@ export async function registerWalletNotifications(
     }
 
     const walletServiceInfo = await nwcClient.getWalletServiceInfo();
-    const isNip44 = walletServiceInfo.versions.includes("1.0");
+    const isNip44 = walletServiceInfo.encryptions.includes("nip44_v2");
 
     const pushToken = useAppStore.getState().expoPushToken;
     if (!pushToken) {
