@@ -181,8 +181,8 @@ export function EditWallet() {
           <Pressable
             onPress={() => {
               RNAlert.alert(
-                "Delete Wallet",
-                "Are you sure you want to delete your wallet? This cannot be undone.",
+                "Remove Wallet Connection",
+                "Are you sure you want to remove this wallet connection? This cannot be undone.",
                 [
                   {
                     text: "Cancel",
@@ -200,9 +200,9 @@ export function EditWallet() {
               <CardContent className="flex flex-row items-center gap-4">
                 <TrashIcon className="text-muted-foreground" />
                 <View className="flex flex-1 flex-col">
-                  <CardTitle>Delete Wallet</CardTitle>
+                  <CardTitle>Remove Wallet Connection</CardTitle>
                   <CardDescription>
-                    Remove this wallet from your list of wallets
+                    Remove this wallet connection from Alby Go
                   </CardDescription>
                 </View>
               </CardContent>
