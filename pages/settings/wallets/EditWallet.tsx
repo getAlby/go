@@ -202,7 +202,7 @@ export function EditWallet() {
                 <View className="flex flex-1 flex-col">
                   <CardTitle>Remove Wallet Connection</CardTitle>
                   <CardDescription>
-                    Remove this wallet connection from your list of wallets
+                    Remove this wallet connection from Alby Go
                   </CardDescription>
                 </View>
               </CardContent>
