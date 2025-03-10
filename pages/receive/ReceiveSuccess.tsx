@@ -56,6 +56,7 @@ export function ReceiveSuccess() {
         <Button
           size="lg"
           onPress={() => {
+            router.dismissAll();
             router.replace("/");
           }}
         >
