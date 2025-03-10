@@ -4,6 +4,7 @@ import { LNURLPaymentSuccessAction } from "lib/lnurl";
 import React from "react";
 import { ScrollView, View } from "react-native";
 import { Tick } from "~/animations/Tick";
+import AlbyGoLogo from "~/components/AlbyGoLogo";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -27,8 +28,9 @@ export function PaymentSuccess() {
 
   return (
     <View className="flex-1 flex flex-col">
-      <Screen title="Payment succeeded" />
+      <Screen title="" />
       <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
+        <AlbyGoLogo className="w-52 h-16 mx-auto" />
         <View className="flex-1 w-full">
           <Tick />
         </View>
