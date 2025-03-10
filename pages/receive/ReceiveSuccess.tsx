@@ -2,6 +2,7 @@ import { Invoice } from "@getalby/lightning-tools";
 import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { Tick } from "~/animations/Tick";
+import AlbyGoLogo from "~/components/AlbyGoLogo";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -16,8 +17,9 @@ export function ReceiveSuccess() {
   });
   return (
     <View className="flex-1 flex flex-col">
-      <Screen title="Receive successful" animation="slide_from_left" />
+      <Screen title="" animation="slide_from_left" />
       <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
+        <AlbyGoLogo className="w-52 h-16 mx-auto" />
         <View className="flex-1 w-full">
           <Tick />
         </View>
