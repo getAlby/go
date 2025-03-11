@@ -16,7 +16,9 @@ interface AppState {
   readonly expoPushToken: string;
   readonly theme?: Theme;
   readonly balanceDisplayMode: BalanceDisplayMode;
+  readonly lastAppStateChangeTime: number;
   setUnlocked: (unlocked: boolean) => void;
+  setLastAppStateChangeTime: (lastAppStateChangeTime: number) => void;
   setTheme: (theme: Theme) => void;
   setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
@@ -48,7 +50,6 @@ const themeKey = "theme";
 const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
 const isNotificationsEnabledKey = "isNotificationsEnabled";
-export const lastActiveTimeKey = "lastActiveTime";
 
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
 export type Theme = "light" | "dark";
@@ -204,6 +205,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
     expoPushToken: secureStorage.getItem(expoPushTokenKey) || "",
+    lastAppStateChangeTime: 0,
     updateWallet,
     removeWallet,
     removeAddressBookEntry,
@@ -290,6 +292,10 @@ export const useAppStore = create<AppState>()((set, get) => {
     updateLastAlbyPayment: () => {
       secureStorage.setItem(lastAlbyPaymentKey, new Date().toString());
     },
+    setLastAppStateChangeTime: (lastAppStateChangeTime) =>
+      set({
+        lastAppStateChangeTime,
+      }),
     reset() {
       // clear wallets
       for (let i = 0; i < get().wallets.length; i++) {

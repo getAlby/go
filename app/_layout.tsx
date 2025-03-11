@@ -18,7 +18,6 @@ import { toastConfig } from "~/components/ToastConfig";
 import { NotificationProvider } from "~/context/Notification";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
-import { useInfo } from "~/hooks/useInfo";
 import { SessionProvider } from "~/hooks/useSession";
 import { IS_EXPO_GO, NAV_THEME } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
@@ -50,8 +49,6 @@ export const unstable_settings = {
 export default function RootLayout() {
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const [resourcesLoaded, setResourcesLoaded] = React.useState(false);
-
-  useConnectionChecker();
 
   async function loadFonts() {
     await Font.loadAsync({
@@ -137,16 +134,4 @@ export default function RootLayout() {
       </NotificationProvider>
     </SWRConfig>
   );
-}
-
-function useConnectionChecker() {
-  const { error } = useInfo();
-  React.useEffect(() => {
-    if (error?.message) {
-      Toast.show({
-        type: "connectionError",
-        text1: error.message,
-      });
-    }
-  }, [error?.message]);
 }

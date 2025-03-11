@@ -1,12 +1,9 @@
 import * as React from "react";
-import {
-  AppState,
-  AppStateStatus,
-  NativeEventSubscription,
-} from "react-native";
+import { AppState, AppStateStatus } from "react-native";
 import { INACTIVITY_THRESHOLD } from "~/lib/constants";
-import { secureStorage } from "~/lib/secureStorage";
-import { lastActiveTimeKey, useAppStore } from "~/lib/state/appStore";
+import { useAppStore } from "~/lib/state/appStore";
+
+let lastActiveTime = 0;
 
 export const UserInactivityProvider = ({ children }: any) => {
   const [appState, setAppState] = React.useState<AppStateStatus>(
@@ -16,37 +13,36 @@ export const UserInactivityProvider = ({ children }: any) => {
 
   const handleAppStateChange = React.useCallback(
     async (nextState: AppStateStatus): Promise<void> => {
-      if (appState === "active" && nextState.match(/inactive|background/)) {
-        const now = Date.now();
-        secureStorage.setItem(lastActiveTimeKey, now.toString());
-      } else if (
-        appState.match(/inactive|background/) &&
-        nextState === "active"
-      ) {
-        const lastActiveTime = secureStorage.getItem(lastActiveTimeKey);
-        if (lastActiveTime) {
-          const timeElapsed = Date.now() - parseInt(lastActiveTime, 10);
-          if (timeElapsed >= INACTIVITY_THRESHOLD) {
-            useAppStore.getState().setUnlocked(false);
+      const now = Date.now();
+      useAppStore.getState().setLastAppStateChangeTime(now);
+      if (isSecurityEnabled) {
+        if (appState === "active" && nextState.match(/inactive|background/)) {
+          lastActiveTime = now;
+        } else if (
+          appState.match(/inactive|background/) &&
+          nextState === "active"
+        ) {
+          if (lastActiveTime) {
+            const timeElapsed = Date.now() - lastActiveTime;
+            if (timeElapsed >= INACTIVITY_THRESHOLD) {
+              useAppStore.getState().setUnlocked(false);
+            }
           }
         }
-        await secureStorage.removeItem(lastActiveTimeKey);
       }
       setAppState(nextState);
     },
-    [appState],
+    [appState, isSecurityEnabled],
   );
 
   React.useEffect(() => {
-    let subscription: NativeEventSubscription;
-    if (isSecurityEnabled) {
-      subscription = AppState.addEventListener("change", handleAppStateChange);
-    }
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
 
     return () => {
-      if (subscription) {
-        subscription.remove();
-      }
+      subscription.remove();
     };
   }, [appState, handleAppStateChange, isSecurityEnabled]);
 
