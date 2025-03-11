@@ -1,8 +1,15 @@
 import { fiat } from "@getalby/lightning-tools";
 import React from "react";
+import { BTC_RATE_REFRESH_INTERVAL } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 
-let cachedRates: Record<string, number> = {};
+interface RateCacheEntry {
+  rate: number;
+  timestamp: number;
+}
+
+let cachedRates: Record<string, RateCacheEntry> = {};
+
 function useFiatRate() {
   const fiatCurrency = useAppStore((store) => store.fiatCurrency) || "USD";
   const [rate, setRate] = React.useState<number>();
@@ -10,14 +17,19 @@ function useFiatRate() {
   React.useEffect(() => {
     (async () => {
       try {
-        if (cachedRates[fiatCurrency]) {
-          setRate(cachedRates[fiatCurrency]);
+        const cacheEntry = cachedRates[fiatCurrency];
+        const now = Date.now();
+        if (
+          cacheEntry &&
+          now - cacheEntry.timestamp < BTC_RATE_REFRESH_INTERVAL
+        ) {
+          setRate(cacheEntry.rate);
           return;
         }
         setRate(undefined);
-        const rate = await fiat.getFiatBtcRate(fiatCurrency);
-        setRate(rate);
-        cachedRates[fiatCurrency] = rate;
+        const fetchedRate = await fiat.getFiatBtcRate(fiatCurrency);
+        setRate(fetchedRate);
+        cachedRates[fiatCurrency] = { rate: fetchedRate, timestamp: now };
       } catch (error) {
         console.error(error);
       }
