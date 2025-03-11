@@ -16,39 +16,39 @@ export const UserInactivityProvider = ({ children }: any) => {
 
   const handleAppStateChange = React.useCallback(
     async (nextState: AppStateStatus): Promise<void> => {
-      if (appState === "active" && nextState.match(/inactive|background/)) {
-        const now = Date.now();
-        secureStorage.setItem(lastActiveTimeKey, now.toString());
-      } else if (
-        appState.match(/inactive|background/) &&
-        nextState === "active"
-      ) {
-        const lastActiveTime = secureStorage.getItem(lastActiveTimeKey);
-        if (lastActiveTime) {
-          const timeElapsed = Date.now() - parseInt(lastActiveTime, 10);
-          if (timeElapsed >= INACTIVITY_THRESHOLD) {
-            useAppStore.getState().setUnlocked(false);
+      if (isSecurityEnabled) {
+        if (appState === "active" && nextState.match(/inactive|background/)) {
+          const now = Date.now();
+          secureStorage.setItem(lastActiveTimeKey, now.toString());
+        } else if (
+          appState.match(/inactive|background/) &&
+          nextState === "active"
+        ) {
+          const lastActiveTime = secureStorage.getItem(lastActiveTimeKey);
+          if (lastActiveTime) {
+            const timeElapsed = Date.now() - parseInt(lastActiveTime, 10);
+            if (timeElapsed >= INACTIVITY_THRESHOLD) {
+              useAppStore.getState().setUnlocked(false);
+            }
           }
+          await secureStorage.removeItem(lastActiveTimeKey);
         }
-        await secureStorage.removeItem(lastActiveTimeKey);
       }
       setAppState(nextState);
+      useAppStore.getState().incrementAppStateChangeCount();
     },
-    [appState],
+    [appState, isSecurityEnabled],
   );
 
   React.useEffect(() => {
-    let subscription: NativeEventSubscription;
-    if (isSecurityEnabled) {
-      subscription = AppState.addEventListener("change", handleAppStateChange);
-    }
-
+    const subscription: NativeEventSubscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
     return () => {
-      if (subscription) {
-        subscription.remove();
-      }
+      subscription.remove();
     };
-  }, [appState, handleAppStateChange, isSecurityEnabled]);
+  }, [handleAppStateChange]);
 
   return children;
 };

@@ -16,7 +16,9 @@ interface AppState {
   readonly expoPushToken: string;
   readonly theme?: Theme;
   readonly balanceDisplayMode: BalanceDisplayMode;
+  readonly appStateChangeCount: number;
   setUnlocked: (unlocked: boolean) => void;
+  incrementAppStateChangeCount: () => void;
   setTheme: (theme: Theme) => void;
   setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
@@ -190,6 +192,7 @@ export const useAppStore = create<AppState>()((set, get) => {
 
   const initialWallets = loadWallets();
   return {
+    appStateChangeCount: 0,
     unlocked: !isSecurityEnabled,
     addressBookEntries: loadAddressBookEntries(),
     wallets: initialWallets,
@@ -208,6 +211,10 @@ export const useAppStore = create<AppState>()((set, get) => {
     removeWallet,
     removeAddressBookEntry,
     getNWCClient,
+    incrementAppStateChangeCount: () =>
+      set((state) => ({ appStateChangeCount: state.appStateChangeCount + 1 })),
+    setAppStateChangeCount: (count: number) =>
+      set({ appStateChangeCount: count }),
     setUnlocked: (unlocked) => {
       set({ unlocked });
     },

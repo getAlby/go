@@ -5,6 +5,9 @@ import { errorToast } from "~/lib/errorToast";
 type FetchArgs = Parameters<typeof fetch>;
 const fetcher = async (...args: FetchArgs) => {
   const nwcClient = useAppStore.getState().nwcClient;
+  // Capture the current appStateChangeCount before making the request
+  const initialAppStateChangeCount = useAppStore.getState().appStateChangeCount;
+
   if (!nwcClient) {
     throw new Error("No NWC client");
   }
@@ -12,7 +15,12 @@ const fetcher = async (...args: FetchArgs) => {
     const balance = await nwcClient.getBalance();
     return balance;
   } catch (error) {
-    errorToast(error);
+    // Compare the stored count with the current value
+    const currentAppStateChangeCount =
+      useAppStore.getState().appStateChangeCount;
+    if (currentAppStateChangeCount === initialAppStateChangeCount) {
+      errorToast(error);
+    }
     throw error;
   }
 };
