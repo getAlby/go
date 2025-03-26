@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SwapIcon } from "~/components/Icons";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import {
@@ -36,6 +36,7 @@ export function DualCurrencyInput({
     useAppStore((store) => store.fiatCurrency) || DEFAULT_CURRENCY;
   const [fiatAmount, setFiatAmount] = React.useState("");
   const [inputMode, setInputMode] = React.useState<"sats" | "fiat">("sats");
+  const inputRef = React.useRef<TextInput>(null);
 
   function onChangeText(text: string) {
     if (inputMode === "sats") {
@@ -49,23 +50,27 @@ export function DualCurrencyInput({
       }
       setFiatAmount(text);
       if (getSatsAmount) {
-        setAmount(getSatsAmount(+text)?.toString() || "");
+        const numericValue = +text.replace(",", ".");
+        setAmount(getSatsAmount(numericValue)?.toString() || "");
       }
     }
   }
 
   function toggleInputMode() {
+    inputRef.current?.blur();
     if (inputMode === "sats" && getFiatAmount) {
       setFiatAmount(
         amount ? getFiatAmount(+amount, false)?.toString() || "" : "",
       );
     }
     setInputMode(inputMode === "fiat" ? "sats" : "fiat");
+    inputRef.current?.focus();
   }
 
   return (
     <View className="w-full flex flex-col items-center justify-center gap-5">
       <Input
+        ref={inputRef}
         className={cn(
           "w-full border-transparent bg-transparent text-center mt-3",
           ((max && Number(amount) > max) || (min && Number(amount) < min)) &&
@@ -83,7 +88,7 @@ export function DualCurrencyInput({
         readOnly={readOnly}
         // aria-errormessage="inputError"
       />
-      <TouchableOpacity onPress={toggleInputMode}>
+      <TouchableOpacity onPress={toggleInputMode} className="p-2">
         <View className="flex flex-row gap-2 items-center justify-center">
           <Text className="font-semibold2 text-2xl text-muted-foreground">
             {inputMode === "fiat" ? fiatCurrency : "sats"}
