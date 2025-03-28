@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   DarkTheme,
   DefaultTheme,
@@ -11,6 +12,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { SWRConfig } from "swr";
@@ -117,18 +119,22 @@ export default function RootLayout() {
             className="w-full h-full bg-background"
             edges={["left", "right", "bottom"]}
           >
-            <UserInactivityProvider>
-              <SessionProvider>
-                <Slot />
-              </SessionProvider>
-            </UserInactivityProvider>
-            <Toast
-              config={toastConfig}
-              position="bottom"
-              bottomOffset={140}
-              topOffset={140}
-            />
-            <PortalHost />
+            <GestureHandlerRootView>
+              <BottomSheetModalProvider>
+                <UserInactivityProvider>
+                  <SessionProvider>
+                    <Slot />
+                  </SessionProvider>
+                </UserInactivityProvider>
+                <Toast
+                  config={toastConfig}
+                  position="bottom"
+                  bottomOffset={140}
+                  topOffset={140}
+                />
+                <PortalHost />
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
           </SafeAreaView>
         </ThemeProvider>
       </NotificationProvider>

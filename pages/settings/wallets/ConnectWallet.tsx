@@ -15,14 +15,14 @@ import {
 } from "react-native";
 
 import { Tick } from "~/animations/Tick";
-import { WalletIcon, XIcon } from "~/components/Icons";
+import { XIcon } from "~/components/Icons";
 import NWCIcon from "~/components/icons/NWCIcon";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { WalletSwitcher } from "~/components/WalletSwitcher";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -202,16 +202,10 @@ export function ConnectWallet() {
           </View>
           {!connectionCreated && (
             <View className="p-6">
-              <View className="flex flex-row items-center justify-center gap-2 mb-4 px-4">
-                <WalletIcon className="text-muted-foreground" />
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  className="text-muted-foreground font-medium2 text-xl"
-                >
-                  {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
-                </Text>
-              </View>
+              <WalletSwitcher
+                selectedWalletId={selectedWalletId}
+                wallets={wallets}
+              />
               <Button
                 size="lg"
                 onPress={confirm}
