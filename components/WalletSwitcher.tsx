@@ -5,7 +5,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef } from "react";
-import { FlatList, Pressable, TouchableOpacity, View } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { ChevronDownIcon, WalletIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
@@ -52,7 +52,7 @@ export function WalletSwitcher({
   );
   return (
     <>
-      <Pressable
+      <TouchableOpacity
         onPress={openSheet}
         className="flex flex-row items-center justify-center gap-2 mb-4 px-4"
       >
@@ -67,14 +67,12 @@ export function WalletSwitcher({
         {wallets.length > 1 && (
           <ChevronDownIcon className="text-muted-foreground" />
         )}
-      </Pressable>
+      </TouchableOpacity>
 
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backgroundStyle={{
           backgroundColor: isDarkColorScheme ? "#09090B" : "#FFFFFF", // translates to muted
-          borderTopLeftRadius: 0,
-          borderTopRightRadius: 0,
         }}
         handleIndicatorStyle={{
           backgroundColor: isDarkColorScheme ? "#FAFAFA" : "#1F2937", // translates to foreground
