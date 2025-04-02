@@ -63,13 +63,17 @@ export function DualCurrencyInput({
         amount ? getFiatAmount(+amount, false)?.toString() || "" : "",
       );
     }
-    setInputMode(inputMode === "fiat" ? "sats" : "fiat");
-    inputRef.current?.focus();
+    const newMode = inputMode === "fiat" ? "sats" : "fiat";
+    setInputMode(newMode);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   }
 
   return (
     <View className="w-full flex flex-col items-center justify-center gap-5">
       <Input
+        key={inputMode}
         ref={inputRef}
         className={cn(
           "w-full border-transparent bg-transparent text-center mt-3",
