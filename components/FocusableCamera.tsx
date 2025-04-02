@@ -8,7 +8,6 @@ type FocusableCameraProps = {
 
 export function FocusableCamera({ onScanned }: FocusableCameraProps) {
   const [autoFocus, setAutoFocus] = React.useState(true);
-  const [isCameraReady, setCameraReady] = React.useState(false);
 
   const focusCamera = () => {
     setAutoFocus(false);
@@ -22,9 +21,7 @@ export function FocusableCamera({ onScanned }: FocusableCameraProps) {
   };
   return (
     <CameraView
-      // TODO: Remove this once expo-camera v16.0.18 is released
-      onCameraReady={() => setCameraReady(true)}
-      onBarcodeScanned={isCameraReady ? handleBarCodeScanned : undefined}
+      onBarcodeScanned={handleBarCodeScanned}
       style={{ flex: 1, width: "100%" }}
       barcodeScannerSettings={{
         barcodeTypes: ["qr"],
