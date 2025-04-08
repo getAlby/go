@@ -1,7 +1,7 @@
 import { NWAOptions } from "@getalby/sdk/dist/NWAClient";
 import { bytesToHex } from "@noble/hashes/utils";
 import { openURL } from "expo-linking";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import React from "react";
 import {
@@ -153,6 +153,10 @@ export function ConnectWallet() {
       useAppStore.getState().selectedWalletId
     ]?.nwcCapabilities?.includes("create_connection");
 
+  const hasCreateConnectionWallet = wallets.some((wallet) =>
+    wallet.nwcCapabilities?.includes("create_connection"),
+  );
+
   return (
     <>
       <Screen
@@ -171,55 +175,60 @@ export function ConnectWallet() {
           </TouchableOpacity>
         )}
       />
-      {!supportsCreateConnection && <NotSupportedView />}
-      {supportsCreateConnection && (
-        <>
-          <View className="flex-1 justify-center items-center gap-8 p-6">
-            <PlugView
-              connectionCreated={connectionCreated}
-              name={name}
-              icon={icon}
-            />
-            {connectionCreated && (
-              <ConnectedView
-                returnTo={returnTo}
-                redirectCountdown={redirectCountdown}
-              />
-            )}
-            {!connectionCreated && (
-              <ConnectView
-                name={name}
-                requestMethods={requestMethods}
-                notificationTypes={notificationTypes}
-                isolated={isolated}
-                budgetRenewal={budgetRenewal}
-                satsAmount={satsAmount}
-                expiresAt={expiresAt}
-                returnTo={returnTo}
-                metadata={metadata}
-              />
-            )}
+      <View className="flex-1 justify-center items-center gap-8 p-6">
+        <PlugView
+          connectionCreated={connectionCreated}
+          name={name}
+          icon={icon}
+        />
+        {!supportsCreateConnection ? (
+          <View className="flex-1 justify-center items-center p-8">
+            <Text className="text-center">
+              This wallet connection does not support one tap connections.
+            </Text>
+            <Text className="text-center mt-4">
+              {hasCreateConnectionWallet
+                ? "Please switch your wallet and try again."
+                : `Please re-connect Alby Go from Alby Hub using the "One Tap Connections" button.`}
+            </Text>
           </View>
-          {!connectionCreated && (
-            <View className="p-6">
-              <WalletSwitcher
-                selectedWalletId={selectedWalletId}
-                wallets={wallets}
-              />
-              <Button
-                size="lg"
-                onPress={confirm}
-                className="flex flex-row gap-2"
-                disabled={isCreatingConnection}
-              >
-                {isCreatingConnection && (
-                  <Loading className="text-primary-foreground" />
-                )}
-                <Text>Confirm Connection</Text>
-              </Button>
-            </View>
-          )}
-        </>
+        ) : connectionCreated ? (
+          <ConnectedView
+            returnTo={returnTo}
+            redirectCountdown={redirectCountdown}
+          />
+        ) : (
+          <ConnectView
+            name={name}
+            requestMethods={requestMethods}
+            notificationTypes={notificationTypes}
+            isolated={isolated}
+            budgetRenewal={budgetRenewal}
+            satsAmount={satsAmount}
+            expiresAt={expiresAt}
+            returnTo={returnTo}
+            metadata={metadata}
+          />
+        )}
+      </View>
+      {!connectionCreated && (
+        <View className="p-6">
+          <WalletSwitcher
+            selectedWalletId={selectedWalletId}
+            wallets={wallets}
+          />
+          <Button
+            size="lg"
+            onPress={confirm}
+            className="flex flex-row gap-2"
+            disabled={!supportsCreateConnection || isCreatingConnection}
+          >
+            {isCreatingConnection && (
+              <Loading className="text-primary-foreground" />
+            )}
+            <Text>Confirm Connection</Text>
+          </Button>
+        </View>
       )}
     </>
   );
@@ -473,28 +482,6 @@ function PlugView({
           {name || "New App"}
         </Text>
       </View>
-    </View>
-  );
-}
-
-function NotSupportedView() {
-  return (
-    <View className="flex-1 justify-center items-center p-8">
-      <View className="flex-1 justify-center items-center p-8">
-        <Text className="text-center">
-          This wallet connection does not support one tap connections.
-        </Text>
-        <Text className="text-center mt-4">
-          Please re-connect Alby Go from Alby Hub using the "One Tap
-          Connections" button.
-        </Text>
-      </View>
-      {/* TODO: allow switching wallets here */}
-      <Link href="/" replace className="mt-4" asChild>
-        <Button variant="secondary" className="w-full">
-          <Text>Home</Text>
-        </Button>
-      </Link>
     </View>
   );
 }
