@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
-import { BookUserIcon, EditIcon, PasteIcon } from "~/components/Icons";
+import { BookUserIcon, KeyboardIcon, PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
@@ -102,8 +102,8 @@ export function Send() {
                   variant="secondary"
                   className="flex flex-col gap-2 flex-1"
                 >
-                  <EditIcon className="text-muted-foreground" />
-                  <Text numberOfLines={1}>Amount</Text>
+                  <KeyboardIcon className="text-muted-foreground" />
+                  <Text numberOfLines={1}>Manual</Text>
                 </Button>
                 <Button
                   variant="secondary"

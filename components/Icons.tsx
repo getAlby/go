@@ -13,6 +13,7 @@ import {
   PopiconsUploadSolid as ExportIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
   PopiconsCircleInfoSolid as HelpCircleIcon,
+  PopiconsKeyboardSolid as KeyboardIcon,
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
@@ -65,6 +66,7 @@ interopIcon(EditIcon);
 interopIcon(ExportIcon);
 interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
+interopIcon(KeyboardIcon);
 interopIcon(LinkIcon);
 interopIcon(MoveDownIcon);
 interopIcon(MoveUpIcon);
@@ -103,6 +105,7 @@ export {
   ExportIcon,
   FingerprintIcon,
   HelpCircleIcon,
+  KeyboardIcon,
   LinkIcon,
   MoveDownIcon,
   MoveUpIcon,
