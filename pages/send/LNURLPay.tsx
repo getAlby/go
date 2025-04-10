@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { View } from "react-native";
+import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import Loading from "~/components/Loading";
@@ -41,6 +42,11 @@ export function LNURLPay() {
     if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
       setAmount((lnurlDetails.minSendable / 1000).toString());
       setAmountReadOnly(true);
+      Toast.show({
+        type: "success",
+        text1: "You are paying a fixed amount invoice",
+        position: "top",
+      });
     }
   }, [lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
@@ -105,18 +111,20 @@ export function LNURLPay() {
                 sats
               </Text>
             </View>
-            <View className="w-full">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                Comment
-              </Text>
-              <Input
-                className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
-                placeholder="Enter an optional comment"
-                value={comment}
-                onChangeText={setComment}
-                returnKeyType="done"
-              />
-            </View>
+            {!!lnurlDetails.commentAllowed && (
+              <View className="w-full">
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  Comment
+                </Text>
+                <Input
+                  className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
+                  placeholder="Enter an optional comment"
+                  value={comment}
+                  onChangeText={setComment}
+                  returnKeyType="done"
+                />
+              </View>
+            )}
             <Receiver originalText={originalText} />
           </View>
           <View className="p-6">
