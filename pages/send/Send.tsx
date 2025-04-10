@@ -1,7 +1,5 @@
-import { Invoice } from "@getalby/lightning-tools";
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
-import { lnurl } from "lib/lnurl";
 import React from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
@@ -14,13 +12,14 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { handleLink } from "~/lib/link";
-import { convertMerchantQRToLightningAddress } from "~/lib/merchants";
+import { processPayment } from "~/lib/processPayment";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{
     url: string;
     amount: string;
   }>();
+
   const [isLoading, setLoading] = React.useState(false);
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [keyboardText, setKeyboardText] = React.useState("");
@@ -34,130 +33,41 @@ export function Send() {
       console.error("Failed to read clipboard", error);
       return;
     }
-    loadPayment(clipboardText);
+    await loadPayment(clipboardText);
   }
+
+  const handleScanned = async (data: string) => {
+    return loadPayment(data);
+  };
 
   function openKeyboard() {
     setKeyboardOpen(true);
   }
 
-  const handleScanned = (data: string) => {
-    return loadPayment(data);
-  };
-
   function submitKeyboardText() {
     loadPayment(keyboardText);
   }
 
-  const loadPayment = React.useCallback(
-    async (text: string): Promise<boolean> => {
-      if (!text) {
-        errorToast(new Error("Your clipboard is empty."));
-        return false;
-      }
-
-      if (text.startsWith("nostr+walletauth") /* can have : or +alby: */) {
-        handleLink(text);
-        return true;
-      }
-
-      // Some apps use uppercased LIGHTNING: prefixes
-      text = text.toLowerCase();
-
-      console.info("loading payment", text);
-      const originalText = text;
-      setLoading(true);
-      try {
-        if (text.startsWith("bitcoin:")) {
-          const universalUrl = text.replace("bitcoin:", "http://");
-          const url = new URL(universalUrl);
-          const lightningParam = url.searchParams.get("lightning");
-          if (!lightningParam) {
-            throw new Error("No lightning param found in bitcoin payment link");
-          }
-          text = lightningParam;
-        }
-        if (text.startsWith("lightning:")) {
-          text = text.substring("lightning:".length);
-        }
-
-        // convert picknpay QRs to lightning addresses
-        const merchantLightningAddress =
-          convertMerchantQRToLightningAddress(text);
-        if (merchantLightningAddress) {
-          text = merchantLightningAddress;
-        }
-
-        const lnurlValue = lnurl.findLnurl(text);
-        console.info("Checked lnurl value", text, lnurlValue);
-        if (lnurlValue) {
-          const lnurlDetails = await lnurl.getDetails(lnurlValue);
-
-          if (
-            lnurlDetails.tag !== "payRequest" &&
-            lnurlDetails.tag !== "withdrawRequest"
-          ) {
-            throw new Error("LNURL tag not supported");
-          }
-
-          if (lnurlDetails.tag === "withdrawRequest") {
-            router.replace({
-              pathname: "/withdraw",
-              params: {
-                url: lnurlValue,
-              },
-            });
-            return true;
-          }
-
-          router.replace({
-            pathname: "/send/lnurl-pay",
-            params: {
-              lnurlDetailsJSON: JSON.stringify(lnurlDetails),
-              originalText,
-              amount,
-            },
-          });
-          return true;
-        } else {
-          // Check if this is a valid invoice
-          const invoice = new Invoice({ pr: text });
-
-          if (invoice.satoshi === 0) {
-            router.replace({
-              pathname: "/send/0-amount",
-              params: {
-                invoice: text,
-                originalText,
-                comment: invoice.description,
-              },
-            });
-            return true;
-          }
-
-          router.replace({
-            pathname: "/send/confirm",
-            params: { invoice: text, originalText },
-          });
-          return true;
-        }
-      } catch (error) {
-        console.error("failed to load payment", originalText, error);
-        errorToast(error);
-      } finally {
-        setLoading(false);
-      }
-
+  const loadPayment = async (text: string, amount = "") => {
+    if (!text) {
+      errorToast(new Error("Your clipboard is empty."));
       return false;
-    },
-    [amount],
-  );
+    }
 
-  // Delay starting the QR scanner if url has valid payment info
+    if (text.startsWith("nostr+walletauth") /* can have : or +alby: */) {
+      handleLink(text);
+      return true;
+    }
+    setLoading(true);
+    const result = await processPayment(text, amount);
+    setLoading(false);
+    return result;
+  };
+
   React.useEffect(() => {
     if (url) {
       (async () => {
-        const result = await loadPayment(url);
+        const result = await loadPayment(url, amount);
         // Delay the camera to show the error message
         if (!result) {
           setTimeout(() => {
@@ -168,7 +78,7 @@ export function Send() {
     } else {
       setStartScanning(true);
     }
-  }, [loadPayment, url]);
+  }, [url, amount]);
 
   return (
     <>
