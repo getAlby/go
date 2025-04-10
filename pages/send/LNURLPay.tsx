@@ -17,11 +17,11 @@ import { cn } from "~/lib/utils";
 export function LNURLPay() {
   const {
     lnurlDetailsJSON,
-    originalText,
+    receiver,
     amount: amountParam,
   } = useLocalSearchParams() as unknown as {
     lnurlDetailsJSON: string;
-    originalText: string;
+    receiver: string;
     amount: string;
   };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
@@ -65,7 +65,7 @@ export function LNURLPay() {
         pathname: "/send/confirm",
         params: {
           invoice: lnurlPayInfo.pr,
-          originalText,
+          receiver,
           comment,
           successAction: lnurlPayInfo.successAction
             ? JSON.stringify(lnurlPayInfo.successAction)
@@ -125,7 +125,7 @@ export function LNURLPay() {
                 />
               </View>
             )}
-            <Receiver originalText={originalText} />
+            <Receiver name={receiver} />
           </View>
           <View className="p-6">
             <Button
