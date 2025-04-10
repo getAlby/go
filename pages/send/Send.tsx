@@ -110,32 +110,14 @@ export function Send() {
             return true;
           }
 
-          // Handle fixed amount LNURLs
-          if (
-            lnurlDetails.minSendable === lnurlDetails.maxSendable &&
-            !lnurlDetails.commentAllowed
-          ) {
-            const callback = new URL(lnurlDetails.callback);
-            callback.searchParams.append(
-              "amount",
-              lnurlDetails.minSendable.toString(),
-            );
-            const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-            router.replace({
-              pathname: "/send/confirm",
-              params: { invoice: lnurlPayInfo.pr, originalText },
-            });
-          } else {
-            router.replace({
-              pathname: "/send/lnurl-pay",
-              params: {
-                lnurlDetailsJSON: JSON.stringify(lnurlDetails),
-                originalText,
-                amount,
-              },
-            });
-          }
-
+          router.replace({
+            pathname: "/send/lnurl-pay",
+            params: {
+              lnurlDetailsJSON: JSON.stringify(lnurlDetails),
+              originalText,
+              amount,
+            },
+          });
           return true;
         } else {
           // Check if this is a valid invoice
