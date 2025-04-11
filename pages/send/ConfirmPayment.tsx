@@ -19,10 +19,10 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
   const { data: transactions } = useTransactions();
-  const { invoice, originalText, comment, successAction, amount } =
+  const { invoice, receiver, comment, successAction, amount } =
     useLocalSearchParams() as {
       invoice: string;
-      originalText: string;
+      receiver: string;
       comment: string;
       successAction: string;
       amount?: string;
@@ -50,7 +50,7 @@ export function ConfirmPayment() {
 
       console.info("payInvoice Response", response);
 
-      if (originalText === ALBY_LIGHTNING_ADDRESS) {
+      if (receiver === ALBY_LIGHTNING_ADDRESS) {
         useAppStore.getState().updateLastAlbyPayment();
       }
 
@@ -59,7 +59,7 @@ export function ConfirmPayment() {
         pathname: "/send/success",
         params: {
           preimage: response.preimage,
-          originalText,
+          receiver,
           invoice,
           amount: amountToPaySats,
           successAction,
@@ -112,7 +112,7 @@ export function ConfirmPayment() {
             </View>
           )
         )}
-        <Receiver originalText={originalText} invoice={invoice} />
+        <Receiver name={receiver} invoice={invoice} />
       </View>
       <View className="p-6 bg-background">
         <WalletSwitcher selectedWalletId={selectedWalletId} wallets={wallets} />

@@ -159,9 +159,10 @@ export const handleLink = async (url: string) => {
 
       if (lnurlDetails.tag === "payRequest") {
         router.push({
-          pathname: "/send",
+          pathname: "/send/lnurl-pay",
           params: {
-            url: lnurl,
+            lnurlDetailsJSON: JSON.stringify(lnurlDetails),
+            receiver: lnurl,
           },
         });
         return;
