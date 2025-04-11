@@ -12,10 +12,6 @@ export function Manual() {
   const [keyboardText, setKeyboardText] = useState("");
 
   const submitKeyboardText = async () => {
-    if (!keyboardText) {
-      errorToast(new Error("Input is empty."));
-      return;
-    }
     try {
       await processPayment(keyboardText, "");
     } catch (error) {
@@ -43,7 +39,11 @@ export function Manual() {
               returnKeyType="done"
             />
           </View>
-          <Button onPress={submitKeyboardText} size="lg">
+          <Button
+            onPress={submitKeyboardText}
+            disabled={!keyboardText}
+            size="lg"
+          >
             <Text>Next</Text>
           </Button>
         </View>
