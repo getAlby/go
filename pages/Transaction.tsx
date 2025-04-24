@@ -148,6 +148,14 @@ export function Transaction() {
               title="Description"
               content={transaction.description || "-"}
             />
+            <TransactionDetailRow
+              title="Fees"
+              content={
+                transaction.fees_paid
+                  ? Math.floor(transaction.fees_paid / 1000) + " sats"
+                  : "-"
+              }
+            />
 
             {boostagram && <PodcastingInfo boost={boostagram} />}
 
