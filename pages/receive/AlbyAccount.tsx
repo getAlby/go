@@ -49,7 +49,7 @@ export function AlbyAccount() {
         <Button
           size="lg"
           className="flex flex-row gap-2"
-          onPress={() => openURL("https://getalby.com/")}
+          onPress={() => openURL("https://getalby.com/auth/users/new")}
         >
           <Text>Get Alby Account</Text>
           <LinkIcon className="text-primary-foreground" />
