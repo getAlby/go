@@ -3,14 +3,14 @@ import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 
 interface ReceiverProps {
-  originalText: string;
+  name: string;
   invoice?: string;
 }
 
-export function Receiver({ originalText, invoice }: ReceiverProps) {
+export function Receiver({ name, invoice }: ReceiverProps) {
   const shouldShowReceiver =
-    originalText !== invoice &&
-    originalText.toLowerCase().replace("lightning:", "").includes("@");
+    name !== invoice &&
+    name.toLowerCase().replace("lightning:", "").includes("@");
 
   if (!shouldShowReceiver) {
     return null;
@@ -22,7 +22,7 @@ export function Receiver({ originalText, invoice }: ReceiverProps) {
         To
       </Text>
       <Text className="text-center text-foreground text-2xl font-medium2">
-        {originalText.toLowerCase().replace("lightning:", "")}
+        {name.toLowerCase().replace("lightning:", "")}
       </Text>
     </View>
   );

@@ -13,10 +13,10 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function PaymentSuccess() {
   const getFiatAmount = useGetFiatAmount();
-  const { originalText, invoice, amount, successAction } =
+  const { receiver, invoice, amount, successAction } =
     useLocalSearchParams() as {
       preimage: string;
-      originalText: string;
+      receiver: string;
       invoice: string;
       amount: string;
       successAction: string;
@@ -49,7 +49,7 @@ export function PaymentSuccess() {
             </Text>
           )}
         </View>
-        <Receiver originalText={originalText} invoice={invoice} />
+        <Receiver name={receiver} invoice={invoice} />
         {lnurlSuccessAction && (
           <View className="flex flex-col gap-2 items-center">
             <Text className="text-muted-foreground text-center font-semibold2">

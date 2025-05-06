@@ -11,12 +11,11 @@ import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 
 export function ZeroAmount() {
-  const { invoice, originalText, comment } =
-    useLocalSearchParams() as unknown as {
-      invoice: string;
-      originalText: string;
-      comment: string;
-    };
+  const { invoice, receiver, comment } = useLocalSearchParams() as unknown as {
+    invoice: string;
+    receiver: string;
+    comment: string;
+  };
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
 
@@ -27,7 +26,7 @@ export function ZeroAmount() {
         pathname: "/send/confirm",
         params: {
           invoice,
-          originalText,
+          receiver,
           amount,
         },
       });
@@ -63,7 +62,7 @@ export function ZeroAmount() {
                 </Text>
               </View>
             )}
-            <Receiver originalText={originalText} />
+            <Receiver name={receiver} />
           </View>
           <View className="p-6">
             <Button
