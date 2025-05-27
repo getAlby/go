@@ -1,4 +1,4 @@
-import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
+import { Nip47Transaction } from "@getalby/sdk/dist/nwc";
 import dayjs from "dayjs";
 import { Link, router } from "expo-router";
 import React from "react";

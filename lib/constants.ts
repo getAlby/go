@@ -1,4 +1,4 @@
-import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import { Nip47Capability } from "@getalby/sdk/dist/nwc";
 
 export const NAV_THEME = {
   light: {

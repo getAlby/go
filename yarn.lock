@@ -1252,13 +1252,13 @@
   resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.1.2.tgz#8a018e98d5c13097dd98d93192cf5e4e455f4c20"
   integrity sha512-BwGm8eGbPh59BVa1gI5yJMantBl/Fdps6X4p1ZACnmxz9vDINX8/3aFoOnDlF7yyA2boXWCsReVQSr26Q2yjiQ==
 
-"@getalby/sdk@^3.8.2":
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-3.8.2.tgz#84a184c46fdebf18652d6c06b92f07ed36129d3d"
-  integrity sha512-0F4ub/e+t93V9wzR5Vr+Xdfhhy5kK+ZKls/J3yX2YBT27X1Rd3QIPLCTUFCb4RaV6a/e17aZAVJF8Af7r9BeAg==
+"@getalby/sdk@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-5.1.0.tgz#5e54d99b7c9470425ddcca529a95718f451efe0d"
+  integrity sha512-0ijo4enzoxZinyhOMFlR4h3qTQ9I0Se+dBkefk0ja5zOcpi61ZqT86n0T+7u94l8SH6/poysFBObdtN61u+6tQ==
   dependencies:
-    emittery "^1.0.3"
-    nostr-tools "2.9.4"
+    "@getalby/lightning-tools" "^5.1.2"
+    nostr-tools "2.12.0"
 
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
@@ -3919,11 +3919,6 @@ emittery@^0.13.1:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/emittery/-/emittery-0.13.1.tgz#c04b8c3457490e0847ae51fced3af52d338e3dad"
   integrity sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==
-
-emittery@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/emittery/-/emittery-1.0.3.tgz#c9d2a9c689870f15251bb13b31c67715c26d69ac"
-  integrity sha512-tJdCJitoy2lrC2ldJcqN4vkqJ00lT+tOWNT1hBJjO/3FDMJa5TTIiYGCKGkn/WfCyOzUMObeohbVTj00fhiLiA==
 
 emoji-regex@^10.3.0:
   version "10.4.0"
@@ -7113,10 +7108,10 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
-nostr-tools@2.9.4:
-  version "2.9.4"
-  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-2.9.4.tgz#ec0e1faa95bf9e5fee30b36c842a270135f40183"
-  integrity sha512-Powumwkp+EWbdK1T8IsEX4daTLQhtWJvitfZ6OP2BdU1jJZvNlUp3SQB541UYw4uc9jgLbxZW6EZSdZoSfIygQ==
+nostr-tools@2.12.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-2.12.0.tgz#09f270e32453611a85c3670ff86ae856f3cbd21a"
+  integrity sha512-pUWEb020gTvt1XZvTa8AKNIHWFapjsv2NKyk43Ez2nnvz6WSXsrTFE0XtkNLSRBjPn6EpxumKeNiVzLz74jNSA==
   dependencies:
     "@noble/ciphers" "^0.5.1"
     "@noble/curves" "1.2.0"
@@ -7125,9 +7120,9 @@ nostr-tools@2.9.4:
     "@scure/bip32" "1.3.1"
     "@scure/bip39" "1.2.1"
   optionalDependencies:
-    nostr-wasm v0.1.0
+    nostr-wasm "0.1.0"
 
-nostr-wasm@v0.1.0:
+nostr-wasm@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/nostr-wasm/-/nostr-wasm-0.1.0.tgz#17af486745feb2b7dd29503fdd81613a24058d94"
   integrity sha512-78BTryCLcLYv96ONU8Ws3Q1JzjlAt+43pWQhIl86xZmWeegYCNLPml7yQ+gG3vR6V5h4XGj+TxO+SS5dsThQIA==

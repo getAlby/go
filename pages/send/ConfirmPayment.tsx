@@ -24,7 +24,6 @@ export function ConfirmPayment() {
     comment,
     successAction,
     amount,
-    recipientDescription,
     recipientIdentifier,
   } = useLocalSearchParams() as {
     invoice: string;
@@ -32,7 +31,6 @@ export function ConfirmPayment() {
     comment: string;
     successAction: string;
     amount?: string;
-    recipientDescription?: string;
     recipientIdentifier?: string;
   };
   const getFiatAmount = useGetFiatAmount();
@@ -55,11 +53,10 @@ export function ConfirmPayment() {
         invoice,
         amount: amount ? amountToPaySats * 1000 : undefined,
         metadata: {
-          recipient_data: {
-            identifier: recipientIdentifier,
-            description: recipientDescription,
-          },
-          comment,
+          ...(comment && { comment }),
+          ...(recipientIdentifier && {
+            recipient_data: { identifier: recipientIdentifier },
+          }),
         },
       });
 

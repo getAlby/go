@@ -1,4 +1,7 @@
-import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
+import {
+  Nip47Transaction,
+  Nip47TransactionMetadata,
+} from "@getalby/sdk/dist/nwc";
 import { hexToBytes } from "@noble/hashes/utils";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
@@ -60,15 +63,7 @@ export function Transaction() {
     return parsedBoostagram;
   }, [transaction.metadata]);
 
-  // TODO: extract typings
-  // TODO: review "description" field
-  const metadata = transaction.metadata as
-    | {
-        payer_data?: { name?: string };
-        recipient_data?: { identifier?: string; description?: string };
-        comment?: string;
-      }
-    | undefined;
+  const metadata = transaction.metadata as Nip47TransactionMetadata;
 
   return (
     <View className="flex-1 flex flex-col gap-3">
@@ -160,12 +155,7 @@ export function Transaction() {
             />
             <TransactionDetailRow
               title="Description"
-              content={
-                // TODO: should this description be merged on Alby Hub side?
-                transaction.description ||
-                metadata?.recipient_data?.description ||
-                "-"
-              }
+              content={transaction.description || "-"}
             />
             {metadata?.comment && (
               <TransactionDetailRow
@@ -203,10 +193,10 @@ export function Transaction() {
                 copy
               />
             )}
-            {transaction.metadata && (
+            {metadata && (
               <TransactionDetailRow
                 title="Metadata"
-                content={JSON.stringify(transaction.metadata, null, 2)}
+                content={JSON.stringify(metadata, null, 2)}
                 copy
               />
             )}

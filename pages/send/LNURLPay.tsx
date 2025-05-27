@@ -52,15 +52,6 @@ export function LNURLPay() {
       if (comment) {
         callback.searchParams.append("comment", comment);
       }
-      let recipientDescription = "";
-      try {
-        recipientDescription =
-          (
-            JSON.parse(decodeURIComponent(lnurlDetails.metadata)) as string[][]
-          ).find((t) => t[0] === "text/plain")?.[1] || "";
-      } catch (error) {
-        console.error("failed to parse recipient description", error);
-      }
       let recipientIdentifier = "";
       try {
         recipientIdentifier =
@@ -78,7 +69,6 @@ export function LNURLPay() {
         params: {
           invoice: lnurlPayInfo.pr,
           originalText,
-          recipientDescription,
           recipientIdentifier,
           comment,
           successAction: lnurlPayInfo.successAction
