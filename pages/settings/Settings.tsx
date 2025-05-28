@@ -3,7 +3,9 @@ import { Alert, TouchableOpacity, View } from "react-native";
 import {
   BitcoinIcon,
   FingerprintIcon,
+  NotificationIcon,
   OnboardingIcon,
+  PinIcon,
   ResetIcon,
   SignOutIcon,
   ThemeIcon,
@@ -17,11 +19,18 @@ import AlbyBanner from "~/components/AlbyBanner";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
-import { DEFAULT_CURRENCY, DEFAULT_WALLET_NAME } from "~/lib/constants";
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_WALLET_NAME,
+  IS_EXPO_GO,
+} from "~/lib/constants";
+import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { removeAllInfo } from "~/lib/walletInfo";
 
 export function Settings() {
+  const wallets = useAppStore((store) => store.wallets);
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(__DEV__);
@@ -50,7 +59,7 @@ export function Settings() {
         </Link>
 
         <Link href="/settings/fiat-currency" asChild>
-          <TouchableOpacity className="flex flex-row gap-4">
+          <TouchableOpacity className="flex flex-row gap-4 items-center">
             <BitcoinIcon className="text-muted-foreground" />
             <Text className="text-foreground font-medium2 text-xl">
               Fiat Currency
@@ -61,8 +70,19 @@ export function Settings() {
           </TouchableOpacity>
         </Link>
 
+        {!IS_EXPO_GO && (
+          <Link href="/settings/notifications" asChild>
+            <TouchableOpacity className="flex flex-row gap-4 items-center">
+              <NotificationIcon className="text-muted-foreground" />
+              <Text className="text-foreground font-medium2 text-xl">
+                Notifications
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        )}
+
         <Link href="/settings/security" asChild>
-          <TouchableOpacity className="flex flex-row gap-4">
+          <TouchableOpacity className="flex flex-row gap-4 items-center">
             <FingerprintIcon className="text-muted-foreground" />
             <Text className="text-foreground font-medium2 text-xl">
               Security
@@ -71,7 +91,7 @@ export function Settings() {
         </Link>
 
         <TouchableOpacity
-          className="flex flex-row gap-4"
+          className="flex flex-row gap-4 items-center"
           onPress={toggleColorScheme}
         >
           <ThemeIcon className="text-muted-foreground" />
@@ -81,6 +101,15 @@ export function Settings() {
           </Text>
         </TouchableOpacity>
 
+        <Link href="/settings/bitcoin-map" asChild>
+          <TouchableOpacity className="flex flex-row gap-4 items-center">
+            <PinIcon className="text-muted-foreground" />
+            <Text className="text-foreground font-medium2 text-xl">
+              Bitcoin Map
+            </Text>
+          </TouchableOpacity>
+        </Link>
+
         {developerMode && (
           <>
             <View className="mt-5 flex flex-col gap-6">
@@ -88,7 +117,7 @@ export function Settings() {
                 Developer mode
               </Text>
               <TouchableOpacity
-                className="flex flex-row gap-4"
+                className="flex flex-row gap-4 items-center"
                 onPress={() => {
                   signOut();
                 }}
@@ -97,7 +126,7 @@ export function Settings() {
                 <Text className="font-medium2 text-xl">Sign out</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row gap-4"
+                className="flex flex-row gap-4 items-center"
                 onPress={() => {
                   router.dismissAll();
                   useAppStore.getState().setOnboarded(false);
@@ -107,7 +136,7 @@ export function Settings() {
                 <Text className="font-medium2 text-xl">Open Onboarding</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row gap-4"
+                className="flex flex-row gap-4 items-center"
                 onPress={() => {
                   Alert.alert(
                     "Reset",
@@ -119,7 +148,13 @@ export function Settings() {
                       },
                       {
                         text: "Confirm",
-                        onPress: () => {
+                        onPress: async () => {
+                          if (!IS_EXPO_GO) {
+                            for (const [id, wallet] of wallets.entries()) {
+                              await deregisterWalletNotifications(wallet, id);
+                            }
+                            await removeAllInfo();
+                          }
                           router.dismissAll();
                           useAppStore.getState().reset();
                         },

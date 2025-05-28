@@ -1,21 +1,11 @@
 import { useAppStore } from "lib/state/appStore";
 import useSWR from "swr";
-import { errorToast } from "~/lib/errorToast";
+import { createNwcFetcher } from "~/lib/createNwcFetcher";
 
-type FetchArgs = Parameters<typeof fetch>;
-const fetcher = async (...args: FetchArgs) => {
-  const nwcClient = useAppStore.getState().nwcClient;
-  if (!nwcClient) {
-    throw new Error("No NWC client");
-  }
-  try {
-    const info = await nwcClient.getInfo();
-    return info;
-  } catch (error) {
-    errorToast(error);
-    throw error;
-  }
-};
+const fetcher = createNwcFetcher(async (nwcClient) => {
+  const info = await nwcClient.getInfo();
+  return info;
+});
 
 export function useInfo() {
   const nwcClient = useAppStore((store) => store.nwcClient);

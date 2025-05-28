@@ -2,7 +2,7 @@
 
 1. Update version in
 
-- `app.json`
+- `app.config.js`
 - `package.json`
 
 2. Create a git tag and push it (a new draft release will be created)

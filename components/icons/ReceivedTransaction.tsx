@@ -7,19 +7,19 @@ const ReceivedTransactionIcon = (props: SvgProps) => {
 
   const colors = {
     light: {
-      rectFill: "#DBFBE6",
-      pathStroke: "#22C45E",
+      rectFill: "#DCFCE7",
+      pathStroke: "#22C55E",
     },
     dark: {
       rectFill: "#022C22",
-      pathStroke: "#10B981",
+      pathStroke: "#14B8A6",
     },
   };
 
   const currentColors = colorScheme === "dark" ? colors.dark : colors.light;
 
   return (
-    <Svg width={40} height={40} viewBox="0 0 40 40" fill="none" {...props}>
+    <Svg width={44} height={44} viewBox="0 0 40 40" fill="none" {...props}>
       <Rect width="40" height="40" rx="20" fill={currentColors.rectFill} />
       <Path
         strokeWidth="3.75"

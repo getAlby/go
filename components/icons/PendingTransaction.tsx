@@ -7,19 +7,19 @@ const PendingTransactionIcon = (props: SvgProps) => {
 
   const colors = {
     light: {
-      rectFill: "#DAE9FD",
-      pathStroke: "#3B81F5",
+      rectFill: "#DBEAFE",
+      pathStroke: "#3B82F6",
     },
     dark: {
-      rectFill: "#1E3A89",
-      pathStroke: "#3B81F5",
+      rectFill: "#082F49",
+      pathStroke: "#0EA5E9",
     },
   };
 
   const currentColors = colorScheme === "dark" ? colors.dark : colors.light;
 
   return (
-    <Svg width={40} height={40} viewBox="0 0 40 40" fill="none" {...props}>
+    <Svg width={44} height={44} viewBox="0 0 40 40" fill="none" {...props}>
       <Rect width="40" height="40" rx="20" fill={currentColors.rectFill} />
       <Path
         strokeWidth="3.75"

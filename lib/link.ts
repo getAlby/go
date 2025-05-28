@@ -1,3 +1,5 @@
+import { nwc } from "@getalby/sdk";
+import { NWAOptions } from "@getalby/sdk/dist/nwc";
 import { router } from "expo-router";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
@@ -7,6 +9,10 @@ const SUPPORTED_SCHEMES = [
   "bitcoin:",
   "alby:",
   "nostr+walletconnect:",
+  "nostrnwc:",
+  "nostrnwc+alby:",
+  "nostr+walletauth:",
+  "nostr+walletauth+alby:",
 ];
 
 // Register exp scheme for testing during development
@@ -17,16 +23,67 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
 
 export const handleLink = async (url: string) => {
   if (!url) {
+    console.error("no url to handle");
     return;
   }
+  console.info("handling link", url);
 
   const parsedUrl = new URL(url);
   if (!parsedUrl.protocol) {
+    console.error("no protocol in URL", url);
     return;
   }
 
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
+    if (parsedUrl.protocol.startsWith("nostr+walletauth")) {
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+
+      const nwaOptions = nwc.NWAClient.parseWalletAuthUrl(url);
+
+      router.push({
+        pathname: "/settings/wallets/connect",
+        params: {
+          options: JSON.stringify(nwaOptions),
+          flow: "nwa",
+        },
+      });
+      return;
+    }
+
+    if (parsedUrl.protocol.startsWith("nostrnwc")) {
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+
+      const params = new URLSearchParams(search);
+      const appname = params.get("appname");
+      const rawCallback = params.get("callback");
+      const rawAppIcon = params.get("appicon");
+      if (!appname || !rawCallback || !rawAppIcon) {
+        return;
+      }
+
+      const appicon = decodeURIComponent(rawAppIcon);
+      const callback = decodeURIComponent(rawCallback);
+
+      console.info("Navigating to NWA flow");
+      router.push({
+        pathname: "/settings/wallets/connect",
+        params: {
+          options: JSON.stringify({
+            icon: appicon,
+            name: appname,
+            returnTo: callback,
+          } as NWAOptions),
+          flow: "deeplink",
+        },
+      });
+      return;
+    }
+
     if (parsedUrl.protocol === "nostr+walletconnect:") {
       if (router.canDismiss()) {
         router.dismissAll();
@@ -62,6 +119,23 @@ export const handleLink = async (url: string) => {
     }
 
     console.info("Navigating to", fullUrl);
+
+    // Opening the notification executes the linking code
+    // We set the hostname on the notification deeplink so that it can be handled separately
+    if (hostname === "payment_notification") {
+      const urlParams = new URLSearchParams(search);
+      const walletId = urlParams.get("wallet_id");
+      const transaction = urlParams.get("transaction");
+      if (!transaction || !walletId) {
+        return;
+      }
+      const transactionJSON = decodeURIComponent(transaction);
+      router.push({
+        pathname: "/transaction",
+        params: { transactionJSON, walletId },
+      });
+      return;
+    }
 
     const schemePattern = new RegExp(
       `^(${SUPPORTED_SCHEMES.map((s) => s.replace(":", "")).join("|")}):`,
@@ -106,6 +180,7 @@ export const handleLink = async (url: string) => {
       });
     }
   } else {
+    console.error("Unsupported scheme", url);
     // Redirect the user to the home screen
     // if no match was found
     router.replace({

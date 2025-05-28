@@ -8,18 +8,18 @@ const FailedTransactionIcon = (props: SvgProps) => {
   const colors = {
     light: {
       rectFill: "#FEE2E2",
-      pathStroke: "#FB7185",
+      pathStroke: "#EF4444",
     },
     dark: {
-      rectFill: "#450A0A",
-      pathStroke: "#DC2626",
+      rectFill: "#4C0519",
+      pathStroke: "#F43F5E",
     },
   };
 
   const currentColors = colorScheme === "dark" ? colors.dark : colors.light;
 
   return (
-    <Svg width={40} height={40} viewBox="0 0 40 40" fill="none" {...props}>
+    <Svg width={44} height={44} viewBox="0 0 40 40" fill="none" {...props}>
       <Rect width="40" height="40" rx="20" fill={currentColors.rectFill} />
       <Path
         strokeWidth="3.75"

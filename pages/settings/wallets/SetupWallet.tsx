@@ -4,7 +4,7 @@ import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Modal, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
@@ -18,20 +18,12 @@ import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
-import { REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import { registerWalletNotifications } from "~/lib/notifications";
 
 export function SetupWallet() {
   const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
@@ -49,6 +41,8 @@ export function SetupWallet() {
     React.useState<nwc.Nip47Capability[]>();
   const [name, setName] = React.useState("");
   const [startScanning, setStartScanning] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [showHelp, setShowHelp] = React.useState(false);
 
   const handleScanned = (data: string) => {
     return connect(data);
@@ -104,18 +98,30 @@ export function SetupWallet() {
     [],
   );
 
-  const addWallet = () => {
-    if (!nostrWalletConnectUrl) {
+  const addWallet = async () => {
+    if (isLoading || !nostrWalletConnectUrl) {
       return;
     }
+    setIsLoading(true);
 
     const nwcClient = new nwc.NWCClient({ nostrWalletConnectUrl });
-    useAppStore.getState().addWallet({
+
+    const wallet = {
       nostrWalletConnectUrl,
       nwcCapabilities: capabilities,
       name: name,
       lightningAddress: nwcClient.lud16 || "",
-    });
+    };
+    useAppStore.getState().addWallet(wallet);
+
+    if (!IS_EXPO_GO) {
+      const isNotificationsEnabled =
+        useAppStore.getState().isNotificationsEnabled;
+      if (isNotificationsEnabled) {
+        await registerWalletNotifications(wallet, wallets.length);
+      }
+    }
+
     useAppStore.getState().setNWCClient(nwcClient);
 
     Toast.show({
@@ -129,6 +135,7 @@ export function SetupWallet() {
       router.dismissAll();
     }
     router.replace("/");
+    setIsLoading(false);
   };
 
   React.useEffect(() => {
@@ -163,43 +170,27 @@ export function SetupWallet() {
                 }
                 router.replace("/");
               }}
+              className="-mr-4 px-6"
             >
-              <XIcon className="text-foreground" />
+              <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
           ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <TouchableOpacity>
-                  <HelpCircleIcon className="text-foreground" />
-                </TouchableOpacity>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Connect Your Wallet</DialogTitle>
-                  <View className="flex flex-col gap-2">
-                    <Text className="text-muted-foreground">
-                      Follow these steps to connect Alby Go to your Hub:
-                    </Text>
-                    <Text className="text-muted-foreground">
-                      1. Open your Alby Hub
-                    </Text>
-                    <Text className="text-muted-foreground">
-                      2. Go to App Store &raquo; Alby Go
-                    </Text>
-                    <Text className="text-muted-foreground">
-                      3. Scan the QR code with this app
-                    </Text>
-                  </View>
-                </DialogHeader>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button>
-                      <Text>OK</Text>
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <>
+              <TouchableOpacity
+                onPressIn={() => setShowHelp(true)}
+                className="-mr-4 px-6"
+              >
+                <HelpCircleIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <HelpModal
+                visible={showHelp}
+                onClose={() => setShowHelp(false)}
+              />
+            </>
           )
         }
       />
@@ -210,6 +201,11 @@ export function SetupWallet() {
         </View>
       ) : !nostrWalletConnectUrl ? (
         <>
+          <View className="p-4">
+            <Text className="text-lg text-center font-medium2 text-secondary-foreground">
+              Scan a NWC connection secret to add a wallet
+            </Text>
+          </View>
           <QRCodeScanner
             onScanned={handleScanned}
             startScanning={startScanning}
@@ -220,8 +216,8 @@ export function SetupWallet() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
             >
-              <PasteIcon className="text-secondary-foreground" />
-              <Text className="text-secondary-foreground">Paste</Text>
+              <PasteIcon className="text-muted-foreground" />
+              <Text>Paste</Text>
             </Button>
           </View>
         </>
@@ -258,12 +254,75 @@ export function SetupWallet() {
                   icon={TriangleAlertIcon}
                 />
               )}
-            <Button size="lg" onPress={addWallet} disabled={!name}>
+            <Button
+              size="lg"
+              className="flex flex-row gap-2"
+              onPress={addWallet}
+              disabled={!name || isLoading}
+            >
+              {isLoading && <Loading className="text-primary-foreground" />}
               <Text>Finish</Text>
             </Button>
           </View>
         </DismissableKeyboardView>
       )}
     </>
+  );
+}
+
+function HelpModal({
+  visible,
+  onClose,
+}: {
+  visible: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <Modal
+      transparent
+      animationType="fade"
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View className="flex-1 justify-center items-center bg-black/80">
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={onClose}
+          className="absolute inset-0"
+        />
+        <View className="w-4/5 max-w-[425px] bg-background border border-border rounded-2xl z-10">
+          <View className="flex-row items-center justify-center relative p-6">
+            <Text className="text-xl font-bold2 text-foreground">
+              Connect Your Wallet
+            </Text>
+            <TouchableOpacity
+              onPress={onClose}
+              className="absolute right-0 p-4"
+            >
+              <XIcon className="text-muted-foreground" width={24} height={24} />
+            </TouchableOpacity>
+          </View>
+          <View className="p-6 pt-0 flex flex-col">
+            <View className="flex flex-col mb-4">
+              <Text className="text-muted-foreground">
+                Follow these steps to connect Alby Go to your Hub:
+              </Text>
+              <Text className="text-muted-foreground">
+                1. Open your Alby Hub
+              </Text>
+              <Text className="text-muted-foreground">
+                2. Go to App Store &raquo; Alby Go
+              </Text>
+              <Text className="text-muted-foreground">
+                3. Scan the QR code with this app
+              </Text>
+            </View>
+            <Button onPress={onClose}>
+              <Text className="font-bold2">OK</Text>
+            </Button>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 }

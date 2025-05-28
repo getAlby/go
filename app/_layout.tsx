@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   DarkTheme,
   DefaultTheme,
@@ -11,18 +12,20 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { SWRConfig } from "swr";
 import { toastConfig } from "~/components/ToastConfig";
+import { NotificationProvider } from "~/context/Notification";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
-import { useInfo } from "~/hooks/useInfo";
 import { SessionProvider } from "~/hooks/useSession";
-import { NAV_THEME } from "~/lib/constants";
+import { IS_EXPO_GO, NAV_THEME } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -49,8 +52,6 @@ export default function RootLayout() {
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const [resourcesLoaded, setResourcesLoaded] = React.useState(false);
 
-  useConnectionChecker();
-
   async function loadFonts() {
     await Font.loadAsync({
       OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
@@ -64,6 +65,16 @@ export default function RootLayout() {
     const isSupported = await isBiometricSupported();
     if (!isSupported) {
       useAppStore.getState().setSecurityEnabled(false);
+    }
+  }
+
+  // TODO: Do not prompt the user at all if FCM is disabled
+  async function checkAndPromptForNotifications() {
+    const isEnabled = useAppStore.getState().isNotificationsEnabled;
+    // prompt the user to enable notifications on first open
+    if (isEnabled === null) {
+      const enabled = await registerForPushNotificationsAsync();
+      useAppStore.getState().setNotificationsEnabled(enabled);
     }
   }
 
@@ -85,6 +96,9 @@ export default function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
+        if (!IS_EXPO_GO) {
+          await checkAndPromptForNotifications();
+        }
         SplashScreen.hide();
       }
     };
@@ -98,38 +112,32 @@ export default function RootLayout() {
 
   return (
     <SWRConfig value={swrConfiguration}>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <SafeAreaView
-          className="w-full h-full bg-background"
-          edges={["left", "right", "bottom"]}
-        >
-          <UserInactivityProvider>
-            <SessionProvider>
-              <Slot />
-            </SessionProvider>
-          </UserInactivityProvider>
-          <Toast
-            config={toastConfig}
-            position="bottom"
-            bottomOffset={140}
-            topOffset={140}
-          />
-          <PortalHost />
-        </SafeAreaView>
-      </ThemeProvider>
+      <NotificationProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+          <SafeAreaView
+            className="w-full h-full bg-background"
+            edges={["left", "right", "bottom"]}
+          >
+            <GestureHandlerRootView>
+              <BottomSheetModalProvider>
+                <UserInactivityProvider>
+                  <SessionProvider>
+                    <Slot />
+                  </SessionProvider>
+                </UserInactivityProvider>
+                <Toast
+                  config={toastConfig}
+                  position="bottom"
+                  bottomOffset={140}
+                  topOffset={140}
+                />
+                <PortalHost />
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
+          </SafeAreaView>
+        </ThemeProvider>
+      </NotificationProvider>
     </SWRConfig>
   );
-}
-
-function useConnectionChecker() {
-  const { error } = useInfo();
-  React.useEffect(() => {
-    if (error?.message) {
-      Toast.show({
-        type: "connectionError",
-        text1: error.message,
-      });
-    }
-  }, [error?.message]);
 }

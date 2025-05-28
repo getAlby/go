@@ -1,35 +1,36 @@
 import * as React from "react";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from "react-native-reanimated";
+import { Animated, Easing, TextProps } from "react-native";
 import { cn } from "~/lib/utils";
 
 const duration = 1000;
 
-function Skeleton({
-  className,
-  ...props
-}: Omit<React.ComponentPropsWithoutRef<typeof Animated.View>, "style">) {
-  const sv = useSharedValue(1);
+function Skeleton({ className, ...props }: Omit<TextProps, "style">) {
+  const opacity = React.useRef(new Animated.Value(1)).current;
 
   React.useEffect(() => {
-    sv.value = withRepeat(
-      withSequence(withTiming(0.5, { duration }), withTiming(1, { duration })),
-      -1,
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: 0.5,
+          duration,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
     );
-  }, [sv]);
-
-  const style = useAnimatedStyle(() => ({
-    opacity: sv.value,
-  }));
+    pulse.start();
+    return () => pulse.stop();
+  }, [opacity]);
 
   return (
-    <Animated.View
-      style={style}
+    <Animated.Text
+      style={{ opacity }}
       className={cn("rounded-md bg-muted", className)}
       {...props}
     />
