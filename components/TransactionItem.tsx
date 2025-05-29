@@ -1,7 +1,6 @@
 import { Nip47Transaction } from "@getalby/sdk/dist/nwc";
 import dayjs from "dayjs";
 import { router } from "expo-router";
-import { nip19 } from "nostr-tools";
 import React from "react";
 import { Pressable, View } from "react-native";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
@@ -10,19 +9,11 @@ import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { cn } from "~/lib/utils";
+import { cn, safeNpubEncode } from "~/lib/utils";
 
 type Props = {
   tx: Nip47Transaction;
 };
-
-function safeNpubEncode(hex: string): string | undefined {
-  try {
-    return nip19.npubEncode(hex);
-  } catch {
-    return undefined;
-  }
-}
 
 export function TransactionItem({ tx }: Props) {
   const metadata = tx.metadata;

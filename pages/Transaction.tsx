@@ -5,10 +5,12 @@ import {
 import { hexToBytes } from "@noble/hashes/utils";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
+import { nip19 } from "nostr-tools";
 import React from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import { LinkIcon } from "~/components/Icons";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import PendingTransactionIcon from "~/components/icons/PendingTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
@@ -17,7 +19,7 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useAppStore } from "~/lib/state/appStore";
-import { cn } from "~/lib/utils";
+import { cn, safeNpubEncode } from "~/lib/utils";
 
 type TLVRecord = {
   type: number;
@@ -70,6 +72,13 @@ export function Transaction() {
     }
     return parsedBoostagram;
   }, [transaction.metadata]);
+
+  const eventId = transaction.metadata?.nostr?.tags?.find(
+    (t) => t[0] === "e",
+  )?.[1];
+
+  const pubkey = transaction.metadata?.nostr?.pubkey;
+  const npub = pubkey ? safeNpubEncode(pubkey) : undefined;
 
   const metadata = transaction.metadata as Nip47TransactionMetadata;
 
@@ -171,9 +180,29 @@ export function Transaction() {
                 content={metadata.comment}
               />
             )}
-
+            {/* for Alby lightning addresses the content of the zap request is
+            automatically extracted and already displayed above as description */}
+            {transaction.metadata?.nostr && eventId && npub && (
+              <View className="flex flex-row gap-3">
+                <Text className="w-32 text-muted-foreground text-lg">
+                  Nostr Zap
+                </Text>
+                <Link
+                  href={`https://njump.me/${nip19.neventEncode({
+                    id: eventId,
+                  })}`}
+                  asChild
+                >
+                  <Pressable className="flex-row flex-1 gap-1 items-center">
+                    <Text className="flex-1 font-medium2 text-lg">
+                      From {npub}
+                    </Text>
+                    <LinkIcon width={16} className="text-primary-foreground" />
+                  </Pressable>
+                </Link>
+              </View>
+            )}
             {boostagram && <PodcastingInfo boost={boostagram} />}
-
             {transaction.state === "settled" &&
               transaction.type === "outgoing" && (
                 <TransactionDetailRow
