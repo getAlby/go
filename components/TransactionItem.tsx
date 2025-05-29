@@ -85,7 +85,10 @@ export function TransactionItem({ tx }: Props) {
         </View>
         <View className="flex flex-col flex-1">
           <View className="flex flex-row items-center gap-2">
-            <Text numberOfLines={1} className="font-medium2 text-lg">
+            <Text
+              numberOfLines={1}
+              className="font-medium2 text-lg flex-initial"
+            >
               {typeStateText}
               {from !== undefined && <>&nbsp;{from}</>}
               {to !== undefined && <>&nbsp;{to}</>}
