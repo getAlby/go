@@ -1,4 +1,4 @@
-import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
+import { Nip47Transaction } from "@getalby/sdk/dist/nwc";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";

@@ -1,4 +1,4 @@
-import { NWAOptions } from "@getalby/sdk/dist/NWAClient";
+import { NWAOptions } from "@getalby/sdk/dist/nwc";
 import { bytesToHex } from "@noble/hashes/utils";
 import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";

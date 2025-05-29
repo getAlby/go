@@ -5,7 +5,7 @@ import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
 import { Buffer } from "buffer";
 import { clsx, type ClassValue } from "clsx";
-import { getPublicKey } from "nostr-tools";
+import { getPublicKey, nip19 } from "nostr-tools";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -27,5 +27,13 @@ export function getPubkeyFromNWCUrl(nwcUrl: string): string | undefined {
   const nwcOptions = nwc.NWCClient.parseWalletConnectUrl(nwcUrl);
   if (nwcOptions.secret) {
     return getPublicKey(hexToBytes(nwcOptions.secret));
+  }
+}
+
+export function safeNpubEncode(hex: string): string | undefined {
+  try {
+    return nip19.npubEncode(hex);
+  } catch {
+    return undefined;
   }
 }

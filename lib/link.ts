@@ -1,5 +1,5 @@
-import { nwa } from "@getalby/sdk";
-import { NWAOptions } from "@getalby/sdk/dist/NWAClient";
+import { nwc } from "@getalby/sdk";
+import { NWAOptions } from "@getalby/sdk/dist/nwc";
 import { router } from "expo-router";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
@@ -41,7 +41,7 @@ export const handleLink = async (url: string) => {
         router.dismissAll();
       }
 
-      const nwaOptions = nwa.NWAClient.parseWalletAuthUrl(url);
+      const nwaOptions = nwc.NWAClient.parseWalletAuthUrl(url);
 
       router.push({
         pathname: "/settings/wallets/connect",

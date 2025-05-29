@@ -1321,12 +1321,13 @@
   resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.1.2.tgz#8a018e98d5c13097dd98d93192cf5e4e455f4c20"
   integrity sha512-BwGm8eGbPh59BVa1gI5yJMantBl/Fdps6X4p1ZACnmxz9vDINX8/3aFoOnDlF7yyA2boXWCsReVQSr26Q2yjiQ==
 
-"@getalby/sdk@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-4.1.0.tgz#b395cae92ffb5e814d9418e5e9f3960a996b01e2"
-  integrity sha512-vo/Y6cEyFtzeOddRqS1QTmoVeathxODzMDVFHyAbfv6wZdTeqvEjVOKB2fOPatndAdZTT8nbNgFC2nhDqrvvDg==
+"@getalby/sdk@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-5.1.0.tgz#5e54d99b7c9470425ddcca529a95718f451efe0d"
+  integrity sha512-0ijo4enzoxZinyhOMFlR4h3qTQ9I0Se+dBkefk0ja5zOcpi61ZqT86n0T+7u94l8SH6/poysFBObdtN61u+6tQ==
   dependencies:
-    nostr-tools "2.9.4"
+    "@getalby/lightning-tools" "^5.1.2"
+    nostr-tools "2.12.0"
 
 "@gorhom/bottom-sheet@^5.1.2":
   version "5.1.2"
@@ -7201,10 +7202,10 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
-nostr-tools@2.9.4:
-  version "2.9.4"
-  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-2.9.4.tgz#ec0e1faa95bf9e5fee30b36c842a270135f40183"
-  integrity sha512-Powumwkp+EWbdK1T8IsEX4daTLQhtWJvitfZ6OP2BdU1jJZvNlUp3SQB541UYw4uc9jgLbxZW6EZSdZoSfIygQ==
+nostr-tools@2.12.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-2.12.0.tgz#09f270e32453611a85c3670ff86ae856f3cbd21a"
+  integrity sha512-pUWEb020gTvt1XZvTa8AKNIHWFapjsv2NKyk43Ez2nnvz6WSXsrTFE0XtkNLSRBjPn6EpxumKeNiVzLz74jNSA==
   dependencies:
     "@noble/ciphers" "^0.5.1"
     "@noble/curves" "1.2.0"
@@ -7213,9 +7214,9 @@ nostr-tools@2.9.4:
     "@scure/bip32" "1.3.1"
     "@scure/bip39" "1.2.1"
   optionalDependencies:
-    nostr-wasm v0.1.0
+    nostr-wasm "0.1.0"
 
-nostr-wasm@v0.1.0:
+nostr-wasm@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/nostr-wasm/-/nostr-wasm-0.1.0.tgz#17af486745feb2b7dd29503fdd81613a24058d94"
   integrity sha512-78BTryCLcLYv96ONU8Ws3Q1JzjlAt+43pWQhIl86xZmWeegYCNLPml7yQ+gG3vR6V5h4XGj+TxO+SS5dsThQIA==
