@@ -1,28 +1,21 @@
-import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
-import dayjs from "dayjs";
+import { Nip47Transaction } from "@getalby/sdk/dist/nwc";
 import { Link, router } from "expo-router";
 import React from "react";
 import {
   FlatList,
-  Pressable,
   RefreshControl,
   ScrollView,
   TouchableOpacity,
   View,
 } from "react-native";
 import { XIcon } from "~/components/Icons";
-import FailedTransactionIcon from "~/components/icons/FailedTransaction";
-import PendingTransactionIcon from "~/components/icons/PendingTransaction";
-import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
-import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
+import { TransactionItem } from "~/components/TransactionItem";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
-import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useTransactions } from "~/hooks/useTransactions";
 import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
-import { cn } from "~/lib/utils";
 
 export function Transactions() {
   const [page, setPage] = React.useState(1);
@@ -35,7 +28,6 @@ export function Transactions() {
   >([]);
   const [refreshingTransactions, setRefreshingTransactions] =
     React.useState(false);
-  const getFiatAmount = useGetFiatAmount();
 
   React.useEffect(() => {
     if (
@@ -43,7 +35,7 @@ export function Transactions() {
       transactions?.transactions.length &&
       !allTransactions.some((t) =>
         transactions.transactions.some(
-          (other) => t.payment_hash === other.payment_hash,
+          (other: Nip47Transaction) => t.payment_hash === other.payment_hash,
         ),
       )
     ) {
@@ -113,85 +105,7 @@ export function Transactions() {
             }
           }}
           renderItem={({ item: transaction }) => (
-            <Pressable
-              key={transaction.payment_hash}
-              onPress={() =>
-                router.navigate({
-                  pathname: "/transaction",
-                  params: {
-                    transactionJSON: encodeURIComponent(
-                      JSON.stringify(transaction),
-                    ),
-                  },
-                })
-              }
-            >
-              <View
-                className={cn(
-                  "flex flex-row items-center gap-3 px-6 py-2 my-2",
-                  transaction.state === "pending" && "animate-pulse",
-                )}
-              >
-                <View className="w-[44px] h-[44px] bg-muted rounded-full flex flex-col items-center justify-center">
-                  {!(
-                    transaction.state === "failed" ||
-                    transaction.state === "pending"
-                  ) && (
-                    <>
-                      {transaction.type === "incoming" && (
-                        <ReceivedTransactionIcon />
-                      )}
-                      {transaction.type === "outgoing" && (
-                        <SentTransactionIcon />
-                      )}
-                    </>
-                  )}
-                  {transaction.state === "pending" && (
-                    <PendingTransactionIcon />
-                  )}
-                  {transaction.state === "failed" && <FailedTransactionIcon />}
-                </View>
-                <View className="flex flex-col flex-1">
-                  <View className="flex flex-row items-center gap-2">
-                    <Text numberOfLines={1} className="font-medium2 text-lg">
-                      {transaction.type === "incoming"
-                        ? "Received"
-                        : transaction.state === "failed"
-                          ? "Failed"
-                          : transaction.state === "pending"
-                            ? "Sending"
-                            : "Sent"}
-                    </Text>
-                    <Text className="text-muted-foreground text-sm">
-                      {dayjs
-                        .unix(transaction.settled_at || transaction.created_at)
-                        .fromNow()}
-                    </Text>
-                  </View>
-                  {transaction.description && (
-                    <Text numberOfLines={1}>{transaction.description}</Text>
-                  )}
-                </View>
-                <View>
-                  <Text
-                    className={cn(
-                      "text-right font-medium2 text-lg",
-                      transaction.type === "incoming"
-                        ? "text-receive"
-                        : "text-foreground",
-                    )}
-                  >
-                    {transaction.type === "incoming" ? "+" : "-"}{" "}
-                    {Math.floor(transaction.amount / 1000)}
-                    <Text className="text-muted-foreground text-lg"> sats</Text>
-                  </Text>
-                  <Text className="text-right text-sm text-muted-foreground font-medium2">
-                    {getFiatAmount &&
-                      getFiatAmount(Math.floor(transaction.amount / 1000))}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
+            <TransactionItem tx={transaction} />
           )}
         />
       ) : !transactionsLoaded ? (

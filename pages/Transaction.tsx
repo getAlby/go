@@ -1,11 +1,16 @@
-import { Nip47Transaction } from "@getalby/sdk/dist/NWCClient";
+import {
+  Nip47Transaction,
+  Nip47TransactionMetadata,
+} from "@getalby/sdk/dist/nwc";
 import { hexToBytes } from "@noble/hashes/utils";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
+import { nip19 } from "nostr-tools";
 import React from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import { LinkIcon } from "~/components/Icons";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import PendingTransactionIcon from "~/components/icons/PendingTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
@@ -14,7 +19,7 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useAppStore } from "~/lib/state/appStore";
-import { cn } from "~/lib/utils";
+import { cn, safeNpubEncode } from "~/lib/utils";
 
 type TLVRecord = {
   type: number;
@@ -67,6 +72,15 @@ export function Transaction() {
     }
     return parsedBoostagram;
   }, [transaction.metadata]);
+
+  const eventId = transaction.metadata?.nostr?.tags?.find(
+    (t) => t[0] === "e",
+  )?.[1];
+
+  const pubkey = transaction.metadata?.nostr?.pubkey;
+  const npub = pubkey ? safeNpubEncode(pubkey) : undefined;
+
+  const metadata = transaction.metadata as Nip47TransactionMetadata;
 
   return (
     <View className="flex-1 flex flex-col gap-3">
@@ -138,6 +152,18 @@ export function Transaction() {
             )}
           </View>
           <View className="flex flex-col gap-4 w-full mt-10">
+            {metadata?.recipient_data?.identifier && (
+              <TransactionDetailRow
+                title="To"
+                content={metadata.recipient_data.identifier}
+              />
+            )}
+            {metadata?.payer_data?.name && (
+              <TransactionDetailRow
+                title="From"
+                content={metadata.payer_data.name}
+              />
+            )}
             <TransactionDetailRow
               title="Date & Time"
               content={dayjs
@@ -148,9 +174,35 @@ export function Transaction() {
               title="Description"
               content={transaction.description || "-"}
             />
-
+            {metadata?.comment && (
+              <TransactionDetailRow
+                title="Comment"
+                content={metadata.comment}
+              />
+            )}
+            {/* for Alby lightning addresses the content of the zap request is
+            automatically extracted and already displayed above as description */}
+            {transaction.metadata?.nostr && eventId && npub && (
+              <View className="flex flex-row gap-3">
+                <Text className="w-32 text-muted-foreground text-lg">
+                  Nostr Zap
+                </Text>
+                <Link
+                  href={`https://njump.me/${nip19.neventEncode({
+                    id: eventId,
+                  })}`}
+                  asChild
+                >
+                  <Pressable className="flex-row flex-1 gap-1 items-center">
+                    <Text className="flex-1 font-medium2 text-lg">
+                      From {npub}
+                    </Text>
+                    <LinkIcon width={16} className="text-primary-foreground" />
+                  </Pressable>
+                </Link>
+              </View>
+            )}
             {boostagram && <PodcastingInfo boost={boostagram} />}
-
             {transaction.state === "settled" &&
               transaction.type === "outgoing" && (
                 <TransactionDetailRow
@@ -175,6 +227,13 @@ export function Transaction() {
               <TransactionDetailRow
                 title="Preimage"
                 content={transaction.preimage}
+                copy
+              />
+            )}
+            {metadata && (
+              <TransactionDetailRow
+                title="Metadata"
+                content={JSON.stringify(metadata, null, 2)}
                 copy
               />
             )}

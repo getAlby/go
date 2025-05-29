@@ -1,4 +1,4 @@
-import { NWCClient } from "@getalby/sdk/dist/NWCClient";
+import { NWCClient } from "@getalby/sdk/dist/nwc";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 

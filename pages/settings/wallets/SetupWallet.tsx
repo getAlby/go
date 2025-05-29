@@ -1,5 +1,5 @@
 import { nwc } from "@getalby/sdk";
-import { Nip47Capability } from "@getalby/sdk/dist/NWCClient";
+import { Nip47Capability } from "@getalby/sdk/dist/nwc";
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";

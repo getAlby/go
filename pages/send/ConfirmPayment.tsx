@@ -19,14 +19,21 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
   const { data: transactions } = useTransactions();
-  const { invoice, receiver, comment, successAction, amount } =
-    useLocalSearchParams() as {
-      invoice: string;
-      receiver: string;
-      comment: string;
-      successAction: string;
-      amount?: string;
-    };
+  const {
+    invoice,
+    receiver,
+    comment,
+    successAction,
+    amount,
+    recipientIdentifier,
+  } = useLocalSearchParams() as {
+    invoice: string;
+    receiver: string;
+    comment: string;
+    successAction: string;
+    amount?: string;
+    recipientIdentifier?: string;
+  };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
@@ -46,6 +53,12 @@ export function ConfirmPayment() {
       const response = await nwcClient.payInvoice({
         invoice,
         amount: amount ? amountToPaySats * 1000 : undefined,
+        metadata: {
+          ...(comment && { comment }),
+          ...(recipientIdentifier && {
+            recipient_data: { identifier: recipientIdentifier },
+          }),
+        },
       });
 
       console.info("payInvoice Response", response);
