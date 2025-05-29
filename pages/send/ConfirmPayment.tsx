@@ -19,21 +19,14 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
   const { data: transactions } = useTransactions();
-  const {
-    invoice,
-    receiver,
-    comment,
-    successAction,
-    amount,
-    recipientIdentifier,
-  } = useLocalSearchParams() as {
-    invoice: string;
-    receiver: string;
-    comment: string;
-    successAction: string;
-    amount?: string;
-    recipientIdentifier?: string;
-  };
+  const { invoice, comment, successAction, amount, receiver } =
+    useLocalSearchParams() as {
+      invoice: string;
+      comment: string;
+      successAction: string;
+      amount?: string;
+      receiver?: string;
+    };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
@@ -55,8 +48,8 @@ export function ConfirmPayment() {
         amount: amount ? amountToPaySats * 1000 : undefined,
         metadata: {
           ...(comment && { comment }),
-          ...(recipientIdentifier && {
-            recipient_data: { identifier: recipientIdentifier },
+          ...(receiver && {
+            recipient_data: { identifier: receiver },
           }),
         },
       });
@@ -125,7 +118,7 @@ export function ConfirmPayment() {
             </View>
           )
         )}
-        <Receiver name={receiver} invoice={invoice} />
+        <Receiver name={receiver} />
       </View>
       <View className="p-6 bg-background">
         <WalletSwitcher selectedWalletId={selectedWalletId} wallets={wallets} />

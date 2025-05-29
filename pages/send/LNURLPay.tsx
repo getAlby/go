@@ -74,8 +74,7 @@ export function LNURLPay() {
         pathname: "/send/confirm",
         params: {
           invoice: lnurlPayInfo.pr,
-          receiver,
-          recipientIdentifier,
+          receiver: recipientIdentifier,
           comment,
           successAction: lnurlPayInfo.successAction
             ? JSON.stringify(lnurlPayInfo.successAction)

@@ -13,14 +13,12 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 
 export function PaymentSuccess() {
   const getFiatAmount = useGetFiatAmount();
-  const { receiver, invoice, amount, successAction } =
-    useLocalSearchParams() as {
-      preimage: string;
-      receiver: string;
-      invoice: string;
-      amount: string;
-      successAction: string;
-    };
+  const { receiver, amount, successAction } = useLocalSearchParams() as {
+    preimage: string;
+    receiver: string;
+    amount: string;
+    successAction: string;
+  };
 
   const lnurlSuccessAction: LNURLPaymentSuccessAction = successAction
     ? JSON.parse(successAction)
@@ -49,7 +47,7 @@ export function PaymentSuccess() {
             </Text>
           )}
         </View>
-        <Receiver name={receiver} invoice={invoice} />
+        <Receiver name={receiver} />
         {lnurlSuccessAction && (
           <View className="flex flex-col gap-2 items-center">
             <Text className="text-muted-foreground text-center font-semibold2">

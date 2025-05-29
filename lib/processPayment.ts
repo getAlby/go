@@ -75,7 +75,6 @@ export async function processPayment(
           pathname: "/send/0-amount",
           params: {
             invoice: text,
-            receiver: originalText,
             comment: invoice.description,
           },
         });
@@ -84,7 +83,7 @@ export async function processPayment(
 
       router.replace({
         pathname: "/send/confirm",
-        params: { invoice: text, receiver: originalText },
+        params: { invoice: text },
       });
       return true;
     }

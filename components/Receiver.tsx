@@ -3,14 +3,12 @@ import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 
 interface ReceiverProps {
-  name: string;
-  invoice?: string;
+  name?: string;
 }
 
-export function Receiver({ name, invoice }: ReceiverProps) {
+export function Receiver({ name }: ReceiverProps) {
   const shouldShowReceiver =
-    name !== invoice &&
-    name.toLowerCase().replace("lightning:", "").includes("@");
+    name && name.toLowerCase().replace("lightning:", "").includes("@");
 
   if (!shouldShowReceiver) {
     return null;
