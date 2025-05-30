@@ -38,7 +38,7 @@ jobs:
           GOOGLE_SERVICES_JSON: "/home/runner/work/go/go/google-services.json"
 
       - name: 🧪 Run tests
-        run: yarn test:ci
+        run: yarn test
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
