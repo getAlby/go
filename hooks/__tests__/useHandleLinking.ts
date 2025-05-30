@@ -3,20 +3,38 @@ import { handleLink } from "../../lib/link";
 
 jest.mock("expo-router");
 
+const mockLNURLPayResponse = {
+  tag: "payRequest",
+  callback: "https://getalby.com/callback",
+  commentAllowed: 255,
+  minSendable: 1000,
+  maxSendable: 10000000,
+  payerData: {
+    name: { mandatory: false },
+    email: { mandatory: false },
+    pubkey: { mandatory: false },
+  },
+};
+
+const mockLNURLWithdrawResponse = {
+  tag: "withdrawRequest",
+  callback: "https://getalby.com/callback",
+  k1: "unused",
+  defaultDescription: "withdrawal",
+  minWithdrawable: 21000,
+  maxWithdrawable: 21000,
+};
+
 // Mock the lnurl module
 jest.mock("../../lib/lnurl", () => {
   const originalModule = jest.requireActual("../../lib/lnurl");
 
   const mockGetDetails = jest.fn(async (lnurlString) => {
+    if (lnurlString === "hello@getalby.com") {
+      return mockLNURLPayResponse;
+    }
     if (lnurlString.startsWith("lnurlw")) {
-      return {
-        tag: "withdrawRequest",
-        callback: "https://getalby.com/callback",
-        k1: "unused",
-        defaultDescription: "withdrawal",
-        minWithdrawable: 21000,
-        maxWithdrawable: 21000,
-      };
+      return mockLNURLWithdrawResponse;
     }
     return originalModule.lnurl.getDetails(lnurlString);
   });
@@ -30,53 +48,65 @@ jest.mock("../../lib/lnurl", () => {
   };
 });
 
-const testVectors: Record<string, { url: string; path: string }> = {
+const testVectors: Record<string, { path: string; params: any }> = {
   // Lightning Addresses
   "lightning:hello@getalby.com": {
-    url: "hello@getalby.com",
-    path: "/send",
+    path: "/send/lnurl-pay",
+    params: {
+      lnurlDetailsJSON: JSON.stringify(mockLNURLPayResponse),
+      receiver: "hello@getalby.com",
+    },
   },
   "lightning://hello@getalby.com": {
-    url: "hello@getalby.com",
-    path: "/send",
+    path: "/send/lnurl-pay",
+    params: {
+      lnurlDetailsJSON: JSON.stringify(mockLNURLPayResponse),
+      receiver: "hello@getalby.com",
+    },
   },
   "LIGHTNING://hello@getalby.com": {
-    url: "hello@getalby.com",
-    path: "/send",
+    path: "/send/lnurl-pay",
+    params: {
+      lnurlDetailsJSON: JSON.stringify(mockLNURLPayResponse),
+      receiver: "hello@getalby.com",
+    },
   },
   "LIGHTNING:hello@getalby.com": {
-    url: "hello@getalby.com",
-    path: "/send",
+    path: "/send/lnurl-pay",
+    params: {
+      lnurlDetailsJSON: JSON.stringify(mockLNURLPayResponse),
+      receiver: "hello@getalby.com",
+    },
   },
 
   // Lightning invoices
   "lightning:lnbc123": {
-    url: "lnbc123",
     path: "/send",
+    params: { url: "lnbc123" },
   },
   "lightning://lnbc123": {
-    url: "lnbc123",
     path: "/send",
+    params: { url: "lnbc123" },
   },
 
   // BIP21
   "bitcoin:bitcoinaddress?lightning=lnbc123": {
-    url: "lnbc123",
     path: "/send",
+    params: { url: "lnbc123" },
   },
   "BITCOIN:bitcoinaddress?lightning=lnbc123": {
-    url: "lnbc123",
     path: "/send",
+    params: { url: "lnbc123" },
   },
 
   // LNURL-withdraw
   "lightning:lnurlw123": {
-    url: "lnurlw123",
     path: "/withdraw",
+    params: { url: "lnurlw123" },
   },
   "lightning://lnurlw123": {
-    url: "lnurlw123",
     path: "/withdraw",
+    params: { url: "lnurlw123" },
   },
 };
 
@@ -104,7 +134,7 @@ describe("handleLink", () => {
       "should parse the URL '%s' and navigate correctly",
       async (url, expectedOutput) => {
         await handleLink("exp://127.0.0.1:8081/--/" + url);
-        assertRedirect(expectedOutput.path, expectedOutput.url);
+        assertRedirect(expectedOutput.path, expectedOutput.params);
       },
     );
   });
@@ -114,17 +144,15 @@ describe("handleLink", () => {
       "should parse the URL '%s' and navigate correctly",
       async (url, expectedOutput) => {
         await handleLink(url);
-        assertRedirect(expectedOutput.path, expectedOutput.url);
+        assertRedirect(expectedOutput.path, expectedOutput.params);
       },
     );
   });
 });
 
-const assertRedirect = (expectedPath: string, expectedUrl: string) => {
+const assertRedirect = (expectedPath: string, expectedParams: any) => {
   expect(router.push).toHaveBeenCalledWith({
     pathname: expectedPath,
-    params: {
-      url: expectedUrl,
-    },
+    params: expectedParams,
   });
 };

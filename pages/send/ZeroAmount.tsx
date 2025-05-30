@@ -4,19 +4,16 @@ import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import Loading from "~/components/Loading";
-import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 
 export function ZeroAmount() {
-  const { invoice, originalText, comment } =
-    useLocalSearchParams() as unknown as {
-      invoice: string;
-      originalText: string;
-      comment: string;
-    };
+  const { invoice, comment } = useLocalSearchParams() as {
+    invoice: string;
+    comment: string;
+  };
   const [isLoading, setLoading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
 
@@ -27,7 +24,6 @@ export function ZeroAmount() {
         pathname: "/send/confirm",
         params: {
           invoice,
-          originalText,
           amount,
         },
       });
@@ -63,7 +59,6 @@ export function ZeroAmount() {
                 </Text>
               </View>
             )}
-            <Receiver originalText={originalText} />
           </View>
           <View className="p-6">
             <Button

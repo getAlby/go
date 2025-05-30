@@ -43,7 +43,7 @@ type Boostagram = {
 };
 
 export function Transaction() {
-  const { transactionJSON, walletId } = useLocalSearchParams() as unknown as {
+  const { transactionJSON, walletId } = useLocalSearchParams() as {
     transactionJSON: string;
     walletId?: string;
   };

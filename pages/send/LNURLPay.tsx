@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { View } from "react-native";
+import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import Loading from "~/components/Loading";
@@ -16,11 +17,11 @@ import { cn } from "~/lib/utils";
 export function LNURLPay() {
   const {
     lnurlDetailsJSON,
-    originalText,
+    receiver,
     amount: amountParam,
-  } = useLocalSearchParams() as unknown as {
+  } = useLocalSearchParams() as {
     lnurlDetailsJSON: string;
-    originalText: string;
+    receiver: string;
     amount: string;
   };
   const lnurlDetails: LNURLPayServiceResponse = JSON.parse(lnurlDetailsJSON);
@@ -41,6 +42,11 @@ export function LNURLPay() {
     if (lnurlDetails.minSendable === lnurlDetails.maxSendable) {
       setAmount((lnurlDetails.minSendable / 1000).toString());
       setAmountReadOnly(true);
+      Toast.show({
+        type: "success",
+        text1: "You are paying a fixed amount invoice",
+        position: "top",
+      });
     }
   }, [lnurlDetails.minSendable, lnurlDetails.maxSendable]);
 
@@ -61,15 +67,12 @@ export function LNURLPay() {
       } catch (error) {
         console.error("failed to parse recipient identifier", error);
       }
-      //callback.searchParams.append("payerdata", JSON.stringify({ test: 1 }));
       const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-      //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
         params: {
           invoice: lnurlPayInfo.pr,
-          originalText,
-          recipientIdentifier,
+          receiver: recipientIdentifier,
           comment,
           successAction: lnurlPayInfo.successAction
             ? JSON.stringify(lnurlPayInfo.successAction)
@@ -115,19 +118,21 @@ export function LNURLPay() {
                 sats
               </Text>
             </View>
-            <View className="w-full">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                Comment
-              </Text>
-              <Input
-                className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
-                placeholder="Enter an optional comment"
-                value={comment}
-                onChangeText={setComment}
-                returnKeyType="done"
-              />
-            </View>
-            <Receiver originalText={originalText} />
+            {!!lnurlDetails.commentAllowed && (
+              <View className="w-full">
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  Comment
+                </Text>
+                <Input
+                  className="w-full border-transparent bg-transparent text-center native:text-2xl font-semibold2"
+                  placeholder="Enter an optional comment"
+                  value={comment}
+                  onChangeText={setComment}
+                  returnKeyType="done"
+                />
+              </View>
+            )}
+            <Receiver lightningAddress={receiver} />
           </View>
           <View className="p-6">
             <Button

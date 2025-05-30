@@ -19,21 +19,14 @@ import { useAppStore } from "~/lib/state/appStore";
 
 export function ConfirmPayment() {
   const { data: transactions } = useTransactions();
-  const {
-    invoice,
-    originalText,
-    comment,
-    successAction,
-    amount,
-    recipientIdentifier,
-  } = useLocalSearchParams() as {
-    invoice: string;
-    originalText: string;
-    comment: string;
-    successAction: string;
-    amount?: string;
-    recipientIdentifier?: string;
-  };
+  const { invoice, comment, successAction, amount, receiver } =
+    useLocalSearchParams() as {
+      invoice: string;
+      comment: string;
+      successAction: string;
+      amount?: string;
+      receiver?: string;
+    };
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
@@ -55,15 +48,15 @@ export function ConfirmPayment() {
         amount: amount ? amountToPaySats * 1000 : undefined,
         metadata: {
           ...(comment && { comment }),
-          ...(recipientIdentifier && {
-            recipient_data: { identifier: recipientIdentifier },
+          ...(receiver && {
+            recipient_data: { identifier: receiver },
           }),
         },
       });
 
       console.info("payInvoice Response", response);
 
-      if (originalText === ALBY_LIGHTNING_ADDRESS) {
+      if (receiver === ALBY_LIGHTNING_ADDRESS) {
         useAppStore.getState().updateLastAlbyPayment();
       }
 
@@ -72,7 +65,7 @@ export function ConfirmPayment() {
         pathname: "/send/success",
         params: {
           preimage: response.preimage,
-          originalText,
+          receiver,
           invoice,
           amount: amountToPaySats,
           successAction,
@@ -125,7 +118,7 @@ export function ConfirmPayment() {
             </View>
           )
         )}
-        <Receiver originalText={originalText} invoice={invoice} />
+        <Receiver lightningAddress={receiver} />
       </View>
       <View className="p-6 bg-background">
         <WalletSwitcher selectedWalletId={selectedWalletId} wallets={wallets} />
