@@ -118,7 +118,7 @@ export function ConfirmPayment() {
             </View>
           )
         )}
-        <Receiver name={receiver} />
+        <Receiver lightningAddress={receiver} />
       </View>
       <View className="p-6 bg-background">
         <WalletSwitcher selectedWalletId={selectedWalletId} wallets={wallets} />

@@ -19,7 +19,7 @@ export function LNURLPay() {
     lnurlDetailsJSON,
     receiver,
     amount: amountParam,
-  } = useLocalSearchParams() as unknown as {
+  } = useLocalSearchParams() as {
     lnurlDetailsJSON: string;
     receiver: string;
     amount: string;
@@ -67,9 +67,7 @@ export function LNURLPay() {
       } catch (error) {
         console.error("failed to parse recipient identifier", error);
       }
-      //callback.searchParams.append("payerdata", JSON.stringify({ test: 1 }));
       const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-      //console.log("Got pay request", lnurlPayInfo.pr);
       router.push({
         pathname: "/send/confirm",
         params: {
@@ -134,7 +132,7 @@ export function LNURLPay() {
                 />
               </View>
             )}
-            <Receiver name={receiver} />
+            <Receiver lightningAddress={receiver} />
           </View>
           <View className="p-6">
             <Button

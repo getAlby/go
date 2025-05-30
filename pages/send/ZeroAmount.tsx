@@ -10,7 +10,7 @@ import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 
 export function ZeroAmount() {
-  const { invoice, comment } = useLocalSearchParams() as unknown as {
+  const { invoice, comment } = useLocalSearchParams() as {
     invoice: string;
     comment: string;
   };

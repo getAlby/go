@@ -3,12 +3,13 @@ import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 
 interface ReceiverProps {
-  name?: string;
+  lightningAddress?: string;
 }
 
-export function Receiver({ name }: ReceiverProps) {
+export function Receiver({ lightningAddress }: ReceiverProps) {
   const shouldShowReceiver =
-    name && name.toLowerCase().replace("lightning:", "").includes("@");
+    lightningAddress &&
+    lightningAddress.toLowerCase().replace("lightning:", "").includes("@");
 
   if (!shouldShowReceiver) {
     return null;
@@ -20,7 +21,7 @@ export function Receiver({ name }: ReceiverProps) {
         To
       </Text>
       <Text className="text-center text-foreground text-2xl font-medium2">
-        {name.toLowerCase().replace("lightning:", "")}
+        {lightningAddress.toLowerCase().replace("lightning:", "")}
       </Text>
     </View>
   );

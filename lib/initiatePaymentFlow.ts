@@ -4,7 +4,7 @@ import { lnurl as lnurlLib } from "lib/lnurl";
 import { errorToast } from "~/lib/errorToast";
 import { convertMerchantQRToLightningAddress } from "~/lib/merchants";
 
-export async function processPayment(
+export async function initiatePaymentFlow(
   text: string,
   amount: string,
 ): Promise<boolean> {

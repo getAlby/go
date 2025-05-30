@@ -9,8 +9,8 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
+import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { handleLink } from "~/lib/link";
-import { processPayment } from "~/lib/processPayment";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{
@@ -47,7 +47,7 @@ export function Send() {
       return true;
     }
     setLoading(true);
-    const result = await processPayment(text, amount);
+    const result = await initiatePaymentFlow(text, amount);
     setLoading(false);
     return result;
   };

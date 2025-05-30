@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import Screen from "~/components/Screen";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Button } from "~/components/ui/button";
 import { errorToast } from "~/lib/errorToast";
-import { processPayment } from "~/lib/processPayment";
+import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 
 export function Manual() {
   const [keyboardText, setKeyboardText] = useState("");
 
   const submitKeyboardText = async () => {
     try {
-      await processPayment(keyboardText, "");
+      await initiatePaymentFlow(keyboardText, "");
     } catch (error) {
       console.error("Payment failed:", error);
       errorToast(error);

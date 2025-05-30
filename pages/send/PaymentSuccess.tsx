@@ -47,7 +47,7 @@ export function PaymentSuccess() {
             </Text>
           )}
         </View>
-        <Receiver name={receiver} />
+        <Receiver lightningAddress={receiver} />
         {lnurlSuccessAction && (
           <View className="flex flex-col gap-2 items-center">
             <Text className="text-muted-foreground text-center font-semibold2">
