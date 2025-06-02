@@ -177,10 +177,6 @@ export const useAppStore = create<AppState>()((set, get) => {
     set({ addressBookEntries });
   };
 
-  const initialSelectedWalletId = +(
-    secureStorage.getItem(selectedWalletIdKey) || "0"
-  );
-
   const isSecurityEnabled =
     secureStorage.getItem(isSecurityEnabledKey) === "true";
 
@@ -190,6 +186,13 @@ export const useAppStore = create<AppState>()((set, get) => {
     "sats";
 
   const initialWallets = loadWallets();
+
+  const selectedWalletId = Number(secureStorage.getItem(selectedWalletIdKey));
+  const initialSelectedWalletId =
+    typeof initialWallets[selectedWalletId] !== "undefined"
+      ? selectedWalletId
+      : 0;
+
   return {
     unlocked: !isSecurityEnabled,
     addressBookEntries: loadAddressBookEntries(),
@@ -256,11 +259,13 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({ fiatCurrency });
     },
     setSelectedWalletId: (selectedWalletId) => {
-      set({
-        selectedWalletId,
-        nwcClient: getNWCClient(selectedWalletId),
-      });
-      secureStorage.setItem(selectedWalletIdKey, selectedWalletId.toString());
+      if (typeof get().wallets[selectedWalletId] !== "undefined") {
+        set({
+          selectedWalletId,
+          nwcClient: getNWCClient(selectedWalletId),
+        });
+        secureStorage.setItem(selectedWalletIdKey, selectedWalletId.toString());
+      }
     },
     addWallet: (wallet: Wallet) => {
       const currentWallets = get().wallets;
