@@ -65,7 +65,7 @@ export function RenameWallet() {
             // aria-errormessage="inputError"
           />
         </View>
-        <Button size="lg" onPress={onRenameWallet}>
+        <Button size="lg" onPress={onRenameWallet} disabled={!walletName}>
           <Text>Save</Text>
         </Button>
       </View>
