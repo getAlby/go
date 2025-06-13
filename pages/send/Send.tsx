@@ -36,7 +36,7 @@ export function Send() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ["images"],
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
