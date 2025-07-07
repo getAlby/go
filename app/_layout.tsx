@@ -5,7 +5,6 @@ import {
   Theme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { PortalHost } from "@rn-primitives/portal";
 import * as Font from "expo-font";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -132,7 +131,6 @@ export default function RootLayout() {
                   bottomOffset={140}
                   topOffset={140}
                 />
-                <PortalHost />
               </BottomSheetModalProvider>
             </GestureHandlerRootView>
           </SafeAreaView>
