@@ -1,6 +1,6 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import { router, Stack } from "expo-router";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { Image, View } from "react-native";
 
 import { Button } from "~/components/ui/button";
@@ -34,10 +34,6 @@ export function Unlock() {
       setIsUnlocking(false);
     }
   }, [isUnlocking, signIn]);
-
-  useEffect(() => {
-    handleUnlock();
-  }, [handleUnlock]);
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">

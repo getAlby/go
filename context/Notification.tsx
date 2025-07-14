@@ -6,12 +6,14 @@ import { useAppStore } from "~/lib/state/appStore";
 let ExpoNotifications: any;
 
 if (!IS_EXPO_GO) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   ExpoNotifications = require("expo-notifications");
 
   ExpoNotifications.setNotificationHandler({
     handleNotification: async () => {
       return {
-        shouldShowAlert: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
         shouldPlaySound: true,
         shouldSetBadge: false,
       };
@@ -20,7 +22,7 @@ if (!IS_EXPO_GO) {
 }
 
 export const NotificationProvider = ({ children }: any) => {
-  const responseListener = useRef<any>();
+  const responseListener = useRef<any>(null);
   const isNotificationsEnabled = useAppStore(
     (store) => store.isNotificationsEnabled,
   );
@@ -43,10 +45,7 @@ export const NotificationProvider = ({ children }: any) => {
       );
 
     return () => {
-      responseListener.current &&
-        ExpoNotifications.removeNotificationSubscription(
-          responseListener.current,
-        );
+      responseListener.current && responseListener.current.remove();
     };
   }, [isNotificationsEnabled]);
 
