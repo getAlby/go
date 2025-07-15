@@ -10,8 +10,10 @@ let SharedPreferences: any;
 if (!IS_EXPO_GO) {
   if (Platform.OS === "ios") {
     UserDefaults =
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       require("@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios").default;
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     SharedPreferences = require("@getalby/expo-shared-preferences");
   }
 }
