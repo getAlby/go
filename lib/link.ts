@@ -1,6 +1,5 @@
 import { nwc } from "@getalby/sdk";
 import { router, type Href } from "expo-router";
-import type { NavigationOptions } from "expo-router/build/global-state/routing";
 import { InteractionManager } from "react-native";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
@@ -22,12 +21,12 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
   SUPPORTED_SCHEMES.push("exp:");
 }
 
-const safeRouterPush = async (href: Href, options?: NavigationOptions) => {
+const safeRouterPush = async (href: Href) => {
   // This resolves the action 'PUSH' with payload was not handled by any navigator errors
   await new Promise<void>((resolve) =>
     InteractionManager.runAfterInteractions(resolve),
   );
-  return router.push(href, options);
+  router.push(href);
 };
 
 export const handleLink = async (url: string) => {

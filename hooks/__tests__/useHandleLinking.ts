@@ -1,5 +1,12 @@
 import { router } from "expo-router";
+import * as RN from "react-native";
 import { handleLink } from "../../lib/link";
+
+jest.spyOn(RN.InteractionManager, "runAfterInteractions").mockImplementation(
+  jest.fn().mockImplementation((callback) => {
+    callback();
+  }),
+);
 
 jest.mock("expo-router");
 
