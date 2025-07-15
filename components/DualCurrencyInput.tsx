@@ -74,7 +74,7 @@ export function DualCurrencyInput({
     <View className="w-full flex flex-col items-center justify-center gap-5">
       <Input
         key={inputMode}
-        ref={inputRef}
+        ref={inputRef as React.RefObject<TextInput>}
         className={cn(
           "w-full border-transparent bg-transparent text-center mt-3",
           ((max && Number(amount) > max) || (min && Number(amount) < min)) &&

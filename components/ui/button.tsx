@@ -17,13 +17,13 @@ const buttonVariants = cva(
         secondary: "bg-secondary web:hover:opacity-80 active:opacity-80",
         ghost:
           "web:hover:bg-accent web:hover:text-accent-foreground active:bg-accent",
-        link: "web:underline-offset-4 web:hover:underline web:focus:underline ",
+        link: "web:underline-offset-4 web:hover:underline web:focus:underline",
       },
       size: {
         default: "min-h-10 px-4 py-2 native:min-h-12 native:px-3 native:py-3",
         sm: "min-h-9 rounded-md px-3",
         lg: "min-h-11 rounded-2xl px-8 native:min-h-16",
-        icon: "min-h-10 min-w-10",
+        icon: "min-h-10 w-10",
       },
     },
     defaultVariants: {
@@ -60,19 +60,17 @@ const buttonTextVariants = cva(
   },
 );
 
-type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> &
+type ButtonProps = React.ComponentProps<typeof Pressable> &
   VariantProps<typeof buttonVariants>;
 
-const Button = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  ButtonProps
->(({ className, variant, size, ...props }, ref) => {
+function Button({ ref, className, variant, size, ...props }: ButtonProps) {
   return (
     <TextClassContext.Provider
-      value={cn(
-        props.disabled && "web:pointer-events-none",
-        buttonTextVariants({ variant, size }),
-      )}
+      value={buttonTextVariants({
+        variant,
+        size,
+        className: "web:pointer-events-none",
+      })}
     >
       {!variant || variant === "default" ? (
         <View
@@ -115,8 +113,7 @@ const Button = React.forwardRef<
       )}
     </TextClassContext.Provider>
   );
-});
-Button.displayName = "Button";
+}
 
 export { Button, buttonTextVariants, buttonVariants };
 export type { ButtonProps };
