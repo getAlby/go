@@ -2,7 +2,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   DarkTheme,
   DefaultTheme,
-  Theme,
+  type Theme,
   ThemeProvider,
 } from "@react-navigation/native";
 import * as Font from "expo-font";

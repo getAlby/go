@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { View } from "react-native";
-import { ToastConfig } from "react-native-toast-message";
+import { type ToastConfig } from "react-native-toast-message";
 import { CheckCircleIcon, XCircleIcon } from "~/components/Icons";
 import { Button } from "./ui/button";
 import { Text } from "./ui/text";

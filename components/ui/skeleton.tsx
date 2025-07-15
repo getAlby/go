@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Animated, Easing, TextProps } from "react-native";
+import { Animated, Easing, type TextProps } from "react-native";
 import { cn } from "~/lib/utils";
 
 const duration = 1000;

@@ -1,6 +1,6 @@
-import { NativeStackHeaderRightProps } from "@react-navigation/native-stack/src/types";
+import { type NativeStackHeaderRightProps } from "@react-navigation/native-stack";
 import { Stack } from "expo-router";
-import { StackAnimationTypes } from "react-native-screens";
+import { type StackAnimationTypes } from "react-native-screens";
 
 type ScreenProps = {
   title: string;

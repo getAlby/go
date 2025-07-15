@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Link, router, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
-import React, { useState } from "react";
+import React, { type JSX, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -16,7 +16,7 @@ import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { SvgProps } from "react-native-svg";
+import { type SvgProps } from "react-native-svg";
 import AlbyBanner from "~/components/AlbyBanner";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";

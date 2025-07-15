@@ -1,5 +1,4 @@
 import { nwc } from "@getalby/sdk";
-import { NWAOptions } from "@getalby/sdk/dist/nwc";
 import { router } from "expo-router";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
@@ -77,7 +76,7 @@ export const handleLink = async (url: string) => {
             icon: appicon,
             name: appname,
             returnTo: callback,
-          } as NWAOptions),
+          } as nwc.NWAOptions),
           flow: "deeplink",
         },
       });

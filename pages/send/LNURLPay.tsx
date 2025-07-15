@@ -11,7 +11,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
-import { LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
+import { type LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
 import { cn } from "~/lib/utils";
 
 export function LNURLPay() {

@@ -1,6 +1,6 @@
 import {
   BottomSheetBackdrop,
-  BottomSheetBackdropProps,
+  type BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
@@ -10,7 +10,7 @@ import Toast from "react-native-toast-message";
 import { ChevronDownIcon, WalletIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
-import { useAppStore, Wallet } from "~/lib/state/appStore";
+import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { cn } from "~/lib/utils";
 

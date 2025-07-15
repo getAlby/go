@@ -1,7 +1,4 @@
-import {
-  Nip47Transaction,
-  Nip47TransactionMetadata,
-} from "@getalby/sdk/dist/nwc";
+import { type nwc } from "@getalby/sdk";
 import { hexToBytes } from "@noble/hashes/utils";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
@@ -47,7 +44,7 @@ export function Transaction() {
     transactionJSON: string;
     walletId?: string;
   };
-  const transaction: Nip47Transaction = JSON.parse(transactionJSON);
+  const transaction: nwc.Nip47Transaction = JSON.parse(transactionJSON);
   const getFiatAmount = useGetFiatAmount();
 
   React.useEffect(() => {
@@ -80,7 +77,7 @@ export function Transaction() {
   const pubkey = transaction.metadata?.nostr?.pubkey;
   const npub = pubkey ? safeNpubEncode(pubkey) : undefined;
 
-  const metadata = transaction.metadata as Nip47TransactionMetadata;
+  const metadata = transaction.metadata as nwc.Nip47TransactionMetadata;
 
   return (
     <View className="flex-1 flex flex-col gap-3">

@@ -1,4 +1,4 @@
-import { BarcodeScanningResult, CameraView } from "expo-camera";
+import { type BarcodeScanningResult, CameraView } from "expo-camera";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
