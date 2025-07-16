@@ -55,6 +55,17 @@ export async function storeWalletInfo(
   }
 }
 
+export async function setNotificationSettings(settings: {
+  ttsEnabled: boolean;
+}) {
+  if (Platform.OS === "ios") {
+    const groupDefaults = new UserDefaults(SUITE_NAME);
+    await groupDefaults.set("settings", JSON.stringify(settings));
+  } else {
+    await SharedPreferences.setItemAsync("settings", JSON.stringify(settings));
+  }
+}
+
 export async function removeWalletInfo(publicKey: string, walletId: number) {
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);

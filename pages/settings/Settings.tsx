@@ -25,9 +25,9 @@ import {
   IS_EXPO_GO,
 } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
+import { removeAllInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
-import { removeAllInfo } from "~/lib/walletInfo";
 
 export function Settings() {
   const wallets = useAppStore((store) => store.wallets);

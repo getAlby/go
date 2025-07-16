@@ -29,7 +29,7 @@ import android.speech.tts.TextToSpeech.OnInitListener
 import java.util.Locale
 
 class MessagingService : FirebaseMessagingService(), OnInitListener {
-    private lateinit var tts: TextToSpeech;
+    private lateinit var tts: TextToSpeech
     private val ttsQueue = mutableListOf<String>()
     private var ttsReady = false
 
@@ -68,6 +68,19 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         val id: Int,
         val version: String = "0.0"
     )
+
+    private fun getTtsNotificationsEnabledFromPreferences(context: Context): Boolean {
+      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
+      val settingsString = sharedPreferences.getString("settings", null) ?: return false
+      try {
+        val settingsJson = JSONObject(settingsString)
+        val ttsEnabledString = settingsJson.optString("ttsEnabled")
+        return ttsEnabledString == "true"
+      } catch (e: Exception) {
+          e.printStackTrace()
+          return false
+      }
+    }
 
     private fun getWalletInfo(context: Context, key: String): WalletInfo? {
       val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
@@ -175,21 +188,15 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
     }
 
     private fun speakOut(text: String) {
+        if (!getTtsNotificationsEnabledFromPreferences(this)) {
+            Log.i(TAG, "TTS notifications disabled, skipping")
+            return
+        }
         Log.i(TAG, "Speaking: $text")
         val result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
         if (result == TextToSpeech.ERROR) {
             Log.e(TAG, "Error occurred while trying to speak: $text")
         }
-    }
-
-    private fun getSharedSecretFromPreferences(context: Context, key: String): String? {
-      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
-      return sharedPreferences.getString("${key}_shared_secret", null)
-    }
-
-    private fun getWalletNameFromPreferences(context: Context, key: String): String? {
-      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
-      return sharedPreferences.getString("${key}_name", null)
     }
 
     private fun decrypt(content: String, key: ByteArray, version: String): String? {
