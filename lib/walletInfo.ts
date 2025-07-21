@@ -1,21 +1,19 @@
 import { Platform } from "react-native";
 import { IS_EXPO_GO, SUITE_NAME } from "~/lib/constants";
 
-let UserDefaults: any;
-let SharedPreferences: any;
-
 // this is done because accessing values stored from expo-secure-store
 // is quite difficult and we do not wish to complicate the notification
 // service extension (ios) or messaging service (android)
-if (!IS_EXPO_GO) {
-  if (Platform.OS === "ios") {
-    UserDefaults =
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      require("@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios").default;
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    SharedPreferences = require("@getalby/expo-shared-preferences");
-  }
+async function getUserDefaultsModule() {
+  const module = await import(
+    "@alevy97/react-native-userdefaults/src/ReactNativeUserDefaults.ios"
+  );
+  return module.default;
+}
+
+async function getSharedPreferencesModule() {
+  const module = await import("@getalby/expo-shared-preferences");
+  return module;
 }
 
 type WalletInfo = {
@@ -36,7 +34,11 @@ export async function storeWalletInfo(
   publicKey: string,
   walletData: Partial<WalletInfo>,
 ) {
+  if (IS_EXPO_GO) {
+    return;
+  }
   if (Platform.OS === "ios") {
+    const UserDefaults = await getUserDefaultsModule();
     const groupDefaults = new UserDefaults(SUITE_NAME);
     const wallets = (await groupDefaults.get("wallets")) || {};
     wallets[publicKey] = {
@@ -45,6 +47,7 @@ export async function storeWalletInfo(
     };
     await groupDefaults.set("wallets", wallets);
   } else {
+    const SharedPreferences = await getSharedPreferencesModule();
     const walletsString = await SharedPreferences.getItemAsync("wallets");
     const wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
     wallets[publicKey] = {
@@ -56,7 +59,11 @@ export async function storeWalletInfo(
 }
 
 export async function removeWalletInfo(publicKey: string, walletId: number) {
+  if (IS_EXPO_GO) {
+    return;
+  }
   if (Platform.OS === "ios") {
+    const UserDefaults = await getUserDefaultsModule();
     const groupDefaults = new UserDefaults(SUITE_NAME);
     let wallets = await groupDefaults.get("wallets");
     await groupDefaults.set("wallets", wallets);
@@ -65,6 +72,7 @@ export async function removeWalletInfo(publicKey: string, walletId: number) {
       await groupDefaults.set("wallets", wallets);
     }
   } else {
+    const SharedPreferences = await getSharedPreferencesModule();
     const walletsString = await SharedPreferences.getItemAsync("wallets");
     let wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
     if (wallets) {
@@ -75,10 +83,15 @@ export async function removeWalletInfo(publicKey: string, walletId: number) {
 }
 
 export async function removeAllInfo() {
+  if (IS_EXPO_GO) {
+    return;
+  }
   if (Platform.OS === "ios") {
+    const UserDefaults = await getUserDefaultsModule();
     const groupDefaults = new UserDefaults(SUITE_NAME);
     await groupDefaults.removeAll();
   } else {
+    const SharedPreferences = await getSharedPreferencesModule();
     await SharedPreferences.deleteItemAsync("wallets");
   }
 }
