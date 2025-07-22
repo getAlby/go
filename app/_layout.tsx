@@ -2,7 +2,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   DarkTheme,
   DefaultTheme,
-  Theme,
+  type Theme,
   ThemeProvider,
 } from "@react-navigation/native";
 import * as Font from "expo-font";
@@ -114,10 +114,7 @@ export default function RootLayout() {
       <NotificationProvider>
         <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
           <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <SafeAreaView
-            className="w-full h-full bg-background"
-            edges={["left", "right", "bottom"]}
-          >
+          <SafeAreaView className="w-full h-full bg-background">
             <GestureHandlerRootView>
               <BottomSheetModalProvider>
                 <UserInactivityProvider>

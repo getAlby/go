@@ -10,7 +10,7 @@ import {
   deregisterWalletNotifications,
   registerWalletNotifications,
 } from "~/lib/notifications";
-import { useAppStore, Wallet } from "~/lib/state/appStore";
+import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 import { registerForPushNotificationsAsync } from "~/services/Notifications";
 

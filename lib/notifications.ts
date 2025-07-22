@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import { NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
-import { useAppStore, Wallet } from "~/lib/state/appStore";
+import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import {
   computeSharedSecret,
   getConversationKey,

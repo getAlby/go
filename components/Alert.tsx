@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { SvgProps } from "react-native-svg";
+import { type SvgProps } from "react-native-svg";
 import {
   Card,
   CardContent,

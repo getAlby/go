@@ -1,6 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
-import { lnurl, LNURLWithdrawServiceResponse } from "lib/lnurl";
+import { lnurl, type LNURLWithdrawServiceResponse } from "lib/lnurl";
 import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";

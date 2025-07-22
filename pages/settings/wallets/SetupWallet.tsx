@@ -1,5 +1,4 @@
 import { nwc } from "@getalby/sdk";
-import { Nip47Capability } from "@getalby/sdk/dist/nwc";
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
@@ -69,7 +68,7 @@ export function SetupWallet() {
           nostrWalletConnectUrl,
         });
         const info = await nwcClient.getInfo();
-        const capabilities = [...info.methods] as Nip47Capability[];
+        const capabilities = [...info.methods] as nwc.Nip47Capability[];
         if (info.notifications?.length) {
           capabilities.push("notifications");
         }
