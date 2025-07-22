@@ -45,10 +45,6 @@ export const handleLink = async (url: string) => {
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
     if (parsedUrl.protocol.startsWith("nostr+walletauth")) {
-      if (router.canDismiss()) {
-        router.dismissAll();
-      }
-
       const nwaOptions = nwc.NWAClient.parseWalletAuthUrl(url);
 
       safeRouterPush({
@@ -62,10 +58,6 @@ export const handleLink = async (url: string) => {
     }
 
     if (parsedUrl.protocol.startsWith("nostrnwc")) {
-      if (router.canDismiss()) {
-        router.dismissAll();
-      }
-
       const params = new URLSearchParams(search);
       const appname = params.get("appname");
       const rawCallback = params.get("callback");
@@ -93,9 +85,6 @@ export const handleLink = async (url: string) => {
     }
 
     if (parsedUrl.protocol === "nostr+walletconnect:") {
-      if (router.canDismiss()) {
-        router.dismissAll();
-      }
       console.info("Navigating to wallet setup");
       safeRouterPush({
         pathname: "/settings/wallets/setup",
@@ -121,10 +110,6 @@ export const handleLink = async (url: string) => {
     }
 
     let fullUrl = `${protocol}${username ? username + "@" : ""}${hostname}${pathname}${search}`;
-
-    if (router.canDismiss()) {
-      router.dismissAll();
-    }
 
     console.info("Navigating to", fullUrl);
 
