@@ -66,7 +66,9 @@ export function Manual() {
                   (entry) =>
                     !keyboardText ||
                     entry.lightningAddress?.includes(keyboardText) ||
-                    entry.name?.includes(keyboardText),
+                    entry.name
+                      ?.toLowerCase()
+                      .includes(keyboardText.toLowerCase()),
                 )
                 .map((addressBookEntry, index) => (
                   <Pressable
@@ -122,7 +124,7 @@ export function Manual() {
                 </Text>
               </View>
             )}
-          {addToContacts && (
+          {addToContacts && keyboardText.includes("@") && (
             <View>
               <Label nativeID="name" className="self-start justify-self-start">
                 Name
