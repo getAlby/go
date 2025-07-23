@@ -1,20 +1,45 @@
 import { LinearGradient } from "components/LinearGradient";
-import { View } from "react-native";
+import { Dimensions, Image, View } from "react-native";
 import QRCodeLibrary from "react-native-qrcode-svg";
 
-function QRCode({ value }: { value: string }) {
+function QRCode({
+  value,
+  showAvatar,
+}: {
+  value: string;
+  showAvatar?: boolean;
+}) {
+  const dimensions = Dimensions.get("window");
+  const qrWidth = Math.round((dimensions.width * 5) / 7);
+  const avatarWidth = qrWidth * 0.2;
+
   return (
-    <LinearGradient
-      className="p-2 rounded-2xl flex items-center justify-center"
-      colors={["#FFC453", "#FFE951"]}
-      start={[0, 1]}
-      end={[1, 0]}
-      style={{ borderRadius: 28, elevation: 2 }}
-    >
-      <View className="flex items-center justify-center p-3 rounded-3xl bg-white w-96 h-96">
-        <QRCodeLibrary value={value} size={300} />
-      </View>
-    </LinearGradient>
+    <View className="justify-center">
+      <LinearGradient
+        className="p-2 rounded-2xl flex items-center justify-center"
+        colors={["#FFC453", "#FFE951"]}
+        start={[0, 1]}
+        end={[1, 0]}
+        style={{ borderRadius: 28, elevation: 2 }}
+      >
+        <View className="flex items-center justify-center p-4 rounded-3xl bg-white">
+          <QRCodeLibrary value={value} size={qrWidth} />
+        </View>
+      </LinearGradient>
+      {showAvatar && (
+        <View className="absolute self-center p-2 rounded-2xl bg-white">
+          <Image
+            source={require("../assets/icon.png")}
+            className="rounded-xl"
+            resizeMode="contain"
+            style={{
+              width: avatarWidth,
+              height: avatarWidth,
+            }}
+          />
+        </View>
+      )}
+    </View>
   );
 }
 
