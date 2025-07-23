@@ -1,7 +1,7 @@
 import "message-port-polyfill";
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
-const TextEncodingPolyfill = require("text-encoding");
+import TextEncodingPolyfill from "text-encoding";
 
 const applyGlobalPolyfills = () => {
   Object.assign(global, {

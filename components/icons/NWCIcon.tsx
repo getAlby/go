@@ -1,6 +1,6 @@
 import React from "react";
 import { useColorScheme } from "react-native";
-import Svg, { Path, SvgProps } from "react-native-svg";
+import Svg, { Path, type SvgProps } from "react-native-svg";
 
 const NWCIcon = (props: SvgProps) => {
   const colorScheme = useColorScheme();

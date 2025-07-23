@@ -1,11 +1,11 @@
-import { NWCClient } from "@getalby/sdk/dist/nwc";
+import { type nwc } from "@getalby/sdk";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
 type FetchArgs = Parameters<typeof fetch>;
 
 export function createNwcFetcher<T>(
-  fetcherFunc: (nwcClient: NWCClient, args: FetchArgs) => Promise<T>,
+  fetcherFunc: (nwcClient: nwc.NWCClient, args: FetchArgs) => Promise<T>,
 ) {
   return async (...args: FetchArgs) => {
     const nwcClient = useAppStore.getState().nwcClient;

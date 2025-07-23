@@ -1,4 +1,4 @@
-import { Nip47Transaction } from "@getalby/sdk/dist/nwc";
+import { type nwc } from "@getalby/sdk";
 import dayjs from "dayjs";
 import { router } from "expo-router";
 import React from "react";
@@ -12,7 +12,7 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { cn, safeNpubEncode } from "~/lib/utils";
 
 type Props = {
-  tx: Nip47Transaction;
+  tx: nwc.Nip47Transaction;
 };
 
 export function TransactionItem({ tx }: Props) {

@@ -1,13 +1,15 @@
 import * as React from "react";
-import { TextInput } from "react-native";
-import { CURSOR_COLOR } from "~/lib/constants";
-
+import { TextInput, type TextInputProps } from "react-native";
 import { cn } from "~/lib/utils";
 
-const Input = React.forwardRef<
-  React.ElementRef<typeof TextInput>,
-  React.ComponentPropsWithoutRef<typeof TextInput>
->(({ className, placeholderClassName, ...props }, ref) => {
+function Input({
+  className,
+  placeholderClassName,
+  ref,
+  ...props
+}: TextInputProps & {
+  ref?: React.RefObject<TextInput | null>;
+}) {
   return (
     <TextInput
       ref={ref}
@@ -16,13 +18,10 @@ const Input = React.forwardRef<
         props.editable === false && "opacity-50 web:cursor-not-allowed",
         className,
       )}
-      selectionColor={CURSOR_COLOR}
       placeholderClassName={cn("text-muted-foreground", placeholderClassName)}
       {...props}
     />
   );
-});
-
-Input.displayName = "Input";
+}
 
 export { Input };

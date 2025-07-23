@@ -1,4 +1,4 @@
-import { Nip47Transaction } from "@getalby/sdk/dist/nwc";
+import { type nwc } from "@getalby/sdk";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
@@ -82,7 +82,7 @@ export function CreateInvoice() {
   React.useEffect(() => {
     let polling = true;
     let pollCount = 0;
-    let prevTransaction: Nip47Transaction | undefined;
+    let prevTransaction: nwc.Nip47Transaction | undefined;
     (async () => {
       while (polling) {
         try {

@@ -39,7 +39,7 @@ import {
   PopiconsBoltSolid as ZapIcon,
 } from "@popicons/react-native";
 import { cssInterop } from "nativewind";
-import { SvgProps } from "react-native-svg";
+import { type SvgProps } from "react-native-svg";
 
 function interopIcon(icon: React.FunctionComponent<SvgProps>) {
   cssInterop(icon, {

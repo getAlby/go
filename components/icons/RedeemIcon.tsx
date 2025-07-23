@@ -1,6 +1,6 @@
 import React from "react";
 import { useColorScheme } from "react-native";
-import Svg, { Path, SvgProps } from "react-native-svg";
+import Svg, { Path, type SvgProps } from "react-native-svg";
 
 // TODO: Replace with PopiconsWithdrawalSolid once fixed in @popicons/react-native
 const RedeemIcon = (props: SvgProps) => {

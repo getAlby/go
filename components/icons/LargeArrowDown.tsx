@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, { Path, SvgProps } from "react-native-svg";
+import Svg, { Path, type SvgProps } from "react-native-svg";
 const LargeArrowDown = (props: SvgProps) => (
   <Svg width={48} height={48} {...props}>
     <Path

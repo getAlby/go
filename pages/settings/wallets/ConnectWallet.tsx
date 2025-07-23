@@ -1,4 +1,4 @@
-import { NWAOptions } from "@getalby/sdk/dist/nwc";
+import { type nwc } from "@getalby/sdk";
 import { bytesToHex } from "@noble/hashes/utils";
 import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
@@ -31,7 +31,7 @@ export function ConnectWallet() {
     options: string;
     flow: "nwa" | "deeplink";
   }>();
-  const options = JSON.parse(optionsJSON) as Partial<NWAOptions>;
+  const options = JSON.parse(optionsJSON) as Partial<nwc.NWAOptions>;
   const {
     appPubkey,
     name,
@@ -244,7 +244,7 @@ function ConnectView({
   expiresAt,
   returnTo,
   metadata,
-}: Omit<NWAOptions, "appPubkey" | "relayUrl"> & { satsAmount: number }) {
+}: Omit<nwc.NWAOptions, "appPubkey" | "relayUrl"> & { satsAmount: number }) {
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
   const closeModal = () => setShowDetails(false);

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AppState, AppStateStatus } from "react-native";
+import { AppState, type AppStateStatus } from "react-native";
 import { INACTIVITY_THRESHOLD } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 
