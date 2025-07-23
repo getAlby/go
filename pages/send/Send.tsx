@@ -10,7 +10,6 @@ import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 
@@ -35,13 +34,13 @@ export function Send() {
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-    });
-
-    if (!result.canceled && result.assets && result.assets.length > 0) {
+    try {
       setLoading(true);
-      try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
         const scannedCodes = await Camera.scanFromURLAsync(
           result.assets[0].uri,
         );
@@ -53,15 +52,15 @@ export function Send() {
             "Could not find a QR code in the selected image.",
           );
         }
-      } catch (error) {
-        console.error("Error scanning image:", error);
-        Alert.alert(
-          "Error Scanning Image",
-          "An error occurred while trying to scan the image for a QR code.",
-        );
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      console.error("Error scanning image:", error);
+      Alert.alert(
+        "Error Scanning Image",
+        "An error occurred while trying to scan the image for a QR code.",
+      );
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -143,7 +142,6 @@ export function Send() {
               className="flex flex-col gap-2 flex-1"
             >
               <KeyboardIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Manual / Contacts</Text>
             </Button>
             <Button
               onPress={paste}
@@ -151,7 +149,6 @@ export function Send() {
               className="flex flex-col gap-2 flex-1"
             >
               <PasteIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Paste</Text>
             </Button>
             <Button
               onPress={pickImage}
@@ -159,7 +156,6 @@ export function Send() {
               className="flex flex-col gap-2 flex-1"
             >
               <ImageIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Choose Image</Text>
             </Button>
           </View>
         </>

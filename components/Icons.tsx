@@ -5,6 +5,7 @@ import {
   PopiconsAddressBookSolid as BookUserIcon,
   PopiconsCameraWebOffSolid as CameraOffIcon,
   PopiconsCircleCheckLine as CheckCircleIcon,
+  PopiconsCheckSolid as CheckIcon,
   PopiconsChevronBottomLine as ChevronDownIcon,
   PopiconsChevronRightSolid as ChevronRightIcon,
   PopiconsChevronTopLine as ChevronUpIcon,
@@ -59,6 +60,7 @@ interopIcon(BitcoinIcon);
 interopIcon(BookUserIcon);
 interopIcon(CameraOffIcon);
 interopIcon(CheckCircleIcon);
+interopIcon(CheckIcon);
 interopIcon(ChevronDownIcon);
 interopIcon(ChevronRightIcon);
 interopIcon(ChevronUpIcon);
@@ -99,6 +101,7 @@ export {
   BookUserIcon,
   CameraOffIcon,
   CheckCircleIcon,
+  CheckIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronUpIcon,
