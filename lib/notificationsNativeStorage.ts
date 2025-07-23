@@ -60,7 +60,7 @@ export async function setNotificationSettings(settings: {
 }) {
   if (Platform.OS === "ios") {
     const groupDefaults = new UserDefaults(SUITE_NAME);
-    await groupDefaults.set("settings", JSON.stringify(settings));
+    await groupDefaults.set("settings", settings);
   } else {
     await SharedPreferences.setItemAsync("settings", JSON.stringify(settings));
   }

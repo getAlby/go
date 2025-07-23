@@ -3,12 +3,14 @@
 #import <openssl/evp.h>
 #import <openssl/hmac.h>
 #import <openssl/kdf.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface NotificationService ()
 
 @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
 @property (nonatomic, strong) UNNotificationRequest *receivedRequest;
 @property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
+@property (nonatomic, strong) AVSpeechSynthesizer *synthesizer;
 
 @end
 
@@ -47,7 +49,13 @@
         return;
     }
 
-    NSDictionary *walletInfo       = walletsDict[appPubkey];
+    BOOL ttsEnabled        = NO;
+    NSDictionary *settingsDict = [sharedDefaults objectForKey:@"settings"];
+    if (settingsDict) {
+      ttsEnabled = [settingsDict[@"ttsEnabled"] boolValue];
+    }
+
+    NSDictionary *walletInfo = walletsDict[appPubkey];
     if (!walletInfo) {
         self.contentHandler(nil);
         return;
@@ -101,8 +109,8 @@
         return;
     }
 
-    NSError *transactionError  = nil;
-    NSData *transactionData    = [NSJSONSerialization dataWithJSONObject:notificationDict
+    NSError *transactionError = nil;
+    NSData *transactionData   = [NSJSONSerialization dataWithJSONObject:notificationDict
                                                                  options:0
                                                                    error:&transactionError];
     if (transactionError || !transactionData) {
@@ -118,8 +126,7 @@
     }
 
     double amountInSats = [amountNumber doubleValue] / 1000.0;
-    NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&wallet_id=%@", encodedTransaction,
-                                  walletId.stringValue];
+    NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&wallet_id=%@", encodedTransaction, walletId.stringValue];
 
     NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy] ?: [NSMutableDictionary dictionary];
     NSMutableDictionary *newBodyDict = [newUserInfo[@"body"] mutableCopy] ?: [NSMutableDictionary dictionary];
@@ -135,7 +142,64 @@
         self.bestAttemptContent.body = [NSString stringWithFormat:@"You received %.0f sats ⚡️", amountInSats];
     }
 
-    self.contentHandler(self.bestAttemptContent);
+    if ([notificationType isEqualToString:@"payment_received"] && ttsEnabled) {
+        NSString *speechText         = [NSString stringWithFormat:@"%.0f sats", amountInSats];
+        self.synthesizer             = [[AVSpeechSynthesizer alloc] init];
+        self.synthesizer.delegate    = self;
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:speechText];
+        __block AVAudioFile *audioFile;
+        NSString *audioName     = @"tts.caf";
+        NSFileManager *fileMan  = [NSFileManager defaultManager];
+        NSString *containerPath = [fileMan containerURLForSecurityApplicationGroupIdentifier:@"group.com.getalby.mobile.nse"].path;
+        NSString *soundDir = [containerPath stringByAppendingString:@"/Library/Sounds"];
+        NSError *errorOut;
+        if (![fileMan fileExistsAtPath:soundDir]) {
+            [fileMan createDirectoryAtPath:soundDir withIntermediateDirectories:YES attributes:nil error:&errorOut];
+        } else {
+            // Delete old files
+            NSArray<NSString*> *oldFiles = [fileMan contentsOfDirectoryAtPath:soundDir error:&errorOut];
+            if (oldFiles != nil) {
+                for (NSString *oldFileName in oldFiles) {
+                    NSString *oldFilePath = [soundDir stringByAppendingPathComponent:oldFileName];
+                    [fileMan removeItemAtPath:oldFilePath error:&errorOut];
+                }
+            }
+        }
+        if (errorOut != nil) {
+          return;
+        }
+        NSString *soundPath = [soundDir stringByAppendingString:[@"/" stringByAppendingString:audioName]];
+        NSURL *soundUrl     = [NSURL fileURLWithPath:soundPath];
+        [self.synthesizer writeUtterance:utterance toBufferCallback:^(AVAudioBuffer * _Nonnull buffer) {
+            if (![buffer isKindOfClass:[AVAudioPCMBuffer class]]) {
+              return;
+            }
+            AVAudioPCMBuffer *pcmBuffer = (AVAudioPCMBuffer *)buffer;
+            if (pcmBuffer.frameLength == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                  self.bestAttemptContent.sound = [UNNotificationSound soundNamed:audioName];
+                  contentHandler(self.bestAttemptContent);
+                  self.synthesizer = nil;
+                });
+                return;
+            } else {
+                if (!audioFile) {
+                    NSError *error = nil;
+                    audioFile = [[AVAudioFile alloc] initForWriting:soundUrl settings:pcmBuffer.format.settings error:&error];
+                    if (error != nil) {
+                      return;
+                    }
+                }
+            }
+            NSError *error = nil;
+            [audioFile writeFromBuffer:pcmBuffer error:&error];
+            if (error != nil) {
+              return;
+            }
+        }];
+    } else {
+      self.contentHandler(self.bestAttemptContent);
+    }
 }
 
 - (void)serviceExtensionTimeWillExpire {

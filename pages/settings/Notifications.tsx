@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Platform, View } from "react-native";
+import { FlatList, View } from "react-native";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Label } from "~/components/ui/label";
@@ -85,30 +85,28 @@ export function Notifications() {
             />
           </>
         )}
-        {Platform.OS !== "ios" && (
-          <View className="flex-row items-center justify-between gap-2 px-6 mt-8">
-            <Label nativeID="notifications">
-              <Text className="text-lg font-medium2">Spoken notifications</Text>
-            </Label>
-            {isLoading ? (
-              <Loading className="h-8 mr-4" />
-            ) : (
-              <Switch
-                disabled={!notificationsEnabled}
-                checked={!!ttsNotificationsEnabled}
-                onCheckedChange={async (checked) => {
-                  setLoading(true);
-                  useAppStore.getState().setTTSNotificationsEnabled(checked);
-                  setNotificationSettings({
-                    ttsEnabled: checked,
-                  });
-                  setLoading(false);
-                }}
-                nativeID="security"
-              />
-            )}
-          </View>
-        )}
+        <View className="flex-row items-center justify-between gap-2 px-6 mt-8">
+          <Label nativeID="notifications">
+            <Text className="text-lg font-medium2">Spoken notifications</Text>
+          </Label>
+          {isLoading ? (
+            <Loading className="h-8 mr-4" />
+          ) : (
+            <Switch
+              disabled={!notificationsEnabled}
+              checked={!!ttsNotificationsEnabled}
+              onCheckedChange={async (checked) => {
+                setLoading(true);
+                useAppStore.getState().setTTSNotificationsEnabled(checked);
+                setNotificationSettings({
+                  ttsEnabled: checked,
+                });
+                setLoading(false);
+              }}
+              nativeID="security"
+            />
+          )}
+        </View>
       </View>
     </View>
   );
