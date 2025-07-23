@@ -10,8 +10,8 @@ function QRCode({
   showAvatar?: boolean;
 }) {
   const dimensions = Dimensions.get("window");
-  const qrWidth = Math.round((dimensions.width * 5) / 7);
-  const avatarWidth = qrWidth * 0.2;
+  const qrSize = Math.round((dimensions.width * 5) / 7);
+  const avatarSize = qrSize * 0.19;
 
   return (
     <View className="justify-center">
@@ -23,7 +23,7 @@ function QRCode({
         style={{ borderRadius: 28, elevation: 2 }}
       >
         <View className="flex items-center justify-center p-4 rounded-3xl bg-white">
-          <QRCodeLibrary value={value} size={qrWidth} />
+          <QRCodeLibrary value={value} size={qrSize} />
         </View>
       </LinearGradient>
       {showAvatar && (
@@ -33,8 +33,8 @@ function QRCode({
             className="rounded-xl"
             resizeMode="contain"
             style={{
-              width: avatarWidth,
-              height: avatarWidth,
+              width: avatarSize,
+              height: avatarSize,
             }}
           />
         </View>
