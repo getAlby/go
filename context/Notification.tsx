@@ -1,25 +1,19 @@
+import * as ExpoNotifications from "expo-notifications";
 import { useEffect, useRef } from "react";
 import { IS_EXPO_GO } from "~/lib/constants";
 import { handleLink } from "~/lib/link";
 import { useAppStore } from "~/lib/state/appStore";
 
-let ExpoNotifications: any;
-
-if (!IS_EXPO_GO) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  ExpoNotifications = require("expo-notifications");
-
-  ExpoNotifications.setNotificationHandler({
-    handleNotification: async () => {
-      return {
-        shouldShowBanner: true,
-        shouldShowList: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-      };
-    },
-  });
-}
+ExpoNotifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    };
+  },
+});
 
 export const NotificationProvider = ({ children }: any) => {
   const responseListener = useRef<any>(null);

@@ -8,7 +8,7 @@ function Input({
   ref,
   ...props
 }: TextInputProps & {
-  ref?: React.RefObject<TextInput>;
+  ref?: React.RefObject<TextInput | null>;
 }) {
   return (
     <TextInput

@@ -1,3 +1,4 @@
+import { nwc } from "@getalby/sdk";
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
@@ -10,7 +11,6 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
-import { handleLink } from "~/lib/link";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{
@@ -43,9 +43,17 @@ export function Send() {
     }
 
     if (text.startsWith("nostr+walletauth") /* can have : or +alby: */) {
-      handleLink(text);
+      const nwaOptions = nwc.NWAClient.parseWalletAuthUrl(text);
+      router.replace({
+        pathname: "/settings/wallets/connect",
+        params: {
+          options: JSON.stringify(nwaOptions),
+          flow: "nwa",
+        },
+      });
       return true;
     }
+
     setLoading(true);
     const result = await initiatePaymentFlow(text, amount);
     setLoading(false);
