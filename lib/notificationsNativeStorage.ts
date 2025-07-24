@@ -62,9 +62,11 @@ export async function setNotificationSettings(settings: {
   ttsEnabled: boolean;
 }) {
   if (Platform.OS === "ios") {
+    const UserDefaults = await getUserDefaultsModule();
     const groupDefaults = new UserDefaults(SUITE_NAME);
     await groupDefaults.set("settings", settings);
   } else {
+    const SharedPreferences = await getSharedPreferencesModule();
     await SharedPreferences.setItemAsync("settings", JSON.stringify(settings));
   }
 }
