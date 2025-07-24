@@ -16,10 +16,26 @@ Push notifications are only available when running the app on a **physical devic
 
 For iOS:
 
-`yarn ios:device`
+Run `yarn expo prebuild` (make sure to run this each time you edit `assets/ios/NotificationService.m`)
+
+`yarn device:ios`
 
 For Android:
 
-`yarn android:device`
+`yarn device:android`
 
 **Note:** Notifications do not work in the Expo Go app. You must run the app on a standalone build or a device using the above commands.
+
+Download the google services from Firebase console and add it to the root directory
+
+Add a .env.local in the root directory:
+
+```env
+GOOGLE_SERVICES_JSON=./google-services.json
+```
+
+Then run `yarn expo prebuild` (make sure to run this each time you edit `assets/android/MessagingService.kt`)
+
+run `yarn device:android`
+
+To view logs you can run `adb logcat | grep AlbyHubMessagingService`

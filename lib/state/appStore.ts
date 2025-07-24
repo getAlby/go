@@ -11,6 +11,7 @@ interface AppState {
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
   readonly isNotificationsEnabled: boolean | null;
+  readonly ttsNotificationsEnabled: boolean;
   readonly isOnboarded: boolean;
   readonly expoPushToken: string;
   readonly theme?: Theme;
@@ -30,6 +31,7 @@ interface AppState {
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
   setNotificationsEnabled(notificationsEnabled: boolean | null): void;
+  setTTSNotificationsEnabled(ttsNotificationsEnabled: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   removeAddressBookEntry: (index: number) => void;
@@ -49,6 +51,7 @@ const themeKey = "theme";
 const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
 const isNotificationsEnabledKey = "isNotificationsEnabled";
+const ttsNotificationsEnabledKey = "ttsNotificationsEnabled";
 
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
 export type Theme = "light" | "dark";
@@ -202,6 +205,8 @@ export const useAppStore = create<AppState>()((set, get) => {
     isNotificationsEnabled: secureStorage.getItem(isNotificationsEnabledKey)
       ? secureStorage.getItem(isNotificationsEnabledKey) === "true"
       : null,
+    ttsNotificationsEnabled:
+      secureStorage.getItem(ttsNotificationsEnabledKey) === "true",
     theme,
     balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
@@ -251,6 +256,15 @@ export const useAppStore = create<AppState>()((set, get) => {
       }
       set({
         isNotificationsEnabled: isEnabled,
+      });
+    },
+    setTTSNotificationsEnabled: (ttsNotificationsEnabled) => {
+      secureStorage.setItem(
+        ttsNotificationsEnabledKey,
+        ttsNotificationsEnabled.toString(),
+      );
+      set({
+        ttsNotificationsEnabled: ttsNotificationsEnabled,
       });
     },
     setFiatCurrency: (fiatCurrency) => {

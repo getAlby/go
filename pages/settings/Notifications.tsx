@@ -10,6 +10,7 @@ import {
   deregisterWalletNotifications,
   registerWalletNotifications,
 } from "~/lib/notifications";
+import { setNotificationSettings } from "~/lib/notificationsNativeStorage";
 import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 import { registerForPushNotificationsAsync } from "~/services/Notifications";
@@ -17,7 +18,12 @@ import { registerForPushNotificationsAsync } from "~/services/Notifications";
 export function Notifications() {
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
-  const isEnabled = useAppStore((store) => store.isNotificationsEnabled);
+  const notificationsEnabled = useAppStore(
+    (store) => store.isNotificationsEnabled,
+  );
+  const ttsNotificationsEnabled = useAppStore(
+    (store) => store.ttsNotificationsEnabled,
+  );
 
   return (
     <View className="flex-1 py-6">
@@ -31,7 +37,7 @@ export function Notifications() {
             <Loading className="h-8 mr-4" />
           ) : (
             <Switch
-              checked={!!isEnabled}
+              checked={!!notificationsEnabled}
               onCheckedChange={async (checked) => {
                 setLoading(true);
                 let enabled: boolean | null = checked;
@@ -66,19 +72,41 @@ export function Notifications() {
             <FlatList
               className={cn(
                 "flex flex-col px-5",
-                !isEnabled && "opacity-50 pointer-events-none",
+                !notificationsEnabled && "opacity-50 pointer-events-none",
               )}
               data={wallets}
               renderItem={({ item: wallet, index }) => (
                 <WalletNotificationSwitch
                   wallet={wallet}
                   index={index}
-                  isEnabled={!!isEnabled}
+                  isEnabled={!!notificationsEnabled}
                 />
               )}
             />
           </>
         )}
+        <View className="flex-row items-center justify-between gap-2 px-6 mt-8">
+          <Label nativeID="notifications">
+            <Text className="text-lg font-medium2">Spoken notifications</Text>
+          </Label>
+          {isLoading ? (
+            <Loading className="h-8 mr-4" />
+          ) : (
+            <Switch
+              disabled={!notificationsEnabled}
+              checked={!!ttsNotificationsEnabled}
+              onCheckedChange={async (checked) => {
+                setLoading(true);
+                useAppStore.getState().setTTSNotificationsEnabled(checked);
+                setNotificationSettings({
+                  ttsEnabled: checked,
+                });
+                setLoading(false);
+              }}
+              nativeID="security"
+            />
+          )}
+        </View>
       </View>
     </View>
   );

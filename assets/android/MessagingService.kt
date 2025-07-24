@@ -23,15 +23,64 @@ import java.io.ByteArrayOutputStream
 import org.bouncycastle.crypto.engines.ChaCha7539Engine
 import org.bouncycastle.crypto.params.KeyParameter
 import org.bouncycastle.crypto.params.ParametersWithIV
+import android.util.Log
+import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.OnInitListener
+import java.util.Locale
 
-class MessagingService : FirebaseMessagingService() {
+class MessagingService : FirebaseMessagingService(), OnInitListener {
+    private lateinit var tts: TextToSpeech
+    private val ttsQueue = mutableListOf<String>()
+    private var ttsReady = false
 
+    companion object {
+        private const val TAG = "AlbyHubMessagingService"
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        tts = TextToSpeech(this, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.US)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e(TAG, "Failed to find language: $result")
+                return
+            }
+            Log.i(TAG, "Set TTS language from US Locale")
+            ttsReady = true
+
+            // Speak any queued messages
+            while (ttsQueue.isNotEmpty()) {
+                Log.i(TAG, "Speaking queued message")
+                speakOut(ttsQueue.removeAt(0))
+            }
+        } else {
+            Log.e(TAG, "Failed to setup TextToSpeech: $status")
+        }
+    }
+    
     data class WalletInfo(
         val name: String,
         val sharedSecret: String,
         val id: Int,
         val version: String = "0.0"
     )
+
+    private fun getTtsNotificationsEnabledFromPreferences(context: Context): Boolean {
+      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
+      val settingsString = sharedPreferences.getString("settings", null) ?: return false
+      try {
+        val settingsJson = JSONObject(settingsString)
+        val ttsEnabledString = settingsJson.optString("ttsEnabled")
+        return ttsEnabledString == "true"
+      } catch (e: Exception) {
+          e.printStackTrace()
+          return false
+      }
+    }
 
     private fun getWalletInfo(context: Context, key: String): WalletInfo? {
       val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
@@ -55,6 +104,7 @@ class MessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isEmpty()) {
             return
         }
+        Log.i(TAG, "Received notification")
 
         val messageData = remoteMessage.data
         val body = messageData["body"] ?: return
@@ -125,17 +175,28 @@ class MessagingService : FirebaseMessagingService() {
         val notificationManager = NotificationManagerCompat.from(this)
         val notificationId = System.currentTimeMillis().toInt()
         notificationManager.notify(notificationId, notificationBuilder.build())
-        // wakeApp()
+
+        if (notificationType == "payment_received") {
+            var ttsMessage = "$amount sat"
+            if (ttsReady) {
+                speakOut(ttsMessage)
+            } else {
+                ttsQueue.add(ttsMessage)
+                Log.w(TAG, "TTS not initialized yet, queued message: $ttsMessage")
+            }
+        }
     }
 
-    private fun getSharedSecretFromPreferences(context: Context, key: String): String? {
-      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
-      return sharedPreferences.getString("${key}_shared_secret", null)
-    }
-
-    private fun getWalletNameFromPreferences(context: Context, key: String): String? {
-      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
-      return sharedPreferences.getString("${key}_name", null)
+    private fun speakOut(text: String) {
+        if (!getTtsNotificationsEnabledFromPreferences(this)) {
+            Log.i(TAG, "TTS notifications disabled, skipping")
+            return
+        }
+        Log.i(TAG, "Speaking: $text")
+        val result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        if (result == TextToSpeech.ERROR) {
+            Log.e(TAG, "Error occurred while trying to speak: $text")
+        }
     }
 
     private fun decrypt(content: String, key: ByteArray, version: String): String? {

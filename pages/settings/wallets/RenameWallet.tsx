@@ -8,9 +8,9 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME, IS_EXPO_GO } from "~/lib/constants";
+import { storeWalletInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
 import { getPubkeyFromNWCUrl } from "~/lib/utils";
-import { storeWalletInfo } from "~/lib/walletInfo";
 
 export function RenameWallet() {
   const { id } = useLocalSearchParams() as { id: string };
