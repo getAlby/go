@@ -16,6 +16,8 @@ Push notifications are only available when running the app on a **physical devic
 
 For iOS:
 
+Run `yarn expo prebuild` (make sure to run this each time you edit `assets/ios/NotificationService.m`)
+
 `yarn device:ios`
 
 For Android:
@@ -32,7 +34,7 @@ Add a .env.local in the root directory:
 GOOGLE_SERVICES_JSON=./google-services.json
 ```
 
-Then run `yarn expo prebuild` (make sure to run this each time you edit `MessagingService.kt`)
+Then run `yarn expo prebuild` (make sure to run this each time you edit `assets/android/MessagingService.kt`)
 
 run `yarn device:android`
 
