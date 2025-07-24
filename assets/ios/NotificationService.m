@@ -176,11 +176,9 @@
             }
             AVAudioPCMBuffer *pcmBuffer = (AVAudioPCMBuffer *)buffer;
             if (pcmBuffer.frameLength == 0) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                  self.bestAttemptContent.sound = [UNNotificationSound soundNamed:audioName];
-                  contentHandler(self.bestAttemptContent);
-                  self.synthesizer = nil;
-                });
+                self.bestAttemptContent.sound = [UNNotificationSound soundNamed:audioName];
+                contentHandler(self.bestAttemptContent);
+                self.synthesizer = nil;
                 return;
             } else {
                 if (!audioFile) {
