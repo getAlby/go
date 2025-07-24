@@ -143,66 +143,74 @@
     }
 
     if ([notificationType isEqualToString:@"payment_received"] && ttsEnabled) {
-        NSString *speechText         = [NSString stringWithFormat:@"%.0f sats", amountInSats];
-        self.synthesizer             = [[AVSpeechSynthesizer alloc] init];
-        self.synthesizer.delegate    = self;
-        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:speechText];
-        __block AVAudioFile *audioFile;
-        NSString *audioName     = @"tts.caf";
-        NSFileManager *fileMan  = [NSFileManager defaultManager];
-        NSString *containerPath = [fileMan containerURLForSecurityApplicationGroupIdentifier:@"group.com.getalby.mobile.nse"].path;
-        NSString *soundDir = [containerPath stringByAppendingString:@"/Library/Sounds"];
-        NSError *errorOut;
-        if (![fileMan fileExistsAtPath:soundDir]) {
-            [fileMan createDirectoryAtPath:soundDir withIntermediateDirectories:YES attributes:nil error:&errorOut];
-        } else {
-            // Delete old files
-            NSArray<NSString*> *oldFiles = [fileMan contentsOfDirectoryAtPath:soundDir error:&errorOut];
-            if (oldFiles != nil) {
-                for (NSString *oldFileName in oldFiles) {
-                    NSString *oldFilePath = [soundDir stringByAppendingPathComponent:oldFileName];
-                    [fileMan removeItemAtPath:oldFilePath error:&errorOut];
-                }
-            }
-        }
-        if (errorOut != nil) {
-          return;
-        }
-        NSString *soundPath = [soundDir stringByAppendingString:[@"/" stringByAppendingString:audioName]];
-        NSURL *soundUrl     = [NSURL fileURLWithPath:soundPath];
-        [self.synthesizer writeUtterance:utterance toBufferCallback:^(AVAudioBuffer * _Nonnull buffer) {
-            if (![buffer isKindOfClass:[AVAudioPCMBuffer class]]) {
-              return;
-            }
-            AVAudioPCMBuffer *pcmBuffer = (AVAudioPCMBuffer *)buffer;
-            if (pcmBuffer.frameLength == 0) {
-                self.bestAttemptContent.sound = [UNNotificationSound soundNamed:audioName];
-                contentHandler(self.bestAttemptContent);
-                self.synthesizer = nil;
-                return;
-            } else {
-                if (!audioFile) {
-                    NSError *error = nil;
-                    audioFile = [[AVAudioFile alloc] initForWriting:soundUrl settings:pcmBuffer.format.settings error:&error];
-                    if (error != nil) {
-                      return;
-                    }
-                }
-            }
-            NSError *error = nil;
-            [audioFile writeFromBuffer:pcmBuffer error:&error];
-            if (error != nil) {
-              return;
-            }
-        }];
+        NSString *speechText = [NSString stringWithFormat:@"%.0f sats", amountInSats];
+        [self handleTextToSpeech:speechText contentHandler:contentHandler];
     } else {
-      self.contentHandler(self.bestAttemptContent);
+        self.contentHandler(self.bestAttemptContent);
     }
 }
 
 - (void)serviceExtensionTimeWillExpire {
     self.bestAttemptContent.body = @"expired notification";
     self.contentHandler(self.bestAttemptContent);
+}
+
+- (void)handleTextToSpeech:(NSString *)speechText contentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+    self.synthesizer = [[AVSpeechSynthesizer alloc] init];
+    self.synthesizer.delegate = self;
+    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:speechText];
+    __block AVAudioFile *audioFile;
+    NSString *audioName = @"tts.caf";
+    NSFileManager *fileMan = [NSFileManager defaultManager];
+    NSString *containerPath = [fileMan containerURLForSecurityApplicationGroupIdentifier:@"group.com.getalby.mobile.nse"].path;
+    NSString *soundDir = [containerPath stringByAppendingString:@"/Library/Sounds"];
+    NSError *errorOut = nil;
+    if (![fileMan fileExistsAtPath:soundDir]) {
+        [fileMan createDirectoryAtPath:soundDir withIntermediateDirectories:YES attributes:nil error:&errorOut];
+    } else {
+        // Delete old files
+        NSArray<NSString*> *oldFiles = [fileMan contentsOfDirectoryAtPath:soundDir error:&errorOut];
+        if (oldFiles != nil) {
+            for (NSString *oldFileName in oldFiles) {
+                NSString *oldFilePath = [soundDir stringByAppendingPathComponent:oldFileName];
+                [fileMan removeItemAtPath:oldFilePath error:&errorOut];
+            }
+        }
+    }
+    if (errorOut) {
+        contentHandler(self.bestAttemptContent);
+        return;
+    }
+    NSString *soundPath = [soundDir stringByAppendingString:[@"/" stringByAppendingString:audioName]];
+    NSURL *soundUrl     = [NSURL fileURLWithPath:soundPath];
+    [self.synthesizer writeUtterance:utterance toBufferCallback:^(AVAudioBuffer * _Nonnull buffer) {
+        if (![buffer isKindOfClass:[AVAudioPCMBuffer class]]) {
+          contentHandler(self.bestAttemptContent);
+          return;
+        }
+        AVAudioPCMBuffer *pcmBuffer = (AVAudioPCMBuffer *)buffer;
+        if (pcmBuffer.frameLength == 0) {
+            self.bestAttemptContent.sound = [UNNotificationSound soundNamed:audioName];
+            contentHandler(self.bestAttemptContent);
+            self.synthesizer = nil;
+            return;
+        } else {
+            if (!audioFile) {
+                NSError *error = nil;
+                audioFile = [[AVAudioFile alloc] initForWriting:soundUrl settings:pcmBuffer.format.settings error:&error];
+                if (error != nil) {
+                    contentHandler(self.bestAttemptContent);
+                    return;
+                }
+            }
+        }
+        NSError *error = nil;
+        [audioFile writeFromBuffer:pcmBuffer error:&error];
+        if (error != nil) {
+            contentHandler(self.bestAttemptContent);
+            return;
+        }
+    }];
 }
 
 /// Decrypts a NIP-44–style message using the given conversation key (in hex format).
