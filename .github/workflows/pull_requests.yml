@@ -36,6 +36,7 @@ jobs:
         run: eas build --non-interactive --platform android --local --profile preview --output=./app-release.apk
         env:
           GOOGLE_SERVICES_JSON: "/home/runner/work/go/go/google-services.json"
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
       - name: 🧪 Run tests
         run: yarn test
