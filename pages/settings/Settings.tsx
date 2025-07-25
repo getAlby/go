@@ -28,6 +28,7 @@ import { useColorScheme } from "~/lib/useColorScheme";
 export function Settings() {
   const wallets = useAppStore((store) => store.wallets);
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(__DEV__);
   const { colorScheme, toggleColorScheme } = useColorScheme();
@@ -59,6 +60,11 @@ export function Settings() {
             <Text className="text-foreground font-medium2 text-xl">
               Fiat Currency
             </Text>
+            {fiatCurrency && (
+              <Text className="text-muted-foreground text-xl">
+                ({fiatCurrency})
+              </Text>
+            )}
           </TouchableOpacity>
         </Link>
 
