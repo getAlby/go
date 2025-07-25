@@ -49,7 +49,7 @@ export function Manual() {
               Type or paste a Lightning Address, lightning invoice or LNURL.
             </Text>
             <Input
-              className="w-full text-center mt-6 border-transparent bg-transparent native:text-2xl font-semibold2"
+              className="w-full mt-6"
               placeholder="hello@getalby.com"
               value={keyboardText}
               onChangeText={setKeyboardText}
