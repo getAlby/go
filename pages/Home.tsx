@@ -31,10 +31,11 @@ dayjs.extend(relativeTime);
 export function Home() {
   const { data: balance, mutate: reloadBalance } = useBalance();
   const [refreshingBalance, setRefreshingBalance] = useState(false);
-  const getFiatAmount = useGetFiatAmount();
   const balanceDisplayMode = useAppStore((store) => store.balanceDisplayMode);
   const wallets = useAppStore((store) => store.wallets);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
+  const getFiatAmount = useGetFiatAmount();
 
   useFocusEffect(() => {
     reloadBalance();
@@ -49,7 +50,9 @@ export function Home() {
   function switchBalanceState(): void {
     switch (balanceDisplayMode) {
       case "sats":
-        useAppStore.getState().setBalanceDisplayMode("fiat");
+        useAppStore
+          .getState()
+          .setBalanceDisplayMode(!fiatCurrency ? "hidden" : "fiat");
         break;
       case "fiat":
         useAppStore.getState().setBalanceDisplayMode("hidden");
@@ -135,21 +138,23 @@ export function Home() {
                   <Skeleton className="w-48 text-5xl" />
                 )}
               </View>
-              <View className="flex justify-center items-center">
-                {balance && !refreshingBalance ? (
-                  <Text className="text-center text-3xl text-muted-foreground font-semibold2">
-                    {balanceDisplayMode === "sats" &&
-                      getFiatAmount &&
-                      getFiatAmount(Math.floor(balance.balance / 1000))}
-                    {balanceDisplayMode === "fiat" &&
-                      new Intl.NumberFormat().format(
-                        Math.floor(balance.balance / 1000),
-                      ) + " sats"}
-                  </Text>
-                ) : (
-                  <Skeleton className="w-32 text-3xl" />
-                )}
-              </View>
+              {/* Hide conversion if fiat currency is not selected */}
+              {fiatCurrency && (
+                <View className="flex justify-center items-center">
+                  {balance && !refreshingBalance && getFiatAmount ? (
+                    <Text className="text-center text-3xl text-muted-foreground font-semibold2">
+                      {balanceDisplayMode === "sats" &&
+                        getFiatAmount(Math.floor(balance.balance / 1000))}
+                      {balanceDisplayMode === "fiat" &&
+                        new Intl.NumberFormat().format(
+                          Math.floor(balance.balance / 1000),
+                        ) + " sats"}
+                    </Text>
+                  ) : (
+                    <Skeleton className="w-32 text-3xl" />
+                  )}
+                </View>
+              )}
             </TouchableOpacity>
             {new Date().getDate() === 21 && <AlbyBanner />}
           </View>

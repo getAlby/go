@@ -11,11 +11,14 @@ interface RateCacheEntry {
 let cachedRates: Record<string, RateCacheEntry> = {};
 
 function useFiatRate() {
-  const fiatCurrency = useAppStore((store) => store.fiatCurrency) || "USD";
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const [rate, setRate] = React.useState<number>();
 
   React.useEffect(() => {
     (async () => {
+      if (!fiatCurrency) {
+        return;
+      }
       try {
         const cacheEntry = cachedRates[fiatCurrency];
         const now = Date.now();
@@ -40,12 +43,12 @@ function useFiatRate() {
 }
 
 export function useGetFiatAmount() {
-  const fiatCurrency = useAppStore((store) => store.fiatCurrency) || "USD";
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const rate = useFiatRate();
 
   const getFiatAmount = React.useCallback(
     (amount: number, displayCurrencySign = true) => {
-      if (rate) {
+      if (fiatCurrency && rate) {
         if (displayCurrencySign) {
           return `${new Intl.NumberFormat(undefined, {
             style: "currency",
@@ -66,7 +69,6 @@ export function useGetFiatAmount() {
       }
       return undefined;
     },
-
     [rate, fiatCurrency],
   );
 
