@@ -2,12 +2,7 @@ import React from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SwapIcon } from "~/components/Icons";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
-import {
-  CURSOR_COLOR,
-  DEFAULT_CURRENCY,
-  FIAT_REGEX,
-  SATS_REGEX,
-} from "~/lib/constants";
+import { CURSOR_COLOR, FIAT_REGEX, SATS_REGEX } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 import { Input } from "./ui/input";
@@ -32,8 +27,7 @@ export function DualCurrencyInput({
 }: DualCurrencyInputProps) {
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
-  const fiatCurrency =
-    useAppStore((store) => store.fiatCurrency) || DEFAULT_CURRENCY;
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const [fiatAmount, setFiatAmount] = React.useState("");
   const [inputMode, setInputMode] = React.useState<"sats" | "fiat">("sats");
   const inputRef = React.useRef<TextInput>(null);
@@ -97,16 +91,22 @@ export function DualCurrencyInput({
           <Text className="font-semibold2 text-2xl text-muted-foreground">
             {inputMode === "fiat" ? fiatCurrency : "sats"}
           </Text>
-          <SwapIcon className="text-muted-foreground" width={16} height={16} />
+          {fiatCurrency && (
+            <SwapIcon
+              className="text-muted-foreground"
+              width={16}
+              height={16}
+            />
+          )}
         </View>
       </TouchableOpacity>
-      {
+      {fiatCurrency && (
         <Text className="text-muted-foreground text-2xl font-semibold2">
           {inputMode === "fiat"
             ? new Intl.NumberFormat().format(+amount) + " sats"
             : getFiatAmount?.(+amount) || ""}
         </Text>
-      }
+      )}
     </View>
   );
 }

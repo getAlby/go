@@ -195,12 +195,15 @@ export const useAppStore = create<AppState>()((set, get) => {
       ? selectedWalletId
       : 0;
 
+  const fiatKey = secureStorage.getItem(fiatCurrencyKey);
+  const fiatCurrency = fiatKey === "" ? "" : fiatKey || "USD";
+
   return {
     unlocked: !isSecurityEnabled,
     addressBookEntries: loadAddressBookEntries(),
     wallets: initialWallets,
     nwcClient: getNWCClient(initialSelectedWalletId),
-    fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
+    fiatCurrency,
     isSecurityEnabled,
     isNotificationsEnabled: secureStorage.getItem(isNotificationsEnabledKey)
       ? secureStorage.getItem(isNotificationsEnabledKey) === "true"
@@ -268,8 +271,13 @@ export const useAppStore = create<AppState>()((set, get) => {
       });
     },
     setFiatCurrency: (fiatCurrency) => {
+      const displayMode = get().balanceDisplayMode;
       secureStorage.setItem(fiatCurrencyKey, fiatCurrency);
-      set({ fiatCurrency });
+      set({
+        fiatCurrency,
+        balanceDisplayMode:
+          !fiatCurrency && displayMode === "fiat" ? "sats" : displayMode,
+      });
     },
     setSelectedWalletId: (selectedWalletId) => {
       if (typeof get().wallets[selectedWalletId] !== "undefined") {

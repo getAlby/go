@@ -105,9 +105,11 @@ export function TransactionItem({ tx }: Props) {
               {Math.floor(tx.amount / 1000) === 1 ? "sat" : "sats"}
             </Text>
           </Text>
-          <Text className="text-right text-sm text-muted-foreground font-medium2">
-            {getFiatAmount && getFiatAmount(Math.floor(tx.amount / 1000))}
-          </Text>
+          {getFiatAmount && (
+            <Text className="text-right text-sm text-muted-foreground font-medium2">
+              {getFiatAmount(Math.floor(tx.amount / 1000))}
+            </Text>
+          )}
         </View>
       </View>
     </Pressable>
