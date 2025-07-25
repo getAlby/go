@@ -116,11 +116,12 @@ export function Manual() {
               <View className="flex items-center justify-center">
                 <Text className="text-muted-foreground text-center flex flex-row gap-4">
                   <Checkbox
+                    aria-labelledby="add-to-contacts"
                     checked={addToContacts}
                     onCheckedChange={setAddToContacts}
                   />{" "}
                   <View>
-                    <Text>Add to contacts</Text>
+                    <Label nativeID="add-to-contacts">Add to contacts</Label>
                   </View>
                 </Text>
               </View>
