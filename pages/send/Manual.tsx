@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import {
@@ -24,8 +25,10 @@ export function Manual() {
   const [contactName, setContactName] = useState("");
   const [addToContacts, setAddToContacts] = React.useState(false);
   const addressBookEntries = useAppStore((store) => store.addressBookEntries);
+  const [isSubmitting, setSubmitting] = React.useState(false);
 
   const submitKeyboardText = async () => {
+    setSubmitting(true);
     try {
       if (addToContacts) {
         useAppStore.getState().addAddressBookEntry({
@@ -38,6 +41,7 @@ export function Manual() {
       console.error("Payment failed:", error);
       errorToast(error);
     }
+    setSubmitting(false);
   };
 
   return (
@@ -146,9 +150,11 @@ export function Manual() {
           )}
           <Button
             onPress={submitKeyboardText}
-            disabled={!keyboardText}
+            disabled={!keyboardText || isSubmitting}
             size="lg"
+            className="flex flex-row gap-2"
           >
+            {isSubmitting && <Loading className="text-primary-foreground" />}
             <Text>Next</Text>
           </Button>
         </View>
