@@ -1,3 +1,4 @@
+import { LN_ADDRESS_REGEX } from "@getalby/lightning-tools";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
@@ -108,7 +109,7 @@ export function Manual() {
                 ))}
             </ScrollView>
           )}
-          {keyboardText.includes("@") &&
+          {LN_ADDRESS_REGEX.test(keyboardText) &&
             !addressBookEntries.some(
               (entry) => entry.lightningAddress === keyboardText,
             ) && (
