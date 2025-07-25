@@ -17,17 +17,16 @@ type Props = {
 
 export function TransactionItem({ tx }: Props) {
   const metadata = tx.metadata;
-  const type = tx.type;
   const getFiatAmount = useGetFiatAmount();
 
   const typeStateText =
-    type === "incoming"
-      ? "Received"
-      : tx.state === "settled" // we only fetch settled incoming payments
-        ? "Sent"
-        : tx.state === "pending"
-          ? "Sending"
-          : "Failed";
+    tx.state === "failed"
+      ? "Failed"
+      : tx.state === "pending"
+        ? "Sending"
+        : tx.type === "outgoing"
+          ? "Sent"
+          : "Received";
 
   const Icon =
     tx.state === "failed"
