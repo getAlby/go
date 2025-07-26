@@ -30,13 +30,13 @@ export function Manual() {
   const submitKeyboardText = async () => {
     setSubmitting(true);
     try {
-      if (addToContacts) {
+      const result = await initiatePaymentFlow(keyboardText, "");
+      if (result && addToContacts) {
         useAppStore.getState().addAddressBookEntry({
           name: contactName,
           lightningAddress: keyboardText,
         });
       }
-      await initiatePaymentFlow(keyboardText, "");
     } catch (error) {
       console.error("Payment failed:", error);
       errorToast(error);
