@@ -76,6 +76,13 @@ export default ({ config }) => {
           icon: "./assets/notification.png",
         },
       ],
+      [
+        "expo-image-picker",
+        {
+          photosPermission:
+            "Allow Alby Go to access your photos to load invoice and lightning address QRs",
+        },
+      ],
       "expo-location",
       "expo-router",
       "expo-secure-store",

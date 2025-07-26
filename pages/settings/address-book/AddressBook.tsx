@@ -1,5 +1,5 @@
-import { Link, router } from "expo-router";
-import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
+import { Link } from "expo-router";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { TrashIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -21,19 +21,7 @@ export function AddressBook() {
       <ScrollView className="flex-1 flex flex-col">
         {addressBookEntries.length > 0 ? (
           addressBookEntries.map((addressBookEntry, index) => (
-            <Pressable
-              key={index}
-              onPress={() => {
-                router.dismissAll();
-                router.navigate({
-                  pathname: "/send",
-                  params: {
-                    url: addressBookEntry.lightningAddress,
-                  },
-                });
-              }}
-              className="mb-4"
-            >
+            <View key={index} className="mb-4">
               <Card>
                 <CardContent className="flex flex-row items-center gap-4">
                   <View className="h-10 w-10 flex items-center justify-center rounded-full bg-accent">
@@ -53,8 +41,7 @@ export function AddressBook() {
                     </CardDescription>
                   </View>
                   <TouchableOpacity
-                    onPress={(e) => {
-                      e.stopPropagation();
+                    onPress={() => {
                       useAppStore.getState().removeAddressBookEntry(index);
                     }}
                   >
@@ -62,7 +49,7 @@ export function AddressBook() {
                   </TouchableOpacity>
                 </CardContent>
               </Card>
-            </Pressable>
+            </View>
           ))
         ) : (
           <Text className="text-lg">No entries yet.</Text>
