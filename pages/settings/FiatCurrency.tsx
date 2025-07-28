@@ -103,12 +103,17 @@ function CurrencyList() {
                 size={18}
                 className="rounded border border-input"
               />
-              <Text className="text-xl font-semibold2 text-secondary-foreground">
-                {name}
-              </Text>
-              <Text className="text-xl font-medium2 text-muted-foreground">
-                {code}
-              </Text>
+              <View className="flex-1 flex flex-row items-center gap-4">
+                <Text
+                  numberOfLines={1}
+                  className="text-xl font-semibold2 text-secondary-foreground flex-initial"
+                >
+                  {name}
+                </Text>
+                <Text className="text-xl font-medium2 text-muted-foreground">
+                  {code}
+                </Text>
+              </View>
             </TouchableOpacity>
             {priority !== 100 && filteredCurrencies[index + 1][2] === 100 && (
               <View className="border border-input my-4" />
