@@ -37,6 +37,7 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: "/home/runner/work/go/go/google-services.json"
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: 🧪 Run tests
         run: yarn test
