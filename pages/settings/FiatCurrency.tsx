@@ -89,37 +89,45 @@ function CurrencyList() {
         }: {
           item: [string, string, number];
           index: number;
-        }) => (
-          <>
-            <TouchableOpacity
-              className={cn(
-                "p-4 flex flex-row items-center gap-4 rounded-2xl",
-                code === fiatCurrency && "bg-muted",
+        }) => {
+          const nextPriority = filteredCurrencies[index + 1]?.[2];
+          const shouldRenderDivider =
+            nextPriority !== undefined &&
+            nextPriority !== priority + 1 &&
+            nextPriority !== priority;
+
+          return (
+            <>
+              <TouchableOpacity
+                className={cn(
+                  "p-4 flex flex-row items-center gap-4 rounded-2xl",
+                  code === fiatCurrency && "bg-muted",
+                )}
+                onPress={() => select(code)}
+              >
+                <CountryFlag
+                  isoCode={code.slice(0, 2).toLowerCase()}
+                  size={18}
+                  className="rounded border border-input"
+                />
+                <View className="flex-1 flex flex-row items-center gap-4">
+                  <Text
+                    numberOfLines={1}
+                    className="text-xl font-semibold2 text-secondary-foreground flex-initial"
+                  >
+                    {name}
+                  </Text>
+                  <Text className="text-xl font-medium2 text-muted-foreground">
+                    {code}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              {shouldRenderDivider && (
+                <View className="border border-input my-4" />
               )}
-              onPress={() => select(code)}
-            >
-              <CountryFlag
-                isoCode={code.slice(0, 2).toLowerCase()}
-                size={18}
-                className="rounded border border-input"
-              />
-              <View className="flex-1 flex flex-row items-center gap-4">
-                <Text
-                  numberOfLines={1}
-                  className="text-xl font-semibold2 text-secondary-foreground flex-initial"
-                >
-                  {name}
-                </Text>
-                <Text className="text-xl font-medium2 text-muted-foreground">
-                  {code}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            {priority !== 100 && filteredCurrencies[index + 1][2] === 100 && (
-              <View className="border border-input my-4" />
-            )}
-          </>
-        )}
+            </>
+          );
+        }}
       />
     </>
   );
