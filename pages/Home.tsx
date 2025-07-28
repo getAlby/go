@@ -116,7 +116,9 @@ export function Home() {
               className="w-full flex flex-col items-center justify-center gap-3"
             >
               <View className="w-full flex flex-row justify-center items-center gap-2">
-                {balance && !refreshingBalance ? (
+                {balance &&
+                !refreshingBalance &&
+                (balanceDisplayMode === "fiat" ? getFiatAmount : true) ? (
                   <>
                     <Text className="text-foreground text-5xl font-bold2">
                       {balanceDisplayMode === "sats" &&
@@ -124,8 +126,7 @@ export function Home() {
                           Math.floor(balance.balance / 1000),
                         )}
                       {balanceDisplayMode === "fiat" &&
-                        getFiatAmount &&
-                        getFiatAmount(Math.floor(balance.balance / 1000))}
+                        getFiatAmount?.(Math.floor(balance.balance / 1000))}
                       {balanceDisplayMode === "hidden" && "****"}
                     </Text>
                     {balanceDisplayMode === "sats" && (
@@ -141,10 +142,12 @@ export function Home() {
               {/* Hide conversion if fiat currency is not selected */}
               {fiatCurrency && (
                 <View className="flex justify-center items-center">
-                  {balance && !refreshingBalance && getFiatAmount ? (
+                  {balance &&
+                  !refreshingBalance &&
+                  (balanceDisplayMode === "sats" ? getFiatAmount : true) ? (
                     <Text className="text-center text-3xl text-muted-foreground font-semibold2">
                       {balanceDisplayMode === "sats" &&
-                        getFiatAmount(Math.floor(balance.balance / 1000))}
+                        getFiatAmount?.(Math.floor(balance.balance / 1000))}
                       {balanceDisplayMode === "fiat" &&
                         new Intl.NumberFormat().format(
                           Math.floor(balance.balance / 1000),
