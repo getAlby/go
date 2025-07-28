@@ -86,20 +86,24 @@ export function DualCurrencyInput({
         readOnly={readOnly}
         // aria-errormessage="inputError"
       />
-      <TouchableOpacity onPress={toggleInputMode} className="p-2">
-        <View className="flex flex-row gap-2 items-center justify-center">
-          <Text className="font-semibold2 text-2xl text-muted-foreground">
-            {inputMode === "fiat" ? fiatCurrency : "sats"}
-          </Text>
-          {fiatCurrency && (
+      {fiatCurrency ? (
+        <TouchableOpacity onPress={toggleInputMode} className="p-2">
+          <View className="flex flex-row gap-2 items-center justify-center">
+            <Text className="font-semibold2 text-2xl text-muted-foreground">
+              {inputMode === "fiat" ? fiatCurrency : "sats"}
+            </Text>
             <SwapIcon
               className="text-muted-foreground"
               width={16}
               height={16}
             />
-          )}
-        </View>
-      </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <Text className="font-semibold2 text-2xl text-muted-foreground p-2">
+          sats
+        </Text>
+      )}
       {fiatCurrency && (
         <Text className="text-muted-foreground text-2xl font-semibold2">
           {inputMode === "fiat"
