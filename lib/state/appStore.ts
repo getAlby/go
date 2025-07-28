@@ -195,15 +195,12 @@ export const useAppStore = create<AppState>()((set, get) => {
       ? selectedWalletId
       : 0;
 
-  const fiatKey = secureStorage.getItem(fiatCurrencyKey);
-  const fiatCurrency = fiatKey === "" ? "" : fiatKey || "USD";
-
   return {
     unlocked: !isSecurityEnabled,
     addressBookEntries: loadAddressBookEntries(),
     wallets: initialWallets,
     nwcClient: getNWCClient(initialSelectedWalletId),
-    fiatCurrency,
+    fiatCurrency: secureStorage.getItem(fiatCurrencyKey) ?? "USD",
     isSecurityEnabled,
     isNotificationsEnabled: secureStorage.getItem(isNotificationsEnabledKey)
       ? secureStorage.getItem(isNotificationsEnabledKey) === "true"
