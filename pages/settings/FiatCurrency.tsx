@@ -37,7 +37,7 @@ function CurrencyList() {
           .map(([code, details]: any) => [
             code.toUpperCase(),
             details.name,
-            details.priority ?? 100,
+            details.priority,
           ])
           .sort((a, b) => a[1].localeCompare(b[1]))
           .sort((a, b) => a[2] - b[2]) as [string, string, number][];
