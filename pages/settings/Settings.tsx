@@ -19,11 +19,7 @@ import AlbyBanner from "~/components/AlbyBanner";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
-import {
-  DEFAULT_CURRENCY,
-  DEFAULT_WALLET_NAME,
-  IS_EXPO_GO,
-} from "~/lib/constants";
+import { DEFAULT_WALLET_NAME, IS_EXPO_GO } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { removeAllInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
@@ -32,10 +28,10 @@ import { useColorScheme } from "~/lib/useColorScheme";
 export function Settings() {
   const wallets = useAppStore((store) => store.wallets);
   const wallet = useAppStore((store) => store.wallets[store.selectedWalletId]);
+  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const [developerCounter, setDeveloperCounter] = React.useState(0);
   const [developerMode, setDeveloperMode] = React.useState(__DEV__);
   const { colorScheme, toggleColorScheme } = useColorScheme();
-  const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const { signOut } = useSession();
 
   return (
@@ -64,9 +60,11 @@ export function Settings() {
             <Text className="text-foreground font-medium2 text-xl">
               Fiat Currency
             </Text>
-            <Text className="text-muted-foreground text-xl">
-              ({fiatCurrency || DEFAULT_CURRENCY})
-            </Text>
+            {fiatCurrency && (
+              <Text className="text-muted-foreground text-xl">
+                ({fiatCurrency})
+              </Text>
+            )}
           </TouchableOpacity>
         </Link>
 
