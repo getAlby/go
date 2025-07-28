@@ -9,7 +9,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
-import { ALBY_URL, DEFAULT_CURRENCY, TOP_CURRENCIES } from "~/lib/constants";
+import { ALBY_URL, DEFAULT_CURRENCY } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
@@ -19,9 +19,9 @@ function CurrencyList() {
     useAppStore.getState().fiatCurrency,
   );
   const [loading, setLoading] = useState(true);
-  const [currencies, setCurrencies] = useState<[string, string][]>([]);
+  const [currencies, setCurrencies] = useState<[string, string, number][]>([]);
   const [filteredCurrencies, setFilteredCurrencies] = useState<
-    [string, string][]
+    [string, string, number][]
   >([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -30,19 +30,18 @@ function CurrencyList() {
       try {
         const response = await fetch(`${ALBY_URL}/api/rates`);
         const data = await response.json();
-        const mappedCurrencies: [string, string][] = Object.entries(data)
-          .map(([code, details]: any) => [code.toUpperCase(), details.name])
-          .filter(([code]) => code !== "BTC") as [string, string][];
-        mappedCurrencies.sort((a, b) => a[1].localeCompare(b[1]));
-
-        const top = TOP_CURRENCIES.map((code) =>
-          mappedCurrencies.find(([c]) => c === code),
-        ).filter(Boolean) as [string, string][];
-        const others = mappedCurrencies.filter(
-          ([c]) => !TOP_CURRENCIES.includes(c),
-        );
-
-        setCurrencies([...top, ...others]);
+        const mappedCurrencies: [string, string, number][] = Object.entries(
+          data,
+        )
+          .filter(([code]) => code.toUpperCase() !== "BTC")
+          .map(([code, details]: any) => [
+            code.toUpperCase(),
+            details.name,
+            details.priority ?? 100,
+          ])
+          .sort((a, b) => a[1].localeCompare(b[1]))
+          .sort((a, b) => a[2] - b[2]) as [string, string, number][];
+        setCurrencies(mappedCurrencies);
       } catch (error) {
         errorToast(error);
       } finally {
@@ -85,10 +84,10 @@ function CurrencyList() {
         keyExtractor={([code]) => code}
         className="flex-1"
         renderItem={({
-          item: [code, name],
+          item: [code, name, priority],
           index,
         }: {
-          item: [string, string];
+          item: [string, string, number];
           index: number;
         }) => (
           <>
@@ -111,7 +110,7 @@ function CurrencyList() {
                 {code}
               </Text>
             </TouchableOpacity>
-            {index === TOP_CURRENCIES.length - 1 && (
+            {priority !== 100 && filteredCurrencies[index + 1][2] === 100 && (
               <View className="border border-input my-4" />
             )}
           </>

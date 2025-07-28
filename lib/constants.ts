@@ -28,7 +28,6 @@ export const CURSOR_COLOR = "hsl(47 100% 72%)";
 
 export const TRANSACTIONS_PAGE_SIZE = 20;
 
-export const TOP_CURRENCIES = ["USD", "EUR", "JPY", "CNY", "GBP"];
 export const DEFAULT_CURRENCY = "USD";
 export const BTC_RATE_REFRESH_INTERVAL = 5 * 60 * 1000;
 export const DEFAULT_WALLET_NAME = "Default Wallet";
