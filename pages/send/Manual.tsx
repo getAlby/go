@@ -1,7 +1,7 @@
 import { LN_ADDRESS_REGEX } from "@getalby/lightning-tools";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
@@ -48,13 +48,13 @@ export function Manual() {
     <>
       <Screen title="Manual Entry" />
       <DismissableKeyboardView>
-        <View className="flex-1 h-full flex flex-col gap-5 p-6">
-          <View className="flex items-center justify-center mt-8">
+        <View className="flex-1 h-full flex flex-col gap-6 p-6">
+          <View className="flex items-center justify-center mt-8 gap-6">
             <Text className="text-muted-foreground text-center">
               Type or paste a Lightning Address, lightning invoice or LNURL.
             </Text>
             <Input
-              className="w-full mt-6"
+              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
               placeholder="hello@getalby.com"
               value={keyboardText}
               onChangeText={setKeyboardText}
@@ -65,7 +65,7 @@ export function Manual() {
             />
           </View>
           {addressBookEntries.length > 0 && (
-            <ScrollView className="flex-1 flex flex-col mt-8 opacity-75">
+            <ScrollView className="flex-1 flex flex-col mt-2 opacity-75">
               {addressBookEntries
                 .filter(
                   (entry) =>
@@ -76,7 +76,7 @@ export function Manual() {
                       .includes(keyboardText.toLowerCase()),
                 )
                 .map((addressBookEntry, index) => (
-                  <Pressable
+                  <TouchableOpacity
                     key={index}
                     onPress={() => {
                       router.dismissAll();
@@ -87,7 +87,7 @@ export function Manual() {
                         },
                       });
                     }}
-                    className="mb-4"
+                    className="mb-2"
                   >
                     <Card className="border-0 shadow-none">
                       <CardContent className="flex flex-row items-center gap-4">
@@ -109,7 +109,7 @@ export function Manual() {
                         </View>
                       </CardContent>
                     </Card>
-                  </Pressable>
+                  </TouchableOpacity>
                 ))}
             </ScrollView>
           )}
