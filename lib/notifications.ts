@@ -1,13 +1,16 @@
 import { Platform } from "react-native";
 import { NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import {
+  removeWalletInfo,
+  storeWalletInfo,
+} from "~/lib/notificationsNativeStorage";
 import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import {
   computeSharedSecret,
   getConversationKey,
   getPubkeyFromNWCUrl,
 } from "~/lib/utils";
-import { removeWalletInfo, storeWalletInfo } from "~/lib/walletInfo";
 
 export async function registerWalletNotifications(
   wallet: Wallet,

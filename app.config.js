@@ -94,8 +94,8 @@ export default ({ config }) => {
         usesNonExemptEncryption: false,
       },
       infoPlist: {
-        LSMinimumSystemVersion: "12.0",
-        UIBackgroundModes: ["remote-notification"],
+        LSMinimumSystemVersion: "13.0",
+        UIBackgroundModes: ["audio", "remote-notification"],
       },
       userInterfaceStyle: "automatic",
     },

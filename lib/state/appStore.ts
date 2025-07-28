@@ -11,6 +11,7 @@ interface AppState {
   readonly addressBookEntries: AddressBookEntry[];
   readonly isSecurityEnabled: boolean;
   readonly isNotificationsEnabled: boolean | null;
+  readonly ttsNotificationsEnabled: boolean;
   readonly isOnboarded: boolean;
   readonly expoPushToken: string;
   readonly theme?: Theme;
@@ -30,6 +31,7 @@ interface AppState {
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
   setNotificationsEnabled(notificationsEnabled: boolean | null): void;
+  setTTSNotificationsEnabled(ttsNotificationsEnabled: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   removeAddressBookEntry: (index: number) => void;
@@ -49,6 +51,7 @@ const themeKey = "theme";
 const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
 const isNotificationsEnabledKey = "isNotificationsEnabled";
+const ttsNotificationsEnabledKey = "ttsNotificationsEnabled";
 
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
 export type Theme = "light" | "dark";
@@ -197,11 +200,13 @@ export const useAppStore = create<AppState>()((set, get) => {
     addressBookEntries: loadAddressBookEntries(),
     wallets: initialWallets,
     nwcClient: getNWCClient(initialSelectedWalletId),
-    fiatCurrency: secureStorage.getItem(fiatCurrencyKey) || "",
+    fiatCurrency: secureStorage.getItem(fiatCurrencyKey) ?? "USD",
     isSecurityEnabled,
     isNotificationsEnabled: secureStorage.getItem(isNotificationsEnabledKey)
       ? secureStorage.getItem(isNotificationsEnabledKey) === "true"
       : null,
+    ttsNotificationsEnabled:
+      secureStorage.getItem(ttsNotificationsEnabledKey) === "true",
     theme,
     balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
@@ -253,9 +258,23 @@ export const useAppStore = create<AppState>()((set, get) => {
         isNotificationsEnabled: isEnabled,
       });
     },
+    setTTSNotificationsEnabled: (ttsNotificationsEnabled) => {
+      secureStorage.setItem(
+        ttsNotificationsEnabledKey,
+        ttsNotificationsEnabled.toString(),
+      );
+      set({
+        ttsNotificationsEnabled: ttsNotificationsEnabled,
+      });
+    },
     setFiatCurrency: (fiatCurrency) => {
+      const displayMode = get().balanceDisplayMode;
       secureStorage.setItem(fiatCurrencyKey, fiatCurrency);
-      set({ fiatCurrency });
+      set({
+        fiatCurrency,
+        balanceDisplayMode:
+          !fiatCurrency && displayMode === "fiat" ? "sats" : displayMode,
+      });
     },
     setSelectedWalletId: (selectedWalletId) => {
       if (typeof get().wallets[selectedWalletId] !== "undefined") {
