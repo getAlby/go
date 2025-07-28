@@ -5,6 +5,7 @@ import {
   PopiconsAddressBookSolid as BookUserIcon,
   PopiconsCameraWebOffSolid as CameraOffIcon,
   PopiconsCircleCheckLine as CheckCircleIcon,
+  PopiconsCheckSolid as CheckIcon,
   PopiconsChevronBottomLine as ChevronDownIcon,
   PopiconsChevronRightSolid as ChevronRightIcon,
   PopiconsChevronTopLine as ChevronUpIcon,
@@ -13,6 +14,7 @@ import {
   PopiconsUploadSolid as ExportIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
   PopiconsCircleInfoSolid as HelpCircleIcon,
+  PopiconsImageSolid as ImageIcon,
   PopiconsKeyboardSolid as KeyboardIcon,
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsArrowDownLine as MoveDownIcon,
@@ -58,6 +60,7 @@ interopIcon(BitcoinIcon);
 interopIcon(BookUserIcon);
 interopIcon(CameraOffIcon);
 interopIcon(CheckCircleIcon);
+interopIcon(CheckIcon);
 interopIcon(ChevronDownIcon);
 interopIcon(ChevronRightIcon);
 interopIcon(ChevronUpIcon);
@@ -66,6 +69,7 @@ interopIcon(EditIcon);
 interopIcon(ExportIcon);
 interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
+interopIcon(ImageIcon);
 interopIcon(KeyboardIcon);
 interopIcon(LinkIcon);
 interopIcon(MoveDownIcon);
@@ -97,6 +101,7 @@ export {
   BookUserIcon,
   CameraOffIcon,
   CheckCircleIcon,
+  CheckIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronUpIcon,
@@ -105,6 +110,7 @@ export {
   ExportIcon,
   FingerprintIcon,
   HelpCircleIcon,
+  ImageIcon,
   KeyboardIcon,
   LinkIcon,
   MoveDownIcon,

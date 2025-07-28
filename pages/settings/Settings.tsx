@@ -1,6 +1,7 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import {
+  AddressIcon,
   BitcoinIcon,
   FingerprintIcon,
   NotificationIcon,
@@ -99,6 +100,14 @@ export function Settings() {
           </Text>
         </TouchableOpacity>
 
+        <Link href="/settings/address-book" asChild>
+          <TouchableOpacity className="flex flex-row gap-4 items-center">
+            <AddressIcon className="text-muted-foreground" />
+            <Text className="text-foreground font-medium2 text-xl">
+              Address Book
+            </Text>
+          </TouchableOpacity>
+        </Link>
         <Link href="/settings/bitcoin-map" asChild>
           <TouchableOpacity className="flex flex-row gap-4 items-center">
             <PinIcon className="text-muted-foreground" />
