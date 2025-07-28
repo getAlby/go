@@ -86,6 +86,14 @@ export default ({ config }) => {
       "expo-location",
       "expo-router",
       "expo-secure-store",
+      [
+        "@sentry/react-native/expo",
+        {
+          url: "https://sentry.io/",
+          project: "alby-go",
+          organization: "getalby",
+        },
+      ],
     ],
     ios: {
       supportsTablet: true,
