@@ -121,32 +121,33 @@ export function Manual() {
                 !addressBookEntries.some(
                   (entry) => entry.lightningAddress === keyboardText,
                 ) && (
-                  <View className="flex items-center justify-center">
-                    <Text className="text-muted-foreground text-center flex flex-row gap-4">
-                      <Checkbox
-                        aria-labelledby="add-to-contacts"
-                        checked={addToContacts}
-                        onCheckedChange={setAddToContacts}
-                      />{" "}
-                      <View>
-                        <Label nativeID="add-to-contacts">
-                          Add to contacts
-                        </Label>
-                      </View>
-                    </Text>
+                  <View className="flex flex-row items-center justify-center gap-2">
+                    <Checkbox
+                      aria-labelledby="add-to-contacts"
+                      checked={addToContacts}
+                      onCheckedChange={setAddToContacts}
+                    />
+                    <Label
+                      nativeID="add-to-contacts"
+                      onPress={() => setAddToContacts(!addToContacts)}
+                    >
+                      <Text className="text-muted-foreground font-medium2">
+                        Add to contacts
+                      </Text>
+                    </Label>
                   </View>
                 )}
               {addToContacts && keyboardText.includes("@") && (
                 <View>
                   <Label
                     nativeID="name"
-                    className="self-start justify-self-start"
+                    className="self-start justify-self-start text-muted-foreground mb-1"
                   >
                     Name
                   </Label>
                   <Input
                     autoFocus
-                    placeholder="Satoshi"
+                    placeholder="Satoshi Nakamoto"
                     inputMode="email"
                     className="w-full"
                     value={contactName}

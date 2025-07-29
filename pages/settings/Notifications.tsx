@@ -17,6 +17,7 @@ import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 export function Notifications() {
   const [isLoading, setLoading] = React.useState(false);
+  const [isLoadingTTS, setLoadingTTS] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
   const notificationsEnabled = useAppStore(
     (store) => store.isNotificationsEnabled,
@@ -25,12 +26,53 @@ export function Notifications() {
     (store) => store.ttsNotificationsEnabled,
   );
 
+  const toggleNotifications = async () => {
+    if (isLoading) {
+      return;
+    }
+    setLoading(true);
+    let enabled: boolean | null;
+    if (!notificationsEnabled) {
+      enabled = await registerForPushNotificationsAsync();
+    } else {
+      const wallets = useAppStore.getState().wallets;
+      for (const [id, wallet] of wallets.entries()) {
+        await deregisterWalletNotifications(wallet, id);
+      }
+      enabled = useAppStore.getState().wallets.some((wallet) => wallet.pushId);
+      if (enabled) {
+        errorToast("Failed to deregister notifications");
+      } else {
+        if (ttsNotificationsEnabled) {
+          useAppStore.getState().setTTSNotificationsEnabled(false);
+          await setNotificationSettings({
+            ttsEnabled: false,
+          });
+        }
+      }
+    }
+    useAppStore.getState().setNotificationsEnabled(enabled);
+    setLoading(false);
+  };
+
+  const toggleTTS = async () => {
+    if (isLoadingTTS) {
+      return;
+    }
+    setLoadingTTS(true);
+    useAppStore.getState().setTTSNotificationsEnabled(!ttsNotificationsEnabled);
+    await setNotificationSettings({
+      ttsEnabled: !ttsNotificationsEnabled,
+    });
+    setLoadingTTS(false);
+  };
+
   return (
     <View className="flex-1 py-6">
       <Screen title="Notifications" />
       <View className="flex-1">
         <View className="flex-row items-center justify-between gap-2 px-6">
-          <Label nativeID="notifications">
+          <Label onPress={toggleNotifications} nativeID="notifications">
             <Text className="text-lg font-medium2">Show app notifications</Text>
           </Label>
           {isLoading ? (
@@ -38,26 +80,7 @@ export function Notifications() {
           ) : (
             <Switch
               checked={!!notificationsEnabled}
-              onCheckedChange={async (checked) => {
-                setLoading(true);
-                let enabled: boolean | null = checked;
-                if (enabled) {
-                  enabled = await registerForPushNotificationsAsync();
-                } else {
-                  const wallets = useAppStore.getState().wallets;
-                  for (const [id, wallet] of wallets.entries()) {
-                    await deregisterWalletNotifications(wallet, id);
-                  }
-                  enabled = useAppStore
-                    .getState()
-                    .wallets.some((wallet) => wallet.pushId);
-                  if (enabled) {
-                    errorToast("Failed to deregister notifications");
-                  }
-                }
-                useAppStore.getState().setNotificationsEnabled(enabled);
-                setLoading(false);
-              }}
+              onCheckedChange={toggleNotifications}
               nativeID="security"
             />
           )}
@@ -86,23 +109,16 @@ export function Notifications() {
           </>
         )}
         <View className="flex-row items-center justify-between gap-2 px-6 mt-8">
-          <Label nativeID="notifications">
+          <Label onPress={toggleTTS} nativeID="notifications">
             <Text className="text-lg font-medium2">Spoken notifications</Text>
           </Label>
-          {isLoading ? (
+          {isLoadingTTS ? (
             <Loading className="h-8 mr-4" />
           ) : (
             <Switch
               disabled={!notificationsEnabled}
               checked={!!ttsNotificationsEnabled}
-              onCheckedChange={async (checked) => {
-                setLoading(true);
-                useAppStore.getState().setTTSNotificationsEnabled(checked);
-                setNotificationSettings({
-                  ttsEnabled: checked,
-                });
-                setLoading(false);
-              }}
+              onCheckedChange={toggleTTS}
               nativeID="security"
             />
           )}

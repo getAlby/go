@@ -136,22 +136,24 @@ function CurrencyList() {
 export function FiatCurrency() {
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
 
+  const toggleFiatCurrency = () => {
+    useAppStore
+      .getState()
+      .setFiatCurrency(!fiatCurrency ? DEFAULT_CURRENCY : "");
+  };
+
   return (
     <View className="flex-1 flex flex-col gap-6 p-6">
       <Screen title="Fiat Currency" />
 
       <View className="flex-row items-center justify-between gap-2">
-        <Label nativeID="fiat-toggle">
+        <Label onPress={toggleFiatCurrency} nativeID="fiat-toggle">
           <Text className="text-lg font-medium2">Display fiat currency</Text>
         </Label>
         <Switch
           nativeID="fiat-toggle"
           checked={!!fiatCurrency}
-          onCheckedChange={(checked) =>
-            useAppStore
-              .getState()
-              .setFiatCurrency(checked ? DEFAULT_CURRENCY : "")
-          }
+          onCheckedChange={toggleFiatCurrency}
         />
       </View>
 

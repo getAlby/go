@@ -50,6 +50,9 @@ export function Security() {
                 )}
                 nativeID="security"
                 disabled={isSupported}
+                onPress={() => {
+                  useAppStore.getState().setSecurityEnabled(!isEnabled);
+                }}
               >
                 <Text className="text-lg font-medium2">
                   Require phone lock to access
