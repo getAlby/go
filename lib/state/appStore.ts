@@ -1,10 +1,10 @@
-import { nwc } from "@getalby/sdk";
+import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
 import { create } from "zustand";
 import { secureStorage } from "../secureStorage";
 
 interface AppState {
   readonly unlocked: boolean;
-  readonly nwcClient: nwc.NWCClient | undefined;
+  readonly nwcClient: NWCClient | undefined;
   readonly fiatCurrency: string;
   readonly selectedWalletId: number;
   readonly wallets: Wallet[];
@@ -23,8 +23,8 @@ interface AppState {
   setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setExpoPushToken: (expoPushToken: string) => void;
-  getNWCClient: (walletId: number) => nwc.NWCClient | undefined;
-  setNWCClient: (nwcClient: nwc.NWCClient | undefined) => void;
+  getNWCClient: (walletId: number) => NWCClient | undefined;
+  setNWCClient: (nwcClient: NWCClient | undefined) => void;
   updateWallet(wallet: Partial<Wallet>, walletId?: number): void;
   removeWallet(walletId?: number): void;
   setFiatCurrency(fiatCurrency: string): void;
@@ -60,7 +60,7 @@ export type Wallet = {
   name?: string;
   nostrWalletConnectUrl?: string;
   lightningAddress?: string;
-  nwcCapabilities?: nwc.Nip47Capability[];
+  nwcCapabilities?: Nip47Capability[];
   pushId?: string;
 };
 
@@ -363,7 +363,7 @@ export const useAppStore = create<AppState>()((set, get) => {
   };
 });
 
-function getNWCClient(walletId: number): nwc.NWCClient | undefined {
+function getNWCClient(walletId: number): NWCClient | undefined {
   const walletJSON = secureStorage.getItem(getWalletKey(walletId));
   if (!walletJSON) {
     console.info("No wallet set", walletId);
@@ -375,7 +375,7 @@ function getNWCClient(walletId: number): nwc.NWCClient | undefined {
     return undefined;
   }
 
-  return new nwc.NWCClient({
+  return new NWCClient({
     nostrWalletConnectUrl: wallet.nostrWalletConnectUrl,
   });
 }

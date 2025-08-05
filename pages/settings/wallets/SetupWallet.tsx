@@ -1,4 +1,4 @@
-import { nwc } from "@getalby/sdk";
+import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
@@ -36,8 +36,7 @@ export function SetupWallet() {
   const [isConnecting, setConnecting] = React.useState(false);
   const [nostrWalletConnectUrl, setNostrWalletConnectUrl] =
     React.useState<string>();
-  const [capabilities, setCapabilities] =
-    React.useState<nwc.Nip47Capability[]>();
+  const [capabilities, setCapabilities] = React.useState<Nip47Capability[]>();
   const [name, setName] = React.useState("");
   const [startScanning, setStartScanning] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -64,11 +63,11 @@ export function SetupWallet() {
       try {
         setConnecting(true);
         // make sure connection is valid
-        const nwcClient = new nwc.NWCClient({
+        const nwcClient = new NWCClient({
           nostrWalletConnectUrl,
         });
         const info = await nwcClient.getInfo();
-        const capabilities = [...info.methods] as nwc.Nip47Capability[];
+        const capabilities = [...info.methods] as Nip47Capability[];
         if (info.notifications?.length) {
           capabilities.push("notifications");
         }
@@ -103,7 +102,7 @@ export function SetupWallet() {
     }
     setIsLoading(true);
 
-    const nwcClient = new nwc.NWCClient({ nostrWalletConnectUrl });
+    const nwcClient = new NWCClient({ nostrWalletConnectUrl });
 
     const wallet = {
       nostrWalletConnectUrl,

@@ -1,4 +1,4 @@
-import { Invoice } from "@getalby/lightning-tools";
+import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { router } from "expo-router";
 import { lnurl as lnurlLib } from "lib/lnurl";
 import { errorToast } from "~/lib/errorToast";

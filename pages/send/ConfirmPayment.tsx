@@ -1,4 +1,4 @@
-import { Invoice } from "@getalby/lightning-tools";
+import { Invoice } from "@getalby/lightning-tools/bolt11";
 
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";

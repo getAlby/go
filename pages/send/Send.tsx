@@ -1,4 +1,4 @@
-import { nwc } from "@getalby/sdk";
+import { NWAClient } from "@getalby/sdk/nwc";
 import { Camera } from "expo-camera";
 import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from "expo-image-picker";
@@ -87,7 +87,7 @@ export function Send() {
     }
 
     if (text.startsWith("nostr+walletauth") /* can have : or +alby: */) {
-      const nwaOptions = nwc.NWAClient.parseWalletAuthUrl(text);
+      const nwaOptions = NWAClient.parseWalletAuthUrl(text);
       router.replace({
         pathname: "/settings/wallets/connect",
         params: {

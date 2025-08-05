@@ -1,4 +1,4 @@
-import { type nwc } from "@getalby/sdk";
+import type { Nip47Transaction } from "@getalby/sdk";
 import { Link, router } from "expo-router";
 import React from "react";
 import {
@@ -24,7 +24,7 @@ export function Transactions() {
   const [loadingNextPage, setLoadingNextPage] = React.useState(false);
   const [transactionsLoaded, setTransactionsLoaded] = React.useState(false);
   const [allTransactions, setAllTransactions] = React.useState<
-    nwc.Nip47Transaction[]
+    Nip47Transaction[]
   >([]);
   const [refreshingTransactions, setRefreshingTransactions] =
     React.useState(false);
@@ -35,8 +35,7 @@ export function Transactions() {
       transactions?.transactions.length &&
       !allTransactions.some((t) =>
         transactions.transactions.some(
-          (other: nwc.Nip47Transaction) =>
-            t.payment_hash === other.payment_hash,
+          (other: Nip47Transaction) => t.payment_hash === other.payment_hash,
         ),
       )
     ) {

@@ -1,4 +1,4 @@
-import { nwc } from "@getalby/sdk";
+import { NWAClient, type NWAOptions } from "@getalby/sdk/nwc";
 import { router, type Href } from "expo-router";
 import { InteractionManager } from "react-native";
 import { BOLT11_REGEX } from "./constants";
@@ -45,7 +45,7 @@ export const handleLink = async (url: string) => {
   if (SUPPORTED_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
     let { username, hostname, protocol, pathname, search } = parsedUrl;
     if (parsedUrl.protocol.startsWith("nostr+walletauth")) {
-      const nwaOptions = nwc.NWAClient.parseWalletAuthUrl(url);
+      const nwaOptions = NWAClient.parseWalletAuthUrl(url);
 
       safeRouterPush({
         pathname: "/settings/wallets/connect",
@@ -77,7 +77,7 @@ export const handleLink = async (url: string) => {
             icon: appicon,
             name: appname,
             returnTo: callback,
-          } as nwc.NWAOptions),
+          } as NWAOptions),
           flow: "deeplink",
         },
       });
