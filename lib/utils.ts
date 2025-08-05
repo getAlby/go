@@ -1,4 +1,4 @@
-import { nwc } from "@getalby/sdk";
+import { NWCClient } from "@getalby/sdk/nwc";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { extract as hkdf_extract } from "@noble/hashes/hkdf";
 import { sha256 } from "@noble/hashes/sha256";
@@ -24,7 +24,7 @@ export function getConversationKey(pub: string, sk: string): string {
 }
 
 export function getPubkeyFromNWCUrl(nwcUrl: string): string | undefined {
-  const nwcOptions = nwc.NWCClient.parseWalletConnectUrl(nwcUrl);
+  const nwcOptions = NWCClient.parseWalletConnectUrl(nwcUrl);
   if (nwcOptions.secret) {
     return getPublicKey(hexToBytes(nwcOptions.secret));
   }

@@ -1246,22 +1246,22 @@
   resolved "https://registry.yarnpkg.com/@getalby/expo-shared-preferences/-/expo-shared-preferences-0.0.1.tgz#91be9e8f6b138ee4aa014896fb9f5ce25063db30"
   integrity sha512-9TW1m7rLEVttF5rUW3iLNYLFy0kLNlA5HU3x7jcUfVzixuA6CC/NZgLdLSItTR1HG5Ttw4FB/6U5TBvVIkn16Q==
 
-"@getalby/lightning-tools@^5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.1.2.tgz#8a018e98d5c13097dd98d93192cf5e4e455f4c20"
-  integrity sha512-BwGm8eGbPh59BVa1gI5yJMantBl/Fdps6X4p1ZACnmxz9vDINX8/3aFoOnDlF7yyA2boXWCsReVQSr26Q2yjiQ==
-
-"@getalby/lightning-tools@^5.2.1":
+"@getalby/lightning-tools@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.2.1.tgz#861f025218e3d4dc5fb8fe55a16b33c66fb93a56"
   integrity sha512-dxOmJLJAh6qJ8rsbA5/Bwj7MSI9X3RkxxqmCedl5rfP+yKwNSdfu8i4EiCZN/tk2hNBJb8GHSCcPRNZfwfmEHg==
 
-"@getalby/sdk@^5.1.1":
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-5.1.1.tgz#d81c9094e54c677533fcf6b0b8af5af1343953ed"
-  integrity sha512-t/kg2ljPx86qRYKqEVc5VYhDICFKtVPRlQKIz5cI/AqOLYVguLJz1AkQlDBaiOz2PW5FxoyGlLkTGmX7ONHH/Q==
+"@getalby/lightning-tools@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-6.0.0.tgz#07c19cdf29ed8e3d51f125fba780d31a29ba0864"
+  integrity sha512-jpTO+7o1N1KhV5qT6qetPK+et6ZQshCzUMCRV8+Ek1NVlVU4ITIqOWRQ3kOrb0PhSxkbGN5G3d60HCi535hbDw==
+
+"@getalby/sdk@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-6.0.0.tgz#3f7b4965f7113b3a75752f96f88f4347a859518c"
+  integrity sha512-ix2ZFcYwxBy3r4o11C1jC4Hwlu2s8C9pz7Y/NWYw8sSEutioPjG2e0k5Nx1nTs6luQ2LKUBFg9/6f1akZiwYcw==
   dependencies:
-    "@getalby/lightning-tools" "^5.1.2"
+    "@getalby/lightning-tools" "^5.2.0"
     nostr-tools "2.15.0"
 
 "@gorhom/bottom-sheet@^5.1.2":

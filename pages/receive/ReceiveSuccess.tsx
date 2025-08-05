@@ -1,4 +1,4 @@
-import { Invoice } from "@getalby/lightning-tools";
+import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { Tick } from "~/animations/Tick";

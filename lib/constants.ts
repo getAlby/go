@@ -1,4 +1,4 @@
-import { type nwc } from "@getalby/sdk";
+import type { Nip47Capability } from "@getalby/sdk/nwc";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
 export const NAV_THEME = {
@@ -35,7 +35,7 @@ export const ALBY_LIGHTNING_ADDRESS = "go@getalby.com";
 export const ALBY_URL = "https://getalby.com";
 export const NOSTR_API_URL = "https://api.getalby.com/nwc";
 
-export const REQUIRED_CAPABILITIES: nwc.Nip47Capability[] = [
+export const REQUIRED_CAPABILITIES: Nip47Capability[] = [
   "get_balance",
   "make_invoice",
   "pay_invoice",

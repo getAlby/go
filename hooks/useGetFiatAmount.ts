@@ -1,4 +1,4 @@
-import { fiat } from "@getalby/lightning-tools";
+import { getFiatBtcRate } from "@getalby/lightning-tools/fiat";
 import React from "react";
 import { BTC_RATE_REFRESH_INTERVAL } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -30,7 +30,7 @@ function useFiatRate() {
           return;
         }
         setRate(undefined);
-        const fetchedRate = await fiat.getFiatBtcRate(fiatCurrency);
+        const fetchedRate = await getFiatBtcRate(fiatCurrency);
         setRate(fetchedRate);
         cachedRates[fiatCurrency] = { rate: fetchedRate, timestamp: now };
       } catch (error) {

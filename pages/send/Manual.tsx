@@ -1,4 +1,4 @@
-import { LN_ADDRESS_REGEX } from "@getalby/lightning-tools";
+import { LN_ADDRESS_REGEX } from "@getalby/lightning-tools/lnurl";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
