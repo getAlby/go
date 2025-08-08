@@ -17,6 +17,11 @@ export const merchants: MerchantConfig[] = [
     identifierRegex: /(?<identifier>.*za\.co\.ecentric.*)/iu,
     defaultDomain: "cryptoqr.net",
   },
+  {
+    id: "bootleggers",
+    identifierRegex: /(?<identifier>.*(wigroup\.co|yoyogroup\.co).*)/iu,
+    defaultDomain: "cryptoqr.net",
+  },
 ];
 
 export const convertMerchantQRToLightningAddress = (
