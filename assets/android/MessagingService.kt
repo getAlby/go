@@ -138,7 +138,7 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         }
 
         val notificationType = json.optString("notification_type", "")
-        if (notificationType != "payment_sent" && notificationType != "payment_received") {
+        if (notificationType != "payment_sent" && notificationType != "payment_received" && notificationType != "hold_invoice_accepted") {
             return
         }
 
@@ -149,8 +149,10 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         var notificationText = ""
         if (notificationType == "payment_sent") {
             notificationText = "You sent $amount sats ⚡️"
-        } else {
+        } else if (notificationType == "payment_received") {
             notificationText = "You received $amount sats ⚡️"
+        } else if (notificationType == "hold_invoice_accepted") {
+            notificationText = "Payment held: $amount sats ⏳"
         }
 
         val intent = Intent(Intent.ACTION_VIEW).apply {

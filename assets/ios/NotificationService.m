@@ -97,7 +97,8 @@
     // Check the notification type
     NSString *notificationType = parsedContent[@"notification_type"];
     if (![notificationType isEqualToString:@"payment_sent"] &&
-        ![notificationType isEqualToString:@"payment_received"]) {
+        ![notificationType isEqualToString:@"payment_received"] &&
+        ![notificationType isEqualToString:@"hold_invoice_accepted"]) {
         self.contentHandler(nil);
         return;
     }
@@ -138,8 +139,10 @@
 
     if ([notificationType isEqualToString:@"payment_sent"]) {
         self.bestAttemptContent.body = [NSString stringWithFormat:@"You sent %.0f sats ⚡️", amountInSats];
-    } else {
+    } else if ([notificationType isEqualToString:@"payment_received"]) {
         self.bestAttemptContent.body = [NSString stringWithFormat:@"You received %.0f sats ⚡️", amountInSats];
+    } else if ([notificationType isEqualToString:@"hold_invoice_accepted"]) {
+        self.bestAttemptContent.body = [NSString stringWithFormat:@"Payment held: %.0f sats ⏳", amountInSats];
     }
 
     if ([notificationType isEqualToString:@"payment_received"] && ttsEnabled) {
