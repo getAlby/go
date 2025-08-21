@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
-import PendingTransactionIcon from "~/components/icons/PendingTransaction";
+import PendingTransactionIcon from "~/components/icons/PendingSendTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
 import { Text } from "~/components/ui/text";
