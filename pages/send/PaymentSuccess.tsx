@@ -2,7 +2,7 @@ import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { type LNURLPaymentSuccessAction } from "lib/lnurl";
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Tick } from "~/animations/Tick";
 import AlbyGoLogo from "~/components/AlbyGoLogo";
 import { Receiver } from "~/components/Receiver";
@@ -27,9 +27,9 @@ export function PaymentSuccess() {
   return (
     <View className="flex-1 flex flex-col">
       <Screen title="" />
-      <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
+      <View className="flex-1 gap-8">
         <AlbyGoLogo className="w-52 h-16 mx-auto" />
-        <View className="flex-1 w-full">
+        <View className="flex-1 flex justify-center items-center">
           <Tick />
         </View>
         <View className="flex flex-col items-center gap-2">
@@ -54,14 +54,14 @@ export function PaymentSuccess() {
               Message From Receiver
             </Text>
             {lnurlSuccessAction.tag === "message" && (
-              <Text className="text-foreground text-center text-2xl font-medium2">
+              <Text className="text-foreground text-center text-xl font-medium2">
                 {lnurlSuccessAction.message}
               </Text>
             )}
             {lnurlSuccessAction.tag === "url" && (
               <>
                 {lnurlSuccessAction.description && (
-                  <Text className="text-foreground text-center text-2xl font-medium2">
+                  <Text className="text-foreground text-center text-xl font-medium2">
                     {lnurlSuccessAction.description}
                   </Text>
                 )}
@@ -77,11 +77,10 @@ export function PaymentSuccess() {
             )}
           </View>
         )}
-      </ScrollView>
+      </View>
       <View className="p-6">
         <Button
           size="lg"
-          className="w-full"
           onPress={() => {
             router.replace("/");
           }}
