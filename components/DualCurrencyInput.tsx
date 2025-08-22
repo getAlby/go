@@ -84,7 +84,6 @@ export function DualCurrencyInput({
         autoFocus={autoFocus}
         returnKeyType="done"
         readOnly={readOnly}
-        // aria-errormessage="inputError"
       />
       {fiatCurrency ? (
         <TouchableOpacity onPress={toggleInputMode} className="p-2">
@@ -118,6 +117,5 @@ export function DualCurrencyInput({
 const styles = StyleSheet.create({
   amountInput: {
     fontSize: 80,
-    height: 90,
   },
 });
