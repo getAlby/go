@@ -1,14 +1,16 @@
 import LottieView from "lottie-react-native";
+import { Dimensions } from "react-native";
 
 export function Tick() {
+  const dimensions = Dimensions.get("window");
+
   return (
     <LottieView
       autoPlay
       loop={false}
       style={{
-        width: "100%",
-        height: "100%",
-        minHeight: 300,
+        width: dimensions.width,
+        height: dimensions.width,
       }}
       source={require("../assets/animations/success.json")}
     />
