@@ -1,6 +1,6 @@
 import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { router, useLocalSearchParams } from "expo-router";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Tick } from "~/animations/Tick";
 import AlbyGoLogo from "~/components/AlbyGoLogo";
 import Screen from "~/components/Screen";
@@ -18,45 +18,47 @@ export function ReceiveSuccess() {
   return (
     <View className="flex-1 flex flex-col">
       <Screen title="" animation="slide_from_left" />
-      <ScrollView contentContainerClassName="flex justify-center items-center gap-8 p-6">
+      <View className="flex-1 gap-8">
         <AlbyGoLogo className="w-52 h-16 mx-auto" />
-        <View className="flex-1 w-full">
+        <View className="flex-1 flex justify-center items-center">
           <Tick />
         </View>
-        <Text className="text-3xl font-bold2 text-muted-foreground">
-          Received
-        </Text>
-        <View className="flex flex-col items-center gap-2 mt-10">
-          <View className="flex flex-row items-end justify-center">
-            <Text className="text-3xl text-receive font-semibold2">
-              + {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}{" "}
-            </Text>
-            <Text className="text-2xl text-muted-foreground font-semibold2">
-              sats
-            </Text>
+        <View className="flex-1 flex flex-col gap-5 justify-center items-center">
+          <Text className="text-4xl font-bold2 text-muted-foreground">
+            Received
+          </Text>
+          <View className="flex flex-col items-center justify-center gap-2">
+            <View className="flex flex-row items-end mt-5">
+              <Text className="text-5xl gap-2 font-semibold2 text-receive">
+                + {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}
+              </Text>
+              <Text className="text-3xl font-semibold2 text-muted-foreground mb-1">
+                {" "}
+                sats
+              </Text>
+            </View>
+            {getFiatAmount && (
+              <Text className="text-3xl font-semibold2 text-muted-foreground">
+                {getFiatAmount(+decodedInvoice.satoshi)}
+              </Text>
+            )}
           </View>
-          {getFiatAmount && (
-            <Text className="text-2xl text-muted-foreground font-semibold2">
-              {getFiatAmount(+decodedInvoice.satoshi)}
-            </Text>
-          )}
         </View>
         {decodedInvoice.description && (
           <View className="flex flex-col gap-2 items-center">
             <Text className="text-muted-foreground text-center font-semibold2">
               Description
             </Text>
-            <Text className="text-foreground text-center text-2xl font-medium2">
+            <Text className="text-foreground text-center text-xl font-medium2">
               {decodedInvoice.description}
             </Text>
           </View>
         )}
-      </ScrollView>
-      <View className="flex flex-col gap-3 m-6">
+      </View>
+      <View className="p-6">
         <Button
           size="lg"
           onPress={() => {
-            router.dismissAll();
             router.replace("/");
           }}
         >
