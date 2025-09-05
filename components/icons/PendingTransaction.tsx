@@ -2,7 +2,7 @@ import React from "react";
 import { useColorScheme } from "react-native";
 import Svg, { Path, Rect, type SvgProps } from "react-native-svg";
 
-const PendingSendTransactionIcon = (props: SvgProps) => {
+const PendingTransactionIcon = (props: SvgProps) => {
   const colorScheme = useColorScheme();
 
   const colors = {
@@ -32,4 +32,4 @@ const PendingSendTransactionIcon = (props: SvgProps) => {
   );
 };
 
-export default PendingSendTransactionIcon;
+export default PendingTransactionIcon;

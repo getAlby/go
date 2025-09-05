@@ -8,9 +8,9 @@ import React from "react";
 import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { LinkIcon } from "~/components/Icons";
+import AcceptedTransactionIcon from "~/components/icons/AcceptedTransaction";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
-import PendingReceiveTransactionIcon from "~/components/icons/PendingReceiveTransaction";
-import PendingSendTransactionIcon from "~/components/icons/PendingSendTransaction";
+import PendingTransactionIcon from "~/components/icons/PendingTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
@@ -59,9 +59,10 @@ export function Transaction() {
       return FailedTransactionIcon;
     }
     if (transaction.state === "pending") {
-      return transaction.type === "incoming"
-        ? PendingReceiveTransactionIcon
-        : PendingSendTransactionIcon;
+      return PendingTransactionIcon;
+    }
+    if (transaction.state === "accepted") {
+      return AcceptedTransactionIcon;
     }
     return transaction.type === "incoming"
       ? ReceivedTransactionIcon
@@ -115,9 +116,9 @@ export function Transaction() {
             )}
           >
             {transaction.type === "incoming"
-              ? transaction.state === "pending"
-                ? "Receiving"
-                : "Received"
+              ? transaction.state === "settled"
+                ? "Received"
+                : "Receiving"
               : transaction.state === "failed"
                 ? "Failed"
                 : transaction.state === "pending"
