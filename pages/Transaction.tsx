@@ -8,6 +8,7 @@ import React from "react";
 import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { LinkIcon } from "~/components/Icons";
+import AcceptedTransactionIcon from "~/components/icons/AcceptedTransaction";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import PendingTransactionIcon from "~/components/icons/PendingTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
@@ -53,6 +54,21 @@ export function Transaction() {
     }
   }, [walletId]);
 
+  const TransactionIcon = React.useMemo(() => {
+    if (transaction.state === "failed") {
+      return FailedTransactionIcon;
+    }
+    if (transaction.state === "pending") {
+      return PendingTransactionIcon;
+    }
+    if (transaction.state === "accepted") {
+      return AcceptedTransactionIcon;
+    }
+    return transaction.type === "incoming"
+      ? ReceivedTransactionIcon
+      : SentTransactionIcon;
+  }, [transaction.state, transaction.type]);
+
   const boostagram = React.useMemo(() => {
     let parsedBoostagram;
     try {
@@ -91,24 +107,7 @@ export function Transaction() {
             )}
             style={{ elevation: 2 }}
           >
-            {!(
-              transaction.state === "failed" || transaction.state === "pending"
-            ) && (
-              <>
-                {transaction.type === "incoming" && (
-                  <ReceivedTransactionIcon width={128} height={128} />
-                )}
-                {transaction.type === "outgoing" && (
-                  <SentTransactionIcon width={128} height={128} />
-                )}
-              </>
-            )}
-            {transaction.state === "pending" && (
-              <PendingTransactionIcon width={128} height={128} />
-            )}
-            {transaction.state === "failed" && (
-              <FailedTransactionIcon width={128} height={128} />
-            )}
+            <TransactionIcon width={128} height={128} />
           </View>
           <Text
             className={cn(
@@ -117,7 +116,9 @@ export function Transaction() {
             )}
           >
             {transaction.type === "incoming"
-              ? "Received"
+              ? transaction.state === "settled"
+                ? "Received"
+                : "Receiving"
               : transaction.state === "failed"
                 ? "Failed"
                 : transaction.state === "pending"
@@ -129,7 +130,8 @@ export function Transaction() {
               <Text
                 className={cn(
                   "text-5xl gap-2 font-semibold2",
-                  transaction.type === "incoming"
+                  transaction.type === "incoming" &&
+                    transaction.state === "settled"
                     ? "text-receive"
                     : "text-foreground",
                 )}
