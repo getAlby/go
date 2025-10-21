@@ -1246,23 +1246,18 @@
   resolved "https://registry.yarnpkg.com/@getalby/expo-shared-preferences/-/expo-shared-preferences-0.0.1.tgz#91be9e8f6b138ee4aa014896fb9f5ce25063db30"
   integrity sha512-9TW1m7rLEVttF5rUW3iLNYLFy0kLNlA5HU3x7jcUfVzixuA6CC/NZgLdLSItTR1HG5Ttw4FB/6U5TBvVIkn16Q==
 
-"@getalby/lightning-tools@^5.2.0":
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.2.1.tgz#861f025218e3d4dc5fb8fe55a16b33c66fb93a56"
-  integrity sha512-dxOmJLJAh6qJ8rsbA5/Bwj7MSI9X3RkxxqmCedl5rfP+yKwNSdfu8i4EiCZN/tk2hNBJb8GHSCcPRNZfwfmEHg==
-
 "@getalby/lightning-tools@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-6.0.0.tgz#07c19cdf29ed8e3d51f125fba780d31a29ba0864"
   integrity sha512-jpTO+7o1N1KhV5qT6qetPK+et6ZQshCzUMCRV8+Ek1NVlVU4ITIqOWRQ3kOrb0PhSxkbGN5G3d60HCi535hbDw==
 
-"@getalby/sdk@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-6.0.1.tgz#bb50bded4a95e7055fcdf57be2ed71ee386d7610"
-  integrity sha512-iFEKT0VI2p7sGNmpLD65rZwIqD+rRHV8OdclKJtqZ7AMlw/ND7M8caJAZt6iU9TY/4O/AiiRenTALGxzckttQw==
+"@getalby/sdk@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-6.0.2.tgz#4f3b987cc8a9da4fd755917a7de4499380114ee2"
+  integrity sha512-Q7fKMlHXFdbT8w1O+khOVhg4FnPwdB1ltvmeoYI6Ec6RKc4qUVwx6vEM6xl8NumOboUMmA1YO5WDxm6WLTJ52w==
   dependencies:
-    "@getalby/lightning-tools" "^5.2.0"
-    nostr-tools "2.16.2"
+    "@getalby/lightning-tools" "^6.0.0"
+    nostr-tools "^2.17.0"
 
 "@gorhom/bottom-sheet@^5.1.2":
   version "5.1.2"
@@ -7220,10 +7215,10 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
-nostr-tools@2.16.2:
-  version "2.16.2"
-  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-2.16.2.tgz#eca1e0ed24428afcdd74708c6fd7f42ed8194101"
-  integrity sha512-ZxH9EbSt5ypURZj2TGNJxZd0Omb5ag5KZSu8IyJMCdLyg2KKz+2GA0sP/cSawCQEkyviIN4eRT4G2gB/t9lMRw==
+nostr-tools@^2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-2.17.0.tgz#ae357479b957ff897ae404761d5cd88f8064d713"
+  integrity sha512-lrvHM7cSaGhz7F0YuBvgHMoU2s8/KuThihDoOYk8w5gpVHTy0DeUCAgCN8uLGeuSl5MAWekJr9Dkfo5HClqO9w==
   dependencies:
     "@noble/ciphers" "^0.5.1"
     "@noble/curves" "1.2.0"
