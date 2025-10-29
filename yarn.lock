@@ -1576,10 +1576,10 @@
     "@getalby/lightning-tools" "^6.0.0"
     nostr-tools "^2.17.0"
 
-"@gorhom/bottom-sheet@^5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-5.1.2.tgz#509992983ce2905d5899d1c7cab1cd3950c8c238"
-  integrity sha512-5np8oL2krqAsVKLRE4YmtkZkyZeFiitoki72bEpVhZb8SRTNuAEeSbP3noq5srKpcRsboCr7uI+xmMyrWUd9kw==
+"@gorhom/bottom-sheet@^5.2.6":
+  version "5.2.6"
+  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-5.2.6.tgz#5f2045f6ca965383afe39f7dfa3afad1502b7467"
+  integrity sha512-vmruJxdiUGDg+ZYcDmS30XDhq/h/+QkINOI5LY/uGjx8cPGwgJW0H6AB902gNTKtccbiKe/rr94EwdmIEz+LAQ==
   dependencies:
     "@gorhom/portal" "1.0.14"
     invariant "^2.2.4"
