@@ -1,6 +1,6 @@
 import { LN_ADDRESS_REGEX } from "@getalby/lightning-tools/lnurl";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import Loading from "~/components/Loading";
@@ -43,6 +43,17 @@ export function Manual() {
     }
     setSubmitting(false);
   };
+
+  const handleAddToContacts = useCallback(
+    (checked: boolean) => {
+      setAddToContacts(checked);
+      if (checked) {
+        const match = keyboardText.trim().match(LN_ADDRESS_REGEX);
+        setContactName(match ? match[1] : "");
+      }
+    },
+    [keyboardText],
+  );
 
   return (
     <>
@@ -125,11 +136,13 @@ export function Manual() {
                     <Checkbox
                       aria-labelledby="add-to-contacts"
                       checked={addToContacts}
-                      onCheckedChange={setAddToContacts}
+                      onCheckedChange={(checked: boolean) =>
+                        handleAddToContacts(checked)
+                      }
                     />
                     <Label
                       nativeID="add-to-contacts"
-                      onPress={() => setAddToContacts(!addToContacts)}
+                      onPress={() => handleAddToContacts(!addToContacts)}
                     >
                       <Text className="text-muted-foreground font-medium2">
                         Add to contacts
