@@ -46,7 +46,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.10",
-    "expo": "54.0.19",
+    "expo": "54.0.21",
     "expo-camera": "~17.0.8",
     "expo-clipboard": "~8.0.7",
     "expo-constants": "~18.0.10",
@@ -59,10 +59,10 @@
     "expo-location": "~19.0.7",
     "expo-notification-service-extension-plugin": "^1.0.1",
     "expo-notifications": "~0.32.12",
-    "expo-router": "~6.0.13",
+    "expo-router": "~6.0.14",
     "expo-secure-store": "~15.0.7",
     "expo-splash-screen": "~31.0.10",
-    "expo-status-bar": "~3.0.8",
+    "expo-status-bar": "~2.2.3",
     "lottie-react-native": "~7.3.1",
     "message-port-polyfill": "^0.2.0",
     "nativewind": "^4.0.1",
@@ -116,6 +116,11 @@
     ]
   },
   "expo": {
+    "install": {
+      "exclude": [
+        "expo-status-bar"
+      ]
+    },
     "doctor": {
       "reactNativeDirectoryCheck": {
         "listUnknownPackages": false
