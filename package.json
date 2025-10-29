@@ -40,7 +40,6 @@
     "@rn-primitives/switch": "^1.2.0",
     "@rn-primitives/types": "^1.2.0",
     "@sentry/react-native": "~7.2.0",
-    "add": "^2.0.6",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
