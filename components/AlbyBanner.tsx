@@ -1,5 +1,7 @@
 import { router } from "expo-router";
-import { View } from "react-native";
+import { useState } from "react";
+import { TouchableOpacity, View } from "react-native";
+import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
@@ -7,7 +9,9 @@ import { Button } from "./ui/button";
 
 function AlbyBanner() {
   const lastPayment = useAppStore.getState().getLastAlbyPayment();
-  const showAlbyBanner = isPaymentOlderThan24Hours(lastPayment);
+  const [showBanner, setShowBanner] = useState(
+    isPaymentOlderThan24Hours(lastPayment),
+  );
   const amounts = [
     { value: 1000, label: "1k", emoji: "🧡" },
     { value: 5000, label: "5k", emoji: "🔥" },
@@ -27,12 +31,18 @@ function AlbyBanner() {
     );
   }
 
-  if (!showAlbyBanner) {
+  if (!showBanner) {
     return null;
   }
 
   return (
-    <View className="border bg-card border-muted rounded mt-5 flex flex-col gap-3 p-5">
+    <View className="border bg-card border-muted rounded-2xl mt-5 flex flex-col gap-3 p-5 relative">
+      <TouchableOpacity
+        onPress={() => setShowBanner(false)}
+        className="absolute right-0 p-4"
+      >
+        <XIcon className="text-muted-foreground" />
+      </TouchableOpacity>
       <Text className="font-semibold2 text-center">✨ Enjoying Alby Go?</Text>
       <Text className="text-muted-foreground text-center">
         Help us grow and improve by supporting our development.
