@@ -1,6 +1,5 @@
 import { useIsFocused } from "@react-navigation/native";
-import { Camera } from "expo-camera";
-import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
+import { Camera, PermissionStatus } from "expo-camera";
 import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { CameraOffIcon } from "~/components/Icons";
