@@ -114,7 +114,10 @@ export default Sentry.wrap(function RootLayout() {
       <NotificationProvider>
         <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
           <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <SafeAreaView className="w-full h-full bg-background">
+          <SafeAreaView
+            className="w-full h-full bg-background"
+            edges={["bottom", "left", "right"]}
+          >
             <GestureHandlerRootView>
               <BottomSheetModalProvider>
                 <UserInactivityProvider>
