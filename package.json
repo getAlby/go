@@ -115,11 +115,6 @@
     ]
   },
   "expo": {
-    "install": {
-      "exclude": [
-        "expo-status-bar"
-      ]
-    },
     "doctor": {
       "reactNativeDirectoryCheck": {
         "listUnknownPackages": false
