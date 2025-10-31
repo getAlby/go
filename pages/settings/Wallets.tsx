@@ -4,7 +4,7 @@ import { FlatList, TouchableOpacity, View } from "react-native";
 import { SettingsIcon, WalletIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
-import Toast from "react-native-toast-message";
+import { Toast } from "toastify-react-native";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
