@@ -1,6 +1,9 @@
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
-import { lnurl, type LNURLWithdrawServiceResponse } from "lib/lnurl";
+import {
+  lnurl as lnurlLib,
+  type LNURLWithdrawServiceResponse,
+} from "lib/lnurl";
 import React, { useEffect } from "react";
 import { View } from "react-native";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
@@ -87,11 +90,15 @@ export function Withdraw() {
       if (text.startsWith("lightning:")) {
         text = text.substring("lightning:".length);
       }
-
-      const lnurlValue = lnurl.findLnurl(text);
-      console.info("Checked lnurl value", text, lnurlValue);
-      if (lnurlValue) {
-        const lnurlDetails = await lnurl.getDetails(lnurlValue);
+      let lnurl;
+      if (text.startsWith("lnurlw:")) {
+        lnurl = text;
+      } else {
+        lnurl = lnurlLib.findLnurl(text);
+      }
+      console.info("Checked lnurl value", text, lnurl);
+      if (lnurl) {
+        const lnurlDetails = await lnurlLib.getDetails(lnurl);
 
         if (lnurlDetails.tag !== "withdrawRequest") {
           throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");

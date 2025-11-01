@@ -13,6 +13,8 @@ const SUPPORTED_SCHEMES = [
   "nostrnwc+alby:",
   "nostr+walletauth:",
   "nostr+walletauth+alby:",
+  "lnurlw:",
+  "lnurlp:",
 ];
 
 // Register exp scheme for testing during development
@@ -27,6 +29,27 @@ const safeRouterPush = async (href: Href) => {
     InteractionManager.runAfterInteractions(resolve),
   );
   router.push(href);
+};
+
+const handleLnurl = async (lnurl: string) => {
+  const lnurlDetails = await lnurlLib.getDetails(lnurl);
+  if (lnurlDetails.tag === "withdrawRequest") {
+    safeRouterPush({
+      pathname: "/receive/withdraw",
+      params: {
+        url: lnurl,
+      },
+    });
+  }
+  if (lnurlDetails.tag === "payRequest") {
+    safeRouterPush({
+      pathname: "/send/lnurl-pay",
+      params: {
+        lnurlDetailsJSON: JSON.stringify(lnurlDetails),
+        receiver: lnurl,
+      },
+    });
+  }
 };
 
 export const handleLink = async (url: string) => {
@@ -113,6 +136,11 @@ export const handleLink = async (url: string) => {
 
     console.info("Navigating to", fullUrl);
 
+    if (parsedUrl.protocol.startsWith("lnurl")) {
+      handleLnurl(fullUrl);
+      return;
+    }
+
     // Opening the notification executes the linking code
     // We set the hostname on the notification deeplink so that it can be handled separately
     if (hostname === "payment_notification") {
@@ -135,31 +163,11 @@ export const handleLink = async (url: string) => {
     );
     const trimmedUrl = fullUrl.replace(schemePattern, "");
 
-    // Check for LNURLs
+    // Check for LNURLs wrapped in other protocol schemes
     const lnurl = lnurlLib.findLnurl(trimmedUrl);
     if (lnurl) {
-      const lnurlDetails = await lnurlLib.getDetails(lnurl);
-
-      if (lnurlDetails.tag === "withdrawRequest") {
-        safeRouterPush({
-          pathname: "/withdraw",
-          params: {
-            url: lnurl,
-          },
-        });
-        return;
-      }
-
-      if (lnurlDetails.tag === "payRequest") {
-        safeRouterPush({
-          pathname: "/send/lnurl-pay",
-          params: {
-            lnurlDetailsJSON: JSON.stringify(lnurlDetails),
-            receiver: lnurl,
-          },
-        });
-        return;
-      }
+      handleLnurl(lnurl);
+      return;
     }
 
     // Check for BOLT-11 invoices (including BIP-21 unified QRs)
