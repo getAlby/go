@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import Toast from "react-native-toast-message";
+import { Toast } from "toastify-react-native";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { AlertCircleIcon } from "~/components/Icons";

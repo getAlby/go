@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
 import { Modal, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
+import { Toast } from "toastify-react-native";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {

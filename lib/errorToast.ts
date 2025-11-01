@@ -1,4 +1,4 @@
-import Toast from "react-native-toast-message";
+import { Toast } from "toastify-react-native";
 
 export function errorToast(error: Error | unknown) {
   Toast.show({

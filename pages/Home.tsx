@@ -111,7 +111,7 @@ export function Home() {
                 </Text>
               </TouchableOpacity>
             )}
-            <TouchableOpacity
+            <Pressable
               onPress={switchBalanceState}
               className="w-full flex flex-col items-center justify-center gap-3"
             >
@@ -140,7 +140,7 @@ export function Home() {
                 )}
               </View>
               {/* Hide conversion if fiat currency is not selected */}
-              {fiatCurrency && (
+              {balanceDisplayMode !== "hidden" && fiatCurrency && (
                 <View className="flex justify-center items-center">
                   {balance &&
                   !refreshingBalance &&
@@ -158,7 +158,7 @@ export function Home() {
                   )}
                 </View>
               )}
-            </TouchableOpacity>
+            </Pressable>
             {new Date().getDate() === 21 && <AlbyBanner />}
           </View>
         </ScrollView>

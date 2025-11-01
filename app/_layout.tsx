@@ -14,8 +14,8 @@ import { swrConfiguration } from "lib/swr";
 import * as React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import { SWRConfig } from "swr";
+import ToastManager from "toastify-react-native";
 import { toastConfig } from "~/components/ToastConfig";
 import { NotificationProvider } from "~/context/Notification";
 import { UserInactivityProvider } from "~/context/UserInactivity";
@@ -114,7 +114,10 @@ export default Sentry.wrap(function RootLayout() {
       <NotificationProvider>
         <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
           <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <SafeAreaView className="w-full h-full bg-background">
+          <SafeAreaView
+            className="w-full h-full bg-background"
+            edges={["bottom", "left", "right"]}
+          >
             <GestureHandlerRootView>
               <BottomSheetModalProvider>
                 <UserInactivityProvider>
@@ -122,11 +125,12 @@ export default Sentry.wrap(function RootLayout() {
                     <Slot />
                   </SessionProvider>
                 </UserInactivityProvider>
-                <Toast
+                <ToastManager
                   config={toastConfig}
                   position="bottom"
                   bottomOffset={140}
                   topOffset={140}
+                  useModal={false}
                 />
               </BottomSheetModalProvider>
             </GestureHandlerRootView>

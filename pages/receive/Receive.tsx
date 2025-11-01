@@ -2,7 +2,7 @@ import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
 import { Share, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
+import { Toast } from "toastify-react-native";
 import { CreateInvoice } from "~/components/CreateInvoice";
 import { AddressIcon, EditIcon, ScanIcon, ShareIcon } from "~/components/Icons";
 import RedeemIcon from "~/components/icons/RedeemIcon";
