@@ -88,7 +88,7 @@ const normalizeLnurl = (lnurlString: string) => {
   }
 
   //maybe it's already a URL?
-  return new URL(`https://${lnurlString.replace(/^lnurl[pwc]/i, "")}`);
+  return new URL(`https://${lnurlString.replace(/^lnurl[pwc]:?/i, "")}`);
 };
 
 export const lnurl = {
@@ -120,7 +120,6 @@ export const lnurl = {
 
     return null;
   },
-
   async getDetails(lnurlString: string): Promise<LNURLDetails> {
     const url = normalizeLnurl(lnurlString);
 

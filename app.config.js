@@ -16,6 +16,8 @@ export default ({ config }) => {
       "nostrnwc+alby",
       "nostr+walletauth",
       "nostr+walletauth+alby",
+      "lnurlw",
+      "lnurlp",
     ],
     orientation: "portrait",
     icon: "./assets/icon.png",
