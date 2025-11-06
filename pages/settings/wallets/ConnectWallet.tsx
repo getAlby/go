@@ -4,15 +4,12 @@ import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import React from "react";
-import {
-  Animated,
-  Easing,
-  Image,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 import { Tick } from "~/animations/Tick";
 import { XIcon } from "~/components/Icons";
@@ -397,30 +394,23 @@ function PlugView({
   icon?: string;
   name?: string;
 }) {
-  const leftPlugAnim = React.useRef(new Animated.Value(0)).current;
-  const rightPlugAnim = React.useRef(new Animated.Value(0)).current;
+  const leftPlugTranslateX = useDerivedValue(() =>
+    connectionCreated ? -43 : -55,
+  );
+  const leftPlugAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: withTiming(leftPlugTranslateX.value, { duration: 400 }) },
+    ],
+  }));
 
-  React.useEffect(() => {
-    if (connectionCreated) {
-      Animated.parallel([
-        Animated.timing(leftPlugAnim, {
-          toValue: 15,
-          duration: 500,
-          useNativeDriver: true,
-          easing: Easing.ease,
-        }),
-        Animated.timing(rightPlugAnim, {
-          toValue: -15,
-          duration: 500,
-          useNativeDriver: true,
-          easing: Easing.ease,
-        }),
-      ]).start();
-    } else {
-      leftPlugAnim.setValue(0);
-      rightPlugAnim.setValue(0);
-    }
-  }, [leftPlugAnim, rightPlugAnim, connectionCreated]);
+  const rightPlugTranslateX = useDerivedValue(() =>
+    connectionCreated ? 47 : 60,
+  );
+  const rightPlugAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: withTiming(rightPlugTranslateX.value, { duration: 400 }) },
+    ],
+  }));
 
   return (
     <View className="flex flex-row items-start justify-center">
@@ -441,27 +431,13 @@ function PlugView({
           resizeMode="contain"
           source={require("../../../assets/left-plug.png")}
           className="absolute w-28 h-28"
-          style={{
-            left: -45,
-            transform: [
-              {
-                translateX: leftPlugAnim,
-              },
-            ],
-          }}
+          style={leftPlugAnimatedStyle}
         />
         <Animated.Image
           resizeMode="contain"
           source={require("../../../assets/right-plug.png")}
           className="absolute w-28 h-28"
-          style={{
-            right: -45,
-            transform: [
-              {
-                translateX: rightPlugAnim,
-              },
-            ],
-          }}
+          style={rightPlugAnimatedStyle}
         />
       </View>
 
