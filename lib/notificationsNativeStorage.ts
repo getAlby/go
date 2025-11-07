@@ -19,12 +19,11 @@ async function getSharedPreferencesModule() {
 type WalletInfo = {
   name: string;
   sharedSecret: string;
-  id: number;
   version: string;
 };
 
 type Wallets = {
-  [publicKey: string]: Partial<WalletInfo>;
+  [publicKey: string]: WalletInfo;
 };
 
 // TODO: In the future when we deprecate NIP-04 and stop
@@ -32,7 +31,7 @@ type Wallets = {
 // using 0.0 as deprecated and write a migration
 export async function storeWalletInfo(
   publicKey: string,
-  walletData: Partial<WalletInfo>,
+  walletData: WalletInfo | Pick<WalletInfo, "name" /* update name only */>,
 ) {
   if (IS_EXPO_GO) {
     return;
@@ -81,7 +80,7 @@ export async function removeWalletInfo(publicKey: string, walletId: number) {
     let wallets = await groupDefaults.get("wallets");
     await groupDefaults.set("wallets", wallets);
     if (wallets) {
-      wallets = removeWallet(wallets, publicKey, walletId);
+      wallets = removeWallet(wallets, publicKey);
       await groupDefaults.set("wallets", wallets);
     }
   } else {
@@ -89,7 +88,7 @@ export async function removeWalletInfo(publicKey: string, walletId: number) {
     const walletsString = await SharedPreferences.getItemAsync("wallets");
     let wallets: Wallets = walletsString ? JSON.parse(walletsString) : {};
     if (wallets) {
-      wallets = removeWallet(wallets, publicKey, walletId);
+      wallets = removeWallet(wallets, publicKey);
       await SharedPreferences.setItemAsync("wallets", JSON.stringify(wallets));
     }
   }
@@ -109,19 +108,9 @@ export async function removeAllInfo() {
   }
 }
 
-function removeWallet(
-  wallets: Wallets,
-  publicKey: string,
-  walletId: number,
-): Wallets {
+function removeWallet(wallets: Wallets, publicKey: string): Wallets {
   if (wallets && wallets[publicKey]) {
     delete wallets[publicKey];
-    for (const key in wallets) {
-      const wallet = wallets[key];
-      if (wallet && wallet.id && wallet.id > walletId) {
-        wallet.id -= 1;
-      }
-    }
   }
   return wallets;
 }

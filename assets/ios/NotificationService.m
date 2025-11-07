@@ -63,9 +63,8 @@
 
     NSString *sharedSecretString = walletInfo[@"sharedSecret"];
     NSString *walletName         = walletInfo[@"name"] ?: @"Alby Go";
-    NSNumber *walletId           = walletInfo[@"id"];
     NSString *walletVersion      = walletInfo[@"version"] ?: @"0.0";
-    if (!sharedSecretString || !walletId) {
+    if (!sharedSecretString) {
         self.contentHandler(nil);
         return;
     }
@@ -127,7 +126,7 @@
     }
 
     double amountInSats = [amountNumber doubleValue] / 1000.0;
-    NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&wallet_id=%@", encodedTransaction, walletId.stringValue];
+    NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&app_pubkey=%@", encodedTransaction, appPubkey];
 
     NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy] ?: [NSMutableDictionary dictionary];
     NSMutableDictionary *newBodyDict = [newUserInfo[@"body"] mutableCopy] ?: [NSMutableDictionary dictionary];
