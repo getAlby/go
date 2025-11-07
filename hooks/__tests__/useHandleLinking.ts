@@ -108,11 +108,11 @@ const testVectors: Record<string, { path: string; params: any }> = {
 
   // LNURL-withdraw
   "lightning:lnurlw123": {
-    path: "/withdraw",
+    path: "/receive/withdraw",
     params: { url: "lnurlw123" },
   },
   "lightning://lnurlw123": {
-    path: "/withdraw",
+    path: "/receive/withdraw",
     params: { url: "lnurlw123" },
   },
 };
@@ -141,6 +141,7 @@ describe("handleLink", () => {
       "should parse the URL '%s' and navigate correctly",
       async (url, expectedOutput) => {
         await handleLink("exp://127.0.0.1:8081/--/" + url);
+        await new Promise((resolve) => setTimeout(resolve, 100)); // due to safeRouterPush
         assertRedirect(expectedOutput.path, expectedOutput.params);
       },
     );
@@ -151,6 +152,7 @@ describe("handleLink", () => {
       "should parse the URL '%s' and navigate correctly",
       async (url, expectedOutput) => {
         await handleLink(url);
+        await new Promise((resolve) => setTimeout(resolve, 100)); // due to safeRouterPush
         assertRedirect(expectedOutput.path, expectedOutput.params);
       },
     );

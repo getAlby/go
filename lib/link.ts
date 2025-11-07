@@ -162,7 +162,6 @@ export const handleLink = async (url: string) => {
       `^(${SUPPORTED_SCHEMES.map((s) => s.replace(":", "")).join("|")}):`,
     );
     const trimmedUrl = fullUrl.replace(schemePattern, "");
-
     // Check for LNURLs wrapped in other protocol schemes
     const lnurl = lnurlLib.findLnurl(trimmedUrl);
     if (lnurl) {
