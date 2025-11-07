@@ -36,7 +36,7 @@ export async function registerWalletNotifications(
 
     const body = {
       pushToken,
-      relayUrl: nwcClient.relayUrl,
+      relayUrl: nwcClient.relayUrls[0], // TODO: support multiple relays in http-nostr
       connectionPubkey: nwcClient.publicKey,
       walletPubkey: nwcClient.walletPubkey,
       isIOS: Platform.OS === "ios",
