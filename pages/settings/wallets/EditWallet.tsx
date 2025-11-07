@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import { Pressable, Alert as RNAlert, View } from "react-native";
 import { Toast } from "toastify-react-native";
 import Alert from "~/components/Alert";
+import ConnectionInfoModal from "~/components/ConnectionInfoModal";
 import {
   AddressIcon,
+  HelpCircleIcon,
   TrashIcon,
   TriangleAlertIcon,
   WalletIcon,
@@ -36,6 +38,7 @@ export function EditWallet() {
   const isNotificationsEnabled = useAppStore(
     (store) => store.isNotificationsEnabled,
   );
+  const [showConnectionInfo, setShowConnectionInfo] = React.useState(false);
 
   let walletId = parseInt(id);
 
@@ -173,6 +176,23 @@ export function EditWallet() {
                   <CardDescription>
                     Copy your wallet's Connection Secret which can be imported
                     into another app
+                  </CardDescription>
+                </View>
+              </CardContent>
+            </Card>
+          </Pressable>
+          <ConnectionInfoModal
+            visible={showConnectionInfo}
+            onClose={() => setShowConnectionInfo(false)}
+          />
+          <Pressable onPress={() => setShowConnectionInfo(true)}>
+            <Card className="w-full">
+              <CardContent className="flex flex-row items-center gap-4">
+                <HelpCircleIcon className="text-muted-foreground" />
+                <View className="flex flex-1 flex-col">
+                  <CardTitle>Connection Info</CardTitle>
+                  <CardDescription>
+                    View details about this wallet connection
                   </CardDescription>
                 </View>
               </CardContent>
