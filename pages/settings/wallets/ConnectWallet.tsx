@@ -132,7 +132,7 @@ export function ConnectWallet() {
         setDeeplinkConnectionSecret(
           `nostr+walletconnect://${response.wallet_pubkey}?secret=${
             secretKey
-          }&relay=${nwcClient.relayUrl}`,
+          }&relay=${nwcClient.relayUrls.join("&relay=")}`,
         );
       }
       setRedirectCountdown(3);
@@ -241,7 +241,7 @@ function ConnectView({
   expiresAt,
   returnTo,
   metadata,
-}: Omit<NWAOptions, "appPubkey" | "relayUrl"> & { satsAmount: number }) {
+}: Omit<NWAOptions, "appPubkey" | "relayUrls"> & { satsAmount: number }) {
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
   const closeModal = () => setShowDetails(false);
