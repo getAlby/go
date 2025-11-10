@@ -42,7 +42,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
           </View>
           <View className="p-6 pt-0 flex flex-col">
             <View className="flex flex-col mb-4">
-              <Text className="text-muted-foreground">Relays</Text>
+              <Text className="font-semibold2">Relays</Text>
 
               {nwcClient?.relayUrls.map((relayUrl) => (
                 <Text key={relayUrl} className="text-muted-foreground">
@@ -54,17 +54,17 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
                 </Text>
               ))}
 
-              <Text className="text-muted-foreground mt-2">Capabilities</Text>
+              <Text className="font-semibold2 mt-2">Capabilities</Text>
               <Text className="text-muted-foreground">
                 {capabilities?.join(", ")}
               </Text>
 
-              <Text className="text-muted-foreground mt-2">App Pubkey</Text>
+              <Text className="font-semibold2 mt-2">App Pubkey</Text>
               <Text className="text-muted-foreground">
                 {nwcClient?.publicKey}
               </Text>
 
-              <Text className="text-muted-foreground mt-2">Wallet Pubkey</Text>
+              <Text className="font-semibold2 mt-2">Wallet Pubkey</Text>
               <Text className="text-muted-foreground">
                 {nwcClient?.walletPubkey}
               </Text>
