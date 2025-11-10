@@ -49,7 +49,7 @@ export async function initiatePaymentFlow(
 
       if (lnurlDetails.tag === "withdrawRequest") {
         router.replace({
-          pathname: "/withdraw",
+          pathname: "/receive/withdraw",
           params: { url: lnurl },
         });
         return true;
