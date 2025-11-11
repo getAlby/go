@@ -130,11 +130,11 @@ export function Transactions() {
               className="flex flex-row items-center gap-3 px-6 py-2 my-2"
             >
               <Skeleton className="rounded-full w-[44px] h-[44px]" />
-              <View className="flex flex-col flex-1">
+              <View className="flex flex-col flex-1 gap-2 h-[44px]">
                 <Skeleton className="w-32 text-lg" />
                 <Skeleton className="w-16 text-base" />
               </View>
-              <View className="flex items-end">
+              <View className="flex items-end gap-2 h-[44px]">
                 <Skeleton className="w-16 text-lg" />
                 <Skeleton className="w-8 text-sm" />
               </View>
