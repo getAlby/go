@@ -123,7 +123,7 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         }
 
         val walletInfo = getWalletInfo(this, appPubkey) ?: return
-        if (walletInfo.sharedSecret.isEmpty() || walletInfo.id == -1) {
+        if (walletInfo.sharedSecret.isEmpty()) {
             return
         }
         val sharedSecretBytes = hexStringToByteArray(walletInfo.sharedSecret)
@@ -156,7 +156,7 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         }
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("alby://payment_notification?transaction=${Uri.encode(transaction)}&wallet_id=${walletInfo.id}")
+            data = Uri.parse("alby://payment_notification?transaction=${Uri.encode(transaction)}&app_pubkey=${appPubkey}")
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
