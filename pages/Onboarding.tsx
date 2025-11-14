@@ -1,7 +1,8 @@
 import { openURL } from "expo-linking";
 import { Link, Stack, router } from "expo-router";
 import React from "react";
-import { Image, View } from "react-native";
+import { View } from "react-native";
+import AlbyGoLogomark from "~/components/AlbyGoLogomark";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
@@ -21,11 +22,7 @@ export function Onboarding() {
         }}
       />
       <View className="flex-1 flex items-center justify-center gap-4">
-        <Image
-          source={require("./../assets/logo.png")}
-          className="mb-10 w-52 h-52"
-          resizeMode="contain"
-        />
+        <AlbyGoLogomark className="mb-10 w-52 h-52" />
         <Text className="font-semibold2 text-4xl text-center text-foreground">
           Hello there 👋
         </Text>

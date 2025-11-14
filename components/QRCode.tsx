@@ -1,6 +1,7 @@
 import { LinearGradient } from "components/LinearGradient";
-import { Dimensions, Image, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import QRCodeLibrary from "react-native-qrcode-svg";
+import AlbyGoLogomark from "~/components/AlbyGoLogomark";
 
 function QRCode({
   value,
@@ -11,7 +12,7 @@ function QRCode({
 }) {
   const dimensions = Dimensions.get("window");
   const qrSize = Math.round((dimensions.width * 5) / 7);
-  const avatarSize = qrSize * 0.19;
+  const avatarSize = qrSize * 0.15;
 
   return (
     <View className="justify-center">
@@ -27,11 +28,8 @@ function QRCode({
         </View>
       </LinearGradient>
       {showAvatar && (
-        <View className="absolute self-center p-2 rounded-2xl bg-white">
-          <Image
-            source={require("../assets/icon.png")}
-            className="rounded-xl"
-            resizeMode="contain"
+        <View className="absolute self-center p-3 rounded-full bg-background">
+          <AlbyGoLogomark
             style={{
               width: avatarSize,
               height: avatarSize,

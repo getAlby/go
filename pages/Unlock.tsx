@@ -1,7 +1,8 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import { router, Stack } from "expo-router";
 import React, { useCallback } from "react";
-import { Image, View } from "react-native";
+import { View } from "react-native";
+import AlbyGoLogomark from "~/components/AlbyGoLogomark";
 
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -44,11 +45,7 @@ export function Unlock() {
         }}
       />
       <View className="flex-1 flex items-center justify-center gap-4">
-        <Image
-          source={require("./../assets/logo.png")}
-          className="mb-10 w-52 h-52"
-          resizeMode="contain"
-        />
+        <AlbyGoLogomark className="mb-10 w-52 h-52" />
         <Text className="font-semibold2 text-4xl text-center text-foreground">
           Unlock to continue
         </Text>
