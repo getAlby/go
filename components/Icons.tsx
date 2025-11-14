@@ -17,6 +17,7 @@ import {
   PopiconsImageSolid as ImageIcon,
   PopiconsKeyboardSolid as KeyboardIcon,
   PopiconsLinkExternalSolid as LinkIcon,
+  PopiconsMapLine as MapLineIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
   PopiconsNotificationSquareSolid as NotificationIcon,
@@ -28,6 +29,7 @@ import {
   PopiconsReloadSolid as ResetIcon,
   PopiconsFullscreenSolid as ScanIcon,
   PopiconsSettingsMinimalSolid as SettingsIcon,
+  PopiconsSettingsMinimalLine as SettingsLineIcon,
   PopiconsShareSolid as ShareIcon,
   PopiconsLogoutSolid as SignOutIcon,
   PopiconsLoopSolid as SwapIcon,
@@ -72,6 +74,7 @@ interopIcon(HelpCircleIcon);
 interopIcon(ImageIcon);
 interopIcon(KeyboardIcon);
 interopIcon(LinkIcon);
+interopIcon(MapLineIcon);
 interopIcon(MoveDownIcon);
 interopIcon(MoveUpIcon);
 interopIcon(NotificationIcon);
@@ -83,6 +86,7 @@ interopIcon(RefreshIcon);
 interopIcon(ResetIcon);
 interopIcon(ScanIcon);
 interopIcon(SettingsIcon);
+interopIcon(SettingsLineIcon);
 interopIcon(ShareIcon);
 interopIcon(SignOutIcon);
 interopIcon(SwapIcon);
@@ -113,6 +117,7 @@ export {
   ImageIcon,
   KeyboardIcon,
   LinkIcon,
+  MapLineIcon,
   MoveDownIcon,
   MoveUpIcon,
   NotificationIcon,
@@ -124,6 +129,7 @@ export {
   ResetIcon,
   ScanIcon,
   SettingsIcon,
+  SettingsLineIcon,
   ShareIcon,
   SignOutIcon,
   SwapIcon,
