@@ -12,7 +12,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ChevronUpIcon, SettingsIcon } from "~/components/Icons";
+import {
+  ChevronUpIcon,
+  MapLineIcon,
+  SettingsLineIcon,
+} from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -67,14 +71,28 @@ export function Home() {
     <>
       <Screen
         title=""
-        right={() => (
+        left={() => (
           <TouchableOpacity
             onPressIn={() => {
               router.push("/settings");
             }}
+            className="-ml-4 px-6"
+          >
+            <SettingsLineIcon
+              className="text-muted-foreground"
+              width={24}
+              height={24}
+            />
+          </TouchableOpacity>
+        )}
+        right={() => (
+          <TouchableOpacity
+            onPressIn={() => {
+              router.push("/bitcoin-map");
+            }}
             className="-mr-4 px-6"
           >
-            <SettingsIcon
+            <MapLineIcon
               className="text-muted-foreground"
               width={24}
               height={24}
