@@ -65,7 +65,6 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
     data class WalletInfo(
         val name: String,
         val sharedSecret: String,
-        val id: Int,
         val version: String = "0.0"
     )
 

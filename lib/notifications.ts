@@ -4,6 +4,7 @@ import { errorToast } from "~/lib/errorToast";
 import {
   removeWalletInfo,
   storeWalletInfo,
+  WalletInfo,
 } from "~/lib/notificationsNativeStorage";
 import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import {
@@ -67,12 +68,11 @@ export async function registerWalletNotifications(
       new Error(`Error: ${response.status} ${response.statusText}`);
     }
 
-    const walletData = {
+    const walletData: WalletInfo = {
       name: wallet.name ?? "",
       sharedSecret: isNip44
         ? getConversationKey(nwcClient.walletPubkey, nwcClient.secret ?? "")
         : computeSharedSecret(nwcClient.walletPubkey, nwcClient.secret ?? ""),
-      id: walletId,
       // This is for Alby Go's notification service to know the encryption
       // "1.0" is nip44_v2, "0.0" is nip04
       version: isNip44 ? "1.0" : "0.0",

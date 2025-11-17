@@ -16,7 +16,7 @@ async function getSharedPreferencesModule() {
   return module;
 }
 
-type WalletInfo = {
+export type WalletInfo = {
   name: string;
   sharedSecret: string;
   version: string;
