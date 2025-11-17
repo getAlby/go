@@ -70,7 +70,7 @@ export async function setNotificationSettings(settings: {
   }
 }
 
-export async function removeWalletInfo(publicKey: string, walletId: number) {
+export async function removeWalletInfo(publicKey: string) {
   if (IS_EXPO_GO) {
     return;
   }

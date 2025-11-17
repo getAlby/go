@@ -118,7 +118,7 @@ export async function deregisterWalletNotifications(
     );
     const pubkey = getPubkeyFromNWCUrl(wallet.nostrWalletConnectUrl ?? "");
     if (pubkey) {
-      await removeWalletInfo(pubkey, walletId);
+      await removeWalletInfo(pubkey);
     }
   } catch (error) {
     errorToast(error);
