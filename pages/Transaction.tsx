@@ -41,18 +41,18 @@ type Boostagram = {
 };
 
 export function Transaction() {
-  const { transactionJSON, walletId } = useLocalSearchParams() as {
+  const { transactionJSON, appPubkey } = useLocalSearchParams() as {
     transactionJSON: string;
-    walletId?: string;
+    appPubkey?: string; // only specified when opening from push notification
   };
   const transaction: Nip47Transaction = JSON.parse(transactionJSON);
   const getFiatAmount = useGetFiatAmount();
 
   React.useEffect(() => {
-    if (walletId) {
-      useAppStore.getState().setSelectedWalletId(Number(walletId));
+    if (appPubkey) {
+      useAppStore.getState().setSelectedWallet(appPubkey);
     }
-  }, [walletId]);
+  }, [appPubkey]);
 
   const TransactionIcon = React.useMemo(() => {
     if (transaction.state === "failed") {

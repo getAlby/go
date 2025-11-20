@@ -1,4 +1,6 @@
 import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
+import { hexToBytes } from "@noble/hashes/utils";
+import { getPublicKey } from "nostr-tools";
 import { create } from "zustand";
 import { secureStorage } from "../secureStorage";
 
@@ -28,6 +30,7 @@ interface AppState {
   updateWallet(wallet: Partial<Wallet>, walletId?: number): void;
   removeWallet(walletId?: number): void;
   setFiatCurrency(fiatCurrency: string): void;
+  setSelectedWallet(appPubkey: string): void;
   setSelectedWalletId(walletId: number): void;
   setSecurityEnabled(securityEnabled: boolean): void;
   setNotificationsEnabled(notificationsEnabled: boolean | null): void;
@@ -275,6 +278,25 @@ export const useAppStore = create<AppState>()((set, get) => {
         balanceDisplayMode:
           !fiatCurrency && displayMode === "fiat" ? "sats" : displayMode,
       });
+    },
+    setSelectedWallet: (appPubkey) => {
+      const wallets = get().wallets;
+      for (let i = 0; i < wallets.length; i++) {
+        const wallet = wallets[i];
+        // unfortunately we can only get the wallet pubkey from the connection secret
+        if (wallet.nostrWalletConnectUrl) {
+          const parsedUrl = NWCClient.parseWalletConnectUrl(
+            wallet.nostrWalletConnectUrl,
+          );
+          if (parsedUrl.secret) {
+            const walletAppPubkey = getPublicKey(hexToBytes(parsedUrl.secret));
+            if (walletAppPubkey === appPubkey) {
+              get().setSelectedWalletId(i);
+              break;
+            }
+          }
+        }
+      }
     },
     setSelectedWalletId: (selectedWalletId) => {
       if (typeof get().wallets[selectedWalletId] !== "undefined") {
