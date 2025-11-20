@@ -90,7 +90,6 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
           WalletInfo(
               name = walletJson.optString("name", "Alby Go"),
               sharedSecret = walletJson.optString("sharedSecret", ""),
-              id = walletJson.optInt("id", -1),
               version = walletJson.optString("version", "0.0")
           )
       } catch (e: Exception) {
