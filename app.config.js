@@ -42,8 +42,12 @@ export default ({ config }) => {
       [
         "expo-splash-screen",
         {
-          backgroundColor: "#0B0930",
+          backgroundColor: "#FFFFFF",
           image: "./assets/icon.png",
+          dark: {
+            image: "./assets/icon-dark.png",
+            backgroundColor: "#202020",
+          },
           imageWidth: "150",
         },
       ],
@@ -98,6 +102,11 @@ export default ({ config }) => {
       ],
     ],
     ios: {
+      icon: {
+        dark: "./assets/ios/dark.png",
+        light: "./assets/ios/light.png",
+        tinted: "./assets/ios/tinted.png",
+      },
       supportsTablet: true,
       bundleIdentifier: "com.getalby.mobile",
       config: {
