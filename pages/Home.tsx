@@ -129,7 +129,7 @@ export function Home() {
                 </Text>
               </TouchableOpacity>
             )}
-            <Pressable
+            <TouchableOpacity
               onPress={switchBalanceState}
               className="w-full flex flex-col items-center justify-center gap-3"
             >
@@ -176,7 +176,7 @@ export function Home() {
                   )}
                 </View>
               )}
-            </Pressable>
+            </TouchableOpacity>
             {new Date().getDate() === 21 && <AlbyBanner />}
           </View>
         </ScrollView>

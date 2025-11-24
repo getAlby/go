@@ -2,7 +2,7 @@ import type { Nip47Transaction } from "@getalby/sdk";
 import dayjs from "dayjs";
 import { router } from "expo-router";
 import React from "react";
-import { Pressable, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Animated from "react-native-reanimated";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import PendingTransactionIcon from "~/components/icons/PendingTransaction";
@@ -54,7 +54,7 @@ export function TransactionItem({ tx }: Props) {
     : undefined;
 
   return (
-    <Pressable
+    <TouchableOpacity
       key={tx.payment_hash}
       onPress={() =>
         router.navigate({
@@ -123,6 +123,6 @@ export function TransactionItem({ tx }: Props) {
           )}
         </View>
       </Animated.View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
