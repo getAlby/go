@@ -155,7 +155,7 @@ export function SetupWallet() {
   return (
     <>
       <Screen
-        title="Setup Wallet Connection"
+        title="Connect Wallet"
         right={() =>
           walletIdWithConnection !== -1 ? (
             <TouchableOpacity
