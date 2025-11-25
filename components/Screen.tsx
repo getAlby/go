@@ -1,6 +1,9 @@
 import { type NativeStackHeaderItemProps } from "@react-navigation/native-stack";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
+import { TouchableOpacity } from "react-native";
 import { type StackAnimationTypes } from "react-native-screens";
+import { ChevronLeftIcon } from "~/components/Icons";
+import { Text } from "~/components/ui/text";
 
 type ScreenProps = {
   title: string;
@@ -15,7 +18,26 @@ function Screen({ title, animation, right, left }: ScreenProps) {
       options={{
         title,
         animation,
-        headerLeft: left ? left : undefined,
+        headerLeft: left
+          ? left
+          : ({ canGoBack }) => {
+              return (
+                canGoBack && (
+                  <TouchableOpacity onPress={() => router.back()}>
+                    <ChevronLeftIcon
+                      className="text-muted-foreground p-4"
+                      width={24}
+                      height={24}
+                    />
+                  </TouchableOpacity>
+                )
+              );
+            },
+        headerTitle: () => (
+          <Text className="text-2xl font-semibold2 text-muted-foreground">
+            {title}
+          </Text>
+        ),
         headerRight: right ? right : undefined,
         headerShadowVisible: false,
       }}

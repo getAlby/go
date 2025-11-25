@@ -7,6 +7,7 @@ import {
   PopiconsCircleCheckLine as CheckCircleIcon,
   PopiconsCheckSolid as CheckIcon,
   PopiconsChevronBottomLine as ChevronDownIcon,
+  PopiconsChevronLeftLine as ChevronLeftIcon,
   PopiconsChevronRightSolid as ChevronRightIcon,
   PopiconsChevronTopLine as ChevronUpIcon,
   PopiconsCopySolid as CopyIcon,
@@ -64,6 +65,7 @@ interopIcon(CameraOffIcon);
 interopIcon(CheckCircleIcon);
 interopIcon(CheckIcon);
 interopIcon(ChevronDownIcon);
+interopIcon(ChevronLeftIcon);
 interopIcon(ChevronRightIcon);
 interopIcon(ChevronUpIcon);
 interopIcon(CopyIcon);
@@ -107,6 +109,7 @@ export {
   CheckCircleIcon,
   CheckIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
   ChevronRightIcon,
   ChevronUpIcon,
   CopyIcon,

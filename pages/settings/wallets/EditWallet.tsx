@@ -1,32 +1,23 @@
 import * as Clipboard from "expo-clipboard";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { Pressable, Alert as RNAlert, View } from "react-native";
+import { Alert as RNAlert, TouchableOpacity, View } from "react-native";
 import { Toast } from "toastify-react-native";
 import Alert from "~/components/Alert";
 import ConnectionInfoModal from "~/components/ConnectionInfoModal";
 import {
   AddressIcon,
+  ChevronRightIcon,
+  EditIcon,
   HelpCircleIcon,
+  ShareIcon,
   TrashIcon,
   TriangleAlertIcon,
-  WalletIcon,
 } from "~/components/Icons";
-import NWCIcon from "~/components/icons/NWCIcon";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import {
-  DEFAULT_WALLET_NAME,
-  IS_EXPO_GO,
-  REQUIRED_CAPABILITIES,
-} from "~/lib/constants";
+import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
@@ -61,7 +52,7 @@ export function EditWallet() {
   };
 
   return (
-    <View className="flex-1 flex flex-col p-4 gap-4">
+    <View className="flex-1 flex flex-col">
       <Screen title="Edit Wallet" />
       {isDeleting ? (
         <View className="flex-1 justify-center items-center">
@@ -69,7 +60,7 @@ export function EditWallet() {
           <Text className="text-xl mt-4">Deleting wallet</Text>
         </View>
       ) : (
-        <>
+        <View className="flex-1 flex flex-col mt-4">
           {!REQUIRED_CAPABILITIES.every((capability) =>
             (wallets[walletId]?.nwcCapabilities || []).includes(capability),
           ) && (
@@ -87,39 +78,61 @@ export function EditWallet() {
             />
           )}
           <Link href={`/settings/wallets/${walletId}/name`} asChild>
-            <Pressable>
-              <Card className="w-full">
-                <CardContent className="flex flex-row items-center gap-4">
-                  <WalletIcon className="text-muted-foreground" />
-                  <View className="flex flex-1 flex-col">
-                    <CardTitle>Wallet Name</CardTitle>
-                    <CardDescription>
-                      {wallets[walletId]?.name || DEFAULT_WALLET_NAME}
-                    </CardDescription>
-                  </View>
-                </CardContent>
-              </Card>
-            </Pressable>
+            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3">
+              <EditIcon
+                className="text-muted-foreground"
+                width={28}
+                height={28}
+              />
+              <Text className="font-medium2 text-xl text-foreground">
+                Wallet Name
+              </Text>
+              <ChevronRightIcon
+                className="ml-auto text-muted-foreground "
+                width={20}
+                height={20}
+              />
+            </TouchableOpacity>
           </Link>
           <Link
             href={`/settings/wallets/${walletId}/lightning-address`}
             asChild
           >
-            <Pressable>
-              <Card className="w-full">
-                <CardContent className="flex flex-row items-center gap-4">
-                  <AddressIcon className="text-muted-foreground" />
-                  <View className="flex flex-1 flex-col">
-                    <CardTitle>Lightning Address</CardTitle>
-                    <CardDescription>
-                      Update your Lightning Address to easily receive payments
-                    </CardDescription>
-                  </View>
-                </CardContent>
-              </Card>
-            </Pressable>
+            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3">
+              <AddressIcon
+                className="text-muted-foreground"
+                width={28}
+                height={28}
+              />
+              <Text className="font-medium2 text-xl text-foreground">
+                Lightning Address
+              </Text>
+              <ChevronRightIcon
+                className="ml-auto text-muted-foreground"
+                width={20}
+                height={20}
+              />
+            </TouchableOpacity>
           </Link>
-          <Pressable
+          <ConnectionInfoModal
+            visible={showConnectionInfo}
+            onClose={() => setShowConnectionInfo(false)}
+          />
+          <TouchableOpacity
+            className="flex flex-row items-center gap-4 px-6 py-3"
+            onPress={() => setShowConnectionInfo(true)}
+          >
+            <HelpCircleIcon
+              className="text-muted-foreground"
+              width={28}
+              height={28}
+            />
+            <Text className="font-medium2 text-xl text-foreground">
+              Connection Info
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex flex-row items-center gap-4 px-6 py-3"
             onPress={() => {
               RNAlert.alert(
                 "Export Wallet",
@@ -168,37 +181,17 @@ export function EditWallet() {
               );
             }}
           >
-            <Card className="w-full">
-              <CardContent className="flex flex-row items-center gap-4">
-                <NWCIcon />
-                <View className="flex flex-1 flex-col">
-                  <CardTitle>Export Wallet</CardTitle>
-                  <CardDescription>
-                    Copy your wallet's Connection Secret which can be imported
-                    into another app
-                  </CardDescription>
-                </View>
-              </CardContent>
-            </Card>
-          </Pressable>
-          <ConnectionInfoModal
-            visible={showConnectionInfo}
-            onClose={() => setShowConnectionInfo(false)}
-          />
-          <Pressable onPress={() => setShowConnectionInfo(true)}>
-            <Card className="w-full">
-              <CardContent className="flex flex-row items-center gap-4">
-                <HelpCircleIcon className="text-muted-foreground" />
-                <View className="flex flex-1 flex-col">
-                  <CardTitle>Connection Info</CardTitle>
-                  <CardDescription>
-                    View details about this wallet connection
-                  </CardDescription>
-                </View>
-              </CardContent>
-            </Card>
-          </Pressable>
-          <Pressable
+            <ShareIcon
+              className="text-muted-foreground"
+              width={28}
+              height={28}
+            />
+            <Text className="font-medium2 text-xl text-foreground">
+              Export Wallet
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex flex-row items-center gap-4 px-6 py-3"
             onPress={() => {
               RNAlert.alert(
                 "Remove Wallet Connection",
@@ -216,19 +209,16 @@ export function EditWallet() {
               );
             }}
           >
-            <Card className="w-full">
-              <CardContent className="flex flex-row items-center gap-4">
-                <TrashIcon className="text-muted-foreground" />
-                <View className="flex flex-1 flex-col">
-                  <CardTitle>Remove Wallet Connection</CardTitle>
-                  <CardDescription>
-                    Remove this wallet connection from Alby Go
-                  </CardDescription>
-                </View>
-              </CardContent>
-            </Card>
-          </Pressable>
-        </>
+            <TrashIcon
+              className="text-muted-foreground"
+              width={28}
+              height={28}
+            />
+            <Text className="font-medium2 text-xl text-foreground">
+              Delete Wallet
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );

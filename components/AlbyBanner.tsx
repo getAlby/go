@@ -39,7 +39,7 @@ function AlbyBanner() {
     <View className="border bg-card border-muted rounded-2xl mt-5 flex flex-col gap-3 p-5 relative">
       <TouchableOpacity
         onPress={() => setShowBanner(false)}
-        className="absolute right-0 p-4"
+        className="absolute z-10 right-0 p-4"
       >
         <XIcon className="text-muted-foreground" />
       </TouchableOpacity>

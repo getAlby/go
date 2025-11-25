@@ -5,6 +5,7 @@ import { SettingsIcon, WalletIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
 import { Toast } from "toastify-react-native";
+import NWCIcon from "~/components/icons/NWCIcon";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
@@ -19,7 +20,7 @@ export function Wallets() {
       <Screen title="Manage Wallets" />
       <View className="h-full flex px-6">
         <FlatList
-          className="flex flex-col"
+          className="flex flex-col mt-6"
           data={wallets}
           contentContainerStyle={{ flexGrow: 1 }}
           ListFooterComponentStyle={{ marginTop: "auto" }}
@@ -41,14 +42,21 @@ export function Wallets() {
                   }
                 }}
                 className={cn(
-                  "flex flex-row items-center justify-between p-6 rounded-2xl border-2",
+                  "flex flex-row items-center justify-between px-6 py-4 rounded-2xl border-2",
                   active ? "border-primary" : "border-transparent",
                 )}
               >
                 <View className="flex flex-row gap-4 items-center flex-shrink">
-                  <WalletIcon className="text-muted-foreground" />
+                  <WalletIcon
+                    className="text-muted-foreground"
+                    width={28}
+                    height={28}
+                  />
                   <Text
-                    className={cn("text-xl pr-16", active && "font-semibold2")}
+                    className={cn(
+                      "text-xl pr-16 text-foreground",
+                      active ? "font-semibold2" : "font-medium2",
+                    )}
                     numberOfLines={1}
                     ellipsizeMode="tail"
                   >
@@ -61,7 +69,11 @@ export function Wallets() {
                   asChild
                 >
                   <TouchableOpacity className="p-6">
-                    <SettingsIcon className="text-muted-foreground" />
+                    <SettingsIcon
+                      className="text-muted-foreground"
+                      width={20}
+                      height={20}
+                    />
                   </TouchableOpacity>
                 </Link>
               </TouchableOpacity>
@@ -70,13 +82,16 @@ export function Wallets() {
           ListFooterComponent={
             <View className="py-6">
               <Button
+                variant="secondary"
                 size="lg"
                 onPress={() => {
                   router.dismissAll();
                   router.push("/settings/wallets/setup");
                 }}
+                className="flex flex-row gap-2"
               >
-                <Text>Connect a Wallet</Text>
+                <NWCIcon />
+                <Text className="text-muted-foreground">Connect a Wallet</Text>
               </Button>
             </View>
           }
