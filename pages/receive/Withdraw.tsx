@@ -235,7 +235,7 @@ export function Withdraw() {
                   description={lnurlDetails.defaultDescription}
                   min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
                   max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
-                  readOnly
+                  isDescriptionReadOnly
                 />
               )}
               <View className="p-6 bg-background">

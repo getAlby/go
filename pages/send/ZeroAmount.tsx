@@ -42,7 +42,7 @@ export function ZeroAmount() {
           setAmount={setAmount}
           description={comment}
           min={1}
-          readOnly
+          isDescriptionReadOnly
         />
         <View className="p-6">
           <Button
