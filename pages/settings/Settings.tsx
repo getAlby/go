@@ -15,7 +15,7 @@ import {
 
 import Constants from "expo-constants";
 import React from "react";
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 import AlbyBanner from "~/components/AlbyBanner";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";

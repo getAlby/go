@@ -6,7 +6,7 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { nip19 } from "nostr-tools";
 import React from "react";
 import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 import { LinkIcon } from "~/components/Icons";
 import AcceptedTransactionIcon from "~/components/icons/AcceptedTransaction";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";

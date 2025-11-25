@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";

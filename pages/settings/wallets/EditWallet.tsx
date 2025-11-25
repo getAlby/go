@@ -2,7 +2,7 @@ import * as Clipboard from "expo-clipboard";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Alert as RNAlert, TouchableOpacity, View } from "react-native";
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import ConnectionInfoModal from "~/components/ConnectionInfoModal";
 import {
