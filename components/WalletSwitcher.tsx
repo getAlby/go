@@ -6,7 +6,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 import { ChevronDownIcon, WalletIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";

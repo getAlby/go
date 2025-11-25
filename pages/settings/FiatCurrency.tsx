@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 import { CountryFlag } from "~/components/Flag";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";

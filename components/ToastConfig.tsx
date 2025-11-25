@@ -1,11 +1,12 @@
 import { Link } from "expo-router";
 import { View } from "react-native";
+import { type ToastConfig } from "react-native-toast-message";
 import { CheckCircleIcon, XCircleIcon } from "~/components/Icons";
 import { Button } from "./ui/button";
 import { Text } from "./ui/text";
 
-export const toastConfig = {
-  success: ({ text1, text2 }: { text1: string; text2: string }) => (
+export const toastConfig: ToastConfig = {
+  success: ({ text1, text2 }) => (
     <View className="bg-foreground rounded-xl px-6 py-3 mx-6">
       <View className="flex flex-row gap-2 justify-center items-center">
         <CheckCircleIcon className="text-background" width={16} height={16} />
@@ -14,7 +15,7 @@ export const toastConfig = {
       {text2 && <Text className="text-background text-center">{text2}</Text>}
     </View>
   ),
-  info: ({ text1, text2 }: { text1: string; text2: string }) => (
+  info: ({ text1, text2, hide }) => (
     <View className="bg-yellow-500 rounded-full px-6 py-3 mx-6">
       <View className="flex flex-row gap-2 justify-center items-center">
         <XCircleIcon className="text-background" width={16} height={16} />
@@ -23,7 +24,7 @@ export const toastConfig = {
       {text2 && <Text className="text-background text-center">{text2}</Text>}
     </View>
   ),
-  error: ({ text1, text2 }: { text1: string; text2: string }) => (
+  error: ({ text1, text2, hide }) => (
     <View className="bg-destructive rounded-xl px-6 py-3 mx-6">
       <View className="flex flex-row gap-2 justify-center items-center">
         <XCircleIcon className="text-background" width={16} height={16} />
@@ -32,7 +33,7 @@ export const toastConfig = {
       {text2 && <Text className="text-background text-center">{text2}</Text>}
     </View>
   ),
-  connectionError: ({ text1 }: { text1: string }) => {
+  connectionError: ({ text1, text2, hide }) => {
     return (
       <View className="bg-foreground rounded-xl px-6 py-3 mx-6 flex flex-col gap-2">
         <View className="flex flex-row gap-2 justify-center items-center">
