@@ -20,7 +20,7 @@ export function Wallets() {
       <Screen title="Manage Wallets" />
       <View className="h-full flex px-6">
         <FlatList
-          className="flex flex-col mt-2"
+          className="flex flex-col mt-6"
           data={wallets}
           contentContainerStyle={{ flexGrow: 1 }}
           ListFooterComponentStyle={{ marginTop: "auto" }}
@@ -71,8 +71,8 @@ export function Wallets() {
                   <TouchableOpacity className="p-6">
                     <SettingsIcon
                       className="text-muted-foreground"
-                      width={16}
-                      height={16}
+                      width={20}
+                      height={20}
                     />
                   </TouchableOpacity>
                 </Link>

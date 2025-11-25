@@ -3,6 +3,7 @@ import { Alert, TouchableOpacity, View } from "react-native";
 import {
   AddressIcon,
   BitcoinIcon,
+  ChevronRightIcon,
   FingerprintIcon,
   NotificationIcon,
   OnboardingIcon,
@@ -33,11 +34,11 @@ export function Settings() {
   const { signOut } = useSession();
 
   return (
-    <View className="flex-1 p-6 ">
+    <View className="flex-1">
       <Screen title="Settings" />
-      <View className="flex-1 flex flex-col gap-6">
+      <View className="flex-1 flex flex-col mt-4">
         <Link href="/settings/wallets" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4">
+          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3">
             <WalletIcon
               className="text-muted-foreground"
               width={28}
@@ -46,11 +47,16 @@ export function Settings() {
             <Text className="font-medium2 text-xl text-foreground">
               Wallets
             </Text>
+            <ChevronRightIcon
+              className="ml-auto text-muted-foreground"
+              width={20}
+              height={20}
+            />
           </TouchableOpacity>
         </Link>
 
         <Link href="/settings/fiat-currency" asChild>
-          <TouchableOpacity className="flex flex-row gap-4 items-center">
+          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
             <BitcoinIcon
               className="text-muted-foreground"
               width={28}
@@ -59,12 +65,17 @@ export function Settings() {
             <Text className="text-foreground font-medium2 text-xl">
               Fiat Currency
             </Text>
+            <ChevronRightIcon
+              className="ml-auto text-muted-foreground"
+              width={20}
+              height={20}
+            />
           </TouchableOpacity>
         </Link>
 
         {!IS_EXPO_GO && (
           <Link href="/settings/notifications" asChild>
-            <TouchableOpacity className="flex flex-row gap-4 items-center">
+            <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
               <NotificationIcon
                 className="text-muted-foreground"
                 width={28}
@@ -73,12 +84,17 @@ export function Settings() {
               <Text className="text-foreground font-medium2 text-xl">
                 Notifications
               </Text>
+              <ChevronRightIcon
+                className="ml-auto text-muted-foreground"
+                width={20}
+                height={20}
+              />
             </TouchableOpacity>
           </Link>
         )}
 
         <Link href="/settings/security" asChild>
-          <TouchableOpacity className="flex flex-row gap-4 items-center">
+          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
             <FingerprintIcon
               className="text-muted-foreground"
               width={28}
@@ -87,11 +103,16 @@ export function Settings() {
             <Text className="text-foreground font-medium2 text-xl">
               Security
             </Text>
+            <ChevronRightIcon
+              className="ml-auto text-muted-foreground"
+              width={20}
+              height={20}
+            />
           </TouchableOpacity>
         </Link>
 
         <TouchableOpacity
-          className="flex flex-row gap-4 items-center"
+          className="flex flex-row gap-4 items-center px-6 py-3"
           onPress={toggleColorScheme}
         >
           <ThemeIcon className="text-muted-foreground" width={28} height={28} />
@@ -102,7 +123,7 @@ export function Settings() {
         </TouchableOpacity>
 
         <Link href="/settings/address-book" asChild>
-          <TouchableOpacity className="flex flex-row gap-4 items-center">
+          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
             <AddressIcon
               className="text-muted-foreground"
               width={28}
@@ -111,17 +132,22 @@ export function Settings() {
             <Text className="text-foreground font-medium2 text-xl">
               Address Book
             </Text>
+            <ChevronRightIcon
+              className="ml-auto text-muted-foreground"
+              width={20}
+              height={20}
+            />
           </TouchableOpacity>
         </Link>
 
         {developerMode && (
           <>
-            <View className="mt-5 flex flex-col gap-6">
-              <Text className="text-muted-foreground uppercase">
+            <View className="mt-2 flex flex-col">
+              <Text className="text-muted-foreground uppercase px-6 py-3">
                 Developer mode
               </Text>
               <TouchableOpacity
-                className="flex flex-row gap-4 items-center"
+                className="flex flex-row gap-4 items-center px-6 py-3"
                 onPress={() => {
                   signOut();
                 }}
@@ -134,7 +160,7 @@ export function Settings() {
                 <Text className="font-medium2 text-xl">Sign out</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row gap-4 items-center"
+                className="flex flex-row gap-4 items-center px-6 py-3"
                 onPress={() => {
                   router.dismissAll();
                   useAppStore.getState().setOnboarded(false);
@@ -148,7 +174,7 @@ export function Settings() {
                 <Text className="font-medium2 text-xl">Open Onboarding</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row gap-4 items-center"
+                className="flex flex-row gap-4 items-center px-6 py-3"
                 onPress={() => {
                   Alert.alert(
                     "Reset",
@@ -188,7 +214,7 @@ export function Settings() {
           </>
         )}
       </View>
-      <View className="flex flex-col gap-6">
+      <View className="flex flex-col p-4 gap-6">
         <AlbyBanner />
         <TouchableOpacity
           onPress={() => {
