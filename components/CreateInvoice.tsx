@@ -4,13 +4,11 @@ import { router } from "expo-router";
 import React from "react";
 import { Share, View } from "react-native";
 import Toast from "react-native-toast-message";
-import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { CopyIcon, ShareIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCode from "~/components/QRCode";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
@@ -127,27 +125,21 @@ export function CreateInvoice() {
     <>
       {invoice ? (
         <>
-          <View className="flex-1 justify-center items-center gap-8">
+          <View className="flex-1 justify-center items-center gap-6">
+            <View className="flex flex-row justify-center items-center gap-3">
+              <Loading />
+              <Text className="text-xl">Waiting for payment</Text>
+            </View>
             <QRCode value={invoice} showAvatar />
-
             <View className="flex flex-col items-center justify-center gap-2">
-              <View className="flex flex-row items-end">
-                <Text className="text-foreground text-3xl font-semibold2">
-                  {new Intl.NumberFormat().format(+amount)}{" "}
-                </Text>
-                <Text className="text-muted-foreground text-2xl font-semibold2">
-                  sats
-                </Text>
-              </View>
+              <Text className="text-foreground text-3xl font-semibold2">
+                ₿ {new Intl.NumberFormat().format(+amount)}
+              </Text>
               {getFiatAmount && (
                 <Text className="text-muted-foreground text-2xl font-medium2">
                   {getFiatAmount(+amount)}
                 </Text>
               )}
-            </View>
-            <View className="flex flex-row justify-center items-center gap-3">
-              <Loading />
-              <Text className="text-xl">Waiting for payment</Text>
             </View>
           </View>
           <View className="flex flex-row gap-3 p-6">
@@ -170,40 +162,25 @@ export function CreateInvoice() {
           </View>
         </>
       ) : (
-        <DismissableKeyboardView>
-          <View className="flex-1 flex flex-col">
-            <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
-              <DualCurrencyInput
-                amount={amount}
-                setAmount={setAmount}
-                autoFocus
-              />
-              <View>
-                <Text className="text-muted-foreground text-center mt-6">
-                  Description (optional)
-                </Text>
-                <Input
-                  className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
-                  placeholder="No description"
-                  value={comment}
-                  onChangeText={setComment}
-                  returnKeyType="done"
-                />
-              </View>
-            </View>
-            <View className="m-6">
-              <Button
-                size="lg"
-                className="flex flex-row gap-2"
-                onPress={() => generateInvoice(+amount)}
-                disabled={isLoading}
-              >
-                {isLoading && <Loading className="text-primary-foreground" />}
-                <Text>Create Invoice</Text>
-              </Button>
-            </View>
+        <View className="flex flex-1 flex-col">
+          <DualCurrencyInput
+            amount={amount}
+            setAmount={setAmount}
+            description={comment}
+            setDescription={setComment}
+          />
+          <View className="m-6">
+            <Button
+              size="lg"
+              className="flex flex-row gap-2"
+              onPress={() => generateInvoice(+amount)}
+              disabled={!+amount || isLoading}
+            >
+              {isLoading && <Loading className="text-primary-foreground" />}
+              <Text>Create Invoice</Text>
+            </Button>
           </View>
-        </DismissableKeyboardView>
+        </View>
       )}
     </>
   );

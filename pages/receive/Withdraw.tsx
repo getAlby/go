@@ -6,7 +6,6 @@ import {
 } from "lib/lnurl";
 import React, { useEffect } from "react";
 import { View } from "react-native";
-import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
@@ -18,7 +17,6 @@ import { WalletSwitcher } from "~/components/WalletSwitcher";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
-import { cn } from "~/lib/utils";
 
 export function Withdraw() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -199,95 +197,65 @@ export function Withdraw() {
             </>
           )}
           {lnurlDetails && (
-            <DismissableKeyboardView>
-              <View className="flex-1 flex flex-col">
-                {lnurlDetails.minWithdrawable ===
-                lnurlDetails.maxWithdrawable ? (
-                  <View className="flex-1 justify-center items-center gap-8 p-6">
-                    <View className="flex flex-col gap-2 items-center">
-                      <View className="flex flex-row items-center justify-center gap-2">
-                        <Text className="text-5xl font-bold2 text-foreground">
-                          {new Intl.NumberFormat().format(
-                            Math.floor(lnurlDetails.minWithdrawable / 1000),
-                          )}
-                        </Text>
-                        <Text className="text-3xl font-bold2 text-muted-foreground">
-                          sats
-                        </Text>
-                      </View>
-                      {getFiatAmount && (
-                        <Text className="text-center text-muted-foreground text-3xl font-semibold2">
-                          {getFiatAmount(
-                            Math.floor(lnurlDetails.minWithdrawable / 1000),
-                          )}
-                        </Text>
-                      )}
-                    </View>
-                    <View className="flex flex-col gap-2 justify-center items-center">
-                      <Text className="text-muted-foreground text-center font-semibold2">
-                        Description
-                      </Text>
-                      <Text className="text-center text-foreground text-2xl font-medium2">
-                        {lnurlDetails.defaultDescription}
-                      </Text>
-                    </View>
-                  </View>
-                ) : (
-                  <View className="flex-1 h-full flex flex-col justify-center gap-5 p-3">
-                    <DualCurrencyInput
-                      amount={valueSat}
-                      setAmount={setValueSat}
-                      min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
-                      max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
-                      autoFocus
-                    />
-                    <View className="w-full">
-                      <Text
-                        className={cn(
-                          "text-muted-foreground text-center font-semibold2",
-                          valueSat && isAmountInvalid ? "text-destructive" : "",
-                        )}
-                      >
-                        Between{" "}
+            <View className="flex-1 flex flex-col">
+              {lnurlDetails.minWithdrawable === lnurlDetails.maxWithdrawable ? (
+                <View className="flex-1 justify-center items-center gap-8 p-6">
+                  <View className="flex flex-col gap-2 items-center">
+                    <View className="flex flex-row items-center justify-center gap-2">
+                      <Text className="text-5xl font-bold2 text-foreground">
                         {new Intl.NumberFormat().format(
                           Math.floor(lnurlDetails.minWithdrawable / 1000),
                         )}
-                        {" and "}
-                        {new Intl.NumberFormat().format(
-                          Math.floor(lnurlDetails.maxWithdrawable / 1000),
-                        )}{" "}
+                      </Text>
+                      <Text className="text-3xl font-bold2 text-muted-foreground">
                         sats
                       </Text>
                     </View>
-                    <View className="flex flex-col gap-2 items-center">
-                      <Text className="text-muted-foreground text-center font-semibold2">
-                        Description
+                    {getFiatAmount && (
+                      <Text className="text-center text-muted-foreground text-3xl font-semibold2">
+                        {getFiatAmount(
+                          Math.floor(lnurlDetails.minWithdrawable / 1000),
+                        )}
                       </Text>
-                      <Text className="text-center text-foreground text-2xl font-medium2">
-                        {lnurlDetails.defaultDescription}
-                      </Text>
-                    </View>
-                  </View>
-                )}
-                <View className="p-6 bg-background">
-                  <WalletSwitcher
-                    selectedWalletId={selectedWalletId}
-                    wallets={wallets}
-                  />
-                  <Button
-                    size="lg"
-                    className="flex flex-row gap-2"
-                    onPress={confirm}
-                    disabled={loadingConfirm || isAmountInvalid}
-                  >
-                    {loadingConfirm && (
-                      <Loading className="text-primary-foreground" />
                     )}
-                    <Text>Confirm Withdrawal</Text>
-                  </Button>
+                  </View>
+                  <View className="flex flex-col gap-2 justify-center items-center">
+                    <Text className="text-muted-foreground text-center font-semibold2">
+                      Description
+                    </Text>
+                    <Text className="text-center text-foreground text-2xl font-medium2">
+                      {lnurlDetails.defaultDescription}
+                    </Text>
+                  </View>
                 </View>
+              ) : (
+                <DualCurrencyInput
+                  amount={valueSat}
+                  setAmount={setValueSat}
+                  description={lnurlDetails.defaultDescription}
+                  min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
+                  max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
+                  readOnly
+                />
+              )}
+              <View className="p-6 bg-background">
+                <WalletSwitcher
+                  selectedWalletId={selectedWalletId}
+                  wallets={wallets}
+                />
+                <Button
+                  size="lg"
+                  className="flex flex-row gap-2"
+                  onPress={confirm}
+                  disabled={loadingConfirm || isAmountInvalid}
+                >
+                  {loadingConfirm && (
+                    <Loading className="text-primary-foreground" />
+                  )}
+                  <Text>Confirm Withdrawal</Text>
+                </Button>
               </View>
-            </DismissableKeyboardView>
+            </View>
           )}
         </>
       )}

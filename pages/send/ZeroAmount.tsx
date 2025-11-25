@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
@@ -37,42 +36,26 @@ export function ZeroAmount() {
   return (
     <>
       <Screen title="Send" />
-      <DismissableKeyboardView>
-        <View className="flex-1 flex flex-col">
-          <View className="flex-1 justify-center items-center p-6 gap-6">
-            <DualCurrencyInput
-              amount={amount}
-              setAmount={setAmount}
-              autoFocus
-              min={1}
-            />
-            <View className="w-full">
-              <Text className="text-muted-foreground text-center font-semibold2"></Text>
-            </View>
-            {comment && (
-              <View className="w-full">
-                <Text className="text-muted-foreground text-center font-semibold2">
-                  Comment
-                </Text>
-                <Text className="w-full text-center text-2xl font-semibold2 mt-2">
-                  {comment}
-                </Text>
-              </View>
-            )}
-          </View>
-          <View className="p-6">
-            <Button
-              size="lg"
-              className="flex flex-row gap-2"
-              onPress={submit}
-              disabled={isLoading}
-            >
-              {isLoading && <Loading className="text-primary-foreground" />}
-              <Text>Next</Text>
-            </Button>
-          </View>
+      <View className="flex flex-1 flex-col">
+        <DualCurrencyInput
+          amount={amount}
+          setAmount={setAmount}
+          description={comment}
+          min={1}
+          readOnly
+        />
+        <View className="p-6">
+          <Button
+            size="lg"
+            className="flex flex-row gap-2"
+            onPress={submit}
+            disabled={!+amount || isLoading}
+          >
+            {isLoading && <Loading className="text-primary-foreground" />}
+            <Text>Next</Text>
+          </Button>
         </View>
-      </DismissableKeyboardView>
+      </View>
     </>
   );
 }
