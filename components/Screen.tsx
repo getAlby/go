@@ -24,11 +24,7 @@ function Screen({ title, animation, right, left }: ScreenProps) {
               return (
                 canGoBack && (
                   <TouchableOpacity onPress={() => router.back()}>
-                    <ChevronLeftIcon
-                      className="text-muted-foreground p-4"
-                      width={24}
-                      height={24}
-                    />
+                    <ChevronLeftIcon className="text-muted-foreground p-4 mr-4" />
                   </TouchableOpacity>
                 )
               );
