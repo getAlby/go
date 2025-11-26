@@ -1,6 +1,7 @@
 import {
   PopiconsAtSymbolSolid as AddressIcon,
   PopiconsCircleExclamationLine as AlertCircleIcon,
+  PopiconsArrowLeftSolid as ArrowLeftIcon,
   PopiconsBitcoinSolid as BitcoinIcon,
   PopiconsAddressBookSolid as BookUserIcon,
   PopiconsCameraWebOffSolid as CameraOffIcon,
@@ -12,6 +13,7 @@ import {
   PopiconsChevronTopLine as ChevronUpIcon,
   PopiconsCopySolid as CopyIcon,
   PopiconsEditSolid as EditIcon,
+  PopiconsEditLine as EditLineIcon,
   PopiconsUploadSolid as ExportIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
   PopiconsCircleInfoSolid as HelpCircleIcon,
@@ -21,6 +23,7 @@ import {
   PopiconsMapLine as MapLineIcon,
   PopiconsArrowDownLine as MoveDownIcon,
   PopiconsArrowUpLine as MoveUpIcon,
+  PopiconsNotePlusLine as NotesIcon,
   PopiconsNotificationSquareSolid as NotificationIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
@@ -59,6 +62,7 @@ function interopIcon(icon: React.FunctionComponent<SvgProps>) {
 
 interopIcon(AddressIcon);
 interopIcon(AlertCircleIcon);
+interopIcon(ArrowLeftIcon);
 interopIcon(BitcoinIcon);
 interopIcon(BookUserIcon);
 interopIcon(CameraOffIcon);
@@ -70,6 +74,7 @@ interopIcon(ChevronRightIcon);
 interopIcon(ChevronUpIcon);
 interopIcon(CopyIcon);
 interopIcon(EditIcon);
+interopIcon(EditLineIcon);
 interopIcon(ExportIcon);
 interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
@@ -79,6 +84,7 @@ interopIcon(LinkIcon);
 interopIcon(MapLineIcon);
 interopIcon(MoveDownIcon);
 interopIcon(MoveUpIcon);
+interopIcon(NotesIcon);
 interopIcon(NotificationIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
@@ -103,6 +109,7 @@ interopIcon(ZapIcon);
 export {
   AddressIcon,
   AlertCircleIcon,
+  ArrowLeftIcon,
   BitcoinIcon,
   BookUserIcon,
   CameraOffIcon,
@@ -114,6 +121,7 @@ export {
   ChevronUpIcon,
   CopyIcon,
   EditIcon,
+  EditLineIcon,
   ExportIcon,
   FingerprintIcon,
   HelpCircleIcon,
@@ -123,6 +131,7 @@ export {
   MapLineIcon,
   MoveDownIcon,
   MoveUpIcon,
+  NotesIcon,
   NotificationIcon,
   OnboardingIcon,
   PasteIcon,

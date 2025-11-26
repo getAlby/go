@@ -81,13 +81,16 @@ export function ConfirmPayment() {
   return (
     <>
       <Screen title="Confirm Payment" />
-      <View className="flex-1 justify-center items-center gap-8 p-6">
+      <View className="flex-1 justify-center items-center gap-16 p-6">
         <View className="flex flex-col gap-2">
+          <Text className="text-center text-muted-foreground font-semibold2">
+            Send
+          </Text>
           <View className="flex flex-row items-center justify-center gap-2">
-            <Text className="text-5xl font-bold2 text-foreground">
+            <Text className="text-5xl leading-[1.5] font-bold2 text-foreground">
               {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
             </Text>
-            <Text className="text-3xl font-bold2 text-muted-foreground">
+            <Text className="text-5xl leading-[1.5] font-bold2 text-muted-foreground">
               sats
             </Text>
           </View>
@@ -97,12 +100,17 @@ export function ConfirmPayment() {
             </Text>
           )}
         </View>
+        <Receiver lightningAddress={receiver} />
         {decodedInvoice.description ? (
           <View className="flex flex-col gap-2 justify-center items-center">
             <Text className="text-muted-foreground text-center font-semibold2">
               Description
             </Text>
-            <Text className="text-center text-foreground text-2xl font-medium2">
+            <Text
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              className="text-center text-foreground text-2xl font-medium2"
+            >
               {decodedInvoice.description}
             </Text>
           </View>
@@ -112,13 +120,16 @@ export function ConfirmPayment() {
               <Text className="text-muted-foreground text-center font-semibold2">
                 Comment
               </Text>
-              <Text className="text-center text-foreground text-2xl font-medium2">
+              <Text
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                className="text-center text-foreground text-2xl font-medium2"
+              >
                 {comment}
               </Text>
             </View>
           )
         )}
-        <Receiver lightningAddress={receiver} />
       </View>
       <View className="p-6 bg-background">
         <WalletSwitcher selectedWalletId={selectedWalletId} wallets={wallets} />

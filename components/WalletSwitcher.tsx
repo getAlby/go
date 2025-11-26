@@ -50,6 +50,11 @@ export function WalletSwitcher({
     ),
     [isDarkColorScheme],
   );
+
+  if (wallets.length <= 1) {
+    return;
+  }
+
   return (
     <>
       <TouchableOpacity

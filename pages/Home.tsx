@@ -138,7 +138,7 @@ export function Home() {
                 !refreshingBalance &&
                 (balanceDisplayMode === "fiat" ? getFiatAmount : true) ? (
                   <>
-                    <Text className="text-foreground text-5xl font-bold2">
+                    <Text className="text-foreground text-5xl leading-[1.5] font-bold2">
                       {balanceDisplayMode === "sats" &&
                         new Intl.NumberFormat().format(
                           Math.floor(balance.balance / 1000),
@@ -148,7 +148,7 @@ export function Home() {
                       {balanceDisplayMode === "hidden" && "****"}
                     </Text>
                     {balanceDisplayMode === "sats" && (
-                      <Text className="text-muted-foreground text-3xl font-semibold2">
+                      <Text className="text-muted-foreground text-5xl leading-[1.5] font-bold2">
                         sats
                       </Text>
                     )}
