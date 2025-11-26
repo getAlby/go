@@ -127,7 +127,7 @@ function DescriptionInput({
           </View>
           <BottomSheetTextInput
             placeholder="Sats for Satoshi"
-            className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2"
+            className="text-foreground placeholder:text-muted-foreground/30 border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2"
             value={input}
             onChangeText={setInput}
             onSubmitEditing={save}
