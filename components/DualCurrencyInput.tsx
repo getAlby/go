@@ -239,6 +239,24 @@ export function DualCurrencyInput({
     }
   };
 
+  const validationMessage = React.useMemo(() => {
+    if (!text) {
+      return "";
+    }
+    const hasMin = min !== undefined;
+    const hasMax = max !== undefined;
+    if (hasMin && hasMax && (+amount > max || +amount < min)) {
+      return `Between ₿ ${new Intl.NumberFormat().format(min)} and ₿ ${new Intl.NumberFormat().format(max)}`;
+    }
+    if (hasMin && !hasMax && +amount < min) {
+      return `Should not be less than ₿ ${new Intl.NumberFormat().format(min)}`;
+    }
+    if (hasMax && !hasMin && +amount > max) {
+      return `Should not be more than ₿ ${new Intl.NumberFormat().format(max)}`;
+    }
+    return "";
+  }, [amount, max, min, text]);
+
   function toggleInputMode() {
     if (inputMode === "sats") {
       const fiatAmount = getFiatAmount?.(+amount, false) || "";
@@ -255,16 +273,9 @@ export function DualCurrencyInput({
     <View className="flex-1 flex flex-col gap-2">
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex items-center justify-center">
-          {/* TODO: Cover only min and only max cases */}
-          {text &&
-            min &&
-            max &&
-            (Number(amount) > max || Number(amount) < min) && (
-              <Text className="text-destructive">
-                Between ₿ {new Intl.NumberFormat().format(min)} and ₿{" "}
-                {new Intl.NumberFormat().format(max)}
-              </Text>
-            )}
+          {validationMessage !== "" && (
+            <Text className="text-destructive">{validationMessage}</Text>
+          )}
         </View>
         <View className="flex-[2] w-full flex flex-col items-center justify-center gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
@@ -282,6 +293,7 @@ export function DualCurrencyInput({
                 "text-foreground font-semibold2 leading-[1.5]",
                 formattedText.length > 10 ? "text-4xl" : "text-5xl",
                 !text && "text-muted",
+                validationMessage && "text-destructive",
               )}
             >
               {text ? formattedText : inputMode === "sats" ? "0" : "0.00"}
