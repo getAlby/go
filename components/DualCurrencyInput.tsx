@@ -7,6 +7,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useRef, useState } from "react";
 import { Pressable, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import {
   ArrowLeftIcon,
   EditLineIcon,
@@ -17,6 +18,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
+import { MAX_SATS_THRESHOLD } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { cn } from "~/lib/utils";
@@ -188,6 +190,13 @@ export function DualCurrencyInput({
       : formattedInteger;
   }, [text]);
 
+  const showSatsThresholdToast = useCallback(() => {
+    Toast.show({
+      type: "error",
+      text1: `Maximum amount is ${new Intl.NumberFormat().format(MAX_SATS_THRESHOLD)} sats`,
+    });
+  }, []);
+
   const handleKeyPress = (key: string) => {
     if (inputMode === "sats") {
       let next;
@@ -195,6 +204,10 @@ export function DualCurrencyInput({
         next = text.slice(0, -1);
       } else {
         next = `${text}${key}`;
+      }
+      if (Number(next || "0") > MAX_SATS_THRESHOLD) {
+        showSatsThresholdToast();
+        return;
       }
       setText(next);
       setAmount(next);
@@ -209,9 +222,14 @@ export function DualCurrencyInput({
         next = `${text}${key}`;
       }
       next = next.replace(/^0+(?=\d)/, "");
+      const satsAmount = getSatsAmount?.(+next);
+      if (satsAmount !== undefined && satsAmount > MAX_SATS_THRESHOLD) {
+        showSatsThresholdToast();
+        return;
+      }
       setText(next);
       if (getSatsAmount) {
-        setAmount(getSatsAmount(+next)?.toString() || "");
+        setAmount(satsAmount?.toString() || "");
       }
     }
   };
@@ -247,7 +265,8 @@ export function DualCurrencyInput({
           <View className="flex flex-row items-center justify-center gap-2">
             <Text
               className={cn(
-                "text-muted-foreground font-semibold2 text-5xl leading-[1.5]",
+                "text-muted-foreground font-semibold2 leading-[1.5]",
+                formattedText.length > 10 ? "text-4xl" : "text-5xl",
                 !text && "text-muted",
               )}
             >
@@ -255,7 +274,8 @@ export function DualCurrencyInput({
             </Text>
             <Text
               className={cn(
-                "text-foreground font-semibold2 text-5xl leading-[1.5]",
+                "text-foreground font-semibold2 leading-[1.5]",
+                formattedText.length > 10 ? "text-4xl" : "text-5xl",
                 !text && "text-muted",
               )}
             >

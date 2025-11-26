@@ -50,3 +50,5 @@ export const BOLT11_REGEX = /.*?((lnbcrt|lntb|lnbc)([0-9]{1,}[a-z0-9]+){1})/;
 
 export const IS_EXPO_GO =
   Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
+export const MAX_SATS_THRESHOLD = 1_000_000_000;
