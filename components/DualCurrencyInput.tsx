@@ -108,7 +108,6 @@ function DescriptionInput({
         }}
         backdropComponent={renderBackdrop}
         enablePanDownToClose
-        index={0}
       >
         <BottomSheetView className="p-6 pt-2">
           <View className="relative flex flex-row items-center justify-center">
