@@ -133,7 +133,7 @@ export function CreateInvoice() {
             <QRCode value={invoice} showAvatar />
             <View className="flex flex-col items-center justify-center gap-2">
               <Text className="text-foreground text-3xl font-semibold2">
-                ₿ {new Intl.NumberFormat().format(+amount)}
+                {new Intl.NumberFormat().format(+amount)} sats
               </Text>
               {getFiatAmount && (
                 <Text className="text-muted-foreground text-2xl font-medium2">

@@ -87,11 +87,11 @@ export function ConfirmPayment() {
             Send
           </Text>
           <View className="flex flex-row items-center justify-center gap-2">
-            <Text className="text-5xl leading-[1.5] font-bold2 text-muted-foreground">
-              ₿
-            </Text>
             <Text className="text-5xl leading-[1.5] font-bold2 text-foreground">
               {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
+            </Text>
+            <Text className="text-5xl leading-[1.5] font-bold2 text-muted-foreground">
+              sats
             </Text>
           </View>
           {getFiatAmount && (

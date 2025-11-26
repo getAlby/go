@@ -245,13 +245,13 @@ export function DualCurrencyInput({
     const hasMin = min !== undefined;
     const hasMax = max !== undefined;
     if (hasMin && hasMax && (+amount > max || +amount < min)) {
-      return `Between ₿ ${new Intl.NumberFormat().format(min)} and ₿ ${new Intl.NumberFormat().format(max)}`;
+      return `Between ${new Intl.NumberFormat().format(min)} and ${new Intl.NumberFormat().format(max)} sats`;
     }
     if (hasMin && !hasMax && +amount < min) {
-      return `Should not be less than ₿ ${new Intl.NumberFormat().format(min)}`;
+      return `Should not be less than ${new Intl.NumberFormat().format(min)} sats`;
     }
     if (hasMax && !hasMin && +amount > max) {
-      return `Should not be more than ₿ ${new Intl.NumberFormat().format(max)}`;
+      return `Should not be more than ${new Intl.NumberFormat().format(max)} sats`;
     }
     return "";
   }, [amount, max, min, text]);
@@ -278,15 +278,17 @@ export function DualCurrencyInput({
         </View>
         <View className="flex-[2] w-full flex flex-col items-center justify-center gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
-            <Text
-              className={cn(
-                "text-muted-foreground font-semibold2 leading-[1.5]",
-                formattedText.length > 10 ? "text-4xl" : "text-5xl",
-                !text && "text-muted",
-              )}
-            >
-              {inputMode === "sats" ? "₿" : symbol}
-            </Text>
+            {inputMode === "fiat" && (
+              <Text
+                className={cn(
+                  "text-muted-foreground font-semibold2 leading-[1.5]",
+                  formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                  !text && "text-muted",
+                )}
+              >
+                {symbol}
+              </Text>
+            )}
             <Text
               className={cn(
                 "text-foreground font-semibold2 leading-[1.5]",
@@ -297,13 +299,24 @@ export function DualCurrencyInput({
             >
               {text ? formattedText : inputMode === "sats" ? "0" : "0.00"}
             </Text>
+            {inputMode === "sats" && (
+              <Text
+                className={cn(
+                  "text-muted-foreground font-semibold2 leading-[1.5]",
+                  formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                  !text && "text-muted",
+                )}
+              >
+                sats
+              </Text>
+            )}
           </View>
           {fiatCurrency && (
             <Pressable onPress={toggleInputMode}>
               <View className="flex flex-row gap-2 items-center justify-center">
                 <Text className="text-muted-foreground text-3xl font-semibold2">
                   {inputMode === "fiat"
-                    ? "₿ " + new Intl.NumberFormat().format(+amount)
+                    ? new Intl.NumberFormat().format(+amount) + " sats"
                     : getFiatAmount?.(+amount) || ""}
                 </Text>
                 <SwapIcon

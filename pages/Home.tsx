@@ -138,11 +138,6 @@ export function Home() {
                 !refreshingBalance &&
                 (balanceDisplayMode === "fiat" ? getFiatAmount : true) ? (
                   <>
-                    {balanceDisplayMode === "sats" && (
-                      <Text className="text-muted-foreground text-5xl leading-[1.5] font-bold2">
-                        ₿
-                      </Text>
-                    )}
                     <Text className="text-foreground text-5xl leading-[1.5] font-bold2">
                       {balanceDisplayMode === "sats" &&
                         new Intl.NumberFormat().format(
@@ -152,6 +147,11 @@ export function Home() {
                         getFiatAmount?.(Math.floor(balance.balance / 1000))}
                       {balanceDisplayMode === "hidden" && "****"}
                     </Text>
+                    {balanceDisplayMode === "sats" && (
+                      <Text className="text-muted-foreground text-5xl leading-[1.5] font-bold2">
+                        sats
+                      </Text>
+                    )}
                   </>
                 ) : (
                   <Skeleton className="w-48 text-5xl" />
@@ -167,10 +167,9 @@ export function Home() {
                       {balanceDisplayMode === "sats" &&
                         getFiatAmount?.(Math.floor(balance.balance / 1000))}
                       {balanceDisplayMode === "fiat" &&
-                        "₿ " +
-                          new Intl.NumberFormat().format(
-                            Math.floor(balance.balance / 1000),
-                          )}
+                        new Intl.NumberFormat().format(
+                          Math.floor(balance.balance / 1000),
+                        ) + " sats"}
                     </Text>
                   ) : (
                     <Skeleton className="w-32 text-3xl" />
