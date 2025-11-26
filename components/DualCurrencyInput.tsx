@@ -6,7 +6,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useRef, useState } from "react";
-import { Pressable, TouchableOpacity, View } from "react-native";
+import { Keyboard, Pressable, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import {
   ArrowLeftIcon,
@@ -58,6 +58,7 @@ function DescriptionInput({
         appearsOnIndex={0}
         opacity={0.1}
         pressBehavior="close"
+        onPress={Keyboard.dismiss}
       />
     ),
     [isDarkColorScheme],
@@ -65,6 +66,7 @@ function DescriptionInput({
 
   const save = () => {
     setDescription?.(input);
+    Keyboard.dismiss();
     bottomSheetModalRef.current?.dismiss();
   };
 
@@ -111,7 +113,10 @@ function DescriptionInput({
         <BottomSheetView className="p-6 pt-2">
           <View className="relative flex flex-row items-center justify-center">
             <TouchableOpacity
-              onPress={() => bottomSheetModalRef.current?.dismiss()}
+              onPress={() => {
+                Keyboard.dismiss();
+                bottomSheetModalRef.current?.dismiss();
+              }}
               className="absolute -left-4 p-4"
             >
               <XIcon className="text-muted-foreground" width={24} height={24} />
