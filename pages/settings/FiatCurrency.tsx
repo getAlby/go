@@ -5,7 +5,6 @@ import Toast from "react-native-toast-message";
 import { CountryFlag } from "~/components/Flag";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
@@ -20,10 +19,6 @@ function CurrencyList() {
   );
   const [loading, setLoading] = useState(true);
   const [currencies, setCurrencies] = useState<[string, string, number][]>([]);
-  const [filteredCurrencies, setFilteredCurrencies] = useState<
-    [string, string, number][]
-  >([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function fetchCurrencies() {
@@ -39,7 +34,7 @@ function CurrencyList() {
             details.name,
             details.priority,
           ])
-          .sort((a, b) => a[1].localeCompare(b[1]))
+          .sort((a, b) => a[0].localeCompare(b[0]))
           .sort((a, b) => a[2] - b[2]) as [string, string, number][];
         setCurrencies(mappedCurrencies);
       } catch (error) {
@@ -50,15 +45,6 @@ function CurrencyList() {
     }
     fetchCurrencies();
   }, []);
-
-  useEffect(() => {
-    const filtered = currencies.filter(
-      ([code, name]) =>
-        name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        code.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-    setFilteredCurrencies(filtered);
-  }, [searchQuery, currencies]);
 
   function select(iso: string) {
     setFiatCurrency(iso);
@@ -74,13 +60,8 @@ function CurrencyList() {
 
   return (
     <>
-      <Input
-        placeholder="Search Fiat Currencies"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
       <FlatList
-        data={filteredCurrencies}
+        data={currencies}
         keyExtractor={([code]) => code}
         className="flex-1"
         renderItem={({
@@ -90,7 +71,7 @@ function CurrencyList() {
           item: [string, string, number];
           index: number;
         }) => {
-          const nextPriority = filteredCurrencies[index + 1]?.[2];
+          const nextPriority = currencies[index + 1]?.[2];
           const shouldRenderDivider =
             nextPriority !== undefined &&
             nextPriority !== priority + 1 &&
