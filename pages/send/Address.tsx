@@ -30,12 +30,21 @@ import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 interface ContactInputProps {
+  lnAddress: string;
   contactName: string;
   setContactName: (contactName: string) => void;
 }
 
-function ContactInput({ contactName, setContactName }: ContactInputProps) {
-  const [input, setInput] = useState("");
+function ContactInput({
+  lnAddress,
+  contactName,
+  setContactName,
+}: ContactInputProps) {
+  const match = lnAddress.trim().match(LN_ADDRESS_REGEX);
+  const [input, setInput] = useState(
+    contactName ||
+      (match?.[1] ? match[1].charAt(0).toUpperCase() + match[1].slice(1) : ""),
+  );
   const { isDarkColorScheme } = useColorScheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -211,6 +220,7 @@ export function Address() {
                   <ContactInput
                     contactName={contactName}
                     setContactName={setContactName}
+                    lnAddress={keyboardText}
                   />
                 </View>
               )}
