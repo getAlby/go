@@ -20,6 +20,7 @@ function Input({
       )}
       selectionColor={"hsl(47 100% 50%)"} // translates to primary
       placeholderClassName={cn("text-muted-foreground", placeholderClassName)}
+      multiline
       {...props}
     />
   );
