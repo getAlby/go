@@ -132,6 +132,7 @@ function DescriptionInput({
             onChangeText={setInput}
             onSubmitEditing={save}
             autoFocus
+            multiline
           />
           <Button size="lg" onPress={save}>
             <Text>Save</Text>
