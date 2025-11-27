@@ -125,13 +125,13 @@ function ContactInput({
           </View>
           <BottomSheetTextInput
             placeholder="Satoshi Nakamoto"
-            className="text-foreground placeholder:text-muted-foreground/30 border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
+            className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
+            placeholderClassName="text-muted-foreground"
             selectionColor={"hsl(47 100% 50%)"} // translates to primary
             value={input}
             onChangeText={setInput}
             onSubmitEditing={save}
             autoFocus
-            multiline
           />
           <Button size="lg" onPress={save} disabled={!input}>
             <Text>Save</Text>
