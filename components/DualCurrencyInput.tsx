@@ -23,7 +23,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { cn } from "~/lib/utils";
 
-interface KeypadInputProps {
+interface DescriptionInputProps {
   description: string;
   setDescription?: (description: string) => void;
   readOnly?: boolean;
@@ -44,7 +44,7 @@ function DescriptionInput({
   description,
   setDescription,
   readOnly,
-}: KeypadInputProps) {
+}: DescriptionInputProps) {
   const [input, setInput] = useState(description);
   const { isDarkColorScheme } = useColorScheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -56,7 +56,7 @@ function DescriptionInput({
         style={{ backgroundColor: isDarkColorScheme ? "#FFFFFF" : "#09090B" }} // translates to background
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={0.1}
+        opacity={isDarkColorScheme ? 0.3 : 0.7}
         pressBehavior="close"
         onPress={Keyboard.dismiss}
       />
@@ -83,7 +83,7 @@ function DescriptionInput({
       ) : (
         <TouchableOpacity
           onPress={() => bottomSheetModalRef.current?.present()}
-          className="flex flex-row items-center justify-center gap-2 px-12"
+          className="flex flex-row items-center justify-center gap-2 px-12 py-4"
         >
           {!description && <NotesIcon className="text-muted-foreground" />}
           <Text

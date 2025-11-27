@@ -1,7 +1,7 @@
 import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import {
-  AddressIcon,
+  AddressBookIcon,
   ChevronRightIcon,
   FingerprintIcon,
   NotificationIcon,
@@ -46,6 +46,24 @@ export function Settings() {
             />
             <Text className="font-medium2 text-xl text-foreground">
               Wallets
+            </Text>
+            <ChevronRightIcon
+              className="ml-auto text-muted-foreground"
+              width={20}
+              height={20}
+            />
+          </TouchableOpacity>
+        </Link>
+
+        <Link href="/settings/address-book" asChild>
+          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
+            <AddressBookIcon
+              className="text-muted-foreground"
+              width={28}
+              height={28}
+            />
+            <Text className="text-foreground font-medium2 text-xl">
+              Address Book
             </Text>
             <ChevronRightIcon
               className="ml-auto text-muted-foreground"
@@ -121,24 +139,6 @@ export function Settings() {
             ({colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)})
           </Text>
         </TouchableOpacity>
-
-        <Link href="/settings/address-book" asChild>
-          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
-            <AddressIcon
-              className="text-muted-foreground"
-              width={28}
-              height={28}
-            />
-            <Text className="text-foreground font-medium2 text-xl">
-              Address Book
-            </Text>
-            <ChevronRightIcon
-              className="ml-auto text-muted-foreground"
-              width={20}
-              height={20}
-            />
-          </TouchableOpacity>
-        </Link>
 
         {developerMode && (
           <>

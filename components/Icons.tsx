@@ -1,5 +1,7 @@
 import {
+  PopiconsAddressBookSolid as AddressBookIcon,
   PopiconsAtSymbolSolid as AddressIcon,
+  PopiconsUserPlusLine as AddUserIcon,
   PopiconsCircleExclamationLine as AlertCircleIcon,
   PopiconsArrowLeftSolid as ArrowLeftIcon,
   PopiconsBitcoinSolid as BitcoinIcon,
@@ -27,6 +29,7 @@ import {
   PopiconsNotificationSquareSolid as NotificationIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
+  PopiconsClipboardTextLine as PasteLineIcon,
   PopiconsPinSolid as PinIcon,
   PopiconsQrCodeMinimalSolid as QRIcon,
   PopiconsReloadLine as RefreshIcon,
@@ -39,6 +42,7 @@ import {
   PopiconsLoopSolid as SwapIcon,
   PopiconsPaintSolid as ThemeIcon,
   PopiconsBinSolid as TrashIcon,
+  PopiconsBinLine as TrashLineIcon,
   PopiconsTriangleExclamationLine as TriangleAlertIcon,
   PopiconsWalletHorizontalOpenSolid as WalletIcon,
   PopiconsCircleXLine as XCircleIcon,
@@ -60,7 +64,9 @@ function interopIcon(icon: React.FunctionComponent<SvgProps>) {
   });
 }
 
+interopIcon(AddressBookIcon);
 interopIcon(AddressIcon);
+interopIcon(AddUserIcon);
 interopIcon(AlertCircleIcon);
 interopIcon(ArrowLeftIcon);
 interopIcon(BitcoinIcon);
@@ -88,6 +94,7 @@ interopIcon(NotesIcon);
 interopIcon(NotificationIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
+interopIcon(PasteLineIcon);
 interopIcon(PinIcon);
 interopIcon(QRIcon);
 interopIcon(RefreshIcon);
@@ -100,6 +107,7 @@ interopIcon(SignOutIcon);
 interopIcon(SwapIcon);
 interopIcon(ThemeIcon);
 interopIcon(TrashIcon);
+interopIcon(TrashLineIcon);
 interopIcon(TriangleAlertIcon);
 interopIcon(WalletIcon);
 interopIcon(XCircleIcon);
@@ -107,7 +115,9 @@ interopIcon(XIcon);
 interopIcon(ZapIcon);
 
 export {
+  AddressBookIcon,
   AddressIcon,
+  AddUserIcon,
   AlertCircleIcon,
   ArrowLeftIcon,
   BitcoinIcon,
@@ -135,6 +145,7 @@ export {
   NotificationIcon,
   OnboardingIcon,
   PasteIcon,
+  PasteLineIcon,
   PinIcon,
   QRIcon,
   RefreshIcon,
@@ -147,6 +158,7 @@ export {
   SwapIcon,
   ThemeIcon,
   TrashIcon,
+  TrashLineIcon,
   TriangleAlertIcon,
   WalletIcon,
   XCircleIcon,

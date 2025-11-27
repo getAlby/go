@@ -69,7 +69,7 @@ export type Wallet = {
 
 type AddressBookEntry = {
   name?: string;
-  lightningAddress?: string;
+  lightningAddress: string;
 };
 
 const getWalletKey = (walletId: number) => {
