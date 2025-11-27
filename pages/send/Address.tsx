@@ -12,7 +12,7 @@ import { Keyboard, ScrollView, TouchableOpacity, View } from "react-native";
 import Contact from "~/components/Contact";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
-  AddUserLineIcon,
+  AddUserIcon,
   CheckIcon,
   PasteLineIcon,
   XIcon,
@@ -85,7 +85,7 @@ function ContactInput({
             <CheckIcon className="text-white" width={12} height={12} />
           </View>
         ) : (
-          <AddUserLineIcon className="text-muted-foreground" />
+          <AddUserIcon className="text-muted-foreground" />
         )}
         <Text
           numberOfLines={2}
