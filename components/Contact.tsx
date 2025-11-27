@@ -1,9 +1,9 @@
 import { darken, lighten } from "colorizr";
-import { router } from "expo-router";
 import pastellify from "pastellify";
 import { TouchableOpacity, View } from "react-native";
 import { TrashLineIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
+import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 
 export default function Contact({
   lnAddress,
@@ -17,13 +17,8 @@ export default function Contact({
   return (
     <TouchableOpacity
       className="flex flex-row items-center gap-4 px-6 py-4"
-      onPress={() => {
-        router.navigate({
-          pathname: "/send",
-          params: {
-            url: lnAddress,
-          },
-        });
+      onPress={async () => {
+        await initiatePaymentFlow(lnAddress);
       }}
     >
       <View

@@ -17,7 +17,7 @@ function Screen({ title, animation, right, left }: ScreenProps) {
     <Stack.Screen
       options={{
         title,
-        animation,
+        animation: animation ? animation : "slide_from_right",
         headerLeft: left
           ? left
           : ({ canGoBack }) => {
