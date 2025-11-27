@@ -44,7 +44,7 @@ export function WalletSwitcher({
         style={{ backgroundColor: isDarkColorScheme ? "#FFFFFF" : "#09090B" }} // translates to background
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={0.1}
+        opacity={isDarkColorScheme ? 0.3 : 0.7}
         pressBehavior="close"
       />
     ),

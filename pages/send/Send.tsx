@@ -5,7 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Alert, View } from "react-native";
-import { ImageIcon, KeyboardIcon, PasteIcon } from "~/components/Icons";
+import { AddressIcon, ImageIcon, PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
@@ -136,14 +136,22 @@ export function Send() {
           />
           <View className="flex flex-row items-stretch justify-center gap-4 p-6">
             <Button
+              onPress={pickImage}
+              variant="secondary"
+              className="flex flex-col gap-2 flex-1"
+            >
+              <ImageIcon className="text-muted-foreground" />
+              <Text numberOfLines={1}>Import</Text>
+            </Button>
+            <Button
               onPress={() => {
-                router.push("/send/manual");
+                router.push("/send/address");
               }}
               variant="secondary"
               className="flex flex-col gap-2 flex-1"
             >
-              <KeyboardIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Manual</Text>
+              <AddressIcon className="text-muted-foreground" />
+              <Text numberOfLines={1}>Address</Text>
             </Button>
             <Button
               onPress={paste}
@@ -152,14 +160,6 @@ export function Send() {
             >
               <PasteIcon className="text-muted-foreground" />
               <Text numberOfLines={1}>Paste</Text>
-            </Button>
-            <Button
-              onPress={pickImage}
-              variant="secondary"
-              className="flex flex-col gap-2 flex-1"
-            >
-              <ImageIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Import</Text>
             </Button>
           </View>
         </>

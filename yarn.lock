@@ -3897,6 +3897,11 @@ colorette@^2.0.20:
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.20.tgz#9eb793e6833067f7235902fcd3b09917a000a95a"
   integrity sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==
 
+colorizr@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/colorizr/-/colorizr-3.0.8.tgz#e4105656ef1d6dbe2f450e6ed075043cf9643769"
+  integrity sha512-5B5bNiGU/iEbdL3JsiIYRf57T0CuJjHSgVfe3SP3W3ePe2waJuEYl+llzwm1ZhxIcVyA+gThRlBu3yXBV3tAQQ==
+
 combined-stream@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
@@ -8254,6 +8259,11 @@ password-prompt@^1.0.4:
   dependencies:
     ansi-escapes "^4.3.2"
     cross-spawn "^7.0.3"
+
+pastellify@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/pastellify/-/pastellify-0.1.4.tgz#5d56f83e32c296c7c6f544c8cd0987e40a658738"
+  integrity sha512-X1HXgegLzIBQZnV95HuQARL+acYvKht7V/eaAvfTC2cCGX4eaLCm9w6sZrjnIsvZfiETbAtc85YOe9ZB203dNA==
 
 path-exists@^4.0.0:
   version "4.0.0"
