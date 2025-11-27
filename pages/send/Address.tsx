@@ -6,12 +6,10 @@ import {
   BottomSheetTextInput,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { darken, lighten } from "colorizr";
 import * as Clipboard from "expo-clipboard";
-import { router } from "expo-router";
-import pastellify from "pastellify";
 import React, { useCallback, useRef, useState } from "react";
 import { Keyboard, ScrollView, TouchableOpacity, View } from "react-native";
+import Contact from "~/components/Contact";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
   AddUserLineIcon,
@@ -193,8 +191,8 @@ export function Address() {
       <Screen title="Send to Address" />
       <DismissableKeyboardView>
         <View className="flex-1 flex flex-col">
-          <View className="flex-1 flex flex-col gap-6 px-6">
-            <View className="flex items-center justify-center gap-6 mt-6 px-6 relative">
+          <View className="flex-1 flex flex-col gap-6">
+            <View className="flex items-center justify-center gap-6 mt-6 px-12 relative">
               <Input
                 className="text-center border-transparent bg-transparent native:text-3xl font-semibold2 w-full"
                 placeholder="hello@getalby.com"
@@ -207,7 +205,7 @@ export function Address() {
               />
               <TouchableOpacity
                 onPress={paste}
-                className="absolute -right-4 p-4"
+                className="absolute right-4 p-4"
               >
                 <PasteLineIcon className="text-muted-foreground" />
               </TouchableOpacity>
@@ -230,58 +228,10 @@ export function Address() {
             {filteredAddressBookEntries.length > 0 ? (
               <ScrollView className="flex-1 flex flex-col">
                 {filteredAddressBookEntries.map((addressBookEntry, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      router.dismissAll();
-                      router.navigate({
-                        pathname: "/send",
-                        params: {
-                          url: addressBookEntry.lightningAddress,
-                        },
-                      });
-                    }}
-                    className="py-3"
-                  >
-                    <View className="flex flex-row items-center gap-4">
-                      <View
-                        className="h-12 w-12 flex items-center justify-center rounded-full"
-                        style={{
-                          backgroundColor: lighten(
-                            pastellify(addressBookEntry.lightningAddress, {
-                              toCSS: true,
-                            }),
-                            10,
-                          ),
-                        }}
-                      >
-                        <Text
-                          className="text-2xl font-semibold2"
-                          style={{
-                            color: darken(
-                              pastellify(addressBookEntry.lightningAddress, {
-                                toCSS: true,
-                              }),
-                              30,
-                            ),
-                          }}
-                        >
-                          {addressBookEntry.name?.[0]?.toUpperCase() ||
-                            addressBookEntry.lightningAddress?.[0]?.toUpperCase() ||
-                            "SN"}
-                        </Text>
-                      </View>
-                      <View className="flex flex-1 flex-col">
-                        <Text className="text-xl font-semibold2">
-                          {addressBookEntry.name ||
-                            addressBookEntry.lightningAddress}
-                        </Text>
-                        <Text className="text-muted-foreground">
-                          {addressBookEntry.lightningAddress}
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
+                  <Contact
+                    name={addressBookEntry.name}
+                    lnAddress={addressBookEntry.lightningAddress}
+                  />
                 ))}
               </ScrollView>
             ) : (
