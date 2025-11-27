@@ -6,7 +6,7 @@ import { convertMerchantQRToLightningAddress } from "~/lib/merchants";
 
 export async function initiatePaymentFlow(
   text: string,
-  amount: string,
+  amount = "",
 ): Promise<boolean> {
   // Some apps use uppercased LIGHTNING: prefixes
   text = text.toLowerCase();

@@ -1,9 +1,9 @@
-import { router } from "expo-router";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
+import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
 import { Button } from "./ui/button";
 
@@ -54,14 +54,11 @@ function AlbyBanner() {
             variant="secondary"
             size="sm"
             className="flex-1"
-            onPress={() => {
-              router.navigate({
-                pathname: "/send",
-                params: {
-                  url: ALBY_LIGHTNING_ADDRESS,
-                  amount: value,
-                },
-              });
+            onPress={async () => {
+              await initiatePaymentFlow(
+                ALBY_LIGHTNING_ADDRESS,
+                value.toString(),
+              );
             }}
           >
             <Text>
