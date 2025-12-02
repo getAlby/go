@@ -50,9 +50,16 @@
     }
 
     BOOL ttsEnabled        = NO;
+    BOOL isBip177          = NO;
     NSDictionary *settingsDict = [sharedDefaults objectForKey:@"settings"];
-    if (settingsDict) {
+    if ([settingsDict isKindOfClass:[NSDictionary class]]) {
+      NSDictionary *settings = [settingsDict objectForKey:@"settings"];
+      if ([settings isKindOfClass:[NSDictionary class]]) {
+        settingsDict = settings;
+      }
       ttsEnabled = [settingsDict[@"ttsEnabled"] boolValue];
+      NSString *bitcoinDisplayMode = settingsDict[@"bitcoinDisplayFormat"];
+      isBip177 = [bitcoinDisplayMode isEqualToString:@"bip177"];
     }
 
     NSDictionary *walletInfo = walletsDict[appPubkey];
@@ -136,12 +143,13 @@
     self.bestAttemptContent.userInfo = newUserInfo;
     self.bestAttemptContent.title    = walletName;
 
+    NSString *formattedAmount = isBip177 ? [NSString stringWithFormat:@"₿ %.0f", amountInSats] : [NSString stringWithFormat:@"%.0f sats", amountInSats];
     if ([notificationType isEqualToString:@"payment_sent"]) {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"You sent %.0f sats ⚡️", amountInSats];
+        self.bestAttemptContent.body = [NSString stringWithFormat:@"You sent %@ ⚡️", formattedAmount];
     } else if ([notificationType isEqualToString:@"payment_received"]) {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"You received %.0f sats ⚡️", amountInSats];
+        self.bestAttemptContent.body = [NSString stringWithFormat:@"You received %@ ⚡️", formattedAmount];
     } else if ([notificationType isEqualToString:@"hold_invoice_accepted"]) {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"Payment held: %.0f sats ⏳", amountInSats];
+        self.bestAttemptContent.body = [NSString stringWithFormat:@"Payment held: %@ ⏳", formattedAmount];
     }
 
     if ([notificationType isEqualToString:@"payment_received"] && ttsEnabled) {

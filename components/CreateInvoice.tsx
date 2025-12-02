@@ -13,6 +13,7 @@ import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { formatBitcoinAmount } from "~/lib/utils";
 
 export function CreateInvoice() {
   const getFiatAmount = useGetFiatAmount();
@@ -20,6 +21,9 @@ export function CreateInvoice() {
   const [invoice, setInvoice] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [comment, setComment] = React.useState("");
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
 
   function generateInvoice(amount?: number) {
     if (!amount) {
@@ -133,7 +137,7 @@ export function CreateInvoice() {
             <QRCode value={invoice} showAvatar />
             <View className="flex flex-col items-center justify-center gap-2">
               <Text className="text-foreground text-3xl font-semibold2">
-                {new Intl.NumberFormat().format(+amount)} sats
+                {formatBitcoinAmount(+amount, bitcoinDisplayFormat)}
               </Text>
               {getFiatAmount && (
                 <Text className="text-muted-foreground text-2xl font-medium2">

@@ -68,6 +68,19 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         val version: String = "0.0"
     )
 
+    private fun getBitcoinDisplayModeFromPreferences(context: Context): String {
+      val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
+      val settingsString = sharedPreferences.getString("settings", null) ?: return ""
+      try {
+        val settingsJson = JSONObject(settingsString)
+        val settingsObject = settingsJson.optJSONObject("settings") ?: settingsJson
+        return settingsObject.optString("bitcoinDisplayFormat", "")
+      } catch (e: Exception) {
+          e.printStackTrace()
+          return ""
+      }
+    }
+
     private fun getTtsNotificationsEnabledFromPreferences(context: Context): Boolean {
       val sharedPreferences = context.getSharedPreferences("${context.packageName}.settings", Context.MODE_PRIVATE)
       val settingsString = sharedPreferences.getString("settings", null) ?: return false
@@ -144,13 +157,15 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         val amount = notification.optInt("amount", 0) / 1000
         val transaction = notification.toString()
 
+        val bitcoinDisplayMode = getBitcoinDisplayModeFromPreferences(this)
+        val formattedAmount = if (bitcoinDisplayMode == "bip177") "₿ $amount" else "$amount sats"
         var notificationText = ""
         if (notificationType == "payment_sent") {
-            notificationText = "You sent $amount sats ⚡️"
+            notificationText = "You sent $formattedAmount ⚡️"
         } else if (notificationType == "payment_received") {
-            notificationText = "You received $amount sats ⚡️"
+            notificationText = "You received $formattedAmount ⚡️"
         } else if (notificationType == "hold_invoice_accepted") {
-            notificationText = "Payment held: $amount sats ⏳"
+            notificationText = "Payment held: $formattedAmount ⏳"
         }
 
         val intent = Intent(Intent.ACTION_VIEW).apply {

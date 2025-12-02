@@ -7,6 +7,7 @@ import { Buffer } from "buffer";
 import { clsx, type ClassValue } from "clsx";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { twMerge } from "tailwind-merge";
+import { BitcoinDisplayFormat } from "~/lib/state/appStore";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -35,5 +36,23 @@ export function safeNpubEncode(hex: string): string | undefined {
     return nip19.npubEncode(hex);
   } catch {
     return undefined;
+  }
+}
+
+export function formatBitcoinAmount(
+  amount: number,
+  displayFormat: BitcoinDisplayFormat = "bip177",
+  showSymbol: boolean = true,
+): string {
+  const formattedNumber = new Intl.NumberFormat().format(+amount);
+
+  if (!showSymbol) {
+    return formattedNumber;
+  }
+
+  if (displayFormat === "bip177") {
+    return `₿ ${formattedNumber}`;
+  } else {
+    return `${formattedNumber} ${amount === 1 ? "sat" : "sats"}`;
   }
 }

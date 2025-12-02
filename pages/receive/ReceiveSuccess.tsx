@@ -7,10 +7,13 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { useAppStore } from "~/lib/state/appStore";
 
 export function ReceiveSuccess() {
   const { invoice } = useLocalSearchParams() as { invoice: string };
-
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
   const getFiatAmount = useGetFiatAmount();
   const decodedInvoice = new Invoice({
     pr: invoice,
@@ -28,14 +31,17 @@ export function ReceiveSuccess() {
             Received
           </Text>
           <View className="flex flex-col items-center justify-center gap-2">
-            <View className="flex flex-row items-end mt-5">
-              <Text className="text-5xl gap-2 font-semibold2 text-receive">
-                + {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}
+            <View className="flex flex-row items-end">
+              <Text className="text-5xl leading-[1.5] gap-2 font-semibold2 text-receive">
+                +{bitcoinDisplayFormat === "bip177" && " ₿"}{" "}
+                {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}
               </Text>
-              <Text className="text-3xl font-semibold2 text-muted-foreground mb-1">
-                {" "}
-                sats
-              </Text>
+              {bitcoinDisplayFormat === "sats" && (
+                <Text className="text-3xl font-semibold2 text-muted-foreground mb-1">
+                  {" "}
+                  sats
+                </Text>
+              )}
             </View>
             {getFiatAmount && (
               <Text className="text-3xl font-semibold2 text-muted-foreground">

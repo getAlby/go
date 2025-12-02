@@ -22,6 +22,7 @@ import { WalletSwitcher } from "~/components/WalletSwitcher";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { formatBitcoinAmount } from "~/lib/utils";
 
 export function ConnectWallet() {
   let { options: optionsJSON, flow } = useLocalSearchParams<{
@@ -52,7 +53,6 @@ export function ConnectWallet() {
     "sign_message",
   ];
   const maxAmount = options.maxAmount || 100_000_000;
-  const satsAmount = maxAmount / 1000;
 
   const [isCreatingConnection, setCreatingConnection] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
@@ -201,7 +201,7 @@ export function ConnectWallet() {
             notificationTypes={notificationTypes}
             isolated={isolated}
             budgetRenewal={budgetRenewal}
-            satsAmount={satsAmount}
+            maxAmount={maxAmount}
             expiresAt={expiresAt}
             returnTo={returnTo}
             metadata={metadata}
@@ -237,16 +237,19 @@ function ConnectView({
   notificationTypes,
   isolated,
   budgetRenewal,
-  satsAmount,
+  maxAmount,
   expiresAt,
   returnTo,
   metadata,
-}: Omit<NWAOptions, "appPubkey" | "relayUrls"> & { satsAmount: number }) {
+}: Omit<NWAOptions, "appPubkey" | "relayUrls"> & { maxAmount: number }) {
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
   const closeModal = () => setShowDetails(false);
   const hasPayPermissions = requestMethods.some((method) =>
     method.includes("pay_"),
+  );
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
   );
   return (
     <>
@@ -345,11 +348,11 @@ function ConnectView({
               </Text>
               <View>
                 <Text className="text-right text-lg text-foreground font-medium2">
-                  {new Intl.NumberFormat().format(satsAmount) + " sats"}
+                  {formatBitcoinAmount(maxAmount, bitcoinDisplayFormat)}
                 </Text>
                 {getFiatAmount && (
                   <Text className="text-right text-sm text-muted-foreground">
-                    {getFiatAmount(satsAmount)}
+                    {getFiatAmount(Math.floor(maxAmount / 1000))}
                   </Text>
                 )}
               </View>

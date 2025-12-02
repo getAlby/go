@@ -17,11 +17,13 @@ interface AppState {
   readonly isOnboarded: boolean;
   readonly expoPushToken: string;
   readonly theme?: Theme;
+  readonly bitcoinDisplayFormat: BitcoinDisplayFormat;
   readonly balanceDisplayMode: BalanceDisplayMode;
   readonly lastAppStateChangeTime: number;
   setUnlocked: (unlocked: boolean) => void;
   setLastAppStateChangeTime: (lastAppStateChangeTime: number) => void;
   setTheme: (theme: Theme) => void;
+  setBitcoinDisplayFormat: (bitcoinDisplayFormat: BitcoinDisplayFormat) => void;
   setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setExpoPushToken: (expoPushToken: string) => void;
@@ -51,11 +53,13 @@ const hasOnboardedKey = "hasOnboarded";
 const expoPushTokenKey = "expoPushToken";
 const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
+const bitcoinDisplayFormatKey = "bitcoinDisplayFormat";
 const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
 const isNotificationsEnabledKey = "isNotificationsEnabled";
 const ttsNotificationsEnabledKey = "ttsNotificationsEnabled";
 
+export type BitcoinDisplayFormat = "sats" | "bip177";
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
 export type Theme = "light" | "dark";
 
@@ -186,6 +190,9 @@ export const useAppStore = create<AppState>()((set, get) => {
     secureStorage.getItem(isSecurityEnabledKey) === "true";
 
   const theme = (secureStorage.getItem(themeKey) as Theme) || null;
+  const bitcoinDisplayFormat =
+    (secureStorage.getItem(bitcoinDisplayFormatKey) as BitcoinDisplayFormat) ||
+    "bip177";
   const balanceDisplayMode =
     (secureStorage.getItem(balanceDisplayModeKey) as BalanceDisplayMode) ||
     "sats";
@@ -211,6 +218,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     ttsNotificationsEnabled:
       secureStorage.getItem(ttsNotificationsEnabledKey) === "true",
     theme,
+    bitcoinDisplayFormat,
     balanceDisplayMode,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
@@ -230,6 +238,10 @@ export const useAppStore = create<AppState>()((set, get) => {
     setBalanceDisplayMode: (balanceDisplayMode) => {
       secureStorage.setItem(balanceDisplayModeKey, balanceDisplayMode);
       set({ balanceDisplayMode });
+    },
+    setBitcoinDisplayFormat: (bitcoinDisplayFormat) => {
+      secureStorage.setItem(bitcoinDisplayFormatKey, bitcoinDisplayFormat);
+      set({ bitcoinDisplayFormat });
     },
     setOnboarded: (isOnboarded) => {
       if (isOnboarded) {

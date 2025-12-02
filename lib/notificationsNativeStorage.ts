@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import { IS_EXPO_GO, SUITE_NAME } from "~/lib/constants";
+import { BitcoinDisplayFormat } from "~/lib/state/appStore";
 
 // this is done because accessing values stored from expo-secure-store
 // is quite difficult and we do not wish to complicate the notification
@@ -57,16 +58,33 @@ export async function storeWalletInfo(
   }
 }
 
-export async function setNotificationSettings(settings: {
-  ttsEnabled: boolean;
-}) {
+export async function setNotificationSettings(
+  settings: Partial<{
+    ttsEnabled: boolean;
+    bitcoinDisplayFormat: BitcoinDisplayFormat;
+  }>,
+) {
   if (Platform.OS === "ios") {
     const UserDefaults = await getUserDefaultsModule();
     const groupDefaults = new UserDefaults(SUITE_NAME);
-    await groupDefaults.set("settings", settings);
+    const oldSettings = (await groupDefaults.get("settings")) || {};
+    const updatedSettings = {
+      ...oldSettings,
+      settings,
+    };
+    await groupDefaults.set("settings", updatedSettings);
   } else {
     const SharedPreferences = await getSharedPreferencesModule();
-    await SharedPreferences.setItemAsync("settings", JSON.stringify(settings));
+    const settingsString = await SharedPreferences.getItemAsync("settings");
+    const oldSettings = settingsString ? JSON.parse(settingsString) : {};
+    const updatedSettings = {
+      ...oldSettings,
+      settings,
+    };
+    await SharedPreferences.setItemAsync(
+      "settings",
+      JSON.stringify(updatedSettings),
+    );
   }
 }
 

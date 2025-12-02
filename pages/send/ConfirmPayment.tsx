@@ -31,6 +31,9 @@ export function ConfirmPayment() {
   const [isLoading, setLoading] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
   const decodedInvoice = new Invoice({
     pr: invoice,
   });
@@ -86,13 +89,16 @@ export function ConfirmPayment() {
           <Text className="text-center text-muted-foreground font-semibold2">
             Send
           </Text>
-          <View className="flex flex-row items-center justify-center gap-2">
+          <View className="flex flex-row items-end justify-center gap-2">
             <Text className="text-5xl leading-[1.5] font-bold2 text-foreground">
+              {bitcoinDisplayFormat === "bip177" && "₿ "}
               {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
             </Text>
-            <Text className="text-5xl leading-[1.5] font-bold2 text-muted-foreground">
-              sats
-            </Text>
+            {bitcoinDisplayFormat === "sats" && (
+              <Text className="text-3xl leading-[1.5] font-bold2 text-muted-foreground mb-2">
+                sats
+              </Text>
+            )}
           </View>
           {getFiatAmount && (
             <Text className="text-center text-muted-foreground text-3xl font-semibold2">
