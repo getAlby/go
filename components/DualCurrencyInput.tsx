@@ -299,7 +299,17 @@ export function DualCurrencyInput({
                 validationMessage && "text-destructive",
               )}
             >
-              {text ? formattedText : inputMode === "sats" ? "0" : "0.00"}
+              {text
+                ? formattedText
+                : inputMode === "sats"
+                  ? min
+                    ? max
+                      ? `${min}-${max}`
+                      : `Min ${min}`
+                    : max
+                      ? `Max ${max}`
+                      : "0"
+                  : "0.00"}
             </Text>
             {inputMode === "sats" && (
               <Text
