@@ -6,16 +6,19 @@ import { Text } from "~/components/ui/text";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 
 export default function Contact({
+  key,
   lnAddress,
   name,
   onDelete,
 }: {
+  key: React.Key;
   lnAddress: string;
   name?: string;
   onDelete?: () => void;
 }) {
   return (
     <TouchableOpacity
+      key={key}
       className="flex flex-row items-center gap-4 px-6 py-4"
       onPress={async () => {
         await initiatePaymentFlow(lnAddress);
