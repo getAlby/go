@@ -229,6 +229,7 @@ export function Address() {
               <ScrollView className="flex-1 flex flex-col">
                 {filteredAddressBookEntries.map((addressBookEntry, index) => (
                   <Contact
+                    key={index}
                     name={addressBookEntry.name}
                     lnAddress={addressBookEntry.lightningAddress}
                   />

@@ -14,6 +14,7 @@ export function AddressBook() {
         {addressBookEntries.length > 0 ? (
           addressBookEntries.map((addressBookEntry, index) => (
             <Contact
+              key={index}
               name={addressBookEntry.name}
               lnAddress={addressBookEntry.lightningAddress}
               onDelete={() => {
