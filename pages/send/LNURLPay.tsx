@@ -25,7 +25,6 @@ export function LNURLPay() {
       ? (lnurlDetails.minSendable / 1000).toString()
       : (amountParam ?? ""),
   );
-  const [isAmountReadOnly] = React.useState(isFixedAmount);
   const [comment, setComment] = React.useState("");
 
   const isAmountInvalid = React.useMemo(() => {
@@ -93,7 +92,7 @@ export function LNURLPay() {
           setDescription={setComment}
           min={Math.floor(lnurlDetails.minSendable / 1000)}
           max={Math.floor(lnurlDetails.maxSendable / 1000)}
-          isAmountReadOnly={isAmountReadOnly}
+          isAmountReadOnly={isFixedAmount}
         />
         <View className="p-6">
           <Button
