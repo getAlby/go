@@ -29,7 +29,7 @@ export function BitcoinUnits() {
       <View className="flex-1">
         <View className="px-8">
           <Text className="text-lg text-center text-muted-foreground">
-            Choose from which wallets you want to receive app notifications
+            Choose which bitcoin units should be displayed in the app.
           </Text>
         </View>
         <View className="flex gap-6 px-6 mt-12">

@@ -325,7 +325,7 @@ export function DualCurrencyInput({
                   !text && "text-muted",
                 )}
               >
-                sats
+                {+amount === 1 ? "sat" : "sats"}
               </Text>
             )}
           </View>
