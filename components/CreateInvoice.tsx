@@ -82,46 +82,72 @@ export function CreateInvoice() {
   }
 
   React.useEffect(() => {
+    if (!invoice) {
+      return;
+    }
+
     let polling = true;
-    let pollCount = 0;
-    let prevTransaction: Nip47Transaction | undefined;
+    let unsubscribe: (() => void) | undefined;
+    const nwcClient = useAppStore.getState().nwcClient;
+
+    const handlePaymentReceived = (transaction: Nip47Transaction) => {
+      if (!polling) {
+        return;
+      }
+      polling = false;
+      unsubscribe?.();
+      router.dismissAll();
+      router.navigate({
+        pathname: "/receive/success",
+        params: { invoice: transaction.invoice },
+      });
+    };
+
     (async () => {
+      if (!nwcClient) {
+        return;
+      }
+
+      try {
+        const info = await nwcClient.getWalletServiceInfo();
+        if (info.notifications?.includes("payment_received")) {
+          unsubscribe = await nwcClient.subscribeNotifications(
+            (notification) => {
+              if (
+                notification.notification_type === "payment_received" &&
+                notification.notification.invoice === invoice
+              ) {
+                handlePaymentReceived(notification.notification);
+              }
+            },
+            ["payment_received"],
+          );
+          return;
+        }
+      } catch (error) {
+        console.error("Failed to subscribe to payment notifications", error);
+      }
+
       while (polling) {
         try {
-          const transactions = await useAppStore
-            .getState()
-            .nwcClient?.listTransactions({
-              limit: 1,
-              type: "incoming",
-            });
-          const receivedTransaction = transactions?.transactions[0];
-          if (receivedTransaction) {
-            if (
-              polling &&
-              pollCount > 0 &&
-              receivedTransaction.payment_hash !== prevTransaction?.payment_hash
-            ) {
-              if (invoice && receivedTransaction.invoice === invoice) {
-                router.dismissAll();
-                router.navigate({
-                  pathname: "/receive/success",
-                  params: { invoice: receivedTransaction.invoice },
-                });
-              } else {
-                console.info("Received another payment");
-              }
-            }
-            prevTransaction = receivedTransaction;
+          const transaction = await nwcClient.lookupInvoice({
+            invoice,
+          });
+          if (transaction.state === "settled") {
+            handlePaymentReceived(transaction);
           }
-          ++pollCount;
+          if (!polling) {
+            break;
+          }
         } catch (error) {
-          console.error("Failed to poll for incoming transaction", error);
+          console.error("Failed to poll invoice status", error);
         }
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
       }
     })();
     return () => {
       polling = false;
+      unsubscribe?.();
     };
   }, [invoice]);
 
