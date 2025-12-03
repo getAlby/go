@@ -50,9 +50,6 @@ export function BitcoinUnits() {
               </View>
               <Text className="text-lg font-medium2">₿</Text>
             </TouchableOpacity>
-            <Text className="text-lg text-muted-foreground">
-              1 ₿ = 0.00 000 001 BTC
-            </Text>
           </View>
           <View className="flex-row items-center justify-between">
             <TouchableOpacity
@@ -71,9 +68,6 @@ export function BitcoinUnits() {
               </View>
               <Text className="text-lg font-medium2">sats</Text>
             </TouchableOpacity>
-            <Text className="text-lg text-muted-foreground">
-              1 sat = 0.00 000 001 BTC
-            </Text>
           </View>
         </View>
       </View>
