@@ -1,16 +1,16 @@
-import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { type LNURLPaymentSuccessAction } from "lib/lnurl";
 import React from "react";
 import { View } from "react-native";
 import { Tick } from "~/animations/Tick";
 import AlbyGoLogo from "~/components/AlbyGoLogo";
-import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
+import { SuccessMessage } from "~/components/SuccessMessage";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function PaymentSuccess() {
   const getFiatAmount = useGetFiatAmount();
@@ -30,61 +30,56 @@ export function PaymentSuccess() {
 
   return (
     <View className="flex-1 flex flex-col">
-      <Screen title="" />
-      <View className="flex-1 gap-8">
-        <AlbyGoLogo className="w-52 h-16 mx-auto" />
-        <View className="flex-1 flex justify-center items-center">
-          <Tick />
-        </View>
-        <View className="flex flex-col items-center gap-2">
-          <View className="flex flex-row items-end justify-center">
-            <Text className="text-3xl text-foreground font-semibold2">
-              {bitcoinDisplayFormat === "bip177" && "₿ "}
-              {new Intl.NumberFormat().format(Math.ceil(+amount))}
-            </Text>
-            {bitcoinDisplayFormat === "sats" && (
-              <Text className="text-2xl text-muted-foreground font-semibold2">
-                {" "}
-                sats
-              </Text>
-            )}
+      <Screen title="Success" />
+      <View className="flex-1">
+        <AlbyGoLogo className="w-52 h-16 mx-auto my-4" />
+        <View className="flex-1 gap-6">
+          <View className="flex-[0.45] flex justify-center items-center">
+            <Tick />
           </View>
-          {getFiatAmount && (
-            <Text className="text-2xl text-muted-foreground font-semibold2">
-              {getFiatAmount(+amount)}
-            </Text>
-          )}
-        </View>
-        <Receiver lightningAddress={receiver} />
-        {lnurlSuccessAction && (
-          <View className="flex flex-col gap-2 items-center">
-            <Text className="text-muted-foreground text-center font-semibold2">
-              Message From Receiver
-            </Text>
-            {lnurlSuccessAction.tag === "message" && (
-              <Text className="text-foreground text-center text-xl font-medium2">
-                {lnurlSuccessAction.message}
+          <View className="flex-[0.55] flex flex-col justify-center items-center gap-4">
+            <View className="flex">
+              <Text className="text-2xl text-muted-foreground text-center font-semibold2">
+                Sent to
               </Text>
-            )}
-            {lnurlSuccessAction.tag === "url" && (
-              <>
-                {lnurlSuccessAction.description && (
-                  <Text className="text-foreground text-center text-xl font-medium2">
-                    {lnurlSuccessAction.description}
+              <Text className="text-center text-foreground text-2xl font-semibold2">
+                {receiver.toLowerCase().replace("lightning:", "")}
+              </Text>
+            </View>
+            <View className="flex items-center">
+              <View className="flex flex-row items-end">
+                <Text
+                  className={cn(
+                    "text-5xl gap-2 font-semibold2 text-muted-foreground",
+                    bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
+                  )}
+                >
+                  -{bitcoinDisplayFormat === "bip177" && " ₿"}{" "}
+                </Text>
+                <Text
+                  className={cn(
+                    "text-5xl gap-2 font-semibold2 text-foreground",
+                    bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
+                  )}
+                >
+                  {new Intl.NumberFormat().format(Math.ceil(+amount))}
+                </Text>
+                {bitcoinDisplayFormat === "sats" && (
+                  <Text className="text-3xl font-semibold2 text-muted-foreground mb-1">
+                    {" "}
+                    sats
                   </Text>
                 )}
-                {lnurlSuccessAction.url && (
-                  <Button
-                    variant="secondary"
-                    onPress={() => openURL(lnurlSuccessAction.url ?? "")}
-                  >
-                    <Text>Open Link</Text>
-                  </Button>
-                )}
-              </>
-            )}
+              </View>
+              {getFiatAmount && (
+                <Text className="text-3xl font-semibold2 text-muted-foreground">
+                  {getFiatAmount(+amount)}
+                </Text>
+              )}
+            </View>
+            <SuccessMessage lnurlSuccessAction={lnurlSuccessAction} />
           </View>
-        )}
+        </View>
       </View>
       <View className="p-6">
         <Button

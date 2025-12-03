@@ -21,17 +21,17 @@ export function ReceiveSuccess() {
   });
   return (
     <View className="flex-1 flex flex-col">
-      <Screen title="" animation="slide_from_left" />
-      <View className="flex-1 gap-8">
-        <AlbyGoLogo className="w-52 h-16 mx-auto" />
-        <View className="flex-1 flex justify-center items-center">
-          <Tick />
-        </View>
-        <View className="flex-1 flex flex-col gap-5 justify-center items-center">
-          <Text className="text-4xl font-bold2 text-muted-foreground">
-            Received
-          </Text>
-          <View className="flex flex-col items-center justify-center gap-2">
+      <Screen title="Success" animation="slide_from_left" />
+      <View className="flex-1">
+        <AlbyGoLogo className="w-52 h-16 mx-auto my-4" />
+        <View className="flex-1 gap-6">
+          <View className="flex-[0.45] flex justify-center items-center">
+            <Tick />
+          </View>
+          <View className="flex-[0.55] flex flex-col justify-center items-center">
+            <Text className="text-2xl font-semibold2 text-muted-foreground">
+              Received
+            </Text>
             <View className="flex flex-row items-end">
               <Text
                 className={cn(
@@ -54,20 +54,23 @@ export function ReceiveSuccess() {
                 {getFiatAmount(+decodedInvoice.satoshi)}
               </Text>
             )}
+            {decodedInvoice.description && (
+              <View className="flex flex-col gap-2 items-center mt-6">
+                <Text className="text-muted-foreground text-center font-semibold2">
+                  Description
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  className="text-foreground text-center text-xl font-medium2 px-6"
+                >
+                  {decodedInvoice.description}
+                </Text>
+              </View>
+            )}
           </View>
         </View>
-        {decodedInvoice.description && (
-          <View className="flex flex-col gap-2 items-center">
-            <Text className="text-muted-foreground text-center font-semibold2">
-              Description
-            </Text>
-            <Text className="text-foreground text-center text-xl font-medium2">
-              {decodedInvoice.description}
-            </Text>
-          </View>
-        )}
       </View>
-      <View className="p-6">
+      <View className="flex p-6">
         <Button
           size="lg"
           onPress={() => {
