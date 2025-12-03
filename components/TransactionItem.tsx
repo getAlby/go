@@ -10,7 +10,8 @@ import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { cn, safeNpubEncode } from "~/lib/utils";
+import { useAppStore } from "~/lib/state/appStore";
+import { cn, formatBitcoinAmount, safeNpubEncode } from "~/lib/utils";
 
 type Props = {
   tx: Nip47Transaction;
@@ -19,6 +20,9 @@ type Props = {
 export function TransactionItem({ tx }: Props) {
   const metadata = tx.metadata;
   const getFiatAmount = useGetFiatAmount();
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
 
   const typeStateText =
     tx.state === "failed"
@@ -110,11 +114,10 @@ export function TransactionItem({ tx }: Props) {
             )}
           >
             {tx.type === "incoming" ? "+" : "-"}{" "}
-            {new Intl.NumberFormat().format(Math.floor(tx.amount / 1000))}
-            <Text className="text-muted-foreground text-lg">
-              {" "}
-              {Math.floor(tx.amount / 1000) === 1 ? "sat" : "sats"}
-            </Text>
+            {formatBitcoinAmount(
+              Math.floor(tx.amount / 1000),
+              bitcoinDisplayFormat,
+            )}
           </Text>
           {getFiatAmount && (
             <Text className="text-right text-sm text-muted-foreground font-medium2">

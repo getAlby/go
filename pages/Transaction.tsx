@@ -16,8 +16,8 @@ import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { useAppStore } from "~/lib/state/appStore";
-import { cn, safeNpubEncode } from "~/lib/utils";
+import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
+import { cn, formatBitcoinAmount, safeNpubEncode } from "~/lib/utils";
 
 type TLVRecord = {
   type: number;
@@ -47,6 +47,9 @@ export function Transaction() {
   };
   const transaction: Nip47Transaction = JSON.parse(transactionJSON);
   const getFiatAmount = useGetFiatAmount();
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
 
   React.useEffect(() => {
     if (appPubkey) {
@@ -126,10 +129,11 @@ export function Transaction() {
                   : "Sent"}
           </Text>
           <View className="flex flex-col items-center justify-center gap-2">
-            <View className="flex flex-row items-end mt-5">
+            <View className="flex flex-row items-end mt-2">
               <Text
                 className={cn(
                   "text-5xl gap-2 font-semibold2",
+                  bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
                   transaction.type === "incoming" &&
                     transaction.state === "settled"
                     ? "text-receive"
@@ -137,11 +141,14 @@ export function Transaction() {
                 )}
               >
                 {transaction.type === "incoming" ? "+" : "-"}{" "}
+                {bitcoinDisplayFormat === "bip177" && "₿"}{" "}
                 {Math.floor(transaction.amount / 1000)}
-              </Text>
-              <Text className="text-3xl font-semibold2 text-muted-foreground mb-1">
-                {" "}
-                sats
+                {bitcoinDisplayFormat === "sats" && (
+                  <Text className="text-3xl font-semibold2 text-muted-foreground">
+                    {" "}
+                    sats
+                  </Text>
+                )}
               </Text>
             </View>
             {getFiatAmount && (
@@ -201,14 +208,22 @@ export function Transaction() {
                 </Link>
               </View>
             )}
-            {boostagram && <PodcastingInfo boost={boostagram} />}
+            {boostagram && (
+              <PodcastingInfo
+                boost={boostagram}
+                bitcoinDisplayFormat={bitcoinDisplayFormat}
+              />
+            )}
             {transaction.state === "settled" &&
               transaction.type === "outgoing" && (
                 <TransactionDetailRow
                   title="Fee"
                   content={
-                    Math.floor(transaction.fees_paid / 1000).toString() +
-                    " sats (" +
+                    formatBitcoinAmount(
+                      Math.floor(transaction.fees_paid / 1000),
+                      bitcoinDisplayFormat,
+                    ) +
+                    " (" +
                     (
                       (transaction.fees_paid / transaction.amount) *
                       100
@@ -275,7 +290,13 @@ function TransactionDetailRow(props: {
   );
 }
 
-function PodcastingInfo({ boost }: { boost: Boostagram }) {
+function PodcastingInfo({
+  boost,
+  bitcoinDisplayFormat,
+}: {
+  boost: Boostagram;
+  bitcoinDisplayFormat: BitcoinDisplayFormat;
+}) {
   const renderDetail = (title: string, content: any) => {
     if (content === 0 || !!content) {
       return <TransactionDetailRow title={title} content={String(content)} />;
@@ -292,10 +313,10 @@ function PodcastingInfo({ boost }: { boost: Boostagram }) {
       {renderDetail(
         "Total amount",
         boost.value_msat_total
-          ? Math.floor(boost.value_msat_total / 1000) +
-              (Math.floor(boost.value_msat_total / 1000) === 1
-                ? " sat"
-                : " sats")
+          ? formatBitcoinAmount(
+              Math.floor(boost.value_msat_total / 1000),
+              bitcoinDisplayFormat,
+            )
           : null,
       )}
       {renderDetail("Sender", boost.sender_name)}

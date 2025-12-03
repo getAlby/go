@@ -2,6 +2,7 @@ import { Link, router } from "expo-router";
 import { Alert, TouchableOpacity, View } from "react-native";
 import {
   AddressBookIcon,
+  BitcoinIcon,
   ChevronRightIcon,
   FingerprintIcon,
   NotificationIcon,
@@ -16,7 +17,6 @@ import Constants from "expo-constants";
 import React from "react";
 import Toast from "react-native-toast-message";
 import AlbyBanner from "~/components/AlbyBanner";
-import ShitcoinIcon from "~/components/icons/ShitcoinIcon";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
@@ -73,15 +73,15 @@ export function Settings() {
           </TouchableOpacity>
         </Link>
 
-        <Link href="/settings/fiat-currency" asChild>
+        <Link href="/settings/units-and-currency" asChild>
           <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
-            <ShitcoinIcon
+            <BitcoinIcon
               className="text-muted-foreground"
               width={28}
               height={28}
             />
             <Text className="text-foreground font-medium2 text-xl">
-              Fiat Currency
+              Units & Currency
             </Text>
             <ChevronRightIcon
               className="ml-auto text-muted-foreground"

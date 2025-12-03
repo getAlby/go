@@ -21,7 +21,7 @@ import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import { MAX_SATS_THRESHOLD } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
-import { cn } from "~/lib/utils";
+import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 interface DescriptionInputProps {
   description: string;
@@ -156,6 +156,9 @@ export function DualCurrencyInput({
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
   const [text, setText] = React.useState(amount);
   const [inputMode, setInputMode] = React.useState<"sats" | "fiat">("sats");
 
@@ -199,9 +202,9 @@ export function DualCurrencyInput({
   const showSatsThresholdToast = useCallback(() => {
     Toast.show({
       type: "error",
-      text1: `Maximum amount is ${new Intl.NumberFormat().format(MAX_SATS_THRESHOLD)} sats`,
+      text1: `Maximum amount is ${formatBitcoinAmount(MAX_SATS_THRESHOLD, bitcoinDisplayFormat)}`,
     });
-  }, []);
+  }, [bitcoinDisplayFormat]);
 
   const handleKeyPress = (key: string) => {
     if (inputMode === "sats") {
@@ -247,16 +250,16 @@ export function DualCurrencyInput({
     const hasMin = min !== undefined;
     const hasMax = max !== undefined;
     if (hasMin && hasMax && (+amount > max || +amount < min)) {
-      return `Between ${new Intl.NumberFormat().format(min)} and ${new Intl.NumberFormat().format(max)} sats`;
+      return `Between ${formatBitcoinAmount(min, bitcoinDisplayFormat)} and ${formatBitcoinAmount(max, bitcoinDisplayFormat)}`;
     }
     if (hasMin && !hasMax && +amount < min) {
-      return `Should not be less than ${new Intl.NumberFormat().format(min)} sats`;
+      return `Should not be less than ${formatBitcoinAmount(min, bitcoinDisplayFormat)}`;
     }
     if (hasMax && !hasMin && +amount > max) {
-      return `Should not be more than ${new Intl.NumberFormat().format(max)} sats`;
+      return `Should not be more than ${formatBitcoinAmount(max, bitcoinDisplayFormat)}`;
     }
     return "";
-  }, [amount, max, min, text]);
+  }, [amount, max, min, text, bitcoinDisplayFormat]);
 
   function toggleInputMode() {
     if (inputMode === "sats") {
@@ -280,21 +283,24 @@ export function DualCurrencyInput({
         </View>
         <View className="flex-[2] w-full flex flex-col items-center justify-center gap-2">
           <View className="flex flex-row items-center justify-center gap-2">
-            {inputMode === "fiat" && (
+            {(inputMode === "fiat" ||
+              (inputMode === "sats" && bitcoinDisplayFormat === "bip177")) && (
               <Text
                 className={cn(
-                  "text-muted-foreground font-semibold2 leading-[1.5]",
                   formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                  "text-muted-foreground font-bold2 leading-[1.5]",
                   !text && "text-muted",
                 )}
               >
-                {symbol}
+                {inputMode === "sats" && bitcoinDisplayFormat === "bip177"
+                  ? "₿"
+                  : symbol}
               </Text>
             )}
             <Text
               className={cn(
-                "text-foreground font-semibold2 leading-[1.5]",
                 formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                "text-foreground font-semibold2 leading-[1.5]",
                 !text && "text-muted",
                 validationMessage && "text-destructive",
               )}
@@ -304,22 +310,22 @@ export function DualCurrencyInput({
                 : inputMode === "sats"
                   ? min
                     ? max
-                      ? `${min}-${max}`
-                      : `Min ${min}`
+                      ? `${new Intl.NumberFormat().format(min)}-${new Intl.NumberFormat().format(max)}`
+                      : `Min ${new Intl.NumberFormat().format(min)}`
                     : max
-                      ? `Max ${max}`
+                      ? `Max ${new Intl.NumberFormat().format(max)}`
                       : "0"
                   : "0.00"}
             </Text>
-            {inputMode === "sats" && (
+            {inputMode === "sats" && bitcoinDisplayFormat === "sats" && (
               <Text
                 className={cn(
-                  "text-muted-foreground font-semibold2 leading-[1.5]",
                   formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                  "text-muted-foreground font-semibold2 leading-[1.5]",
                   !text && "text-muted",
                 )}
               >
-                sats
+                {+amount === 1 ? "sat" : "sats"}
               </Text>
             )}
           </View>
@@ -328,7 +334,7 @@ export function DualCurrencyInput({
               <View className="flex flex-row gap-2 items-center justify-center">
                 <Text className="text-muted-foreground text-3xl font-semibold2">
                   {inputMode === "fiat"
-                    ? new Intl.NumberFormat().format(+amount) + " sats"
+                    ? formatBitcoinAmount(+amount, bitcoinDisplayFormat)
                     : getFiatAmount?.(+amount) || ""}
                 </Text>
                 <SwapIcon

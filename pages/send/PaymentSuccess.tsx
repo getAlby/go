@@ -10,9 +10,13 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { useAppStore } from "~/lib/state/appStore";
 
 export function PaymentSuccess() {
   const getFiatAmount = useGetFiatAmount();
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
   const { receiver, amount, successAction } = useLocalSearchParams() as {
     preimage: string;
     receiver: string;
@@ -35,11 +39,15 @@ export function PaymentSuccess() {
         <View className="flex flex-col items-center gap-2">
           <View className="flex flex-row items-end justify-center">
             <Text className="text-3xl text-foreground font-semibold2">
-              {new Intl.NumberFormat().format(Math.ceil(+amount))}{" "}
+              {bitcoinDisplayFormat === "bip177" && "₿ "}
+              {new Intl.NumberFormat().format(Math.ceil(+amount))}
             </Text>
-            <Text className="text-2xl text-muted-foreground font-semibold2">
-              sats
-            </Text>
+            {bitcoinDisplayFormat === "sats" && (
+              <Text className="text-2xl text-muted-foreground font-semibold2">
+                {" "}
+                sats
+              </Text>
+            )}
           </View>
           {getFiatAmount && (
             <Text className="text-2xl text-muted-foreground font-semibold2">

@@ -29,6 +29,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 dayjs.extend(relativeTime);
 
@@ -39,6 +40,9 @@ export function Home() {
   const wallets = useAppStore((store) => store.wallets);
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
+  const bitcoinDisplayFormat = useAppStore(
+    (store) => store.bitcoinDisplayFormat,
+  );
   const getFiatAmount = useGetFiatAmount();
 
   useFocusEffect(() => {
@@ -66,6 +70,19 @@ export function Home() {
         break;
     }
   }
+
+  const symbol = React.useMemo(() => {
+    if (!fiatCurrency) {
+      return "";
+    }
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: fiatCurrency,
+      currencyDisplay: "narrowSymbol",
+    })
+      .format(0)
+      .replace(/[0-9.,\s]/g, "");
+  }, [fiatCurrency]);
 
   return (
     <>
@@ -138,20 +155,36 @@ export function Home() {
                 !refreshingBalance &&
                 (balanceDisplayMode === "fiat" ? getFiatAmount : true) ? (
                   <>
+                    <Text
+                      className={cn(
+                        "text-muted-foreground text-5xl leading-[1.5] font-bold2",
+                        (balanceDisplayMode === "hidden" ||
+                          (balanceDisplayMode === "sats" &&
+                            bitcoinDisplayFormat === "sats")) &&
+                          "hidden",
+                      )}
+                    >
+                      {balanceDisplayMode === "sats" && "₿"}
+                      {balanceDisplayMode === "fiat" && symbol}
+                    </Text>
                     <Text className="text-foreground text-5xl leading-[1.5] font-bold2">
                       {balanceDisplayMode === "sats" &&
                         new Intl.NumberFormat().format(
                           Math.floor(balance.balance / 1000),
                         )}
                       {balanceDisplayMode === "fiat" &&
-                        getFiatAmount?.(Math.floor(balance.balance / 1000))}
+                        getFiatAmount?.(
+                          Math.floor(balance.balance / 1000),
+                          false,
+                        )}
                       {balanceDisplayMode === "hidden" && "****"}
                     </Text>
-                    {balanceDisplayMode === "sats" && (
-                      <Text className="text-muted-foreground text-5xl leading-[1.5] font-bold2">
-                        sats
-                      </Text>
-                    )}
+                    {balanceDisplayMode === "sats" &&
+                      bitcoinDisplayFormat === "sats" && (
+                        <Text className="text-muted-foreground text-5xl leading-[1.5] font-bold2">
+                          sats
+                        </Text>
+                      )}
                   </>
                 ) : (
                   <Skeleton className="w-48 text-5xl" />
@@ -167,9 +200,10 @@ export function Home() {
                       {balanceDisplayMode === "sats" &&
                         getFiatAmount?.(Math.floor(balance.balance / 1000))}
                       {balanceDisplayMode === "fiat" &&
-                        new Intl.NumberFormat().format(
+                        formatBitcoinAmount(
                           Math.floor(balance.balance / 1000),
-                        ) + " sats"}
+                          bitcoinDisplayFormat,
+                        )}
                     </Text>
                   ) : (
                     <Skeleton className="w-32 text-3xl" />
