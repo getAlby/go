@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function ReceiveSuccess() {
   const { invoice } = useLocalSearchParams() as { invoice: string };
@@ -32,7 +33,12 @@ export function ReceiveSuccess() {
           </Text>
           <View className="flex flex-col items-center justify-center gap-2">
             <View className="flex flex-row items-end">
-              <Text className="text-5xl leading-[1.5] gap-2 font-semibold2 text-receive">
+              <Text
+                className={cn(
+                  "text-5xl gap-2 font-semibold2 text-receive",
+                  bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
+                )}
+              >
                 +{bitcoinDisplayFormat === "bip177" && " ₿"}{" "}
                 {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}
               </Text>

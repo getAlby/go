@@ -132,7 +132,8 @@ export function Transaction() {
             <View className="flex flex-row items-end mt-2">
               <Text
                 className={cn(
-                  "text-5xl leading-[1.5] gap-2 font-semibold2",
+                  "text-5xl gap-2 font-semibold2",
+                  bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
                   transaction.type === "incoming" &&
                     transaction.state === "settled"
                     ? "text-receive"
@@ -143,7 +144,7 @@ export function Transaction() {
                 {bitcoinDisplayFormat === "bip177" && "₿"}{" "}
                 {Math.floor(transaction.amount / 1000)}
                 {bitcoinDisplayFormat === "sats" && (
-                  <Text className="text-3xl leading-[1.5] font-semibold2 text-muted-foreground">
+                  <Text className="text-3xl font-semibold2 text-muted-foreground">
                     {" "}
                     sats
                   </Text>

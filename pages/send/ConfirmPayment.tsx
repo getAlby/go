@@ -86,7 +86,7 @@ export function ConfirmPayment() {
       <Screen title="Confirm Payment" />
       <View className="flex-1 justify-center items-center gap-16 p-6">
         <View className="flex flex-col gap-2">
-          <Text className="text-center text-muted-foreground font-semibold2">
+          <Text className="text-center text-muted-foreground font-semibold2 mb-2">
             Send
           </Text>
           <View className="flex flex-row items-end justify-center gap-2">
@@ -95,7 +95,7 @@ export function ConfirmPayment() {
               {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
             </Text>
             {bitcoinDisplayFormat === "sats" && (
-              <Text className="text-3xl leading-[1.5] font-bold2 text-muted-foreground mb-2">
+              <Text className="text-5xl leading-[1.5] font-bold2 text-muted-foreground">
                 sats
               </Text>
             )}

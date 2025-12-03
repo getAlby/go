@@ -310,10 +310,10 @@ export function DualCurrencyInput({
                 : inputMode === "sats"
                   ? min
                     ? max
-                      ? `${min}-${max}`
-                      : `Min ${min}`
+                      ? `${new Intl.NumberFormat().format(min)}-${new Intl.NumberFormat().format(max)}`
+                      : `Min ${new Intl.NumberFormat().format(min)}`
                     : max
-                      ? `Max ${max}`
+                      ? `Max ${new Intl.NumberFormat().format(max)}`
                       : "0"
                   : "0.00"}
             </Text>
