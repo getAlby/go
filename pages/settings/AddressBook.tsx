@@ -1,3 +1,4 @@
+import React from "react";
 import { ScrollView, View } from "react-native";
 import Contact from "~/components/Contact";
 import Screen from "~/components/Screen";
@@ -13,14 +14,15 @@ export function AddressBook() {
       <ScrollView className="flex-1 flex flex-col mt-4">
         {addressBookEntries.length > 0 ? (
           addressBookEntries.map((addressBookEntry, index) => (
-            <Contact
-              key={index}
-              name={addressBookEntry.name}
-              lnAddress={addressBookEntry.lightningAddress}
-              onDelete={() => {
-                useAppStore.getState().removeAddressBookEntry(index);
-              }}
-            />
+            <React.Fragment key={index}>
+              <Contact
+                name={addressBookEntry.name}
+                lnAddress={addressBookEntry.lightningAddress}
+                onDelete={() => {
+                  useAppStore.getState().removeAddressBookEntry(index);
+                }}
+              />
+            </React.Fragment>
           ))
         ) : (
           <Text className="text-lg">No entries yet.</Text>

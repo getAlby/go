@@ -228,11 +228,12 @@ export function Address() {
             {filteredAddressBookEntries.length > 0 ? (
               <ScrollView className="flex-1 flex flex-col">
                 {filteredAddressBookEntries.map((addressBookEntry, index) => (
-                  <Contact
-                    key={index}
-                    name={addressBookEntry.name}
-                    lnAddress={addressBookEntry.lightningAddress}
-                  />
+                  <React.Fragment key={index}>
+                    <Contact
+                      name={addressBookEntry.name}
+                      lnAddress={addressBookEntry.lightningAddress}
+                    />
+                  </React.Fragment>
                 ))}
               </ScrollView>
             ) : (
