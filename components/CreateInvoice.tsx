@@ -90,15 +90,13 @@ export function CreateInvoice() {
       if (!polling) {
         return;
       }
-      if (transaction.invoice === invoice && transaction.state === "settled") {
-        polling = false;
-        unsubscribe?.();
-        router.dismissAll();
-        router.navigate({
-          pathname: "/receive/success",
-          params: { invoice: transaction.invoice },
-        });
-      }
+      polling = false;
+      unsubscribe?.();
+      router.dismissAll();
+      router.navigate({
+        pathname: "/receive/success",
+        params: { invoice: transaction.invoice },
+      });
     };
 
     (async () => {
@@ -128,10 +126,12 @@ export function CreateInvoice() {
 
       while (polling) {
         try {
-          const lookupInvoice = await nwcClient.lookupInvoice({
+          const transaction = await nwcClient.lookupInvoice({
             invoice,
           });
-          handlePaymentReceived(lookupInvoice);
+          if (transaction.state === "settled") {
+            handlePaymentReceived(transaction);
+          }
           if (!polling) {
             break;
           }
