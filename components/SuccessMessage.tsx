@@ -14,7 +14,7 @@ import { LNURLPaymentSuccessAction } from "~/lib/lnurl";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 interface SuccessMessageProps {
-  lnurlSuccessAction: LNURLPaymentSuccessAction;
+  lnurlSuccessAction?: LNURLPaymentSuccessAction;
 }
 
 export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
@@ -34,6 +34,10 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
     ),
     [isDarkColorScheme],
   );
+
+  if (!lnurlSuccessAction) {
+    return;
+  }
 
   return (
     <>
