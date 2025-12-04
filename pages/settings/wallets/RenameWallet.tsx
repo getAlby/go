@@ -50,25 +50,29 @@ export function RenameWallet() {
   };
 
   return (
-    <DismissableKeyboardView>
-      <View className="flex-1 flex flex-col p-6 gap-3">
-        <Screen title="Wallet Name" />
-        <View className="flex-1 flex flex-col items-center justify-center">
-          <Text className="text-muted-foreground text-center">Wallet Name</Text>
-          <Input
-            autoFocus
-            className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
-            placeholder={DEFAULT_WALLET_NAME}
-            value={walletName}
-            onChangeText={setWalletName}
-            returnKeyType="done"
-            // aria-errormessage="inputError"
-          />
+    <>
+      <Screen title="Wallet Name" />
+      <DismissableKeyboardView>
+        <View className="flex-1 p-6">
+          <View className="flex-1 flex flex-col items-center justify-center">
+            <Text className="text-muted-foreground text-center">
+              Wallet name
+            </Text>
+            <Input
+              autoFocus
+              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+              placeholder={DEFAULT_WALLET_NAME}
+              value={walletName}
+              onChangeText={setWalletName}
+              returnKeyType="done"
+              // aria-errormessage="inputError"
+            />
+          </View>
+          <Button size="lg" onPress={onRenameWallet} disabled={!walletName}>
+            <Text>Save</Text>
+          </Button>
         </View>
-        <Button size="lg" onPress={onRenameWallet} disabled={!walletName}>
-          <Text>Save</Text>
-        </Button>
-      </View>
-    </DismissableKeyboardView>
+      </DismissableKeyboardView>
+    </>
   );
 }

@@ -18,7 +18,6 @@ import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
@@ -222,21 +221,17 @@ export function SetupWallet() {
       ) : (
         <DismissableKeyboardView>
           <View className="flex-1 p-6">
-            <View className="flex-1 flex flex-col gap-3 items-center justify-center">
-              <Label
-                nativeID="name"
-                className="text-muted-foreground text-center"
-              >
+            <View className="flex-1 flex flex-col items-center justify-center">
+              <Text className="text-muted-foreground text-center">
                 Wallet name
-              </Label>
+              </Text>
               <Input
-                autoFocus
-                className="w-full border-transparent bg-transparent native:text-2xl text-center"
+                className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
                 value={name}
                 onChangeText={setName}
-                aria-labelledbyledBy="name"
                 placeholder="Enter a name for your wallet"
                 returnKeyType="done"
+                autoFocus
               />
             </View>
             {capabilities &&

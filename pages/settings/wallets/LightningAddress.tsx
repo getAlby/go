@@ -34,9 +34,10 @@ export function SetLightningAddress() {
   };
 
   return (
-    <DismissableKeyboardView>
-      <View className="flex-1 flex flex-col">
-        <View className="px-6 mt-4">
+    <>
+      <Screen title="Lightning Address" />
+      <DismissableKeyboardView>
+        <View className="flex-1 p-6">
           <Alert
             type="warn"
             title="Only add lightning address you own"
@@ -44,27 +45,21 @@ export function SetLightningAddress() {
             icon={AlertCircleIcon}
             className="mb-0"
           />
-        </View>
-        <View className="flex-1 flex flex-col p-3 gap-3">
-          <Screen title="Lightning Address" />
           <View className="flex-1 flex flex-col items-center justify-center">
             <Text className="text-muted-foreground text-center">
               Lightning Address
             </Text>
             <Input
+              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+              value={lightningAddress}
+              onChangeText={setLightningAddress}
+              placeholder="hello@getalby.com"
+              returnKeyType="done"
               autoComplete="email"
               inputMode="email"
               autoFocus
-              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
-              placeholder="hello@getalby.com"
-              value={lightningAddress}
-              onChangeText={setLightningAddress}
-              returnKeyType="done"
-              // aria-errormessage="inputError"
             />
           </View>
-        </View>
-        <View className="p-6">
           <Button
             size="lg"
             className="flex flex-row gap-2"
@@ -75,7 +70,7 @@ export function SetLightningAddress() {
             <Text>Save</Text>
           </Button>
         </View>
-      </View>
-    </DismissableKeyboardView>
+      </DismissableKeyboardView>
+    </>
   );
 }
