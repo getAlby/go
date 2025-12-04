@@ -9,8 +9,8 @@ export function Tick() {
       autoPlay
       loop={false}
       style={{
-        width: dimensions.width,
-        height: dimensions.width,
+        width: dimensions.width * 1.5,
+        height: dimensions.width * 1.5,
       }}
       source={require("../assets/animations/success.json")}
     />

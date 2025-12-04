@@ -97,7 +97,7 @@ export function CreateInvoice() {
       polling = false;
       unsubscribe?.();
       router.dismissAll();
-      router.navigate({
+      router.replace({
         pathname: "/receive/success",
         params: { invoice: transaction.invoice },
       });
