@@ -237,7 +237,7 @@ function ConnectView({
   notificationTypes,
   isolated,
   budgetRenewal,
-  maxAmount = 100_000_000,
+  maxAmount,
   expiresAt,
   returnTo,
   metadata,
@@ -346,19 +346,21 @@ function ConnectView({
                 )}
                 budget
               </Text>
-              <View>
-                <Text className="text-right text-lg text-foreground font-medium2">
-                  {formatBitcoinAmount(
-                    Math.floor(maxAmount / 1000),
-                    bitcoinDisplayFormat,
-                  )}
-                </Text>
-                {getFiatAmount && (
-                  <Text className="text-right text-sm text-muted-foreground">
-                    {getFiatAmount(Math.floor(maxAmount / 1000))}
+              {maxAmount && (
+                <View>
+                  <Text className="text-right text-lg text-foreground font-medium2">
+                    {formatBitcoinAmount(
+                      Math.floor(maxAmount / 1000),
+                      bitcoinDisplayFormat,
+                    )}
                   </Text>
-                )}
-              </View>
+                  {getFiatAmount && (
+                    <Text className="text-right text-sm text-muted-foreground">
+                      {getFiatAmount(Math.floor(maxAmount / 1000))}
+                    </Text>
+                  )}
+                </View>
+              )}
             </View>
           )}
           <TouchableOpacity onPress={() => setShowDetails(true)}>
