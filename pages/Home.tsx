@@ -191,7 +191,7 @@ export function Home() {
                 )}
               </View>
               {/* Hide conversion if fiat currency is not selected */}
-              {balanceDisplayMode !== "hidden" && fiatCurrency && (
+              {fiatCurrency && (
                 <View className="flex justify-center items-center">
                   {balance &&
                   !refreshingBalance &&
@@ -204,6 +204,7 @@ export function Home() {
                           Math.floor(balance.balance / 1000),
                           bitcoinDisplayFormat,
                         )}
+                      {balanceDisplayMode === "hidden" && " "}
                     </Text>
                   ) : (
                     <Skeleton className="w-32 text-3xl" />
