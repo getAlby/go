@@ -132,25 +132,38 @@
         return;
     }
 
-    double amountInSats = [amountNumber doubleValue] / 1000.0;
     NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&app_pubkey=%@", encodedTransaction, appPubkey];
-
     NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy] ?: [NSMutableDictionary dictionary];
     NSMutableDictionary *newBodyDict = [newUserInfo[@"body"] mutableCopy] ?: [NSMutableDictionary dictionary];
 
+    NSString *action = @"";
+    if ([notificationType isEqualToString:@"payment_sent"]) {
+        action = @"Sent";
+    } else if ([notificationType isEqualToString:@"payment_received"]) {
+        action = @"Received";
+    } else if ([notificationType isEqualToString:@"hold_invoice_accepted"]) {
+        action = @"Payment Held:";
+    }
+
+    double amountInSats = [amountNumber doubleValue] / 1000.0;
+    NSString *formattedAmount = isBip177 ? [NSString stringWithFormat:@"₿ %.0f", amountInSats] : [NSString stringWithFormat:@"%.0f sats", amountInSats];
+
+    NSString *descriptionText = notificationDict[@"description"];
+    BOOL hasDescription       = [descriptionText isKindOfClass:[NSString class]] && descriptionText.length > 0;
+
+    NSString *notificationTitle = [notificationType isEqualToString:@"hold_invoice_accepted"]
+                                    ? [NSString stringWithFormat:@"%@ ⏳", walletName]
+                                    : [NSString stringWithFormat:@"%@ ⚡️", walletName];
+    NSString *notificationText = hasDescription
+                                    ? [NSString stringWithFormat:@"%@ %@ • %@", action, formattedAmount, descriptionText]
+                                    : [NSString stringWithFormat:@"%@ %@", action, formattedAmount];
+
     newBodyDict[@"deepLink"]         = deepLink;
     newUserInfo[@"body"]             = newBodyDict;
-    self.bestAttemptContent.userInfo = newUserInfo;
-    self.bestAttemptContent.title    = walletName;
 
-    NSString *formattedAmount = isBip177 ? [NSString stringWithFormat:@"₿ %.0f", amountInSats] : [NSString stringWithFormat:@"%.0f sats", amountInSats];
-    if ([notificationType isEqualToString:@"payment_sent"]) {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"You sent %@ ⚡️", formattedAmount];
-    } else if ([notificationType isEqualToString:@"payment_received"]) {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"You received %@ ⚡️", formattedAmount];
-    } else if ([notificationType isEqualToString:@"hold_invoice_accepted"]) {
-        self.bestAttemptContent.body = [NSString stringWithFormat:@"Payment held: %@ ⏳", formattedAmount];
-    }
+    self.bestAttemptContent.userInfo = newUserInfo;
+    self.bestAttemptContent.title = notificationTitle;
+    self.bestAttemptContent.body  = notificationText;
 
     if ([notificationType isEqualToString:@"payment_received"] && ttsEnabled) {
         NSString *speechText = [NSString stringWithFormat:@"%.0f sats", amountInSats];
