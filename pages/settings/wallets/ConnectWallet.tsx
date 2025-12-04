@@ -237,11 +237,11 @@ function ConnectView({
   notificationTypes,
   isolated,
   budgetRenewal,
-  maxAmount,
+  maxAmount = 100_000_000,
   expiresAt,
   returnTo,
   metadata,
-}: Omit<NWAOptions, "appPubkey" | "relayUrls"> & { maxAmount: number }) {
+}: Omit<NWAOptions, "appPubkey" | "relayUrls">) {
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
   const closeModal = () => setShowDetails(false);
@@ -348,7 +348,10 @@ function ConnectView({
               </Text>
               <View>
                 <Text className="text-right text-lg text-foreground font-medium2">
-                  {formatBitcoinAmount(maxAmount, bitcoinDisplayFormat)}
+                  {formatBitcoinAmount(
+                    Math.floor(maxAmount / 1000),
+                    bitcoinDisplayFormat,
+                  )}
                 </Text>
                 {getFiatAmount && (
                   <Text className="text-right text-sm text-muted-foreground">
