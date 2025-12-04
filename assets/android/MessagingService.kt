@@ -159,13 +159,27 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
 
         val bitcoinDisplayMode = getBitcoinDisplayModeFromPreferences(this)
         val formattedAmount = if (bitcoinDisplayMode == "bip177") "₿ $amount" else "$amount sats"
+
+        val descriptionText = notification.optString("description", "")
+        val hasDescription = descriptionText.isNotEmpty()
+
+        val action = when (notificationType) {
+            "payment_sent" -> "Sent"
+            "payment_received" -> "Received"
+            "hold_invoice_accepted" -> "Payment Held:"
+            else -> ""
+        }
+
+        val notificationTitle = when (notificationType) {
+            "hold_invoice_accepted" -> "$walletName ⏳"
+            else -> "$walletName ⚡️"
+        }
+
         var notificationText = ""
-        if (notificationType == "payment_sent") {
-            notificationText = "You sent $formattedAmount ⚡️"
-        } else if (notificationType == "payment_received") {
-            notificationText = "You received $formattedAmount ⚡️"
-        } else if (notificationType == "hold_invoice_accepted") {
-            notificationText = "Payment held: $formattedAmount ⏳"
+        if (hasDescription) {
+            notificationText = "$action $formattedAmount \u2022 $descriptionText"
+        } else {
+            notificationText = "$action $formattedAmount"
         }
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -182,7 +196,7 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
 
         val notificationBuilder = NotificationCompat.Builder(this, "default")
             .setSmallIcon(R.drawable.notification_icon)
-            .setContentTitle(walletName)
+            .setContentTitle(notificationTitle)
             .setContentText(notificationText)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
