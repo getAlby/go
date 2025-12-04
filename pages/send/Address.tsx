@@ -8,7 +8,13 @@ import {
 } from "@gorhom/bottom-sheet";
 import * as Clipboard from "expo-clipboard";
 import React, { useCallback, useRef, useState } from "react";
-import { Keyboard, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Keyboard,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Contact from "~/components/Contact";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
@@ -67,6 +73,9 @@ function ContactInput({
     bottomSheetModalRef.current?.dismiss();
   };
 
+  const isIOS = Platform.OS === "ios";
+  const Wrapper = isIOS ? React.Fragment : DismissableKeyboardView;
+
   return (
     <>
       <TouchableOpacity
@@ -75,6 +84,9 @@ function ContactInput({
             setInput("");
             setContactName("");
           } else {
+            if (Keyboard.isVisible()) {
+              Keyboard.dismiss();
+            }
             bottomSheetModalRef.current?.present();
           }
         }}
@@ -109,33 +121,50 @@ function ContactInput({
         enablePanDownToClose
       >
         <BottomSheetView className="p-6 pt-2">
-          <View className="relative flex flex-row items-center justify-center">
-            <TouchableOpacity
-              onPress={() => {
-                Keyboard.dismiss();
-                bottomSheetModalRef.current?.dismiss();
-              }}
-              className="absolute -left-4 p-4"
-            >
-              <XIcon className="text-muted-foreground" width={24} height={24} />
-            </TouchableOpacity>
-            <Text className="text-2xl font-semibold2 text-muted-foreground">
-              Add to Contacts
-            </Text>
-          </View>
-          <BottomSheetTextInput
-            placeholder="Satoshi Nakamoto"
-            className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
-            placeholderClassName="text-muted-foreground"
-            selectionColor={"hsl(47 100% 50%)"} // translates to primary
-            value={input}
-            onChangeText={setInput}
-            onSubmitEditing={save}
-            autoFocus
-          />
-          <Button size="lg" onPress={save} disabled={!input}>
-            <Text>Save</Text>
-          </Button>
+          <Wrapper>
+            <View className="relative flex flex-row items-center justify-center">
+              <TouchableOpacity
+                onPress={() => {
+                  Keyboard.dismiss();
+                  bottomSheetModalRef.current?.dismiss();
+                }}
+                className="absolute -left-4 p-4"
+              >
+                <XIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <Text className="text-2xl font-semibold2 text-muted-foreground">
+                Add to Contacts
+              </Text>
+            </View>
+            {isIOS ? (
+              <BottomSheetTextInput
+                placeholder="Satoshi Nakamoto"
+                className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border native:text-2xl leading-[1.25] font-semibold2 caret-primary"
+                placeholderClassName="text-muted-foreground"
+                selectionColor={"hsl(47 100% 50%)"} // translates to primary
+                value={input}
+                onChangeText={setInput}
+                onSubmitEditing={save}
+                autoFocus
+              />
+            ) : (
+              <Input
+                placeholder="Satoshi Nakamoto"
+                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 native:text-2xl font-semibold2"
+                value={input}
+                onChangeText={setInput}
+                onSubmitEditing={save}
+                autoFocus
+              />
+            )}
+            <Button size="lg" onPress={save} disabled={!input}>
+              <Text>Save</Text>
+            </Button>
+          </Wrapper>
         </BottomSheetView>
       </BottomSheetModal>
     </>
@@ -152,7 +181,7 @@ export function Address() {
     setSubmitting(true);
     try {
       const result = await initiatePaymentFlow(keyboardText, "");
-      if (result) {
+      if (contactName && result) {
         useAppStore.getState().addAddressBookEntry({
           name: contactName,
           lightningAddress: keyboardText,

@@ -6,8 +6,15 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useRef, useState } from "react";
-import { Keyboard, Pressable, TouchableOpacity, View } from "react-native";
+import {
+  Keyboard,
+  Platform,
+  Pressable,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
+import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
   ArrowLeftIcon,
   EditLineIcon,
@@ -16,6 +23,7 @@ import {
   XIcon,
 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import { MAX_SATS_THRESHOLD } from "~/lib/constants";
@@ -70,6 +78,9 @@ function DescriptionInput({
     bottomSheetModalRef.current?.dismiss();
   };
 
+  const isIOS = Platform.OS === "ios";
+  const Wrapper = isIOS ? React.Fragment : DismissableKeyboardView;
+
   return (
     <>
       {readOnly ? (
@@ -82,7 +93,12 @@ function DescriptionInput({
         </Text>
       ) : (
         <TouchableOpacity
-          onPress={() => bottomSheetModalRef.current?.present()}
+          onPress={() => {
+            if (Keyboard.isVisible()) {
+              Keyboard.dismiss();
+            }
+            bottomSheetModalRef.current?.present();
+          }}
           className="flex flex-row items-center justify-center gap-2 px-12 py-4"
         >
           {!description && <NotesIcon className="text-muted-foreground" />}
@@ -110,33 +126,50 @@ function DescriptionInput({
         enablePanDownToClose
       >
         <BottomSheetView className="p-6 pt-2">
-          <View className="relative flex flex-row items-center justify-center">
-            <TouchableOpacity
-              onPress={() => {
-                Keyboard.dismiss();
-                bottomSheetModalRef.current?.dismiss();
-              }}
-              className="absolute -left-4 p-4"
-            >
-              <XIcon className="text-muted-foreground" width={24} height={24} />
-            </TouchableOpacity>
-            <Text className="text-2xl font-semibold2 text-muted-foreground">
-              Add Description
-            </Text>
-          </View>
-          <BottomSheetTextInput
-            placeholder="Sats for Satoshi"
-            className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
-            placeholderClassName="text-muted-foreground"
-            selectionColor={"hsl(47 100% 50%)"} // translates to primary
-            value={input}
-            onChangeText={setInput}
-            onSubmitEditing={save}
-            autoFocus
-          />
-          <Button size="lg" onPress={save}>
-            <Text>Save</Text>
-          </Button>
+          <Wrapper>
+            <View className="relative flex flex-row items-center justify-center">
+              <TouchableOpacity
+                onPress={() => {
+                  Keyboard.dismiss();
+                  bottomSheetModalRef.current?.dismiss();
+                }}
+                className="absolute -left-4 p-4"
+              >
+                <XIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <Text className="text-2xl font-semibold2 text-muted-foreground">
+                Add Description
+              </Text>
+            </View>
+            {isIOS ? (
+              <BottomSheetTextInput
+                placeholder="Sats for Satoshi"
+                className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border native:text-2xl leading-[1.25] font-semibold2 caret-primary"
+                placeholderClassName="text-muted-foreground"
+                selectionColor={"hsl(47 100% 50%)"} // translates to primary
+                value={input}
+                onChangeText={setInput}
+                onSubmitEditing={save}
+                autoFocus
+              />
+            ) : (
+              <Input
+                placeholder="Sats for Satoshi"
+                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 native:text-2xl font-semibold2"
+                value={input}
+                onChangeText={setInput}
+                onSubmitEditing={save}
+                autoFocus
+              />
+            )}
+            <Button size="lg" onPress={save}>
+              <Text>Save</Text>
+            </Button>
+          </Wrapper>
         </BottomSheetView>
       </BottomSheetModal>
     </>
