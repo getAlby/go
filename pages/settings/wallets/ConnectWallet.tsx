@@ -241,7 +241,7 @@ function ConnectView({
   expiresAt,
   returnTo,
   metadata,
-}: Omit<NWAOptions, "appPubkey" | "relayUrls"> & { maxAmount: number }) {
+}: Omit<NWAOptions, "appPubkey" | "relayUrls">) {
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
   const closeModal = () => setShowDetails(false);
@@ -346,16 +346,21 @@ function ConnectView({
                 )}
                 budget
               </Text>
-              <View>
-                <Text className="text-right text-lg text-foreground font-medium2">
-                  {formatBitcoinAmount(maxAmount, bitcoinDisplayFormat)}
-                </Text>
-                {getFiatAmount && (
-                  <Text className="text-right text-sm text-muted-foreground">
-                    {getFiatAmount(Math.floor(maxAmount / 1000))}
+              {maxAmount && (
+                <View>
+                  <Text className="text-right text-lg text-foreground font-medium2">
+                    {formatBitcoinAmount(
+                      Math.floor(maxAmount / 1000),
+                      bitcoinDisplayFormat,
+                    )}
                   </Text>
-                )}
-              </View>
+                  {getFiatAmount && (
+                    <Text className="text-right text-sm text-muted-foreground">
+                      {getFiatAmount(Math.floor(maxAmount / 1000))}
+                    </Text>
+                  )}
+                </View>
+              )}
             </View>
           )}
           <TouchableOpacity onPress={() => setShowDetails(true)}>

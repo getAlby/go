@@ -20,7 +20,7 @@ export function Receiver({ lightningAddress }: ReceiverProps) {
       <Text className="text-muted-foreground text-center font-semibold2">
         To
       </Text>
-      <Text className="text-center text-foreground text-2xl font-medium2">
+      <Text className="text-center text-foreground text-2xl font-semibold2">
         {lightningAddress.toLowerCase().replace("lightning:", "")}
       </Text>
     </View>

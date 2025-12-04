@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { router } from "expo-router";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import Animated from "react-native-reanimated";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import PendingTransactionIcon from "~/components/icons/PendingTransaction";
 import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
@@ -69,21 +68,11 @@ export function TransactionItem({ tx }: Props) {
         })
       }
     >
-      {/* TODO: Replace this with animate-pulse class after Nativewind v5 migration */}
-      <Animated.View
-        style={
-          tx.state === "pending" && {
-            animationName: {
-              from: { opacity: 0.4 },
-              to: { opacity: 1 },
-            },
-            animationDuration: "1s",
-            animationIterationCount: "infinite",
-            animationTimingFunction: "ease-in-out",
-            animationDirection: "alternate",
-          }
-        }
-        className={cn("flex flex-row items-center gap-3 px-6 py-2 my-2")}
+      <View
+        className={cn(
+          tx.state === "pending" && "animate-pulse",
+          "flex flex-row items-center gap-3 px-6 py-2 my-2",
+        )}
       >
         <View className="w-[44px] h-[44px] bg-muted rounded-full flex flex-col items-center justify-center">
           <Icon />
@@ -125,7 +114,7 @@ export function TransactionItem({ tx }: Props) {
             </Text>
           )}
         </View>
-      </Animated.View>
+      </View>
     </TouchableOpacity>
   );
 }

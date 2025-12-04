@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Animated from "react-native-reanimated";
 import { XIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
 import { TransactionItem } from "~/components/TransactionItem";
@@ -89,22 +88,9 @@ export function Transactions() {
           }
           ListFooterComponent={
             loadingNextPage ? (
-              // TODO: Replace this with animate-pulse class after Nativewind v5 migration
-              <Animated.Text
-                style={{
-                  animationName: {
-                    from: { opacity: 0.4 },
-                    to: { opacity: 1 },
-                  },
-                  animationDuration: "1s",
-                  animationIterationCount: "infinite",
-                  animationTimingFunction: "ease-in-out",
-                  animationDirection: "alternate",
-                }}
-                className="text-center mb-5"
-              >
+              <Text className="text-center mb-5 animate-pulse">
                 Loading more transactions...
-              </Animated.Text>
+              </Text>
             ) : undefined
           }
           data={allTransactions}

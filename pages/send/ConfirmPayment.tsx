@@ -115,7 +115,7 @@ export function ConfirmPayment() {
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
-              className="text-center text-foreground text-2xl font-medium2"
+              className="text-center text-foreground text-2xl font-semibold2"
             >
               {decodedInvoice.description}
             </Text>

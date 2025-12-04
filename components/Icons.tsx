@@ -5,7 +5,6 @@ import {
   PopiconsCircleExclamationLine as AlertCircleIcon,
   PopiconsArrowLeftSolid as ArrowLeftIcon,
   PopiconsBitcoinSolid as BitcoinIcon,
-  PopiconsAddressBookSolid as BookUserIcon,
   PopiconsCameraWebOffSolid as CameraOffIcon,
   PopiconsCircleCheckLine as CheckCircleIcon,
   PopiconsCheckSolid as CheckIcon,
@@ -16,23 +15,17 @@ import {
   PopiconsCopySolid as CopyIcon,
   PopiconsEditSolid as EditIcon,
   PopiconsEditLine as EditLineIcon,
-  PopiconsUploadSolid as ExportIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
   PopiconsCircleInfoSolid as HelpCircleIcon,
   PopiconsImageSolid as ImageIcon,
-  PopiconsKeyboardSolid as KeyboardIcon,
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsMapLine as MapLineIcon,
-  PopiconsArrowDownLine as MoveDownIcon,
-  PopiconsArrowUpLine as MoveUpIcon,
   PopiconsNotePlusLine as NotesIcon,
   PopiconsNotificationSquareSolid as NotificationIcon,
   PopiconsLifebuoySolid as OnboardingIcon,
   PopiconsClipboardTextSolid as PasteIcon,
   PopiconsClipboardTextLine as PasteLineIcon,
-  PopiconsPinSolid as PinIcon,
   PopiconsQrCodeMinimalSolid as QRIcon,
-  PopiconsReloadLine as RefreshIcon,
   PopiconsReloadSolid as ResetIcon,
   PopiconsFullscreenSolid as ScanIcon,
   PopiconsSettingsMinimalSolid as SettingsIcon,
@@ -70,7 +63,6 @@ interopIcon(AddUserIcon);
 interopIcon(AlertCircleIcon);
 interopIcon(ArrowLeftIcon);
 interopIcon(BitcoinIcon);
-interopIcon(BookUserIcon);
 interopIcon(CameraOffIcon);
 interopIcon(CheckCircleIcon);
 interopIcon(CheckIcon);
@@ -81,23 +73,17 @@ interopIcon(ChevronUpIcon);
 interopIcon(CopyIcon);
 interopIcon(EditIcon);
 interopIcon(EditLineIcon);
-interopIcon(ExportIcon);
 interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
 interopIcon(ImageIcon);
-interopIcon(KeyboardIcon);
 interopIcon(LinkIcon);
 interopIcon(MapLineIcon);
-interopIcon(MoveDownIcon);
-interopIcon(MoveUpIcon);
 interopIcon(NotesIcon);
 interopIcon(NotificationIcon);
 interopIcon(OnboardingIcon);
 interopIcon(PasteIcon);
 interopIcon(PasteLineIcon);
-interopIcon(PinIcon);
 interopIcon(QRIcon);
-interopIcon(RefreshIcon);
 interopIcon(ResetIcon);
 interopIcon(ScanIcon);
 interopIcon(SettingsIcon);
@@ -121,7 +107,6 @@ export {
   AlertCircleIcon,
   ArrowLeftIcon,
   BitcoinIcon,
-  BookUserIcon,
   CameraOffIcon,
   CheckCircleIcon,
   CheckIcon,
@@ -132,23 +117,17 @@ export {
   CopyIcon,
   EditIcon,
   EditLineIcon,
-  ExportIcon,
   FingerprintIcon,
   HelpCircleIcon,
   ImageIcon,
-  KeyboardIcon,
   LinkIcon,
   MapLineIcon,
-  MoveDownIcon,
-  MoveUpIcon,
   NotesIcon,
   NotificationIcon,
   OnboardingIcon,
   PasteIcon,
   PasteLineIcon,
-  PinIcon,
   QRIcon,
-  RefreshIcon,
   ResetIcon,
   ScanIcon,
   SettingsIcon,

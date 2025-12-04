@@ -38,14 +38,16 @@ export function PaymentSuccess() {
             <Tick />
           </View>
           <View className="flex-[0.55] flex flex-col justify-center items-center gap-4">
-            <View className="flex">
-              <Text className="text-2xl text-muted-foreground text-center font-semibold2">
-                Sent to
-              </Text>
-              <Text className="text-center text-foreground text-2xl font-semibold2">
-                {receiver.toLowerCase().replace("lightning:", "")}
-              </Text>
-            </View>
+            {receiver && (
+              <View className="flex">
+                <Text className="text-2xl text-muted-foreground text-center font-semibold2">
+                  Sent to
+                </Text>
+                <Text className="text-center text-foreground text-2xl font-semibold2">
+                  {receiver.toLowerCase().replace("lightning:", "")}
+                </Text>
+              </View>
+            )}
             <View className="flex items-center">
               <View className="flex flex-row items-end">
                 <Text

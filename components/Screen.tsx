@@ -1,9 +1,10 @@
 import { type NativeStackHeaderItemProps } from "@react-navigation/native-stack";
 import { router, Stack } from "expo-router";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { type StackAnimationTypes } from "react-native-screens";
 import { ChevronLeftIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
+import { cn } from "~/lib/utils";
 
 type ScreenProps = {
   title: string;
@@ -30,7 +31,12 @@ function Screen({ title, animation, right, left }: ScreenProps) {
               );
             },
         headerTitle: () => (
-          <Text className="text-2xl font-semibold2 text-muted-foreground">
+          <Text
+            className={cn(
+              Platform.OS === "android" && "mr-[42.18]", // this translates to width of headerLeft button
+              "text-2xl text-center font-semibold2 text-muted-foreground",
+            )}
+          >
             {title}
           </Text>
         ),
