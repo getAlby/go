@@ -15,6 +15,27 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
   const wallets = useAppStore((store) => store.wallets);
   const capabilities = wallets[selectedWalletId].nwcCapabilities;
   const nwcClient = useAppStore((store) => store.nwcClient);
+  const [relayStatuses, setRelayStatuses] = React.useState<boolean[]>([]);
+  React.useEffect(() => {
+    if (!nwcClient) {
+      return;
+    }
+    (async () => {
+      const _relayStatuses = [];
+      for (const relayUrl of nwcClient.relayUrls) {
+        try {
+          await nwcClient.pool.ensureRelay(relayUrl, {
+            connectionTimeout: 2000,
+          });
+          _relayStatuses.push(true);
+        } catch (error) {
+          console.error("Failed to connect to relay", { relayUrl, error });
+          _relayStatuses.push(false);
+        }
+      }
+      setRelayStatuses(_relayStatuses);
+    })();
+  }, [nwcClient]);
   return (
     <Modal
       transparent
@@ -44,13 +65,9 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
             <View className="flex flex-col mb-4">
               <Text className="font-semibold2">Relays</Text>
 
-              {nwcClient?.relayUrls.map((relayUrl) => (
+              {nwcClient?.relayUrls.map((relayUrl, index) => (
                 <Text key={relayUrl} className="text-muted-foreground">
-                  {relayUrl} (
-                  {nwcClient.pool.listConnectionStatus().get(relayUrl)
-                    ? "online"
-                    : "offline"}
-                  )
+                  {relayUrl} ({relayStatuses[index] ? "online" : "offline"})
                 </Text>
               ))}
 
