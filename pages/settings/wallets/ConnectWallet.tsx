@@ -172,7 +172,7 @@ export function ConnectWallet() {
           </TouchableOpacity>
         )}
       />
-      <View className="flex-1 justify-center items-center gap-8 p-6">
+      <View className="flex-1 p-6 bg-background justify-center items-center gap-8">
         <PlugView
           connectionCreated={connectionCreated}
           name={name}

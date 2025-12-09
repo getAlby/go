@@ -1,7 +1,6 @@
 import {
   PopiconsAddressBookSolid as AddressBookIcon,
   PopiconsAtSymbolSolid as AddressIcon,
-  PopiconsUserPlusLine as AddUserIcon,
   PopiconsCircleExclamationLine as AlertCircleIcon,
   PopiconsArrowLeftSolid as ArrowLeftIcon,
   PopiconsBitcoinSolid as BitcoinIcon,
@@ -59,7 +58,6 @@ function interopIcon(icon: React.FunctionComponent<SvgProps>) {
 
 interopIcon(AddressBookIcon);
 interopIcon(AddressIcon);
-interopIcon(AddUserIcon);
 interopIcon(AlertCircleIcon);
 interopIcon(ArrowLeftIcon);
 interopIcon(BitcoinIcon);
@@ -103,7 +101,6 @@ interopIcon(ZapIcon);
 export {
   AddressBookIcon,
   AddressIcon,
-  AddUserIcon,
   AlertCircleIcon,
   ArrowLeftIcon,
   BitcoinIcon,

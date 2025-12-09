@@ -89,22 +89,19 @@ function CurrencyList() {
                 <CountryFlag
                   isoCode={code.slice(0, 2).toLowerCase()}
                   size={18}
-                  className="rounded border border-input"
+                  className="rounded border border-muted"
                 />
                 <View className="flex-1 flex flex-row items-center gap-4">
-                  <Text
-                    numberOfLines={1}
-                    className="text-xl font-semibold2 text-secondary-foreground flex-initial"
-                  >
+                  <Text numberOfLines={1} className="sm:text-lg font-medium2">
                     {name}
                   </Text>
-                  <Text className="text-xl font-medium2 text-muted-foreground">
+                  <Text className="sm:text-lg font-medium2 text-muted-foreground">
                     {code}
                   </Text>
                 </View>
               </TouchableOpacity>
               {shouldRenderDivider && (
-                <View className="border border-input my-4" />
+                <View className="border border-muted my-4" />
               )}
             </>
           );
@@ -124,12 +121,14 @@ export function FiatCurrency() {
   };
 
   return (
-    <View className="flex-1 flex flex-col gap-6 p-6">
+    <View className="flex-1 p-6 bg-background">
       <Screen title="Fiat Currency" />
 
-      <View className="flex-row items-center justify-between gap-2">
+      <View className="flex-row items-center justify-between gap-2 mb-2">
         <Label onPress={toggleFiatCurrency} nativeID="fiat-toggle">
-          <Text className="text-lg font-medium2">Display fiat currency</Text>
+          <Text className="sm:text-lg font-semibold2">
+            Display fiat currency
+          </Text>
         </Label>
         <Switch
           nativeID="fiat-toggle"
@@ -138,7 +137,12 @@ export function FiatCurrency() {
         />
       </View>
 
-      {!!fiatCurrency && <CurrencyList />}
+      {!!fiatCurrency && (
+        <>
+          <View className="border border-muted my-4" />
+          <CurrencyList />
+        </>
+      )}
     </View>
   );
 }

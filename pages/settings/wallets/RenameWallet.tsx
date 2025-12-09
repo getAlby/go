@@ -53,14 +53,14 @@ export function RenameWallet() {
     <>
       <Screen title="Wallet Name" />
       <DismissableKeyboardView>
-        <View className="flex-1 p-6">
+        <View className="flex-1 p-6 bg-background">
           <View className="flex-1 flex flex-col items-center justify-center">
-            <Text className="text-muted-foreground text-center">
+            <Text className="text-secondary-foreground text-center font-medium2">
               Wallet name
             </Text>
             <Input
               autoFocus
-              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+              className="w-full text-center border-transparent bg-transparent text-2xl font-semibold2"
               placeholder={DEFAULT_WALLET_NAME}
               value={walletName}
               onChangeText={setWalletName}
@@ -69,7 +69,7 @@ export function RenameWallet() {
             />
           </View>
           <Button size="lg" onPress={onRenameWallet} disabled={!walletName}>
-            <Text>Save</Text>
+            <Text className="text-2xl">Save</Text>
           </Button>
         </View>
       </DismissableKeyboardView>

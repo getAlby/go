@@ -96,7 +96,7 @@ export function Home() {
             className="-ml-4 px-6"
           >
             <SettingsLineIcon
-              className="text-muted-foreground"
+              className="text-secondary-foreground"
               width={24}
               height={24}
             />
@@ -110,14 +110,14 @@ export function Home() {
             className="-mr-4 px-6"
           >
             <MapLineIcon
-              className="text-muted-foreground"
+              className="text-secondary-foreground"
               width={24}
               height={24}
             />
           </TouchableOpacity>
         )}
       />
-      <View className="h-full flex p-6">
+      <View className="h-full p-6 bg-background">
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -129,7 +129,7 @@ export function Home() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName="flex-1"
         >
-          <View className="grow flex flex-col items-center justify-center gap-5">
+          <View className="grow flex flex-col items-center justify-center gap-2">
             {wallets.length > 1 && (
               <TouchableOpacity
                 className="w-full"
@@ -140,7 +140,7 @@ export function Home() {
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
-                  className="text-center text-muted-foreground font-medium2 text-xl px-4 mb-2"
+                  className="text-center text-muted-foreground font-medium2 text-xl px-4"
                 >
                   {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
                 </Text>
@@ -148,7 +148,7 @@ export function Home() {
             )}
             <TouchableOpacity
               onPress={switchBalanceState}
-              className="w-full flex flex-col items-center justify-center gap-3"
+              className="w-full flex flex-col items-center justify-center gap-2"
             >
               <View className="w-full flex flex-row justify-center items-center gap-2">
                 {balance &&
@@ -157,7 +157,7 @@ export function Home() {
                   <>
                     <Text
                       className={cn(
-                        "text-muted-foreground text-5xl leading-[1.5] font-bold2",
+                        "text-secondary-foreground text-5xl leading-[1.5] font-bold2",
                         (balanceDisplayMode === "hidden" ||
                           (balanceDisplayMode === "sats" &&
                             bitcoinDisplayFormat === "sats")) &&
@@ -167,7 +167,8 @@ export function Home() {
                       {balanceDisplayMode === "sats" && "₿"}
                       {balanceDisplayMode === "fiat" && symbol}
                     </Text>
-                    <Text className="text-foreground text-5xl leading-[1.5] font-bold2">
+                    {/* TODO: Adjust using breakpoints for different screen sizes based on logical width and number of digits */}
+                    <Text className="text-5xl leading-[1.5] font-bold2">
                       {balanceDisplayMode === "sats" &&
                         new Intl.NumberFormat().format(
                           Math.floor(balance.balance / 1000),
@@ -181,7 +182,7 @@ export function Home() {
                     </Text>
                     {balanceDisplayMode === "sats" &&
                       bitcoinDisplayFormat === "sats" && (
-                        <Text className="text-muted-foreground text-5xl leading-[1.5] font-bold2">
+                        <Text className="text-secondary-foreground text-5xl leading-[1.5] font-bold2">
                           sats
                         </Text>
                       )}
@@ -196,7 +197,7 @@ export function Home() {
                   {balance &&
                   !refreshingBalance &&
                   (balanceDisplayMode === "sats" ? getFiatAmount : true) ? (
-                    <Text className="text-center text-3xl text-muted-foreground font-semibold2">
+                    <Text className="text-center text-3xl text-secondary-foreground font-semibold2">
                       {balanceDisplayMode === "sats" &&
                         getFiatAmount?.(Math.floor(balance.balance / 1000))}
                       {balanceDisplayMode === "fiat" &&
@@ -262,7 +263,7 @@ function MainButton({
           onPressOut={() => setPressed(false)}
         >
           <LinearGradient
-            className="flex-1 p-6"
+            className="flex-1 p-6 border border-secondary"
             colors={["#FFE951", "#FFC453"]}
             start={[0, 0]}
             end={[1, 1]}
@@ -276,7 +277,7 @@ function MainButton({
           >
             <View className="flex flex-col justify-center items-center gap-4">
               <Icon />
-              <Text className="font-bold2 text-3xl text-primary-foreground">
+              <Text className="font-bold2 text-2xl sm:text-3xl text-foreground">
                 {title}
               </Text>
             </View>
@@ -291,11 +292,11 @@ const shadows = StyleSheet.create({
   large: {
     ...Platform.select({
       ios: {
-        shadowColor: "black",
-        shadowOpacity: 0.15,
+        shadowColor: "#6F8CB0",
+        shadowOpacity: 0.4,
         shadowOffset: {
-          width: 5,
-          height: 5,
+          width: 1.5,
+          height: 1.5,
         },
         shadowRadius: 4,
         borderRadius: 24,

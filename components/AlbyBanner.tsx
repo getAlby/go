@@ -36,7 +36,7 @@ function AlbyBanner() {
   }
 
   return (
-    <View className="border bg-card border-muted rounded-2xl mt-5 flex flex-col gap-3 p-5 relative">
+    <View className="border bg-background border-muted rounded-2xl flex flex-col gap-3 p-4 relative">
       <TouchableOpacity
         onPress={() => setShowBanner(false)}
         className="absolute z-10 right-0 p-4"
@@ -44,7 +44,7 @@ function AlbyBanner() {
         <XIcon className="text-muted-foreground" />
       </TouchableOpacity>
       <Text className="font-semibold2 text-center">✨ Enjoying Alby Go?</Text>
-      <Text className="text-muted-foreground text-center">
+      <Text className="text-secondary-foreground text-center">
         Help us grow and improve by supporting our development.
       </Text>
       <View className="flex flex-row gap-3 mt-3">

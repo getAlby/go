@@ -99,44 +99,44 @@ export function Transaction() {
   const metadata = transaction.metadata as Nip47TransactionMetadata;
 
   return (
-    <View className="flex-1 flex flex-col gap-3">
+    <View className="flex-1 bg-background">
       <Screen title="Transaction" />
-      <ScrollView className="p-6">
-        <View className="flex flex-col gap-5 justify-center items-center mb-12">
-          <View
-            className={cn(
-              "my-8 bg-muted rounded-full",
-              transaction.state === "pending" && "animate-pulse",
-            )}
-            style={{ elevation: 2 }}
-          >
-            <TransactionIcon width={128} height={128} />
-          </View>
-          <Text
-            className={cn(
-              "text-4xl font-bold2 text-muted-foreground",
-              transaction.state === "pending" && "animate-pulse",
-            )}
-          >
-            {transaction.type === "incoming"
-              ? transaction.state === "settled"
-                ? "Received"
-                : "Receiving"
-              : transaction.state === "failed"
-                ? "Failed"
-                : transaction.state === "pending"
-                  ? "Sending"
-                  : "Sent"}
-          </Text>
-          <View className="flex flex-col items-center justify-center gap-2">
-            <View className="flex flex-row items-end mt-2">
+      <ScrollView className="p-6 pt-12">
+        <View className="flex gap-10">
+          <View className="flex gap-8 justify-center items-center">
+            <View className="flex items-center gap-8">
+              <View
+                className={cn(
+                  transaction.state === "pending" && "animate-pulse",
+                )}
+              >
+                <TransactionIcon width={128} height={128} />
+              </View>
+              <Text
+                className={cn(
+                  "text-3xl font-semibold2 text-secondary-foreground",
+                  transaction.state === "pending" && "animate-pulse",
+                )}
+              >
+                {transaction.type === "incoming"
+                  ? transaction.state === "settled"
+                    ? "Received"
+                    : "Receiving"
+                  : transaction.state === "failed"
+                    ? "Failed"
+                    : transaction.state === "pending"
+                      ? "Sending"
+                      : "Sent"}
+              </Text>
+            </View>
+            <View className="flex items-center gap-2">
               <Text
                 className={cn(
                   "text-5xl gap-2 font-semibold2",
                   bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
                   transaction.type === "incoming" &&
                     transaction.state === "settled"
-                    ? "text-receive"
+                    ? "text-success"
                     : "text-foreground",
                 )}
               >
@@ -144,20 +144,17 @@ export function Transaction() {
                 {bitcoinDisplayFormat === "bip177" && "₿"}{" "}
                 {Math.floor(transaction.amount / 1000)}
                 {bitcoinDisplayFormat === "sats" && (
-                  <Text className="text-3xl font-semibold2 text-muted-foreground">
-                    {" "}
-                    sats
-                  </Text>
+                  <Text className="text-3xl font-semibold2"> sats</Text>
                 )}
               </Text>
+              {getFiatAmount && (
+                <Text className="text-3xl font-semibold2 text-secondary-foreground">
+                  {getFiatAmount(Math.floor(transaction.amount / 1000))}
+                </Text>
+              )}
             </View>
-            {getFiatAmount && (
-              <Text className="text-3xl font-semibold2 text-muted-foreground">
-                {getFiatAmount(Math.floor(transaction.amount / 1000))}
-              </Text>
-            )}
           </View>
-          <View className="flex flex-col gap-4 w-full mt-10">
+          <View className="flex gap-4">
             {metadata?.recipient_data?.identifier && (
               <TransactionDetailRow
                 title="To"
@@ -248,6 +245,7 @@ export function Transaction() {
               <TransactionDetailRow
                 title="Metadata"
                 content={JSON.stringify(metadata, null, 2)}
+                className="font-mono font-medium bg-muted p-2 rounded-md text-foreground"
                 copy
               />
             )}
@@ -262,10 +260,11 @@ function TransactionDetailRow(props: {
   title: string;
   content: string;
   copy?: boolean;
+  className?: string;
 }) {
   return (
     <View className="flex flex-row gap-3">
-      <Text className="w-32 text-muted-foreground text-lg">{props.title}</Text>
+      <Text className="w-32 text-secondary-foreground">{props.title}</Text>
       {props.copy ? (
         <TouchableOpacity
           className="flex-1"
@@ -277,12 +276,12 @@ function TransactionDetailRow(props: {
             });
           }}
         >
-          <Text className="text-foreground font-medium2 text-lg">
+          <Text className={cn("font-medium2", props.className)}>
             {props.content}
           </Text>
         </TouchableOpacity>
       ) : (
-        <Text className="flex-1 text-foreground font-medium2 text-lg">
+        <Text className={cn("font-medium2", props.className)}>
           {props.content}
         </Text>
       )}

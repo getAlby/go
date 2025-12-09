@@ -1,34 +1,51 @@
-import * as CheckboxPrimitive from "@rn-primitives/checkbox";
+import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { Platform } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { CheckIcon } from "~/components/Icons";
 import { cn } from "~/lib/utils";
 
+type CheckboxProps = React.ComponentProps<typeof TouchableOpacity> & {
+  isChecked: boolean;
+  text?: string;
+};
+
 function Checkbox({
   className,
+  isChecked,
+  text,
+  children,
   ...props
-}: CheckboxPrimitive.RootProps & {
-  ref?: React.RefObject<CheckboxPrimitive.RootRef>;
-}) {
+}: CheckboxProps) {
   return (
-    <CheckboxPrimitive.Root
-      className={cn(
-        "web:peer h-4 w-4 native:h-[20] native:w-[20] shrink-0 rounded-sm native:rounded border border-primary web:ring-offset-background web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        props.checked && "bg-primary",
-        className,
-      )}
+    <TouchableOpacity
+      className={cn("flex flex-row items-center gap-4", className)}
       {...props}
     >
-      <CheckboxPrimitive.Indicator
-        className={cn("items-center justify-center h-full w-full")}
-      >
-        <CheckIcon
-          //size={12}
-          strokeWidth={Platform.OS === "web" ? 2.5 : 3.5}
-          className="text-primary-foreground"
+      {isChecked ? (
+        <LinearGradient
+          className="px-1 rounded-lg aspect-square flex items-center justify-center border-secondary border"
+          colors={["#FFE951", "#FFC453"]}
+          start={[0, 0]}
+          end={[1, 1]}
+        >
+          <CheckIcon width={14} height={14} />
+        </LinearGradient>
+      ) : (
+        <LinearGradient
+          className="px-3 rounded-lg aspect-square flex items-center justify-center border-muted border"
+          colors={["#E4E6EA", "#F9FAFB"]}
+          start={[0, 0]}
+          end={[1, 1]}
         />
-      </CheckboxPrimitive.Indicator>
-    </CheckboxPrimitive.Root>
+      )}
+      {children
+        ? children
+        : text && (
+            <Text className="text-lg font-semibold2 text-secondary-foreground">
+              {text}
+            </Text>
+          )}
+    </TouchableOpacity>
   );
 }
 

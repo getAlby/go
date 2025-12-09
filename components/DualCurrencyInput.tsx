@@ -87,7 +87,7 @@ function DescriptionInput({
         <Text
           numberOfLines={2}
           ellipsizeMode="tail"
-          className="text-muted-foreground font-medium2 text-lg text-center px-2"
+          className="text-secondary-foreground font-medium2 text-lg text-center px-2"
         >
           {description}
         </Text>
@@ -101,15 +101,17 @@ function DescriptionInput({
           }}
           className="flex flex-row items-center justify-center gap-2 px-12 py-4"
         >
-          {!description && <NotesIcon className="text-muted-foreground" />}
+          {!description && <NotesIcon className="text-secondary-foreground" />}
           <Text
             numberOfLines={2}
             ellipsizeMode="tail"
-            className="text-muted-foreground font-medium2 text-lg text-center px-2"
+            className="text-secondary-foreground font-medium2 text-lg text-center px-2"
           >
             {description || "Add Description"}
           </Text>
-          {description && <EditLineIcon className="text-muted-foreground" />}
+          {description && (
+            <EditLineIcon className="text-secondary-foreground" />
+          )}
         </TouchableOpacity>
       )}
 
@@ -141,14 +143,14 @@ function DescriptionInput({
                   height={24}
                 />
               </TouchableOpacity>
-              <Text className="text-2xl font-semibold2 text-muted-foreground">
+              <Text className="text-xl sm:text-2xl font-semibold2 text-secondary-foreground">
                 Add Description
               </Text>
             </View>
             {isIOS ? (
               <BottomSheetTextInput
                 placeholder="Sats for Satoshi"
-                className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border native:text-2xl leading-[1.25] font-semibold2 caret-primary"
+                className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted-foreground"
                 selectionColor={"hsl(47 100% 50%)"} // translates to primary
                 value={input}
@@ -159,7 +161,7 @@ function DescriptionInput({
             ) : (
               <Input
                 placeholder="Sats for Satoshi"
-                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 native:text-2xl font-semibold2"
+                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 text-2xl leading-[1.25] font-semibold2"
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}
@@ -307,7 +309,7 @@ export function DualCurrencyInput({
   }
 
   return (
-    <View className="flex-1 flex flex-col gap-2">
+    <View className="flex-1 flex flex-col gap-2 bg-background">
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex items-center justify-center">
           {validationMessage !== "" && (
@@ -321,7 +323,7 @@ export function DualCurrencyInput({
               <Text
                 className={cn(
                   formattedText.length > 10 ? "text-4xl" : "text-5xl",
-                  "text-muted-foreground font-bold2 leading-[1.5]",
+                  "text-secondary-foreground font-bold2 leading-[1.5]",
                   !text && "text-muted",
                 )}
               >
@@ -330,6 +332,7 @@ export function DualCurrencyInput({
                   : symbol}
               </Text>
             )}
+            {/* TODO: Size text accordingly */}
             <Text
               className={cn(
                 formattedText.length > 10 ? "text-4xl" : "text-5xl",
@@ -354,7 +357,7 @@ export function DualCurrencyInput({
               <Text
                 className={cn(
                   formattedText.length > 10 ? "text-4xl" : "text-5xl",
-                  "text-muted-foreground font-semibold2 leading-[1.5]",
+                  "text-secondary-foreground font-semibold2 leading-[1.5]",
                   !text && "text-muted",
                 )}
               >
@@ -365,13 +368,14 @@ export function DualCurrencyInput({
           {fiatCurrency && (
             <Pressable onPress={toggleInputMode}>
               <View className="flex flex-row gap-2 items-center justify-center">
-                <Text className="text-muted-foreground text-3xl font-semibold2">
+                {/* TODO: Set skeleton while loading */}
+                <Text className="text-secondary-foreground text-3xl font-semibold2">
                   {inputMode === "fiat"
                     ? formatBitcoinAmount(+amount, bitcoinDisplayFormat)
                     : getFiatAmount?.(+amount) || ""}
                 </Text>
                 <SwapIcon
-                  className="text-muted-foreground"
+                  className="text-secondary-foreground"
                   width={16}
                   height={16}
                 />

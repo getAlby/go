@@ -84,7 +84,7 @@ export function LNURLPay() {
   return (
     <>
       <Screen title="Send" />
-      <View className="flex flex-1 flex-col">
+      <View className="flex-1 bg-background">
         <DualCurrencyInput
           amount={amount}
           setAmount={setAmount}

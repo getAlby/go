@@ -1,11 +1,6 @@
 import { View } from "react-native";
 import { type SvgProps } from "react-native-svg";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
+import { Text } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
 
 type Props = {
@@ -24,9 +19,9 @@ function Alert({ title, description, type, icon: Icon, className }: Props) {
         ? "text-orange-700 dark:text-orange-300"
         : "text-blue-700 dark:text-blue-300";
   return (
-    <Card
+    <View
       className={cn(
-        "w-full mb-4",
+        "w-full mb-4 border-2 p-4 rounded-xl",
         type === "error" &&
           "bg-red-50 dark:bg-red-900 border-red-100 dark:border-red-900",
         type === "warn" &&
@@ -36,14 +31,14 @@ function Alert({ title, description, type, icon: Icon, className }: Props) {
         className,
       )}
     >
-      <CardContent className="flex flex-row items-center gap-4">
+      <View className="flex flex-row items-center gap-4">
         <Icon className={textColor} width={24} height={24} />
-        <View className="flex flex-1 flex-col">
-          <CardTitle className={cn(textColor, "text-base")}>{title}</CardTitle>
-          <CardDescription className={textColor}>{description}</CardDescription>
+        <View className={cn("flex flex-1 flex-col", textColor)}>
+          <Text className={cn("font-semibold2", textColor)}>{title}</Text>
+          <Text className={textColor}>{description}</Text>
         </View>
-      </CardContent>
-    </Card>
+      </View>
+    </View>
   );
 }
 

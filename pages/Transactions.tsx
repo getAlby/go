@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { XIcon } from "~/components/Icons";
+import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { TransactionItem } from "~/components/TransactionItem";
 import { Button } from "~/components/ui/button";
@@ -62,7 +63,7 @@ export function Transactions() {
   }, [refreshingTransactions, reloadTransactions]);
 
   return (
-    <View className="flex-1 flex flex-col gap-3">
+    <View className="bg-background">
       <Screen
         title="Transactions"
         animation="slide_from_bottom"
@@ -73,7 +74,11 @@ export function Transactions() {
             }}
             className="-mr-4 px-6"
           >
-            <XIcon className="text-muted-foreground" width={24} height={24} />
+            <XIcon
+              className="text-secondary-foreground"
+              width={24}
+              height={24}
+            />
           </TouchableOpacity>
         )}
       />
@@ -88,9 +93,10 @@ export function Transactions() {
           }
           ListFooterComponent={
             loadingNextPage ? (
-              <Text className="text-center mb-5 animate-pulse">
-                Loading more transactions...
-              </Text>
+              <View className="flex flex-row justify-center items-center gap-3 mb-6">
+                <Loading />
+                <Text className="animate-pulse">Loading more transactions</Text>
+              </View>
             ) : undefined
           }
           data={allTransactions}

@@ -123,47 +123,60 @@ export function Send() {
   return (
     <>
       <Screen title="Send" />
-      {isLoading && (
-        <View className="flex-1 flex flex-col items-center justify-center">
-          <Loading className="text-primary-foreground" />
-        </View>
-      )}
-      {!isLoading && (
-        <>
-          <QRCodeScanner
-            onScanned={handleScanned}
-            startScanning={startScanning}
-          />
-          <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-            <Button
-              onPress={pickImage}
-              variant="secondary"
-              className="flex flex-col gap-2 flex-1"
-            >
-              <ImageIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Import</Text>
-            </Button>
-            <Button
-              onPress={() => {
-                router.push("/send/address");
-              }}
-              variant="secondary"
-              className="flex flex-col gap-2 flex-1"
-            >
-              <AddressIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Address</Text>
-            </Button>
-            <Button
-              onPress={paste}
-              variant="secondary"
-              className="flex flex-col gap-2 flex-1"
-            >
-              <PasteIcon className="text-muted-foreground" />
-              <Text numberOfLines={1}>Paste</Text>
-            </Button>
+      <View className="flex-1 bg-background pt-2">
+        {isLoading ? (
+          <View className="flex-1 flex flex-col items-center justify-center">
+            <Loading className="text-primary-foreground" />
           </View>
-        </>
-      )}
+        ) : (
+          <>
+            <QRCodeScanner
+              onScanned={handleScanned}
+              startScanning={startScanning}
+            />
+            <View className="flex flex-row items-stretch justify-center gap-4 p-6">
+              <Button
+                variant="secondary"
+                className="flex-1 flex flex-col gap-2"
+                onPress={pickImage}
+              >
+                <ImageIcon
+                  width={32}
+                  height={32}
+                  className="text-muted-foreground"
+                />
+                <Text numberOfLines={1}>Import</Text>
+              </Button>
+              <Button
+                variant="secondary"
+                className="flex-1 flex flex-col gap-2"
+                onPress={() => {
+                  router.push("/send/address");
+                }}
+              >
+                <AddressIcon
+                  width={32}
+                  height={32}
+                  className="text-muted-foreground"
+                />
+                <Text numberOfLines={1}>Address</Text>
+              </Button>
+              <Button
+                variant="secondary"
+                className="flex-1 flex flex-col gap-2"
+                onPress={paste}
+              >
+                <PasteIcon
+                  width={32}
+                  height={32}
+                  className="text-muted-foreground"
+                />
+                <Text numberOfLines={1}>Paste</Text>
+              </Button>
+            </View>
+          </>
+        )}
+      </View>
     </>
   );
 }

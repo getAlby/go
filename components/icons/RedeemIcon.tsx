@@ -6,9 +6,8 @@ import Svg, { Path, type SvgProps } from "react-native-svg";
 const RedeemIcon = (props: SvgProps) => {
   const colorScheme = useColorScheme();
 
-  // hex values of text-muted-foreground
   const colors = {
-    light: "#71717A",
+    light: "#9BA2AE", // translates to text-secondary-foreground
     dark: "#A1A1AA",
   };
 

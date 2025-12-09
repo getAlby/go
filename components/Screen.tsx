@@ -25,7 +25,7 @@ function Screen({ title, animation, right, left }: ScreenProps) {
               return (
                 canGoBack && (
                   <TouchableOpacity onPress={() => router.back()}>
-                    <ChevronLeftIcon className="text-muted-foreground p-4 mr-4" />
+                    <ChevronLeftIcon className="text-secondary-foreground p-4 mr-4" />
                   </TouchableOpacity>
                 )
               );
@@ -34,7 +34,7 @@ function Screen({ title, animation, right, left }: ScreenProps) {
           <Text
             className={cn(
               Platform.OS === "android" && "mr-[42.18]", // this translates to width of headerLeft button
-              "text-2xl text-center font-semibold2 text-muted-foreground",
+              "text-xl sm:text-2xl text-center font-semibold2 text-foreground",
             )}
           >
             {title}
@@ -42,6 +42,9 @@ function Screen({ title, animation, right, left }: ScreenProps) {
         ),
         headerRight: right ? right : undefined,
         headerShadowVisible: false,
+        headerStyle: {
+          backgroundColor: "#F9FAFB", // translates to background
+        },
       }}
     />
   );

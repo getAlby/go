@@ -16,13 +16,13 @@ export default function Contact({
 }) {
   return (
     <TouchableOpacity
-      className="flex flex-row items-center gap-4 px-6 py-4"
+      className="flex flex-row items-center gap-4 px-6 py-3"
       onPress={async () => {
         await initiatePaymentFlow(lnAddress);
       }}
     >
       <View
-        className="h-12 w-12 flex items-center justify-center rounded-full"
+        className="h-10 w-10 flex items-center justify-center rounded-full"
         style={{
           backgroundColor: lighten(
             pastellify(lnAddress, {
@@ -47,12 +47,16 @@ export default function Contact({
         </Text>
       </View>
       <View className="flex flex-1 flex-col">
-        <Text className="text-xl font-semibold2">{name || lnAddress}</Text>
-        <Text className="text-muted-foreground">{lnAddress}</Text>
+        <Text className="text-lg font-semibold2">{name || lnAddress}</Text>
+        <Text className="text-secondary-foreground">{lnAddress}</Text>
       </View>
       {onDelete && (
-        <TouchableOpacity className="p-3" onPress={onDelete}>
-          <TrashLineIcon className="text-muted-foreground" />
+        <TouchableOpacity className="px-4 -mr-2" onPress={onDelete}>
+          <TrashLineIcon
+            width={18}
+            height={18}
+            className="text-muted-foreground"
+          />
         </TouchableOpacity>
       )}
     </TouchableOpacity>

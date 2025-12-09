@@ -192,14 +192,14 @@ export function SetupWallet() {
         }
       />
       {isConnecting ? (
-        <View className="flex-1 justify-center items-center">
+        <View className="flex-1 justify-center items-center bg-background">
           <Loading />
           <Text className="mt-4">Connecting to your Wallet</Text>
         </View>
       ) : !nostrWalletConnectUrl ? (
-        <>
+        <View className="flex-1 bg-background">
           <View className="p-4">
-            <Text className="text-lg text-center font-medium2 text-secondary-foreground">
+            <Text className="text-center text-secondary-foreground font-medium2">
               Scan a NWC connection secret to add a wallet
             </Text>
           </View>
@@ -217,10 +217,10 @@ export function SetupWallet() {
               <Text>Paste</Text>
             </Button>
           </View>
-        </>
+        </View>
       ) : (
         <DismissableKeyboardView>
-          <View className="flex-1 p-6">
+          <View className="flex-1 p-6 bg-background">
             <View className="flex-1 flex flex-col items-center justify-center">
               <Text className="text-muted-foreground text-center">
                 Wallet name

@@ -18,12 +18,11 @@ export function Wallets() {
   return (
     <>
       <Screen title="Manage Wallets" />
-      <View className="h-full flex px-6">
+      <View className="h-full flex bg-background">
         <FlatList
-          className="flex flex-col mt-6"
+          className="flex flex-col pt-4 px-6"
           data={wallets}
           contentContainerStyle={{ flexGrow: 1 }}
-          ListFooterComponentStyle={{ marginTop: "auto" }}
           renderItem={(item) => {
             const active = item.index === selectedWalletId;
 
@@ -42,19 +41,23 @@ export function Wallets() {
                   }
                 }}
                 className={cn(
-                  "flex flex-row items-center justify-between px-6 py-4 rounded-2xl border-2",
+                  "flex flex-row items-center justify-between px-6 py-4 sm:mb-2 rounded-2xl border-[3px] bg-transparent",
                   active ? "border-primary" : "border-transparent",
                 )}
               >
                 <View className="flex flex-row gap-4 items-center flex-shrink">
                   <WalletIcon
-                    className="text-muted-foreground"
-                    width={28}
-                    height={28}
+                    className={cn(
+                      active
+                        ? "text-secondary-foreground"
+                        : "text-muted-foreground",
+                    )}
+                    width={24}
+                    height={24}
                   />
                   <Text
                     className={cn(
-                      "text-xl pr-16 text-foreground",
+                      "text-lg sm:text-xl pr-16 text-foreground",
                       active ? "font-semibold2" : "font-medium2",
                     )}
                     numberOfLines={1}
@@ -71,31 +74,29 @@ export function Wallets() {
                   <TouchableOpacity className="p-6">
                     <SettingsIcon
                       className="text-muted-foreground"
-                      width={20}
-                      height={20}
+                      width={16}
+                      height={16}
                     />
                   </TouchableOpacity>
                 </Link>
               </TouchableOpacity>
             );
           }}
-          ListFooterComponent={
-            <View className="py-6">
-              <Button
-                variant="secondary"
-                size="lg"
-                onPress={() => {
-                  router.dismissAll();
-                  router.push("/settings/wallets/setup");
-                }}
-                className="flex flex-row gap-2"
-              >
-                <NWCIcon />
-                <Text className="text-muted-foreground">Connect a Wallet</Text>
-              </Button>
-            </View>
-          }
         />
+        <View className="p-6">
+          <Button
+            variant="secondary"
+            size="lg"
+            onPress={() => {
+              router.dismissAll();
+              router.push("/settings/wallets/setup");
+            }}
+            className="flex flex-row gap-2"
+          >
+            <NWCIcon />
+            <Text className="text-secondary-foreground">Connect a Wallet</Text>
+          </Button>
+        </View>
       </View>
     </>
   );

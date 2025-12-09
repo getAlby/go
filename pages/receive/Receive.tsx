@@ -4,7 +4,13 @@ import React from "react";
 import { Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { CreateInvoice } from "~/components/CreateInvoice";
-import { AddressIcon, EditIcon, ScanIcon, ShareIcon } from "~/components/Icons";
+import {
+  AddressIcon,
+  CopyIcon,
+  EditIcon,
+  ScanIcon,
+  ShareIcon,
+} from "~/components/Icons";
 import RedeemIcon from "~/components/icons/RedeemIcon";
 import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
@@ -85,19 +91,21 @@ export function Receive() {
       {!lightningAddress ? (
         <CreateInvoice />
       ) : (
-        <>
-          <View className="flex-1 justify-center items-center gap-8">
+        <View className="flex-1 bg-background">
+          <View className="flex-1 justify-center items-center gap-4">
             <QRCode value={lightningAddress} />
-            <View className="flex flex-col items-center justify-center gap-2">
-              <TouchableOpacity onPress={copy}>
-                <Text className="text-foreground text-xl font-medium2">
-                  {lightningAddress}
-                </Text>
+            <View className="flex flex-col items-center justify-center">
+              <TouchableOpacity
+                onPress={copy}
+                className="flex flex-row items-center gap-2 mt-2"
+              >
+                <Text className="text-xl font-medium2">{lightningAddress}</Text>
+                <CopyIcon className="text-muted-foreground" />
               </TouchableOpacity>
             </View>
           </View>
 
-          <View className="flex flex-row gap-3 p-6">
+          <View className="flex flex-row gap-4 p-6">
             <Button
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
@@ -105,7 +113,7 @@ export function Receive() {
                 router.push("/receive/withdraw");
               }}
             >
-              <RedeemIcon className="text-muted-foreground" />
+              <RedeemIcon width={32} height={32} />
               <Text numberOfLines={1}>Redeem</Text>
             </Button>
             <Button
@@ -113,7 +121,11 @@ export function Receive() {
               className="flex-1 flex flex-col gap-2"
               onPress={share}
             >
-              <ShareIcon className="text-muted-foreground" />
+              <ShareIcon
+                width={32}
+                height={32}
+                className="text-muted-foreground"
+              />
               <Text numberOfLines={1}>Share</Text>
             </Button>
             <Button
@@ -123,11 +135,15 @@ export function Receive() {
                 router.push("/receive/invoice");
               }}
             >
-              <EditIcon className="text-muted-foreground" />
+              <EditIcon
+                width={32}
+                height={32}
+                className="text-muted-foreground"
+              />
               <Text numberOfLines={1}>Amount</Text>
             </Button>
           </View>
-        </>
+        </View>
       )}
     </>
   );

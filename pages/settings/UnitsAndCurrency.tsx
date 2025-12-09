@@ -8,7 +8,7 @@ import { Text } from "~/components/ui/text";
 
 export function UnitsAndCurrency() {
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-background">
       <Screen title="Units & Currency" />
       <View className="flex-1 flex flex-col mt-4">
         <Link href="/settings/bitcoin-units" asChild>
@@ -18,9 +18,7 @@ export function UnitsAndCurrency() {
               width={28}
               height={28}
             />
-            <Text className="font-medium2 text-xl text-foreground">
-              Bitcoin Units
-            </Text>
+            <Text className="font-medium2 text-xl">Bitcoin Units</Text>
             <ChevronRightIcon
               className="ml-auto text-muted-foreground"
               width={20}
@@ -31,14 +29,8 @@ export function UnitsAndCurrency() {
 
         <Link href="/settings/fiat-currency" asChild>
           <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
-            <ShitcoinIcon
-              className="text-muted-foreground"
-              width={28}
-              height={28}
-            />
-            <Text className="text-foreground font-medium2 text-xl">
-              Fiat Currency
-            </Text>
+            <ShitcoinIcon width={28} height={28} />
+            <Text className="font-medium2 text-xl">Fiat Currency</Text>
             <ChevronRightIcon
               className="ml-auto text-muted-foreground"
               width={20}

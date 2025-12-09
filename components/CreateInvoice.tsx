@@ -154,11 +154,13 @@ export function CreateInvoice() {
   return (
     <>
       {invoice ? (
-        <>
-          <View className="flex-1 justify-center items-center gap-6">
-            <View className="flex flex-row justify-center items-center gap-3">
+        <View className="flex-1 bg-background">
+          <View className="flex-1 justify-center items-center gap-6 mt-4">
+            <View className="flex flex-row justify-center items-center gap-2">
               <Loading />
-              <Text className="text-xl">Waiting for payment</Text>
+              <Text className="text-lg sm:text-xl font-medium2">
+                Waiting for payment
+              </Text>
             </View>
             <QRCode value={invoice} showAvatar />
             <View className="flex flex-col items-center justify-center gap-2">
@@ -166,7 +168,7 @@ export function CreateInvoice() {
                 {formatBitcoinAmount(+amount, bitcoinDisplayFormat)}
               </Text>
               {getFiatAmount && (
-                <Text className="text-muted-foreground text-2xl font-medium2">
+                <Text className="text-secondary-foreground text-xl font-semibold2">
                   {getFiatAmount(+amount)}
                 </Text>
               )}
@@ -174,25 +176,33 @@ export function CreateInvoice() {
           </View>
           <View className="flex flex-row gap-3 p-6">
             <Button
-              onPress={share}
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
+              onPress={share}
             >
-              <ShareIcon className="text-muted-foreground" />
+              <ShareIcon
+                width={32}
+                height={32}
+                className="text-muted-foreground"
+              />
               <Text>Share</Text>
             </Button>
             <Button
               variant="secondary"
-              onPress={copy}
               className="flex-1 flex flex-col gap-2"
+              onPress={copy}
             >
-              <CopyIcon className="text-muted-foreground" />
+              <CopyIcon
+                width={32}
+                height={32}
+                className="text-muted-foreground"
+              />
               <Text>Copy</Text>
             </Button>
           </View>
-        </>
+        </View>
       ) : (
-        <View className="flex flex-1 flex-col">
+        <View className="flex-1 bg-background">
           <DualCurrencyInput
             amount={amount}
             setAmount={setAmount}

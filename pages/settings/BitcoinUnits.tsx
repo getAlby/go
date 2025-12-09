@@ -1,12 +1,12 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { CheckIcon } from "~/components/Icons";
+import CheckIcon from "~/components/icons/CheckIcon";
+import { LinearGradient } from "~/components/LinearGradient";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { setNotificationSettings } from "~/lib/notificationsNativeStorage";
 import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
-import { cn } from "~/lib/utils";
 
 export function BitcoinUnits() {
   const bitcoinDisplayFormat = useAppStore(
@@ -24,31 +24,38 @@ export function BitcoinUnits() {
   };
 
   return (
-    <View className="flex-1 py-6">
+    <>
       <Screen title="Bitcoin Units" />
-      <View className="flex-1">
-        <View className="px-8">
-          <Text className="text-lg text-center text-muted-foreground">
+      <View className="flex-1 bg-background">
+        <View className="px-8 my-6">
+          <Text className="text-sm sm:text-base text-center text-secondary-foreground">
             Choose which bitcoin units should be displayed in the app.
           </Text>
         </View>
-        <View className="flex gap-6 px-6 mt-12">
+        <View className="flex gap-6 px-6">
           <View className="flex-row items-center justify-between">
             <TouchableOpacity
               onPress={() => setDisplayFormat("bip177")}
               className="flex flex-row items-center gap-4"
             >
-              <View
-                className={cn(
-                  bitcoinDisplayFormat === "bip177"
-                    ? "bg-primary border-background/80"
-                    : "border-foreground/5",
-                  "shadow shadow-gray-200 px-1 rounded-xl aspect-square flex items-center justify-center border-2",
-                )}
-              >
-                <CheckIcon className="text-white" width={16} height={16} />
-              </View>
-              <Text className="text-lg font-medium2">₿</Text>
+              {bitcoinDisplayFormat === "bip177" ? (
+                <LinearGradient
+                  className="px-1 rounded-lg aspect-square flex items-center justify-center border-secondary border"
+                  colors={["#FFE951", "#FFC453"]}
+                  start={[0, 0]}
+                  end={[1, 1]}
+                >
+                  <CheckIcon width={14} height={14} />
+                </LinearGradient>
+              ) : (
+                <LinearGradient
+                  className="px-[11px] rounded-lg aspect-square flex items-center justify-center border-muted border"
+                  colors={["#F9FAFB", "#E4E6EA"]}
+                  start={[0, 0]}
+                  end={[1, 1]}
+                ></LinearGradient>
+              )}
+              <Text className="font-medium2">₿</Text>
             </TouchableOpacity>
           </View>
           <View className="flex-row items-center justify-between">
@@ -56,21 +63,28 @@ export function BitcoinUnits() {
               onPress={() => setDisplayFormat("sats")}
               className="flex flex-row items-center gap-4"
             >
-              <View
-                className={cn(
-                  bitcoinDisplayFormat === "sats"
-                    ? "bg-primary border-background/80"
-                    : "border-foreground/5",
-                  "shadow shadow-gray-200 px-1 rounded-xl aspect-square flex items-center justify-center border-2",
-                )}
-              >
-                <CheckIcon className="text-white" width={16} height={16} />
-              </View>
-              <Text className="text-lg font-medium2">sats</Text>
+              {bitcoinDisplayFormat === "sats" ? (
+                <LinearGradient
+                  className="px-1 rounded-lg aspect-square flex items-center justify-center border-secondary border"
+                  colors={["#FFE951", "#FFC453"]}
+                  start={[0, 0]}
+                  end={[1, 1]}
+                >
+                  <CheckIcon width={14} height={14} />
+                </LinearGradient>
+              ) : (
+                <LinearGradient
+                  className="px-[11px] rounded-lg aspect-square flex items-center justify-center border-muted border"
+                  colors={["#F9FAFB", "#E4E6EA"]}
+                  start={[0, 0]}
+                  end={[1, 1]}
+                ></LinearGradient>
+              )}
+              <Text className="font-medium2">sats</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-    </View>
+    </>
   );
 }

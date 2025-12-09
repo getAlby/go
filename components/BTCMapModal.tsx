@@ -17,43 +17,42 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-center items-center bg-black/80">
+      {/* TODO: Change bg color */}
+      <View className="flex-1 justify-center items-center bg-black/30">
         <TouchableOpacity
           activeOpacity={1}
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="w-4/5 max-w-[425px] bg-background border border-border rounded-2xl z-10">
-          <View className="flex-row items-center justify-center relative p-6">
-            <Text className="text-3xl font-semibold2 text-muted-foreground">
-              BTC Map
-            </Text>
-            <TouchableOpacity
-              onPress={onClose}
-              className="absolute right-0 p-4"
-            >
-              <XIcon className="text-muted-foreground" width={24} height={24} />
-            </TouchableOpacity>
-          </View>
-          <View className="p-6 pt-0 flex flex-col items-center">
+        <View className="w-4/5 max-w-[425px] relative bg-background shadow shadow-muted-foreground rounded-3xl p-6">
+          <TouchableOpacity
+            onPress={onClose}
+            className="absolute right-0 p-4 z-10"
+          >
+            <XIcon className="text-muted-foreground" width={24} height={24} />
+          </TouchableOpacity>
+          <View className="pt-0 flex flex-col items-center gap-6">
             <Image
               source={require("./../assets/btc-map.png")}
-              className="w-24 h-24"
+              className="w-16 h-16"
               resizeMode="contain"
             />
-            <View className="mt-6 flex flex-col items-center gap-4">
-              <Text className="text-lg text-center text-muted-foreground">
+            <Text className="text-3xl font-semibold2 text-secondary-foreground">
+              BTC Map
+            </Text>
+            <View className="flex flex-col items-center gap-4">
+              <Text className="text-center">
                 BTC Map is an open-source project with the goal of mapping and
                 maintaining all the merchants accepting Bitcoin around the
                 world.
               </Text>
-              <Text className="text-lg text-center text-muted-foreground">
+              <Text className="text-center">
                 Find merchants nearby, pay for goods and services, and help
                 improve the map by contributing!
               </Text>
               <Text
                 onPress={() => openURL("https://btcmap.org/")}
-                className="text-lg underline font-semibold2 text-muted-foreground"
+                className="text-lg underline font-semibold2 mb-2"
               >
                 Visit btcmap.org
               </Text>

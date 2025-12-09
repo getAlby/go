@@ -57,7 +57,7 @@ function QRCodeScanner({
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-background">
       {(isLoading ||
         (!isScanning &&
           permissionStatus === PermissionStatus.UNDETERMINED)) && (
