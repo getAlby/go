@@ -4,6 +4,7 @@ import { TouchableOpacity, View } from "react-native";
 import { TrashLineIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
+import { useColorScheme } from "~/lib/useColorScheme";
 
 export default function Contact({
   lnAddress,
@@ -14,6 +15,12 @@ export default function Contact({
   name?: string;
   onDelete?: () => void;
 }) {
+  const { isDarkColorScheme } = useColorScheme();
+
+  const baseColor = pastellify(lnAddress, { toCSS: true });
+  const lightColor = lighten(baseColor, 10);
+  const darkColor = darken(baseColor, 30);
+
   return (
     <TouchableOpacity
       className="flex flex-row items-center gap-4 px-6 py-3"
@@ -24,23 +31,13 @@ export default function Contact({
       <View
         className="h-10 w-10 flex items-center justify-center rounded-full"
         style={{
-          backgroundColor: lighten(
-            pastellify(lnAddress, {
-              toCSS: true,
-            }),
-            10,
-          ),
+          backgroundColor: isDarkColorScheme ? darkColor : lightColor,
         }}
       >
         <Text
           className="text-2xl font-semibold2"
           style={{
-            color: darken(
-              pastellify(lnAddress, {
-                toCSS: true,
-              }),
-              30,
-            ),
+            color: isDarkColorScheme ? lightColor : darkColor,
           }}
         >
           {name?.[0]?.toUpperCase() || lnAddress[0]?.toUpperCase() || "SN"}

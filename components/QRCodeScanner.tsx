@@ -70,7 +70,7 @@ function QRCodeScanner({
           {!isScanning && permissionStatus === PermissionStatus.DENIED && (
             <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
               <CameraOffIcon className="text-foreground" style={styles.icon} />
-              <Text className="text-2xl text-foreground text-center">
+              <Text className="text-2xl text-center">
                 Camera Permission Denied
               </Text>
               <Text className="text-muted-foreground text-xl text-center">

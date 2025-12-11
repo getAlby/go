@@ -1,21 +1,20 @@
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { Text, TouchableOpacity } from "react-native";
-import { CheckIcon } from "~/components/Icons";
+import { TouchableOpacity } from "react-native";
+import CheckIcon from "~/components/icons/CheckIcon";
+import { useThemeColor } from "~/lib/theme/colors";
 import { cn } from "~/lib/utils";
 
 type CheckboxProps = React.ComponentProps<typeof TouchableOpacity> & {
   isChecked: boolean;
-  text?: string;
 };
 
-function Checkbox({
-  className,
-  isChecked,
-  text,
-  children,
-  ...props
-}: CheckboxProps) {
+function Checkbox({ className, isChecked, children, ...props }: CheckboxProps) {
+  const primaryColor = useThemeColor("primary");
+  const secondaryColor = useThemeColor("secondary");
+  const mutedColor = useThemeColor("muted");
+  const backgroundColor = useThemeColor("background");
+
   return (
     <TouchableOpacity
       className={cn("flex flex-row items-center gap-4", className)}
@@ -24,7 +23,7 @@ function Checkbox({
       {isChecked ? (
         <LinearGradient
           className="px-1 rounded-lg aspect-square flex items-center justify-center border-secondary border"
-          colors={["#FFE951", "#FFC453"]}
+          colors={[secondaryColor, primaryColor]}
           start={[0, 0]}
           end={[1, 1]}
         >
@@ -32,19 +31,13 @@ function Checkbox({
         </LinearGradient>
       ) : (
         <LinearGradient
-          className="px-3 rounded-lg aspect-square flex items-center justify-center border-muted border"
-          colors={["#E4E6EA", "#F9FAFB"]}
+          className="px-[11px] rounded-lg aspect-square flex items-center justify-center border-muted border"
+          colors={[backgroundColor, mutedColor]}
           start={[0, 0]}
           end={[1, 1]}
         />
       )}
-      {children
-        ? children
-        : text && (
-            <Text className="text-lg font-semibold2 text-secondary-foreground">
-              {text}
-            </Text>
-          )}
+      {children}
     </TouchableOpacity>
   );
 }

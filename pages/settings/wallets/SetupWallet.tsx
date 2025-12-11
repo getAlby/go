@@ -285,9 +285,7 @@ function HelpModal({
         />
         <View className="w-4/5 max-w-[425px] bg-background border border-border rounded-2xl z-10">
           <View className="flex-row items-center justify-center relative p-6">
-            <Text className="text-xl font-bold2 text-foreground">
-              Connect Your Wallet
-            </Text>
+            <Text className="text-xl font-bold2">Connect Your Wallet</Text>
             <TouchableOpacity
               onPress={onClose}
               className="absolute right-0 p-4"

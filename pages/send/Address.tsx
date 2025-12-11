@@ -18,16 +18,16 @@ import {
 import Contact from "~/components/Contact";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import { PasteLineIcon, XIcon } from "~/components/Icons";
-import CheckIcon from "~/components/icons/CheckIcon";
-import { LinearGradient } from "~/components/LinearGradient";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
+import { useThemeColor } from "~/lib/theme/colors";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 interface ContactInputProps {
@@ -49,11 +49,16 @@ function ContactInput({
   const { isDarkColorScheme } = useColorScheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
+  const primaryColor = useThemeColor("primary");
+  const backgroundColor = useThemeColor("background");
+  const mutedForegroundColor = useThemeColor("mutedForeground");
+  const foregroundColor = useThemeColor("foreground");
+
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={{ backgroundColor: isDarkColorScheme ? "#FFFFFF" : "#09090B" }} // translates to background
+        style={{ backgroundColor: foregroundColor }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
         opacity={isDarkColorScheme ? 0.3 : 0.7}
@@ -61,7 +66,7 @@ function ContactInput({
         onPress={Keyboard.dismiss}
       />
     ),
-    [isDarkColorScheme],
+    [isDarkColorScheme, foregroundColor],
   );
 
   const save = () => {
@@ -75,7 +80,8 @@ function ContactInput({
 
   return (
     <>
-      <TouchableOpacity
+      <Checkbox
+        isChecked={!!contactName}
         onPress={() => {
           if (contactName) {
             setInput("");
@@ -89,40 +95,19 @@ function ContactInput({
         }}
         className="flex flex-row items-center justify-center px-12 py-2 gap-2"
       >
-        {contactName ? (
-          <LinearGradient
-            className="px-1 rounded-lg aspect-square flex items-center justify-center border-secondary border"
-            colors={["#FFE951", "#FFC453"]}
-            start={[0, 0]}
-            end={[1, 1]}
-          >
-            <CheckIcon width={14} height={14} />
-          </LinearGradient>
-        ) : (
-          <LinearGradient
-            className="px-[11px] rounded-lg aspect-square flex items-center justify-center border-muted border"
-            colors={["#F9FAFB", "#E4E6EA"]}
-            start={[0, 0]}
-            end={[1, 1]}
-          ></LinearGradient>
-        )}
-        <Text
-          numberOfLines={2}
-          ellipsizeMode="tail"
-          className="text-secondary-foreground font-medium2"
-        >
+        <Text className="text-secondary-foreground font-medium2">
           Add to Contacts
         </Text>
-      </TouchableOpacity>
+      </Checkbox>
 
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backgroundStyle={{
-          backgroundColor: isDarkColorScheme ? "#09090B" : "#ffffff", // translates to muted
+          backgroundColor,
           borderRadius: 24,
         }}
         handleIndicatorStyle={{
-          backgroundColor: isDarkColorScheme ? "#FAFAFA" : "#9BA2AE", // translates to foreground
+          backgroundColor: mutedForegroundColor, // translates to foreground
         }}
         backdropComponent={renderBackdrop}
         enablePanDownToClose
@@ -152,7 +137,7 @@ function ContactInput({
                 placeholder="Satoshi Nakamoto"
                 className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted-foreground"
-                selectionColor={"hsl(47 100% 50%)"} // translates to primary
+                selectionColor={primaryColor}
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}

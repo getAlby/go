@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { TextClassContext } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/theme/colors";
 import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
@@ -34,7 +35,7 @@ const buttonVariants = cva(
 );
 
 const buttonTextVariants = cva(
-  "web:whitespace-nowrap text-foreground web:transition-colors leading-6",
+  "web:whitespace-nowrap text-primary-foreground web:transition-colors leading-6",
   {
     variants: {
       variant: {
@@ -63,6 +64,8 @@ type ButtonProps = React.ComponentProps<typeof Pressable> &
   VariantProps<typeof buttonVariants>;
 
 function Button({ ref, className, variant, size, ...props }: ButtonProps) {
+  const primaryColor = useThemeColor("primary");
+  const secondaryColor = useThemeColor("secondary");
   return (
     <TextClassContext.Provider
       value={buttonTextVariants({
@@ -82,7 +85,7 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
           ]}
         >
           <LinearGradient
-            colors={["#FFE951", "#FFC453"]}
+            colors={[secondaryColor, primaryColor]}
             start={[0, 0]}
             end={[1, 1]}
             style={{ borderRadius: size === "lg" ? 16 : 4 }}

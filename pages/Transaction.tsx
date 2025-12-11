@@ -135,9 +135,8 @@ export function Transaction() {
                   "text-5xl gap-2 font-semibold2",
                   bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
                   transaction.type === "incoming" &&
-                    transaction.state === "settled"
-                    ? "text-success"
-                    : "text-foreground",
+                    transaction.state === "settled" &&
+                    "text-success",
                 )}
               >
                 {transaction.type === "incoming" ? "+" : "-"}{" "}
@@ -245,7 +244,7 @@ export function Transaction() {
               <TransactionDetailRow
                 title="Metadata"
                 content={JSON.stringify(metadata, null, 2)}
-                className="font-mono font-medium bg-muted p-2 rounded-md text-foreground"
+                className="font-mono font-medium bg-muted p-2 rounded-md"
                 copy
               />
             )}

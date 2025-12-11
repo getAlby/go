@@ -17,14 +17,13 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
       visible={visible}
       onRequestClose={onClose}
     >
-      {/* TODO: Change bg color */}
-      <View className="flex-1 justify-center items-center bg-black/30">
+      <View className="flex-1 justify-center items-center bg-overlay">
         <TouchableOpacity
           activeOpacity={1}
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="w-4/5 max-w-[425px] relative bg-background shadow shadow-muted-foreground rounded-3xl p-6">
+        <View className="p-6 mx-6 relative bg-background shadow rounded-3xl">
           <TouchableOpacity
             onPress={onClose}
             className="absolute right-0 p-4 z-10"

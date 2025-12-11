@@ -164,7 +164,7 @@ export function CreateInvoice() {
             </View>
             <QRCode value={invoice} showAvatar />
             <View className="flex flex-col items-center justify-center gap-2">
-              <Text className="text-foreground text-3xl font-semibold2">
+              <Text className="text-3xl font-semibold2">
                 {formatBitcoinAmount(+amount, bitcoinDisplayFormat)}
               </Text>
               {getFiatAmount && (

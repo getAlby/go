@@ -71,14 +71,14 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
               Message From Receiver
             </Text>
             {lnurlSuccessAction.tag === "message" && (
-              <Text className="text-foreground text-center text-xl font-medium2">
+              <Text className="text-center text-xl font-medium2">
                 {lnurlSuccessAction.message}
               </Text>
             )}
             {lnurlSuccessAction.tag === "url" && (
               <>
                 {lnurlSuccessAction.description && (
-                  <Text className="px-6 text-foreground text-center text-xl font-medium2">
+                  <Text className="px-6 text-center text-xl font-medium2">
                     {lnurlSuccessAction.description}
                   </Text>
                 )}

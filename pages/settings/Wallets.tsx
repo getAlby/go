@@ -57,7 +57,7 @@ export function Wallets() {
                   />
                   <Text
                     className={cn(
-                      "text-lg sm:text-xl pr-16 text-foreground",
+                      "text-lg sm:text-xl pr-16",
                       active ? "font-semibold2" : "font-medium2",
                     )}
                     numberOfLines={1}

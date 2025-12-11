@@ -6,6 +6,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useThemeColor } from "~/lib/theme/colors";
 import { cn } from "~/lib/utils";
 
 function Switch({
@@ -14,6 +15,10 @@ function Switch({
 }: SwitchPrimitives.RootProps & {
   ref?: React.RefObject<SwitchPrimitives.RootRef>;
 }) {
+  const primaryColor = useThemeColor("primary");
+  const secondaryColor = useThemeColor("secondary");
+  const mutedColor = useThemeColor("muted");
+  const backgroundColor = useThemeColor("background");
   const translateX = useDerivedValue(() => (props.checked ? 18 : 2));
   const animatedThumbStyle = useAnimatedStyle(() => ({
     transform: [
@@ -27,7 +32,11 @@ function Switch({
         props.disabled && "opacity-50",
         props.checked ? "border-secondary" : "border-muted",
       )}
-      colors={props.checked ? ["#FFE951", "#FFC453"] : ["#E4E6EA", "#F9FAFB"]}
+      colors={
+        props.checked
+          ? [secondaryColor, primaryColor]
+          : [mutedColor, backgroundColor]
+      }
       start={[0, 0]}
       end={[1, 1]}
     >
@@ -41,10 +50,8 @@ function Switch({
         <Animated.View style={animatedThumbStyle}>
           <SwitchPrimitives.Thumb
             className={cn(
-              "h-[20px] w-[20px] rounded-full bg-background border-primary shadow-sm bottom-[1]",
-              props.checked
-                ? "border-secondary shadow-muted-foreground"
-                : "border-muted shadow-muted-foreground",
+              "h-[20px] w-[20px] rounded-full bg-background shadow-sm bottom-[1]",
+              props.checked ? "dark:bg-foreground" : "dark:bg-muted-foreground",
             )}
           />
         </Animated.View>

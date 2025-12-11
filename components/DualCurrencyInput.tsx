@@ -336,7 +336,7 @@ export function DualCurrencyInput({
             <Text
               className={cn(
                 formattedText.length > 10 ? "text-4xl" : "text-5xl",
-                "text-foreground font-semibold2 leading-[1.5]",
+                "font-semibold2 leading-[1.5]",
                 !text && "text-muted",
                 validationMessage && "text-destructive",
               )}

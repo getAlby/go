@@ -4,6 +4,7 @@ import { Platform, TouchableOpacity } from "react-native";
 import { type StackAnimationTypes } from "react-native-screens";
 import { ChevronLeftIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/theme/colors";
 import { cn } from "~/lib/utils";
 
 type ScreenProps = {
@@ -14,6 +15,8 @@ type ScreenProps = {
 };
 
 function Screen({ title, animation, right, left }: ScreenProps) {
+  const backgroundColor = useThemeColor("background");
+
   return (
     <Stack.Screen
       options={{
@@ -34,7 +37,7 @@ function Screen({ title, animation, right, left }: ScreenProps) {
           <Text
             className={cn(
               Platform.OS === "android" && "mr-[42.18]", // this translates to width of headerLeft button
-              "text-xl sm:text-2xl text-center font-semibold2 text-foreground",
+              "text-xl sm:text-2xl text-center font-semibold2",
             )}
           >
             {title}
@@ -43,7 +46,7 @@ function Screen({ title, animation, right, left }: ScreenProps) {
         headerRight: right ? right : undefined,
         headerShadowVisible: false,
         headerStyle: {
-          backgroundColor: "#F9FAFB", // translates to background
+          backgroundColor,
         },
       }}
     />

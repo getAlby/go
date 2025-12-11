@@ -36,8 +36,7 @@ export function Security() {
             <Alert
               type="info"
               title="Setup Device Security"
-              description="To protect your wallet, please set up a phone lock in your
-                  device settings first."
+              description="To protect your wallet, please set up a phone lock in your device settings first."
               icon={TriangleAlertIcon}
             />
           )}

@@ -86,7 +86,7 @@ export function EditWallet() {
                 width={24}
                 height={24}
               />
-              <Text className="font-medium2 text-lg sm:text-xl text-foreground">
+              <Text className="font-medium2 text-lg sm:text-xl">
                 Wallet Name
               </Text>
               <ChevronRightIcon
@@ -106,7 +106,7 @@ export function EditWallet() {
                 width={24}
                 height={24}
               />
-              <Text className="font-medium2 text-lg sm:text-xl text-foreground">
+              <Text className="font-medium2 text-lg sm:text-xl">
                 Lightning Address
               </Text>
               <ChevronRightIcon
@@ -129,7 +129,7 @@ export function EditWallet() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-lg sm:text-xl text-foreground">
+            <Text className="font-medium2 text-lg sm:text-xl">
               Connection Info
             </Text>
           </TouchableOpacity>
@@ -188,7 +188,7 @@ export function EditWallet() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-lg sm:text-xl text-foreground">
+            <Text className="font-medium2 text-lg sm:text-xl">
               Export Wallet
             </Text>
           </TouchableOpacity>
@@ -216,7 +216,7 @@ export function EditWallet() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-lg sm:text-xl text-foreground">
+            <Text className="font-medium2 text-lg sm:text-xl">
               Delete Wallet
             </Text>
           </TouchableOpacity>

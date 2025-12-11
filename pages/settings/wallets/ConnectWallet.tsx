@@ -267,9 +267,7 @@ function ConnectView({
           />
           <View className="w-4/5 max-h-[80vh] max-w-[425px] bg-background border border-border rounded-2xl z-10">
             <View className="flex-row items-center justify-center relative p-6">
-              <Text className="text-xl font-bold2 text-foreground">
-                Connection Details
-              </Text>
+              <Text className="text-xl font-bold2">Connection Details</Text>
               <TouchableOpacity
                 onPress={closeModal}
                 className="absolute right-0 p-4"
@@ -283,14 +281,14 @@ function ConnectView({
             </View>
             <ScrollView className="px-6">
               <View className="pb-6 flex flex-col gap-8">
-                <Text className="text-xl text-center text-foreground mt-4">
+                <Text className="text-xl text-center mt-4">
                   Requested methods:{" "}
                   <Text className="text-xl font-semibold2 p-8">
                     {requestMethods?.join(", ") || "all methods"}
                   </Text>
                 </Text>
                 {notificationTypes && (
-                  <Text className="text-xl text-center text-foreground">
+                  <Text className="text-xl text-center">
                     Requested notification types:{" "}
                     <Text className="text-xl font-semibold2 p-8">
                       {notificationTypes.join(", ")}
@@ -298,7 +296,7 @@ function ConnectView({
                   </Text>
                 )}
                 {isolated && (
-                  <Text className="text-xl text-center text-foreground font-semibold2">
+                  <Text className="text-xl text-center font-semibold2">
                     isolated connection
                   </Text>
                 )}
@@ -308,16 +306,16 @@ function ConnectView({
                   </Text>
                 )}
                 {returnTo && (
-                  <Text className="mt-4 text-center text-foreground">
+                  <Text className="mt-4 text-center">
                     You will return to {returnTo} after confirming
                   </Text>
                 )}
                 {!!metadata && (
-                  <Text className="mt-4 text-center text-foreground">
+                  <Text className="mt-4 text-center">
                     Metadata: {JSON.stringify(metadata)}
                   </Text>
                 )}
-                <Text className="mt-4 text-center text-foreground">
+                <Text className="mt-4 text-center">
                   You can edit permissions and revoke access at any time in your
                   Alby Hub settings.
                 </Text>
@@ -326,7 +324,7 @@ function ConnectView({
           </View>
         </View>
       </Modal>
-      <Text className="text-xl text-center text-foreground mt-8">
+      <Text className="text-xl text-center mt-8">
         <Text className="text-xl font-semibold2">{name}</Text> is requesting{" "}
         {!hasPayPermissions && (
           <Text className="text-xl font-semibold2">receive-only </Text>
@@ -348,7 +346,7 @@ function ConnectView({
               </Text>
               {maxAmount && (
                 <View>
-                  <Text className="text-right text-lg text-foreground font-medium2">
+                  <Text className="text-right text-lg font-medium2">
                     {formatBitcoinAmount(
                       Math.floor(maxAmount / 1000),
                       bitcoinDisplayFormat,
@@ -383,7 +381,7 @@ function ConnectedView({
     <View className="flex-1 w-full justify-center items-center">
       <Tick />
 
-      <Text className="my-4 text-lg text-center text-foreground">
+      <Text className="my-4 text-lg text-center">
         Connected!{" "}
         {returnTo
           ? `Redirecting in ${redirectCountdown} seconds...`

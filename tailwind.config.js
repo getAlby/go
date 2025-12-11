@@ -8,6 +8,7 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./pages/**/*.{js,jsx,ts,tsx}",
   ],
+  safelist: ["text-error", "text-warning", "text-info"],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
@@ -19,6 +20,7 @@ module.exports = {
         ring: "var(--ring))",
         background: "var(--background)",
         foreground: "var(--foreground)",
+        overlay: "var(--overlay)",
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
@@ -38,6 +40,21 @@ module.exports = {
         muted: {
           DEFAULT: "var(--muted)",
           foreground: "var(--muted-foreground)",
+        },
+        warning: {
+          DEFAULT: "var(--warning)",
+          foreground: "var(--warning-foreground)",
+          border: "var(--warning-border)",
+        },
+        info: {
+          DEFAULT: "var(--info)",
+          foreground: "var(--info-foreground)",
+          border: "var(--info-border)",
+        },
+        error: {
+          DEFAULT: "var(--error)",
+          foreground: "var(--error-foreground)",
+          border: "var(--error-border)",
         },
         accent: {
           DEFAULT: "var(--accent)",

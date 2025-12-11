@@ -13,21 +13,71 @@
     --destructive-foreground: #fee2e2;
     --success: #22c45e;
     --success-foreground: #dbfbe6;
+    --primary: #ffc800;
+    --primary-foreground: #374151;
+    --secondary: #ffe480;
+    --warning: #c2410c;
+    --warning-foreground: #fff7ed;
+    --warning-border: #ffedd5;
+    --info: #1d4ed8;
+    --info-foreground: #eff6ff;
+    --info-border: #dbeafe;
+    --error: #b91c1c;
+    --error-foreground: #fef2f2;
+    --error-border: #fee2e2;
+    --overlay: #00000060;
+
+    /* TODO: shadows, primary-foreground ? */
+
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: #ffc800;
-    --secondary: #ffe480;
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
-    --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
   }
 
   .dark:root {
+    --background: #0a0b0c;
+    --foreground: #fafafb;
+    --primary-foreground: #374151;
+    --secondary-foreground: #bfbfc2;
+    --muted-foreground: #7e7e88;
+    --muted: #242424;
+    --destructive: #b41818;
+    --destructive-foreground: #1c0202;
+    --success: #44d579;
+    --success-foreground: #062310;
+    --primary: #ffc800;
+    --primary-foreground: #374151;
+    --secondary: #ffe480;
+    --warning: #fdba74;
+    --warning-foreground: #7c2d12;
+    --warning-border: #c16242;
+    --info: #93c5fd;
+    --info-foreground: #1e3a8a;
+    --info-border: #3659b9;
+    --error: #fca5a5;
+    --error-foreground: #7f1d1d;
+    --error-border: #c24141;
+    --overlay: #ffffff20;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+/* .dark:root {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -42,12 +92,8 @@
     --muted-foreground: 240 5% 64.9%;
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
-    --destructive: #ef4444;
-    --destructive-foreground: #fee2e2;
-    --success: #22c45e;
-    --success-foreground: #dbfbe6;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  }
-}
+    --ring: 240 4.9% 83.9%; */

@@ -12,11 +12,11 @@ export function UnitsAndCurrency() {
       <Screen title="Units & Currency" />
       <View className="flex-1 flex flex-col mt-4">
         <Link href="/settings/bitcoin-units" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3">
+          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
             <BitcoinIcon
               className="text-muted-foreground"
-              width={28}
-              height={28}
+              width={24}
+              height={24}
             />
             <Text className="font-medium2 text-xl">Bitcoin Units</Text>
             <ChevronRightIcon
@@ -28,8 +28,8 @@ export function UnitsAndCurrency() {
         </Link>
 
         <Link href="/settings/fiat-currency" asChild>
-          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
-            <ShitcoinIcon width={28} height={28} />
+          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3 sm:py-4">
+            <ShitcoinIcon width={24} height={24} />
             <Text className="font-medium2 text-xl">Fiat Currency</Text>
             <ChevronRightIcon
               className="ml-auto text-muted-foreground"
