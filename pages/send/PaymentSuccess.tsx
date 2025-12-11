@@ -29,7 +29,7 @@ export function PaymentSuccess() {
     : undefined;
 
   return (
-    <View className="flex-1 flex flex-col">
+    <View className="flex-1 bg-background">
       <Screen title="Success" />
       <View className="flex-1">
         <AlbyGoLogo className="w-52 h-16 mx-auto my-4" />
@@ -43,7 +43,7 @@ export function PaymentSuccess() {
                 <Text className="text-2xl text-muted-foreground text-center font-semibold2">
                   Sent to
                 </Text>
-                <Text className="text-center text-foreground text-2xl font-semibold2">
+                <Text className="text-center text-2xl font-semibold2">
                   {receiver.toLowerCase().replace("lightning:", "")}
                 </Text>
               </View>
@@ -60,7 +60,7 @@ export function PaymentSuccess() {
                 </Text>
                 <Text
                   className={cn(
-                    "text-5xl gap-2 font-semibold2 text-foreground",
+                    "text-5xl gap-2 font-semibold2",
                     bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
                   )}
                 >

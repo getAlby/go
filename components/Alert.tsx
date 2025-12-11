@@ -1,11 +1,6 @@
 import { View } from "react-native";
 import { type SvgProps } from "react-native-svg";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "~/components/ui/card";
+import { Text } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
 
 type Props = {
@@ -19,31 +14,28 @@ type Props = {
 function Alert({ title, description, type, icon: Icon, className }: Props) {
   const textColor =
     type === "error"
-      ? "text-red-700 dark:text-red-300"
+      ? "text-error"
       : type === "warn"
-        ? "text-orange-700 dark:text-orange-300"
-        : "text-blue-700 dark:text-blue-300";
+        ? "text-warning"
+        : "text-info";
   return (
-    <Card
+    <View
       className={cn(
-        "w-full mb-4",
-        type === "error" &&
-          "bg-red-50 dark:bg-red-900 border-red-100 dark:border-red-900",
-        type === "warn" &&
-          "bg-orange-50 dark:bg-orange-900 border-orange-100 dark:border-orange-900",
-        type === "info" &&
-          "bg-blue-50 dark:bg-blue-900 border-blue-100 dark:border-blue-900",
+        "flex gap-1 mb-4 border py-3 px-4 rounded-xl",
+        type === "error" && "bg-error-foreground border-error-border",
+        type === "warn" && "bg-warning-foreground border-warning-border",
+        type === "info" && "bg-info-foreground border-info-border",
         className,
       )}
     >
-      <CardContent className="flex flex-row items-center gap-4">
-        <Icon className={textColor} width={24} height={24} />
-        <View className="flex flex-1 flex-col">
-          <CardTitle className={cn(textColor, "text-base")}>{title}</CardTitle>
-          <CardDescription className={textColor}>{description}</CardDescription>
-        </View>
-      </CardContent>
-    </Card>
+      <View className="flex flex-row items-center gap-2">
+        <Icon className={textColor} width={20} height={20} />
+        <Text className={cn("text-sm sm:text-base font-semibold2", textColor)}>
+          {title}
+        </Text>
+      </View>
+      <Text className={cn("text-xs sm:text-sm", textColor)}>{description}</Text>
+    </View>
   );
 }
 

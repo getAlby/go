@@ -61,7 +61,7 @@ export function ReceiveSuccess() {
                 </Text>
                 <Text
                   numberOfLines={1}
-                  className="text-foreground text-center text-xl font-medium2 px-6"
+                  className="text-center text-xl font-medium2 px-6"
                 >
                   {decodedInvoice.description}
                 </Text>

@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 
-function AndroidDismissableKeyboardView({
+function AndroidDismissableKeyboardWrapper({
   children,
 }: {
   children?: React.ReactNode;
@@ -38,7 +38,7 @@ function AndroidDismissableKeyboardView({
   );
 }
 
-function IOSDismissableKeyboardView({
+function IOSDismissableKeyboardWrapper({
   children,
 }: {
   children?: React.ReactNode;
@@ -58,16 +58,24 @@ function IOSDismissableKeyboardView({
   );
 }
 
-function DismissableKeyboardView({ children }: { children?: React.ReactNode }) {
+function DismissableKeyboardWrapper({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   const isIOS = Platform.OS === "ios";
 
   if (isIOS) {
-    return <IOSDismissableKeyboardView>{children}</IOSDismissableKeyboardView>;
+    return (
+      <IOSDismissableKeyboardWrapper>{children}</IOSDismissableKeyboardWrapper>
+    );
   }
 
   return (
-    <AndroidDismissableKeyboardView>{children}</AndroidDismissableKeyboardView>
+    <AndroidDismissableKeyboardWrapper>
+      {children}
+    </AndroidDismissableKeyboardWrapper>
   );
 }
 
-export default DismissableKeyboardView;
+export default DismissableKeyboardWrapper;

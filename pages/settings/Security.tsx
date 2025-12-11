@@ -24,7 +24,7 @@ export function Security() {
   }, []);
 
   return (
-    <View className="flex-1 p-6">
+    <View className="flex-1 p-6 bg-background">
       <Screen title="Security" />
       {isSupported === null ? (
         <View className="flex-1 justify-center items-center">
@@ -36,8 +36,7 @@ export function Security() {
             <Alert
               type="info"
               title="Setup Device Security"
-              description="To protect your wallet, please set up a phone lock in your
-                  device settings first."
+              description="To protect your wallet, please set up a phone lock in your device settings first."
               icon={TriangleAlertIcon}
             />
           )}

@@ -8,9 +8,11 @@ import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 
 import { Text } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/theme/colors";
 import { errorToast } from "~/lib/errorToast";
 
 export function BitcoinMap() {
+  const backgroundColor = useThemeColor("background");
   const [showModal, setShowModal] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [mapUrl, setMapUrl] = React.useState("https://btcmap.org/map");
@@ -36,7 +38,7 @@ export function BitcoinMap() {
   }, []);
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-background pt-2">
       <Screen
         title="Bitcoin Map"
         right={() => (
@@ -46,7 +48,7 @@ export function BitcoinMap() {
               className="-mr-4 px-6"
             >
               <HelpCircleIcon
-                className="text-muted-foreground"
+                className="text-secondary-foreground"
                 width={24}
                 height={24}
               />
@@ -67,6 +69,9 @@ export function BitcoinMap() {
       ) : (
         <WebView
           source={{ uri: mapUrl }}
+          style={{
+            backgroundColor,
+          }}
           className="flex-1"
           geolocationEnabled
         />

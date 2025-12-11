@@ -1,6 +1,5 @@
 import React from "react";
 import { FlatList, View } from "react-native";
-import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
@@ -68,33 +67,32 @@ export function Notifications() {
   };
 
   return (
-    <View className="flex-1 py-6">
+    <View className="flex-1 p-6 bg-background">
       <Screen title="Notifications" />
       <View className="flex-1">
-        <View className="flex-row items-center justify-between gap-2 px-6">
+        <View className="flex-row items-center justify-between gap-2">
           <Label onPress={toggleNotifications} nativeID="notifications">
-            <Text className="text-lg font-medium2">Show app notifications</Text>
+            <Text className="sm:text-lg font-semibold2">
+              Show app notifications
+            </Text>
           </Label>
-          {isLoading ? (
-            <Loading className="h-8 mr-4" />
-          ) : (
-            <Switch
-              checked={!!notificationsEnabled}
-              onCheckedChange={toggleNotifications}
-              nativeID="security"
-            />
-          )}
+          <Switch
+            disabled={isLoading}
+            checked={!!notificationsEnabled}
+            onCheckedChange={toggleNotifications}
+            nativeID="security"
+          />
         </View>
         {wallets.length > 1 && (
           <>
             <View className="px-8 my-6">
-              <Text className="text-lg text-center text-muted-foreground">
+              <Text className="text-sm sm:text-base text-center text-secondary-foreground">
                 Choose from which wallets you want to receive app notifications
               </Text>
             </View>
             <FlatList
               className={cn(
-                "flex flex-col px-5",
+                "flex flex-col",
                 !notificationsEnabled && "opacity-50 pointer-events-none",
               )}
               data={wallets}
@@ -108,20 +106,23 @@ export function Notifications() {
             />
           </>
         )}
-        <View className="flex-row items-center justify-between gap-2 px-6 mt-8">
-          <Label onPress={toggleTTS} nativeID="notifications">
-            <Text className="text-lg font-medium2">Spoken notifications</Text>
-          </Label>
-          {isLoadingTTS ? (
-            <Loading className="h-8 mr-4" />
-          ) : (
-            <Switch
-              disabled={!notificationsEnabled}
-              checked={!!ttsNotificationsEnabled}
-              onCheckedChange={toggleTTS}
-              nativeID="security"
-            />
+        <View
+          className={cn(
+            "flex-row items-center justify-between gap-2 mt-8",
+            !notificationsEnabled && "opacity-50 pointer-events-none",
           )}
+        >
+          <Label onPress={toggleTTS} nativeID="notifications">
+            <Text className="sm:text-lg font-semibold2">
+              Spoken notifications
+            </Text>
+          </Label>
+          <Switch
+            disabled={isLoadingTTS || !notificationsEnabled}
+            checked={!!ttsNotificationsEnabled}
+            onCheckedChange={toggleTTS}
+            nativeID="security"
+          />
         </View>
       </View>
     </View>
@@ -156,17 +157,14 @@ function WalletNotificationSwitch({
   return (
     <View className="flex-row items-center justify-between gap-2 mb-6">
       <Label nativeID={`notifications-${index}`}>
-        <Text className="text-lg font-medium2">{wallet.name}</Text>
+        <Text className="sm:text-lg font-medium2">{wallet.name}</Text>
       </Label>
-      {isLoading ? (
-        <Loading className="h-8 mr-4" />
-      ) : (
-        <Switch
-          checked={isEnabled && !!wallet.pushId}
-          onCheckedChange={handleSwitchToggle}
-          nativeID={`notifications-${index}`}
-        />
-      )}
+      <Switch
+        disabled={isLoading}
+        checked={isEnabled && !!wallet.pushId}
+        onCheckedChange={handleSwitchToggle}
+        nativeID={`notifications-${index}`}
+      />
     </View>
   );
 }

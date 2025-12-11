@@ -90,7 +90,7 @@ export function ConfirmPayment() {
             Send
           </Text>
           <View className="flex flex-row items-end justify-center gap-2">
-            <Text className="text-5xl leading-[1.5] font-bold2 text-foreground">
+            <Text className="text-5xl leading-[1.5] font-bold2">
               {bitcoinDisplayFormat === "bip177" && "₿ "}
               {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
             </Text>
@@ -115,7 +115,7 @@ export function ConfirmPayment() {
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
-              className="text-center text-foreground text-2xl font-semibold2"
+              className="text-center text-2xl font-semibold2"
             >
               {decodedInvoice.description}
             </Text>
@@ -129,7 +129,7 @@ export function ConfirmPayment() {
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
-                className="text-center text-foreground text-2xl font-medium2"
+                className="text-center text-2xl font-medium2"
               >
                 {comment}
               </Text>
