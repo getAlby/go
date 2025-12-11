@@ -20,6 +20,8 @@ interface AppState {
   readonly bitcoinDisplayFormat: BitcoinDisplayFormat;
   readonly balanceDisplayMode: BalanceDisplayMode;
   readonly lastAppStateChangeTime: number;
+  readonly isWidgetsEnabled: boolean;
+  readonly hideWidgetAmounts: boolean;
   setUnlocked: (unlocked: boolean) => void;
   setLastAppStateChangeTime: (lastAppStateChangeTime: number) => void;
   setTheme: (theme: Theme) => void;
@@ -37,6 +39,8 @@ interface AppState {
   setSecurityEnabled(securityEnabled: boolean): void;
   setNotificationsEnabled(notificationsEnabled: boolean | null): void;
   setTTSNotificationsEnabled(ttsNotificationsEnabled: boolean): void;
+  setWidgetsEnabled(widgetsEnabled: boolean): void;
+  setHideWidgetAmounts(hideWidgetAmounts: boolean): void;
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   removeAddressBookEntry: (index: number) => void;
@@ -58,6 +62,8 @@ const balanceDisplayModeKey = "balanceDisplayMode";
 const isSecurityEnabledKey = "isSecurityEnabled";
 const isNotificationsEnabledKey = "isNotificationsEnabled";
 const ttsNotificationsEnabledKey = "ttsNotificationsEnabled";
+const isWidgetsEnabledKey = "isWidgetsEnabled";
+const hideWidgetAmountsKey = "hideWidgetAmounts";
 
 export type BitcoinDisplayFormat = "sats" | "bip177";
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
@@ -217,6 +223,10 @@ export const useAppStore = create<AppState>()((set, get) => {
       : null,
     ttsNotificationsEnabled:
       secureStorage.getItem(ttsNotificationsEnabledKey) === "true",
+    isWidgetsEnabled:
+      secureStorage.getItem(isWidgetsEnabledKey) !== "false", // default true
+    hideWidgetAmounts:
+      secureStorage.getItem(hideWidgetAmountsKey) === "true",
     theme,
     bitcoinDisplayFormat,
     balanceDisplayMode,
@@ -281,6 +291,14 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({
         ttsNotificationsEnabled: ttsNotificationsEnabled,
       });
+    },
+    setWidgetsEnabled: (isWidgetsEnabled) => {
+      secureStorage.setItem(isWidgetsEnabledKey, isWidgetsEnabled.toString());
+      set({ isWidgetsEnabled });
+    },
+    setHideWidgetAmounts: (hideWidgetAmounts) => {
+      secureStorage.setItem(hideWidgetAmountsKey, hideWidgetAmounts.toString());
+      set({ hideWidgetAmounts });
     },
     setFiatCurrency: (fiatCurrency) => {
       const displayMode = get().balanceDisplayMode;
@@ -384,6 +402,10 @@ export const useAppStore = create<AppState>()((set, get) => {
       // clear expo push notifications token
       secureStorage.removeItem(expoPushTokenKey);
 
+      // clear widget settings
+      secureStorage.removeItem(isWidgetsEnabledKey);
+      secureStorage.removeItem(hideWidgetAmountsKey);
+
       set({
         nwcClient: undefined,
         fiatCurrency: undefined,
@@ -392,6 +414,8 @@ export const useAppStore = create<AppState>()((set, get) => {
         addressBookEntries: [],
         isSecurityEnabled: false,
         isOnboarded: false,
+        isWidgetsEnabled: true,
+        hideWidgetAmounts: false,
       });
     },
   };

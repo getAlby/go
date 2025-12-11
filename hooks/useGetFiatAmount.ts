@@ -10,7 +10,7 @@ interface RateCacheEntry {
 
 let cachedRates: Record<string, RateCacheEntry> = {};
 
-function useFiatRate() {
+export function useFiatRate() {
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const [rate, setRate] = React.useState<number>();
 
