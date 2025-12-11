@@ -16,6 +16,7 @@ import {
   PopiconsEditSolid as EditIcon,
   PopiconsEditLine as EditLineIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
+  PopiconsGridSolid as GridIcon,
   PopiconsCircleInfoSolid as HelpCircleIcon,
   PopiconsImageSolid as ImageIcon,
   PopiconsLinkExternalSolid as LinkIcon,
@@ -74,6 +75,7 @@ interopIcon(CopyIcon);
 interopIcon(EditIcon);
 interopIcon(EditLineIcon);
 interopIcon(FingerprintIcon);
+interopIcon(GridIcon);
 interopIcon(HelpCircleIcon);
 interopIcon(ImageIcon);
 interopIcon(LinkIcon);
@@ -118,6 +120,7 @@ export {
   EditIcon,
   EditLineIcon,
   FingerprintIcon,
+  GridIcon,
   HelpCircleIcon,
   ImageIcon,
   LinkIcon,

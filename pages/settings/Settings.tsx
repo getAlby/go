@@ -5,6 +5,7 @@ import {
   BitcoinIcon,
   ChevronRightIcon,
   FingerprintIcon,
+  GridIcon,
   NotificationIcon,
   OnboardingIcon,
   ResetIcon,
@@ -128,6 +129,26 @@ export function Settings() {
             />
           </TouchableOpacity>
         </Link>
+
+        {!IS_EXPO_GO && (
+          <Link href="/settings/widgets" asChild>
+            <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
+              <GridIcon
+                className="text-muted-foreground"
+                width={28}
+                height={28}
+              />
+              <Text className="text-foreground font-medium2 text-xl">
+                Widgets
+              </Text>
+              <ChevronRightIcon
+                className="ml-auto text-muted-foreground"
+                width={20}
+                height={20}
+              />
+            </TouchableOpacity>
+          </Link>
+        )}
 
         <TouchableOpacity
           className="flex flex-row gap-4 items-center px-6 py-3"

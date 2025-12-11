@@ -2,6 +2,7 @@ import { Redirect, Stack } from "expo-router";
 import { useRouteInfo } from "expo-router/build/hooks";
 import { useHandleLinking } from "~/hooks/useHandleLinking";
 import { useSession } from "~/hooks/useSession";
+import { WidgetSync } from "~/hooks/useWidgetSync";
 import { useAppStore } from "~/lib/state/appStore";
 
 export default function AppLayout() {
@@ -28,5 +29,10 @@ export default function AppLayout() {
     return <Redirect href={connectionPage} />;
   }
 
-  return <Stack />;
+  return (
+    <>
+      <WidgetSync />
+      <Stack />
+    </>
+  );
 }
