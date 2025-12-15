@@ -36,7 +36,10 @@ function Screen({ title, animation, right, left }: ScreenProps) {
         headerTitle: () => (
           <Text
             className={cn(
-              Platform.OS === "android" && "mr-[42.18]", // this translates to width of headerLeft button
+              Platform.OS === "android" &&
+                (right
+                  ? "ml-4"
+                  : "mr-[42.18]") /* this translates to width of headerLeft button */,
               "text-xl sm:text-2xl text-center font-semibold2",
             )}
           >
