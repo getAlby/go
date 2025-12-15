@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import { TouchableOpacity } from "react-native";
 import CheckIcon from "~/components/icons/CheckIcon";
-import { useThemeColor } from "~/lib/theme/colors";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
 type CheckboxProps = React.ComponentProps<typeof TouchableOpacity> & {
@@ -10,10 +10,12 @@ type CheckboxProps = React.ComponentProps<typeof TouchableOpacity> & {
 };
 
 function Checkbox({ className, isChecked, children, ...props }: CheckboxProps) {
-  const primaryColor = useThemeColor("primary");
-  const secondaryColor = useThemeColor("secondary");
-  const mutedColor = useThemeColor("muted");
-  const backgroundColor = useThemeColor("background");
+  const { primary, secondary, muted, background } = useThemeColor(
+    "primary",
+    "secondary",
+    "muted",
+    "background",
+  );
 
   return (
     <TouchableOpacity
@@ -23,7 +25,7 @@ function Checkbox({ className, isChecked, children, ...props }: CheckboxProps) {
       {isChecked ? (
         <LinearGradient
           className="px-1 rounded-lg aspect-square flex items-center justify-center border-secondary border"
-          colors={[secondaryColor, primaryColor]}
+          colors={[secondary, primary]}
           start={[0, 0]}
           end={[1, 1]}
         >
@@ -32,7 +34,7 @@ function Checkbox({ className, isChecked, children, ...props }: CheckboxProps) {
       ) : (
         <LinearGradient
           className="px-[11px] rounded-lg aspect-square flex items-center justify-center border-muted border"
-          colors={[backgroundColor, mutedColor]}
+          colors={[background, muted]}
           start={[0, 0]}
           end={[1, 1]}
         />

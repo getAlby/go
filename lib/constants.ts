@@ -1,7 +1,7 @@
 import type { Nip47Capability } from "@getalby/sdk/nwc";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-export const THEME = {
+export const THEME_COLORS = {
   light: {
     background: "#F9FAFB",
     foreground: "#374151",
@@ -21,11 +21,11 @@ export const THEME = {
     notification: "",
   },
   dark: {
-    background: "#0a0b0c",
+    background: "#0A0B0C",
     foreground: "#FAFBFB",
     secondaryForeground: "#BFBFC2",
     mutedForeground: "#7E7E88",
-    muted: "#1f2937",
+    muted: "#1F2937",
     destructive: "#B41818",
     destructiveForeground: "#1C0202",
     success: "#44D579",

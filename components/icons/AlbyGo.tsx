@@ -6,12 +6,12 @@ const AlbyGo = (props: SvgProps) => {
   const colorScheme = useColorScheme();
 
   const primaryColors = {
-    light: "#202020", // translates to primary
+    light: "#202020",
     dark: "#FFFFFF",
   };
 
   const secondaryColors = {
-    light: "#ffc800", // translates to secondary
+    light: "#FFC800",
     dark: "#FFE480",
   };
 

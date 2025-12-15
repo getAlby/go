@@ -27,8 +27,8 @@ import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
-import { useThemeColor } from "~/lib/theme/colors";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 interface ContactInputProps {
   lnAddress: string;
@@ -49,16 +49,18 @@ function ContactInput({
   const { isDarkColorScheme } = useColorScheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const primaryColor = useThemeColor("primary");
-  const backgroundColor = useThemeColor("background");
-  const mutedForegroundColor = useThemeColor("mutedForeground");
-  const foregroundColor = useThemeColor("foreground");
+  const { primary, background, mutedForeground, foreground } = useThemeColor(
+    "primary",
+    "background",
+    "mutedForeground",
+    "foreground",
+  );
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={{ backgroundColor: foregroundColor }}
+        style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
         opacity={isDarkColorScheme ? 0.3 : 0.7}
@@ -66,7 +68,7 @@ function ContactInput({
         onPress={Keyboard.dismiss}
       />
     ),
-    [isDarkColorScheme, foregroundColor],
+    [isDarkColorScheme, foreground],
   );
 
   const save = () => {
@@ -103,11 +105,11 @@ function ContactInput({
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backgroundStyle={{
-          backgroundColor,
+          backgroundColor: background,
           borderRadius: 24,
         }}
         handleIndicatorStyle={{
-          backgroundColor: mutedForegroundColor, // translates to foreground
+          backgroundColor: mutedForeground,
         }}
         backdropComponent={renderBackdrop}
         enablePanDownToClose
@@ -137,7 +139,7 @@ function ContactInput({
                 placeholder="Satoshi Nakamoto"
                 className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted-foreground"
-                selectionColor={primaryColor}
+                selectionColor={primary}
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}

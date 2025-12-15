@@ -29,6 +29,7 @@ import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import { MAX_SATS_THRESHOLD } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 interface DescriptionInputProps {
@@ -55,13 +56,19 @@ function DescriptionInput({
 }: DescriptionInputProps) {
   const [input, setInput] = useState(description);
   const { isDarkColorScheme } = useColorScheme();
+  const { primary, foreground, background, mutedForeground } = useThemeColor(
+    "primary",
+    "foreground",
+    "background",
+    "mutedForeground",
+  );
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={{ backgroundColor: isDarkColorScheme ? "#FFFFFF" : "#09090B" }} // translates to background
+        style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
         opacity={isDarkColorScheme ? 0.3 : 0.7}
@@ -69,7 +76,7 @@ function DescriptionInput({
         onPress={Keyboard.dismiss}
       />
     ),
-    [isDarkColorScheme],
+    [isDarkColorScheme, foreground],
   );
 
   const save = () => {
@@ -118,11 +125,11 @@ function DescriptionInput({
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backgroundStyle={{
-          backgroundColor: isDarkColorScheme ? "#09090B" : "#ffffff", // translates to muted
+          backgroundColor: background,
           borderRadius: 24,
         }}
         handleIndicatorStyle={{
-          backgroundColor: isDarkColorScheme ? "#FAFAFA" : "#9BA2AE", // translates to foreground
+          backgroundColor: mutedForeground,
         }}
         backdropComponent={renderBackdrop}
         enablePanDownToClose
@@ -152,7 +159,7 @@ function DescriptionInput({
                 placeholder="Sats for Satoshi"
                 className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted-foreground"
-                selectionColor={"hsl(47 100% 50%)"} // translates to primary
+                selectionColor={primary}
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}

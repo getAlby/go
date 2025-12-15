@@ -21,7 +21,7 @@ import { NotificationProvider } from "~/context/Notification";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { SessionProvider } from "~/hooks/useSession";
-import { IS_EXPO_GO, THEME } from "~/lib/constants";
+import { IS_EXPO_GO, THEME_COLORS } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -33,11 +33,11 @@ Sentry.init({
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
-  colors: THEME.light,
+  colors: THEME_COLORS.light,
 };
 const DARK_THEME: Theme = {
   ...DarkTheme,
-  colors: THEME.dark,
+  colors: THEME_COLORS.dark,
 };
 
 // Prevent the splash screen from auto-hiding before getting the color scheme.

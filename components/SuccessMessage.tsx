@@ -12,6 +12,7 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { LNURLPaymentSuccessAction } from "~/lib/lnurl";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 interface SuccessMessageProps {
   lnurlSuccessAction?: LNURLPaymentSuccessAction;
@@ -19,20 +20,25 @@ interface SuccessMessageProps {
 
 export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
   const { isDarkColorScheme } = useColorScheme();
+  const { foreground, background, mutedForeground } = useThemeColor(
+    "foreground",
+    "background",
+    "mutedForeground",
+  );
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={{ backgroundColor: isDarkColorScheme ? "#FFFFFF" : "#09090B" }} // translates to background
+        style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
         opacity={isDarkColorScheme ? 0.3 : 0.7}
         pressBehavior="close"
       />
     ),
-    [isDarkColorScheme],
+    [isDarkColorScheme, foreground],
   );
 
   if (!lnurlSuccessAction) {
@@ -57,10 +63,10 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backgroundStyle={{
-          backgroundColor: isDarkColorScheme ? "#09090B" : "#FFFFFF", // translates to muted
+          backgroundColor: background,
         }}
         handleIndicatorStyle={{
-          backgroundColor: isDarkColorScheme ? "#FAFAFA" : "#1F2937", // translates to foreground
+          backgroundColor: mutedForeground,
         }}
         backdropComponent={renderBackdrop}
         enablePanDownToClose

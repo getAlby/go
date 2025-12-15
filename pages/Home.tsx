@@ -29,7 +29,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
-import { useThemeColor } from "~/lib/theme/colors";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 dayjs.extend(relativeTime);
@@ -247,8 +247,7 @@ function MainButton({
   Icon: (props: SvgProps) => React.JSX.Element;
 }): JSX.Element {
   const [pressed, setPressed] = React.useState(false);
-  const primaryColor = useThemeColor("primary");
-  const secondaryColor = useThemeColor("secondary");
+  const { primary, secondary } = useThemeColor("primary", "secondary");
 
   return (
     <>
@@ -268,7 +267,7 @@ function MainButton({
         >
           <LinearGradient
             className="flex-1 p-6 border border-secondary"
-            colors={[secondaryColor, primaryColor]}
+            colors={[secondary, primary]}
             start={[0, 0]}
             end={[1, 1]}
             style={{

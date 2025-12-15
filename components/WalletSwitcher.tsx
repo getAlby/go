@@ -12,6 +12,7 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
 interface WalletSwitcherProps {
@@ -24,6 +25,11 @@ export function WalletSwitcher({
   wallets,
 }: WalletSwitcherProps) {
   const { isDarkColorScheme } = useColorScheme();
+  const { foreground, background, mutedForeground } = useThemeColor(
+    "foreground",
+    "background",
+    "mutedForeground",
+  );
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const openSheet = useCallback(() => {
@@ -41,14 +47,14 @@ export function WalletSwitcher({
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={{ backgroundColor: isDarkColorScheme ? "#FFFFFF" : "#09090B" }} // translates to background
+        style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
         opacity={isDarkColorScheme ? 0.3 : 0.7}
         pressBehavior="close"
       />
     ),
-    [isDarkColorScheme],
+    [isDarkColorScheme, foreground],
   );
 
   if (wallets.length <= 1) {
@@ -77,10 +83,10 @@ export function WalletSwitcher({
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backgroundStyle={{
-          backgroundColor: isDarkColorScheme ? "#09090B" : "#FFFFFF", // translates to muted
+          backgroundColor: background,
         }}
         handleIndicatorStyle={{
-          backgroundColor: isDarkColorScheme ? "#FAFAFA" : "#1F2937", // translates to foreground
+          backgroundColor: mutedForeground,
         }}
         backdropComponent={renderBackdrop}
         enablePanDownToClose

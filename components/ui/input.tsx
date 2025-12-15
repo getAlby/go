@@ -1,5 +1,6 @@
 import * as React from "react";
 import { TextInput, type TextInputProps } from "react-native";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
 // TODO: Review font sizing and remove unnecessary web classes
@@ -11,6 +12,7 @@ function Input({
 }: TextInputProps & {
   ref?: React.RefObject<TextInput | null>;
 }) {
+  const { primary } = useThemeColor("primary");
   return (
     <TextInput
       ref={ref}
@@ -19,7 +21,7 @@ function Input({
         props.editable === false && "opacity-50 web:cursor-not-allowed",
         className,
       )}
-      selectionColor={"hsl(47 100% 50%)"} // translates to primary
+      selectionColor={primary}
       placeholderClassName={cn("text-muted-foreground", placeholderClassName)}
       {...props}
     />

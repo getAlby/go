@@ -28,7 +28,9 @@ export function AddressBook() {
             </React.Fragment>
           ))
         ) : (
-          <Text className="text-lg">No entries yet.</Text>
+          <Text className="text-secondary-foreground text-center">
+            No entries yet.
+          </Text>
         )}
       </ScrollView>
     </View>

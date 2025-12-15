@@ -1,10 +1,10 @@
 import React from "react";
 import Svg, { Path, type SvgProps } from "react-native-svg";
-import { useThemeColor } from "~/lib/theme/colors";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 const CheckIcon = ({ color, fill, ...props }: SvgProps) => {
-  const backgroundColor = useThemeColor("background");
-  const fillColor = color ?? fill ?? backgroundColor;
+  const { background } = useThemeColor("background");
+  const fillColor = color ?? fill ?? background;
 
   return (
     <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" {...props}>

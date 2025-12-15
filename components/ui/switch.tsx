@@ -6,7 +6,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useThemeColor } from "~/lib/theme/colors";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
 function Switch({
@@ -15,10 +15,12 @@ function Switch({
 }: SwitchPrimitives.RootProps & {
   ref?: React.RefObject<SwitchPrimitives.RootRef>;
 }) {
-  const primaryColor = useThemeColor("primary");
-  const secondaryColor = useThemeColor("secondary");
-  const mutedColor = useThemeColor("muted");
-  const backgroundColor = useThemeColor("background");
+  const { primary, secondary, muted, background } = useThemeColor(
+    "primary",
+    "secondary",
+    "muted",
+    "background",
+  );
   const translateX = useDerivedValue(() => (props.checked ? 18 : 2));
   const animatedThumbStyle = useAnimatedStyle(() => ({
     transform: [
@@ -32,11 +34,7 @@ function Switch({
         props.disabled && "opacity-50",
         props.checked ? "border-secondary" : "border-muted",
       )}
-      colors={
-        props.checked
-          ? [secondaryColor, primaryColor]
-          : [mutedColor, backgroundColor]
-      }
+      colors={props.checked ? [secondary, primary] : [muted, background]}
       start={[0, 0]}
       end={[1, 1]}
     >
