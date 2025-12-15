@@ -24,6 +24,7 @@ import {
 } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import { MAX_SATS_THRESHOLD } from "~/lib/constants";
@@ -375,12 +376,15 @@ export function DualCurrencyInput({
           {fiatCurrency && (
             <Pressable onPress={toggleInputMode}>
               <View className="flex flex-row gap-2 items-center justify-center">
-                {/* TODO: Set skeleton while loading */}
-                <Text className="text-secondary-foreground text-3xl font-semibold2">
-                  {inputMode === "fiat"
-                    ? formatBitcoinAmount(+amount, bitcoinDisplayFormat)
-                    : getFiatAmount?.(+amount) || ""}
-                </Text>
+                {getFiatAmount ? (
+                  <Text className="text-secondary-foreground text-3xl font-semibold2">
+                    {inputMode === "fiat"
+                      ? formatBitcoinAmount(+amount, bitcoinDisplayFormat)
+                      : getFiatAmount(+amount) || ""}
+                  </Text>
+                ) : (
+                  <Skeleton className="w-16 text-3xl" />
+                )}
                 <SwapIcon
                   className="text-secondary-foreground"
                   width={16}
