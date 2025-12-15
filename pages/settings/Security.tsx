@@ -1,10 +1,9 @@
 import React from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { TriangleAlertIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
-import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
@@ -22,6 +21,10 @@ export function Security() {
     }
     checkBiometricSupport();
   }, []);
+
+  const onChange = () => {
+    useAppStore.getState().setSecurityEnabled(!isEnabled);
+  };
 
   return (
     <View className="flex-1 p-6">
@@ -42,28 +45,19 @@ export function Security() {
           )}
           <View className="flex-1">
             <View className="flex-row items-center justify-between gap-2">
-              <Label
-                className={cn(
-                  "text-2xl",
-                  !isSupported && "text-muted-foreground",
-                )}
-                nativeID="security"
-                disabled={isSupported}
-                onPress={() => {
-                  useAppStore.getState().setSecurityEnabled(!isEnabled);
-                }}
+              <Pressable
+                onPress={onChange}
+                className={cn(!isSupported && "pointer-events-none")}
+                disabled={!isSupported}
               >
-                <Text className="text-lg font-medium2">
+                <Text className="sm:text-lg font-semibold2">
                   Require phone lock to access
                 </Text>
-              </Label>
+              </Pressable>
               <Switch
                 checked={isEnabled}
                 disabled={!isSupported}
-                onCheckedChange={() => {
-                  useAppStore.getState().setSecurityEnabled(!isEnabled);
-                }}
-                nativeID="security"
+                onCheckedChange={onChange}
               />
             </View>
           </View>

@@ -1,7 +1,6 @@
 import React from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, Pressable, View } from "react-native";
 import Screen from "~/components/Screen";
-import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
@@ -71,11 +70,11 @@ export function Notifications() {
       <Screen title="Notifications" />
       <View className="flex-1">
         <View className="flex-row items-center justify-between gap-2">
-          <Label onPress={toggleNotifications} nativeID="notifications">
+          <Pressable onPress={toggleNotifications}>
             <Text className="sm:text-lg font-semibold2">
               Show app notifications
             </Text>
-          </Label>
+          </Pressable>
           <Switch
             disabled={isLoading}
             checked={!!notificationsEnabled}
@@ -112,11 +111,11 @@ export function Notifications() {
             !notificationsEnabled && "opacity-50 pointer-events-none",
           )}
         >
-          <Label onPress={toggleTTS} nativeID="notifications">
+          <Pressable onPress={toggleTTS}>
             <Text className="sm:text-lg font-semibold2">
               Spoken notifications
             </Text>
-          </Label>
+          </Pressable>
           <Switch
             disabled={isLoadingTTS || !notificationsEnabled}
             checked={!!ttsNotificationsEnabled}
@@ -138,11 +137,12 @@ function WalletNotificationSwitch({
   index: number;
   isEnabled: boolean;
 }) {
+  const checked = isEnabled && !!wallet.pushId;
   const [isLoading, setLoading] = React.useState(false);
 
-  const handleSwitchToggle = async (checked: boolean) => {
+  const handleSwitchToggle = async () => {
     setLoading(true);
-    if (checked) {
+    if (!checked) {
       await registerWalletNotifications(wallet, index);
     } else {
       await deregisterWalletNotifications(wallet, index);
@@ -155,13 +155,16 @@ function WalletNotificationSwitch({
   };
 
   return (
-    <View className="flex-row items-center justify-between gap-2 mb-6">
-      <Label nativeID={`notifications-${index}`}>
+    <View
+      key={index}
+      className="flex-row items-center justify-between gap-2 mb-6"
+    >
+      <Pressable onPress={handleSwitchToggle}>
         <Text className="sm:text-lg font-medium2">{wallet.name}</Text>
-      </Label>
+      </Pressable>
       <Switch
         disabled={isLoading}
-        checked={isEnabled && !!wallet.pushId}
+        checked={checked}
         onCheckedChange={handleSwitchToggle}
         nativeID={`notifications-${index}`}
       />

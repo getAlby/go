@@ -1,11 +1,10 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, Pressable, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { CountryFlag } from "~/components/Flag";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
-import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { ALBY_URL, DEFAULT_CURRENCY } from "~/lib/constants";
@@ -125,16 +124,12 @@ export function FiatCurrency() {
       <Screen title="Fiat Currency" />
 
       <View className="flex-row items-center justify-between gap-2 mb-2">
-        <Label onPress={toggleFiatCurrency} nativeID="fiat-toggle">
+        <Pressable onPress={toggleFiatCurrency}>
           <Text className="sm:text-lg font-semibold2">
             Display fiat currency
           </Text>
-        </Label>
-        <Switch
-          nativeID="fiat-toggle"
-          checked={!!fiatCurrency}
-          onCheckedChange={toggleFiatCurrency}
-        />
+        </Pressable>
+        <Switch checked={!!fiatCurrency} onCheckedChange={toggleFiatCurrency} />
       </View>
 
       {!!fiatCurrency && (
