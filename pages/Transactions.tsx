@@ -84,7 +84,7 @@ export function Transactions() {
       />
       {allTransactions && allTransactions.length ? (
         <FlatList
-          className="mt-3"
+          className="mt-2"
           refreshControl={
             <RefreshControl
               refreshing={refreshingTransactions}
@@ -115,19 +115,19 @@ export function Transactions() {
           )}
         />
       ) : !transactionsLoaded ? (
-        <ScrollView className="mt-3">
+        <ScrollView className="mt-2">
           {[...Array(20)].map((e, i) => (
             <View
               key={i}
-              className="flex flex-row items-center gap-3 px-6 py-2 my-2"
+              className="flex flex-row items-center gap-2 px-6 py-4"
             >
-              <Skeleton className="rounded-full w-[44px] h-[44px]" />
-              <View className="flex flex-col flex-1 gap-2 h-[44px]">
-                <Skeleton className="w-32 text-lg" />
-                <Skeleton className="w-16 text-base" />
+              <Skeleton className="rounded-full w-10 h-10" />
+              <View className="flex flex-col flex-1 gap-1">
+                <Skeleton className="w-32 text-sm" />
+                <Skeleton className="w-16 text-sm" />
               </View>
-              <View className="flex items-end gap-2 h-[44px]">
-                <Skeleton className="w-16 text-lg" />
+              <View className="flex items-end gap-1">
+                <Skeleton className="w-16 text-sm" />
                 <Skeleton className="w-8 text-sm" />
               </View>
             </View>

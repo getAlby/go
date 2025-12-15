@@ -189,7 +189,7 @@ export function Home() {
                       )}
                   </>
                 ) : (
-                  <Skeleton className="w-48 text-5xl" />
+                  <Skeleton className="w-48 text-5xl my-2.5" />
                 )}
               </View>
               {/* Hide conversion if fiat currency is not selected */}
