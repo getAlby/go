@@ -35,7 +35,7 @@ export function Settings() {
   const { signOut } = useSession();
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1">
       <Screen title="Settings" />
       <View className="flex-1 flex flex-col mt-4">
         <Link href="/settings/wallets" asChild>

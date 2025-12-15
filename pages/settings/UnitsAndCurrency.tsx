@@ -8,7 +8,7 @@ import { Text } from "~/components/ui/text";
 
 export function UnitsAndCurrency() {
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1">
       <Screen title="Units & Currency" />
       <View className="flex-1 flex flex-col mt-4">
         <Link href="/settings/bitcoin-units" asChild>

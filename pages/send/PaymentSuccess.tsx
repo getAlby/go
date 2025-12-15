@@ -29,7 +29,7 @@ export function PaymentSuccess() {
     : undefined;
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1">
       <Screen title="Success" />
       <View className="flex-1">
         <AlbyGoLogo className="w-52 h-16 mx-auto my-4" />

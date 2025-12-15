@@ -48,7 +48,7 @@ export async function initiatePaymentFlow(
       }
 
       if (lnurlDetails.tag === "withdrawRequest") {
-        router.replace({
+        router.push({
           pathname: "/receive/withdraw",
           params: { url: lnurl },
         });
@@ -56,7 +56,7 @@ export async function initiatePaymentFlow(
       }
 
       if (lnurlDetails.tag === "payRequest") {
-        router.replace({
+        router.push({
           pathname: "/send/lnurl-pay",
           params: {
             lnurlDetailsJSON: JSON.stringify(lnurlDetails),
@@ -71,7 +71,7 @@ export async function initiatePaymentFlow(
       const invoice = new Invoice({ pr: text });
 
       if (invoice.satoshi === 0) {
-        router.replace({
+        router.push({
           pathname: "/send/0-amount",
           params: {
             invoice: text,
@@ -81,7 +81,7 @@ export async function initiatePaymentFlow(
         return true;
       }
 
-      router.replace({
+      router.push({
         pathname: "/send/confirm",
         params: { invoice: text },
       });

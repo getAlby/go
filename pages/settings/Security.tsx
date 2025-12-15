@@ -24,7 +24,7 @@ export function Security() {
   }, []);
 
   return (
-    <View className="flex-1 p-6 bg-background">
+    <View className="flex-1 p-6">
       <Screen title="Security" />
       {isSupported === null ? (
         <View className="flex-1 justify-center items-center">

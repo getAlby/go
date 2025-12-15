@@ -8,8 +8,8 @@ import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 
 import { Text } from "~/components/ui/text";
-import { useThemeColor } from "~/lib/theme/colors";
 import { errorToast } from "~/lib/errorToast";
+import { useThemeColor } from "~/lib/theme/colors";
 
 export function BitcoinMap() {
   const backgroundColor = useThemeColor("background");
@@ -38,7 +38,7 @@ export function BitcoinMap() {
   }, []);
 
   return (
-    <View className="flex-1 bg-background pt-2">
+    <View className="flex-1 pt-2">
       <Screen
         title="Bitcoin Map"
         right={() => (

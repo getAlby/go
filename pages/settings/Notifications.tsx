@@ -67,7 +67,7 @@ export function Notifications() {
   };
 
   return (
-    <View className="flex-1 p-6 bg-background">
+    <View className="flex-1 p-6">
       <Screen title="Notifications" />
       <View className="flex-1">
         <View className="flex-row items-center justify-between gap-2">

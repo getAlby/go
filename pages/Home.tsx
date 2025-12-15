@@ -118,7 +118,7 @@ export function Home() {
           </TouchableOpacity>
         )}
       />
-      <View className="h-full p-6 bg-background">
+      <View className="flex-1 p-6">
         <ScrollView
           refreshControl={
             <RefreshControl

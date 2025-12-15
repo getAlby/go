@@ -25,7 +25,7 @@ export function BitcoinUnits() {
   return (
     <>
       <Screen title="Bitcoin Units" />
-      <View className="flex-1 bg-background">
+      <View className="flex-1">
         <View className="px-8 my-6">
           <Text className="text-sm sm:text-base text-center text-secondary-foreground">
             Choose which bitcoin units should be displayed in the app.

@@ -1,6 +1,6 @@
 import { openURL } from "expo-linking";
 import React from "react";
-import { Image, Modal, TouchableOpacity, View } from "react-native";
+import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native";
 import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
@@ -23,14 +23,19 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="p-6 mx-6 relative bg-background shadow rounded-3xl">
+        <View className="p-6 mx-6 relative bg-background shadow-sm rounded-3xl max-h-[80vh]">
           <TouchableOpacity
             onPress={onClose}
             className="absolute right-0 p-4 z-10"
           >
             <XIcon className="text-muted-foreground" width={24} height={24} />
           </TouchableOpacity>
-          <View className="pt-0 flex flex-col items-center gap-6">
+          <ScrollView
+            className="my-4 grow-0"
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="flex flex-col items-center gap-6"
+          >
+            {/* <View className="pt-0 flex flex-col items-center gap-6"> */}
             <Image
               source={require("./../assets/btc-map.png")}
               className="w-16 h-16"
@@ -56,7 +61,7 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
                 Visit btcmap.org
               </Text>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </View>
     </Modal>

@@ -137,7 +137,7 @@ export function ConfirmPayment() {
           )
         )}
       </View>
-      <View className="p-6 bg-background">
+      <View className="p-6">
         <WalletSwitcher selectedWalletId={selectedWalletId} wallets={wallets} />
         {transactions?.transactions.some(
           (transaction) => transaction.state === "pending",

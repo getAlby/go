@@ -63,7 +63,7 @@ export function Transactions() {
   }, [refreshingTransactions, reloadTransactions]);
 
   return (
-    <View className="bg-background">
+    <>
       <Screen
         title="Transactions"
         animation="slide_from_bottom"
@@ -148,6 +148,6 @@ export function Transactions() {
           </Link>
         </View>
       )}
-    </View>
+    </>
   );
 }

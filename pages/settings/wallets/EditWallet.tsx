@@ -52,7 +52,7 @@ export function EditWallet() {
   };
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1">
       <Screen title="Edit Wallet" />
       {isDeleting ? (
         <View className="flex-1 justify-center items-center">

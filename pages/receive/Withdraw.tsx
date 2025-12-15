@@ -164,7 +164,7 @@ export function Withdraw() {
   return (
     <>
       <Screen title="Redeem" animation="slide_from_left" />
-      <View className="flex-1 bg-background">
+      <View className="flex-1">
         {isLoading && (
           <View className="flex-1 flex flex-col items-center justify-center">
             <Loading className="text-primary-foreground" />
@@ -213,7 +213,7 @@ export function Withdraw() {
                   }
                   isDescriptionReadOnly
                 />
-                <View className="p-6 bg-background">
+                <View className="p-6">
                   <WalletSwitcher
                     selectedWalletId={selectedWalletId}
                     wallets={wallets}

@@ -53,7 +53,7 @@ export function RenameWallet() {
     <>
       <Screen title="Wallet Name" />
       <DismissableKeyboardView>
-        <View className="flex-1 p-6 bg-background">
+        <View className="flex-1 p-6">
           <View className="flex-1 flex flex-col items-center justify-center">
             <Text className="text-secondary-foreground text-center font-medium2">
               Wallet name

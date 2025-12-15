@@ -309,7 +309,7 @@ export function DualCurrencyInput({
   }
 
   return (
-    <View className="flex-1 flex flex-col gap-2 bg-background">
+    <View className="flex-1 flex flex-col gap-2">
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex items-center justify-center">
           {validationMessage !== "" && (

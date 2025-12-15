@@ -37,7 +37,7 @@ export function SetLightningAddress() {
     <>
       <Screen title="Lightning Address" />
       <DismissableKeyboardView>
-        <View className="flex-1 p-6 bg-background">
+        <View className="flex-1 p-6">
           <Alert
             type="warn"
             title="Only add lightning address you own"

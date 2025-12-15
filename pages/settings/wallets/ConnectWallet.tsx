@@ -172,7 +172,7 @@ export function ConnectWallet() {
           </TouchableOpacity>
         )}
       />
-      <View className="flex-1 p-6 bg-background justify-center items-center gap-8">
+      <View className="flex-1 p-6 justify-center items-center gap-8">
         <PlugView
           connectionCreated={connectionCreated}
           name={name}
@@ -279,7 +279,7 @@ function ConnectView({
                 />
               </TouchableOpacity>
             </View>
-            <ScrollView className="px-6">
+            <ScrollView showsVerticalScrollIndicator={false} className="px-6">
               <View className="pb-6 flex flex-col gap-8">
                 <Text className="text-xl text-center mt-4">
                   Requested methods:{" "}

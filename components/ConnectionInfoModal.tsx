@@ -28,21 +28,20 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        {/* TODO: This always occupies 80vh instead of extending only when required */}
-        <View className="p-6 mx-6 relative bg-background shadow-sm rounded-3xl h-fit max-h-[80vh]">
-          <View className="flex-row items-center justify-center relative">
+        <View className="p-6 mx-6 bg-background shadow-sm rounded-3xl max-h-[80vh]">
+          <View className="mb-4 relative flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={onClose}
-              className="absolute -right-4 p-4 z-10"
+              className="absolute -right-6 p-4"
             >
               <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
-            <Text className="text-2xl text-center font-bold2 text-secondary-foreground">
+            <Text className="text-xl sm:text-2xl text-center font-bold2 text-secondary-foreground">
               Connection Info
             </Text>
           </View>
           <ScrollView
-            className="my-4"
+            className="grow-0"
             showsVerticalScrollIndicator={false}
             contentContainerClassName="flex flex-col gap-2"
           >

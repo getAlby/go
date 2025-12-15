@@ -13,7 +13,10 @@ export function AlbyAccount() {
   return (
     <View className="flex-1 flex flex-col">
       <Screen title="Get Alby Account" />
-      <ScrollView contentContainerClassName="flex items-center gap-3 p-6">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="flex items-center gap-3 p-6"
+      >
         <Image
           source={require("../../assets/alby-account.png")}
           className="my-4"

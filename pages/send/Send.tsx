@@ -123,7 +123,7 @@ export function Send() {
   return (
     <>
       <Screen title="Send" />
-      <View className="flex-1 bg-background pt-2">
+      <View className="flex-1 pt-2">
         {isLoading ? (
           <View className="flex-1 flex flex-col items-center justify-center">
             <Loading className="text-primary-foreground" />

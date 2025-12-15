@@ -1,22 +1,42 @@
 import type { Nip47Capability } from "@getalby/sdk/nwc";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-export const NAV_THEME = {
+export const THEME = {
   light: {
-    background: "hsl(0 0% 100%)", // background
-    border: "hsl(240 5.9% 90%)", // border
-    card: "hsl(0 0% 100%)", // card
-    notification: "hsl(0 84.2% 60.2%)", // destructive
-    primary: "hsl(240 5.9% 10%)", // primary
-    text: "hsl(240 10% 3.9%)", // foreground
+    background: "#F9FAFB",
+    foreground: "#374151",
+    secondaryForeground: "#6B7280",
+    mutedForeground: "#9BA2AE",
+    muted: "#E4E6EA",
+    destructive: "#EF4444",
+    destructiveForeground: "#FEE2E2",
+    success: "#22C45E",
+    successForeground: "#DBFBE6",
+    primary: "#FFC800",
+    primaryForeground: "#374151",
+    secondary: "#FFE480",
+    card: "",
+    text: "",
+    border: "",
+    notification: "",
   },
   dark: {
-    background: "hsl(240 10% 3.9%)", // background
-    border: "hsl(240 3.7% 15.9%)", // border
-    card: "hsl(240 10% 3.9%)", // card
-    notification: "hsl(0 72% 51%)", // destructive
-    primary: "hsl(0 0% 98%)", // primary
-    text: "hsl(0 0% 98%)", // foreground
+    background: "#0a0b0c",
+    foreground: "#FAFBFB",
+    secondaryForeground: "#BFBFC2",
+    mutedForeground: "#7E7E88",
+    muted: "#1f2937",
+    destructive: "#B41818",
+    destructiveForeground: "#1C0202",
+    success: "#44D579",
+    successForeground: "#062310",
+    primary: "#FFC800",
+    primaryForeground: "#374151",
+    secondary: "#FFE480",
+    card: "",
+    text: "",
+    border: "",
+    notification: "",
   },
 };
 

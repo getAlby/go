@@ -91,7 +91,7 @@ export function Receive() {
       {!lightningAddress ? (
         <CreateInvoice />
       ) : (
-        <View className="flex-1 bg-background">
+        <View className="flex-1">
           <View className="flex-1 justify-center items-center gap-4">
             <QRCode value={lightningAddress} />
             <View className="flex flex-col items-center justify-center">

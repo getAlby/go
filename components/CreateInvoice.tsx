@@ -154,7 +154,7 @@ export function CreateInvoice() {
   return (
     <>
       {invoice ? (
-        <View className="flex-1 bg-background">
+        <View className="flex-1">
           <View className="flex-1 justify-center items-center gap-6 mt-4">
             <View className="flex flex-row justify-center items-center gap-2">
               <Loading />
@@ -202,7 +202,7 @@ export function CreateInvoice() {
           </View>
         </View>
       ) : (
-        <View className="flex-1 bg-background">
+        <View className="flex-1">
           <DualCurrencyInput
             amount={amount}
             setAmount={setAmount}

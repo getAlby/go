@@ -99,7 +99,7 @@ export function Transaction() {
   const metadata = transaction.metadata as Nip47TransactionMetadata;
 
   return (
-    <View className="flex-1 bg-background">
+    <>
       <Screen title="Transaction" />
       <ScrollView className="p-6 pt-12">
         <View className="flex gap-10">
@@ -251,7 +251,7 @@ export function Transaction() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 }
 

@@ -18,7 +18,7 @@ export function Wallets() {
   return (
     <>
       <Screen title="Manage Wallets" />
-      <View className="h-full flex bg-background">
+      <View className="flex-1">
         <FlatList
           className="flex flex-col pt-4 px-6"
           data={wallets}
