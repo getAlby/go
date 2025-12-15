@@ -3,7 +3,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { WebView } from "react-native-webview";
 import BTCMapModal from "~/components/BTCMapModal";
-import { HelpCircleIcon } from "~/components/Icons";
+import { HelpCircleLineIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 
@@ -47,7 +47,7 @@ export function BitcoinMap() {
               onPressIn={() => setShowModal(true)}
               className="-mr-4 px-6"
             >
-              <HelpCircleIcon
+              <HelpCircleLineIcon
                 className="text-secondary-foreground"
                 width={24}
                 height={24}

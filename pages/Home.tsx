@@ -4,11 +4,9 @@ import { Link, router, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
 import React, { type JSX, useState } from "react";
 import {
-  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -27,7 +25,7 @@ import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import { DEFAULT_WALLET_NAME, SHADOWS } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn, formatBitcoinAmount } from "~/lib/utils";
@@ -253,30 +251,19 @@ function MainButton({
     <>
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
-          className="flex-1 aspect-square rounded-xl flex"
+          className="flex-1 aspect-square rounded-3xl flex shadow shadow-muted"
           style={{
-            ...shadows.large,
-            ...(pressed
-              ? {
-                  transform: "scale(0.98)",
-                }
-              : {}),
+            ...(pressed && { transform: "scale(0.98)" }),
+            ...SHADOWS.small,
           }}
           onPressIn={() => setPressed(true)}
           onPressOut={() => setPressed(false)}
         >
           <LinearGradient
-            className="flex-1 p-6 border border-secondary"
+            className="flex-1 p-6 border justify-center items-center border-secondary rounded-3xl "
             colors={[secondary, primary]}
             start={[0, 0]}
             end={[1, 1]}
-            style={{
-              flex: 1,
-              padding: 6,
-              borderRadius: 24,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
           >
             <View className="flex flex-col justify-center items-center gap-4">
               <Icon />
@@ -290,25 +277,3 @@ function MainButton({
     </>
   );
 }
-
-const shadows = StyleSheet.create({
-  large: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#6F8CB0",
-        shadowOpacity: 0.4,
-        shadowOffset: {
-          width: 1.5,
-          height: 1.5,
-        },
-        shadowRadius: 4,
-        borderRadius: 24,
-        backgroundColor: "white",
-      },
-      android: {
-        borderRadius: 24,
-        elevation: 2,
-      },
-    }),
-  },
-});

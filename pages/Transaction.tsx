@@ -136,7 +136,7 @@ export function Transaction() {
                   bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
                   transaction.type === "incoming" &&
                     transaction.state === "settled" &&
-                    "text-success",
+                    "text-receive",
                 )}
               >
                 {transaction.type === "incoming" ? "+" : "-"}{" "}

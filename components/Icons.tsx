@@ -16,6 +16,7 @@ import {
   PopiconsEditLine as EditLineIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
   PopiconsCircleInfoSolid as HelpCircleIcon,
+  PopiconsCircleInfoLine as HelpCircleLineIcon,
   PopiconsImageSolid as ImageIcon,
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsMapLine as MapLineIcon,
@@ -73,6 +74,7 @@ interopIcon(EditIcon);
 interopIcon(EditLineIcon);
 interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
+interopIcon(HelpCircleLineIcon);
 interopIcon(ImageIcon);
 interopIcon(LinkIcon);
 interopIcon(MapLineIcon);
@@ -116,6 +118,7 @@ export {
   EditLineIcon,
   FingerprintIcon,
   HelpCircleIcon,
+  HelpCircleLineIcon,
   ImageIcon,
   LinkIcon,
   MapLineIcon,

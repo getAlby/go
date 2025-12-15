@@ -1,5 +1,6 @@
 import type { Nip47Capability } from "@getalby/sdk/nwc";
 import Constants, { ExecutionEnvironment } from "expo-constants";
+import { Platform, StyleSheet } from "react-native";
 
 export const THEME_COLORS = {
   light: {
@@ -10,15 +11,21 @@ export const THEME_COLORS = {
     muted: "#E4E6EA",
     destructive: "#EF4444",
     destructiveForeground: "#FEE2E2",
-    success: "#22C45E",
-    successForeground: "#DBFBE6",
+    receive: "#22C45E",
+    receiveForeground: "#DBFBE6",
+    sent: "#F97316",
+    sentForeground: "#FFEDD5",
+    pending: "#3B82F6",
+    pendingForeground: "#DBEAFE",
     primary: "#FFC800",
     primaryForeground: "#374151",
     secondary: "#FFE480",
     card: "",
     text: "",
-    border: "",
+    border: "#E2E7ED",
     notification: "",
+    logoPrimary: "#202020",
+    logoSecondary: "#FFC800",
   },
   dark: {
     background: "#0A0B0C",
@@ -26,19 +33,62 @@ export const THEME_COLORS = {
     secondaryForeground: "#BFBFC2",
     mutedForeground: "#7E7E88",
     muted: "#1F2937",
-    destructive: "#B41818",
-    destructiveForeground: "#1C0202",
-    success: "#44D579",
-    successForeground: "#062310",
+    destructive: "#F43F5E",
+    destructiveForeground: "#4C0519",
+    receive: "#14B8A6",
+    receiveForeground: "#022C22",
+    sent: "#F59E0B",
+    sentForeground: "#451A03",
+    pending: "#0EA5E9",
+    pendingForeground: "#082F49",
     primary: "#FFC800",
     primaryForeground: "#374151",
     secondary: "#FFE480",
     card: "",
     text: "",
-    border: "",
+    border: "#E2E7ED",
     notification: "",
+    logoPrimary: "#FFFFFF",
+    logoSecondary: "#FFE480",
   },
 };
+
+export const SHADOWS = StyleSheet.create({
+  small: {
+    ...Platform.select({
+      // make sure bg color is applied to avoid RCTView errors
+      ios: {
+        shadowColor: "#6F8CB0",
+        shadowOpacity: 0.4,
+        shadowOffset: {
+          width: 1.5,
+          height: 1.5,
+        },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  large: {
+    ...Platform.select({
+      // make sure bg color is applied to avoid RCTView errors
+      ios: {
+        shadowColor: "#6F8CB0",
+        shadowOpacity: 0.4,
+        shadowOffset: {
+          width: 1.5,
+          height: 1.5,
+        },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+});
 
 export const SUITE_NAME = "group.com.getalby.mobile.nse";
 

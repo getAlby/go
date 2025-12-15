@@ -57,7 +57,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
                     className={cn(
                       "rounded-full w-2 h-2",
                       nwcClient.pool.listConnectionStatus().get(relayUrl)
-                        ? "bg-success"
+                        ? "bg-receive"
                         : "bg-destructive",
                     )}
                   ></View>

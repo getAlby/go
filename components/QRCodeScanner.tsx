@@ -1,18 +1,11 @@
 import { useIsFocused } from "@react-navigation/native";
 import { Camera, PermissionStatus } from "expo-camera";
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { CameraOffIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { FocusableCamera } from "./FocusableCamera";
 import Loading from "./Loading";
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 64,
-    height: 64,
-  },
-});
 
 interface QRCodeScannerProps {
   onScanned: (data: string) => Promise<boolean>;
@@ -69,7 +62,11 @@ function QRCodeScanner({
         <>
           {!isScanning && permissionStatus === PermissionStatus.DENIED && (
             <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
-              <CameraOffIcon className="text-foreground" style={styles.icon} />
+              <CameraOffIcon
+                className="text-foreground"
+                width={64}
+                height={64}
+              />
               <Text className="text-2xl text-center">
                 Camera Permission Denied
               </Text>

@@ -9,7 +9,7 @@ import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import HelpModal from "~/components/HelpModal";
 import {
-  HelpCircleIcon,
+  HelpCircleLineIcon,
   PasteIcon,
   TriangleAlertIcon,
   XIcon,
@@ -178,7 +178,7 @@ export function SetupWallet() {
                 onPressIn={() => setShowHelp(true)}
                 className="-mr-4 px-6"
               >
-                <HelpCircleIcon
+                <HelpCircleLineIcon
                   className="text-muted-foreground"
                   width={24}
                   height={24}

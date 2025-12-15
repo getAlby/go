@@ -13,8 +13,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        receive: "#47A66D",
-        send: "#E26842",
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring))",
@@ -33,9 +31,13 @@ module.exports = {
           DEFAULT: "var(--destructive)",
           foreground: "var(--destructive-foreground)",
         },
-        success: {
-          DEFAULT: "var(--success)",
-          foreground: "var(--success-foreground)",
+        receive: {
+          DEFAULT: "var(--receive)",
+          foreground: "var(--receive-foreground)",
+        },
+        sent: {
+          DEFAULT: "var(--sent)",
+          foreground: "var(--sent-foreground)",
         },
         muted: {
           DEFAULT: "var(--muted)",
