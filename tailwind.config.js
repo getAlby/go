@@ -13,12 +13,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring))",
         background: "var(--background)",
         foreground: "var(--foreground)",
         overlay: "var(--overlay)",
+        border: "var(--border)",
+        logo: {
+          primary: "var(--logo-primary)",
+          secondary: "var(--logo-secondary)",
+        },
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
@@ -27,9 +29,9 @@ module.exports = {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
         },
-        destructive: {
-          DEFAULT: "var(--destructive)",
-          foreground: "var(--destructive-foreground)",
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
         receive: {
           DEFAULT: "var(--receive)",
@@ -39,36 +41,28 @@ module.exports = {
           DEFAULT: "var(--sent)",
           foreground: "var(--sent-foreground)",
         },
-        muted: {
-          DEFAULT: "var(--muted)",
-          foreground: "var(--muted-foreground)",
+        destructive: {
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
         },
-        warning: {
-          DEFAULT: "var(--warning)",
-          foreground: "var(--warning-foreground)",
-          border: "var(--warning-border)",
+        pending: {
+          DEFAULT: "var(--pending)",
+          foreground: "var(--pending-foreground)",
         },
         info: {
           DEFAULT: "var(--info)",
           foreground: "var(--info-foreground)",
           border: "var(--info-border)",
         },
+        warning: {
+          DEFAULT: "var(--warning)",
+          foreground: "var(--warning-foreground)",
+          border: "var(--warning-border)",
+        },
         error: {
           DEFAULT: "var(--error)",
           foreground: "var(--error-foreground)",
           border: "var(--error-border)",
-        },
-        accent: {
-          DEFAULT: "var(--accent)",
-          foreground: "var(--accent-foreground)",
-        },
-        popover: {
-          DEFAULT: "var(--popover)",
-          foreground: "var(--popover-foreground)",
-        },
-        card: {
-          DEFAULT: "var(--card)",
-          foreground: "var(--card-foreground)",
         },
       },
       borderWidth: {
