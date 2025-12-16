@@ -4,6 +4,7 @@ import { Link, router, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
 import React, { type JSX, useState } from "react";
 import {
+  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -25,7 +26,7 @@ import LargeArrowUp from "~/components/icons/LargeArrowUp";
 import Screen from "~/components/Screen";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { DEFAULT_WALLET_NAME, SHADOWS } from "~/lib/constants";
+import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn, formatBitcoinAmount } from "~/lib/utils";
@@ -83,6 +84,13 @@ export function Home() {
       .replace(/[0-9.,\s]/g, "");
   }, [fiatCurrency]);
 
+  const displayCharacterCount = React.useMemo(
+    () =>
+      new Intl.NumberFormat().format(Math.floor((balance?.balance || 0) / 1000))
+        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+    [bitcoinDisplayFormat, balance?.balance],
+  );
+
   return (
     <>
       <Screen
@@ -116,7 +124,7 @@ export function Home() {
           </TouchableOpacity>
         )}
       />
-      <View className="flex-1 p-6">
+      <View className="flex-1">
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -126,92 +134,106 @@ export function Home() {
             />
           }
           showsVerticalScrollIndicator={false}
-          contentContainerClassName="flex-1"
+          contentContainerClassName="flex-1 px-6"
         >
-          <View className="grow flex flex-col items-center justify-center gap-2">
-            {wallets.length > 1 && (
-              <TouchableOpacity
-                className="w-full"
-                onPress={() => {
-                  router.push("/settings/wallets");
-                }}
-              >
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  className="text-center text-muted-foreground font-medium2 text-xl px-4"
+          <View className="flex-1 justify-center gap-8">
+            <View className="flex items-center justify-center gap-2">
+              {wallets.length > 1 && (
+                <TouchableOpacity
+                  className="w-full"
+                  onPress={() => {
+                    router.push("/settings/wallets");
+                  }}
                 >
-                  {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
-                </Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              onPress={switchBalanceState}
-              className="w-full flex flex-col items-center justify-center gap-2"
-            >
-              <View className="w-full flex flex-row justify-center items-center gap-2">
-                {balance &&
-                !refreshingBalance &&
-                (balanceDisplayMode === "fiat" ? getFiatAmount : true) ? (
-                  <>
-                    <Text
-                      className={cn(
-                        "text-secondary-foreground text-5xl leading-[1.5] font-bold2",
-                        (balanceDisplayMode === "hidden" ||
-                          (balanceDisplayMode === "sats" &&
-                            bitcoinDisplayFormat === "sats")) &&
-                          "hidden",
-                      )}
-                    >
-                      {balanceDisplayMode === "sats" && "₿"}
-                      {balanceDisplayMode === "fiat" && symbol}
-                    </Text>
-                    {/* TODO: Adjust using breakpoints for different screen sizes based on logical width and number of digits */}
-                    <Text className="text-5xl leading-[1.5] font-bold2">
-                      {balanceDisplayMode === "sats" &&
-                        new Intl.NumberFormat().format(
-                          Math.floor(balance.balance / 1000),
-                        )}
-                      {balanceDisplayMode === "fiat" &&
-                        getFiatAmount?.(
-                          Math.floor(balance.balance / 1000),
-                          false,
-                        )}
-                      {balanceDisplayMode === "hidden" && "****"}
-                    </Text>
-                    {balanceDisplayMode === "sats" &&
-                      bitcoinDisplayFormat === "sats" && (
-                        <Text className="text-secondary-foreground text-5xl leading-[1.5] font-bold2">
-                          sats
-                        </Text>
-                      )}
-                  </>
-                ) : (
-                  <Skeleton className="w-48 text-5xl my-2.5" />
-                )}
-              </View>
-              {/* Hide conversion if fiat currency is not selected */}
-              {fiatCurrency && (
-                <View className="flex justify-center items-center">
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    className="text-center text-muted-foreground font-medium2 text-xl px-4"
+                  >
+                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                onPress={switchBalanceState}
+                className="w-full flex flex-col items-center justify-center gap-2"
+              >
+                <View className="w-full flex flex-row justify-center items-center gap-2">
                   {balance &&
                   !refreshingBalance &&
-                  (balanceDisplayMode === "sats" ? getFiatAmount : true) ? (
-                    <Text className="text-center text-3xl text-secondary-foreground font-semibold2">
-                      {balanceDisplayMode === "sats" &&
-                        getFiatAmount?.(Math.floor(balance.balance / 1000))}
-                      {balanceDisplayMode === "fiat" &&
-                        formatBitcoinAmount(
-                          Math.floor(balance.balance / 1000),
-                          bitcoinDisplayFormat,
+                  (balanceDisplayMode === "fiat" ? getFiatAmount : true) ? (
+                    <>
+                      <Text
+                        className={cn(
+                          displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
+                          "text-secondary-foreground leading-[1.5] font-bold2",
+                          (balanceDisplayMode === "hidden" ||
+                            (balanceDisplayMode === "sats" &&
+                              bitcoinDisplayFormat === "sats")) &&
+                            "hidden",
                         )}
-                      {balanceDisplayMode === "hidden" && " "}
-                    </Text>
+                      >
+                        {balanceDisplayMode === "sats" && "₿"}
+                        {balanceDisplayMode === "fiat" && symbol}
+                      </Text>
+                      <Text
+                        className={cn(
+                          displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
+                          "leading-[1.5] font-bold2",
+                        )}
+                      >
+                        {balanceDisplayMode === "sats" &&
+                          new Intl.NumberFormat().format(
+                            Math.floor(balance.balance / 1000),
+                          )}
+                        {balanceDisplayMode === "fiat" &&
+                          getFiatAmount?.(
+                            Math.floor(balance.balance / 1000),
+                            false,
+                          )}
+                        {balanceDisplayMode === "hidden" && "******"}
+                      </Text>
+                      {balanceDisplayMode === "sats" &&
+                        bitcoinDisplayFormat === "sats" && (
+                          <Text
+                            className={cn(
+                              displayCharacterCount > 12
+                                ? "text-4xl"
+                                : "text-5xl",
+                              "text-secondary-foreground leading-[1.5] font-bold2",
+                            )}
+                          >
+                            sats
+                          </Text>
+                        )}
+                    </>
                   ) : (
-                    <Skeleton className="w-32 text-3xl" />
+                    <Skeleton className="w-48 text-5xl my-2.5" />
                   )}
                 </View>
-              )}
-            </TouchableOpacity>
+                {/* Hide conversion if fiat currency is not selected */}
+                {fiatCurrency && (
+                  <View className="flex justify-center items-center">
+                    {balance &&
+                    !refreshingBalance &&
+                    (balanceDisplayMode === "sats" ? getFiatAmount : true) ? (
+                      <Text className="text-center text-3xl text-secondary-foreground font-semibold2">
+                        {balanceDisplayMode === "sats" &&
+                          getFiatAmount?.(Math.floor(balance.balance / 1000))}
+                        {balanceDisplayMode === "fiat" &&
+                          formatBitcoinAmount(
+                            Math.floor(balance.balance / 1000),
+                            bitcoinDisplayFormat,
+                          )}
+                        {balanceDisplayMode === "hidden" && " "}
+                      </Text>
+                    ) : (
+                      <Skeleton className="w-32 text-3xl" />
+                    )}
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
             {new Date().getDate() === 21 && <AlbyBanner />}
           </View>
         </ScrollView>
@@ -226,7 +248,7 @@ export function Home() {
             </TouchableOpacity>
           </Link>
         </View>
-        <View className="flex flex-row gap-6 mt-10">
+        <View className="flex flex-row gap-6 p-6">
           <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
           <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
         </View>
@@ -245,7 +267,11 @@ function MainButton({
   Icon: (props: SvgProps) => React.JSX.Element;
 }): JSX.Element {
   const [pressed, setPressed] = React.useState(false);
-  const { primary, secondary } = useThemeColor("primary", "secondary");
+  const { primary, secondary, shadow } = useThemeColor(
+    "primary",
+    "secondary",
+    "shadow",
+  );
 
   return (
     <>
@@ -254,7 +280,21 @@ function MainButton({
           className="flex-1 aspect-square rounded-3xl flex shadow shadow-muted"
           style={{
             ...(pressed && { transform: "scale(0.98)" }),
-            ...SHADOWS.small,
+            ...Platform.select({
+              // make sure bg color is applied to avoid RCTView errors
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                elevation: 2,
+              },
+            }),
           }}
           onPressIn={() => setPressed(true)}
           onPressOut={() => setPressed(false)}

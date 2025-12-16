@@ -49,7 +49,7 @@ function Switch({
           <SwitchPrimitives.Thumb
             className={cn(
               "h-[20px] w-[20px] rounded-full bg-background shadow-sm bottom-[1]",
-              props.checked ? "dark:bg-foreground" : "dark:bg-muted-foreground",
+              !props.checked && "dark:bg-muted-foreground",
             )}
           />
         </Animated.View>

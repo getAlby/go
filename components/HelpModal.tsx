@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, ScrollView, TouchableOpacity, View } from "react-native";
-import { XIcon } from "~/components/Icons";
+import { LikeIcon, XIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Text, TextClassContext } from "~/components/ui/text";
 
@@ -23,7 +23,7 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="p-6 mx-6 bg-background relative shadow-sm rounded-3xl max-h-[80vh]">
+        <View className="p-6 mx-6 bg-background shadow-sm rounded-3xl max-h-[80vh] self-stretch">
           <View className="mb-4 relative flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={onClose}
@@ -32,11 +32,11 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
               <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
             <Text className="text-xl sm:text-2xl text-center font-bold2 text-secondary-foreground">
-              Connect Your Wallet
+              How To Connect?
             </Text>
           </View>
           <ScrollView
-            className="mb-6 grow-0"
+            className="grow-0"
             showsVerticalScrollIndicator={false}
             contentContainerClassName="flex flex-col gap-2"
           >
@@ -51,8 +51,13 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
               </TextClassContext.Provider>
             </View>
           </ScrollView>
-          <Button variant="secondary" size="lg" onPress={onClose}>
-            <Text className="text-secondary-foreground">Okay</Text>
+          <Button
+            variant="secondary"
+            className="flex flex-row gap-2"
+            onPress={onClose}
+          >
+            <LikeIcon className="text-muted-foreground" />
+            <Text className="text-lg">Okay</Text>
           </Button>
         </View>
       </View>

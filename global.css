@@ -8,6 +8,7 @@
     --foreground: #374151;
     --overlay: #00000060;
     --border: #e2e7ed;
+    --shadow: #6f8cb0;
     --logo-primary: #202020;
     --logo-secondary: #ffc800;
     --primary: #ffc800;
@@ -37,23 +38,24 @@
 
   .dark:root {
     --background: #0a0b0c;
-    --foreground: #fafafb;
+    --foreground: #e3e3e3;
     --overlay: #ffffff20;
     --border: #e2e7ed;
+    --shadow: #000000;
     --logo-primary: #ffffff;
     --logo-secondary: #ffe480;
     --primary: #ffc800;
     --secondary: #ffe480;
     --primary-foreground: #374151;
-    --secondary-foreground: #bfbfc2;
+    --secondary-foreground: #bababa;
     --muted: #242424;
-    --muted-foreground: #7e7e88;
+    --muted-foreground: #858585;
     --receive: #14b8a6;
     --receive-foreground: #022c22;
     --sent: #f59e0b;
     --sent-foreground: #451a03;
-    --destructive: #b41818;
-    --destructive-foreground: #1c0202;
+    --destructive: #f43f5e;
+    --destructive-foreground: #4c0519;
     --pending: #0ea5e9;
     --pending-foreground: #082f49;
     --info: #93c5fd;

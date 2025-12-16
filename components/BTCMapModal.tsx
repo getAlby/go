@@ -23,7 +23,7 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="p-6 mx-6 relative bg-background shadow-sm rounded-3xl max-h-[80vh]">
+        <View className="p-6 mx-6 relative bg-background shadow-sm rounded-3xl max-h-[80vh] self-stretch">
           <TouchableOpacity
             onPress={onClose}
             className="absolute right-0 p-4 z-10"

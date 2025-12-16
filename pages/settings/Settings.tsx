@@ -234,7 +234,7 @@ export function Settings() {
         >
           <View className="flex flex-row items-center justify-center gap-2">
             <AlbyGo width={82} height={20} />
-            <View className="border-muted border py-2" />
+            <View className="border-muted-foreground border-[0.5px] py-2" />
             <Text className="text-muted-foreground font-medium2 text-sm">
               v{Constants.expoConfig?.version}
             </Text>

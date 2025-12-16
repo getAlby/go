@@ -67,11 +67,11 @@ export function WalletSwitcher({
         onPress={openSheet}
         className="flex flex-row items-center justify-center gap-2 mb-4 px-4"
       >
-        <WalletIcon className="text-muted-foreground" />
+        <WalletIcon width={16} height={16} className="text-muted-foreground" />
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          className="text-muted-foreground font-medium2 text-xl"
+          className="text-muted-foreground font-medium2 sm:text-lg"
         >
           {selectedWallet?.name || DEFAULT_WALLET_NAME}
         </Text>
@@ -84,6 +84,7 @@ export function WalletSwitcher({
         ref={bottomSheetModalRef}
         backgroundStyle={{
           backgroundColor: background,
+          borderRadius: 24,
         }}
         handleIndicatorStyle={{
           backgroundColor: mutedForeground,
@@ -91,11 +92,12 @@ export function WalletSwitcher({
         backdropComponent={renderBackdrop}
         enablePanDownToClose
       >
-        <BottomSheetView className="p-4 pt-0">
-          <Text className="text-lg text-center font-bold2 my-2">
+        <BottomSheetView className="p-6 pt-2">
+          <Text className="text-xl sm:text-2xl text-center font-semibold2 text-secondary-foreground">
             Switch Wallet
           </Text>
           <FlatList
+            className="mt-4"
             data={wallets}
             renderItem={({ item: wallet, index }) => {
               const active = index === selectedWalletId;
@@ -114,16 +116,24 @@ export function WalletSwitcher({
                     }
                   }}
                   className={cn(
-                    "flex flex-row items-center justify-between p-6 rounded-2xl border-2",
+                    "flex flex-row items-center justify-between px-6 py-4 sm:mb-2 rounded-2xl border-[3px] bg-transparent",
                     active ? "border-primary" : "border-transparent",
                   )}
                 >
                   <View className="flex flex-row gap-4 items-center flex-shrink">
-                    <WalletIcon className="text-muted-foreground" />
+                    <WalletIcon
+                      className={cn(
+                        active
+                          ? "text-secondary-foreground"
+                          : "text-muted-foreground",
+                      )}
+                      width={24}
+                      height={24}
+                    />
                     <Text
                       className={cn(
-                        "text-xl pr-16",
-                        active && "font-semibold2",
+                        "text-lg sm:text-xl pr-16",
+                        active ? "font-semibold2" : "font-medium2",
                       )}
                       numberOfLines={1}
                       ellipsizeMode="tail"

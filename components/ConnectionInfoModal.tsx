@@ -28,7 +28,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="p-6 mx-6 bg-background shadow-sm rounded-3xl max-h-[80vh]">
+        <View className="p-6 mx-6 bg-background shadow-sm rounded-3xl max-h-[80vh] self-stretch">
           <View className="mb-4 relative flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={onClose}

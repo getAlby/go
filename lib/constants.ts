@@ -1,6 +1,5 @@
 import type { Nip47Capability } from "@getalby/sdk/nwc";
 import Constants, { ExecutionEnvironment } from "expo-constants";
-import { Platform, StyleSheet } from "react-native";
 
 export const THEME_COLORS = {
   light: {
@@ -8,6 +7,7 @@ export const THEME_COLORS = {
     foreground: "#374151",
     overlay: "#00000060",
     border: "#E2E7ED",
+    shadow: "#6F8CB0",
     logoPrimary: "#202020",
     logoSecondary: "#FFC800",
     primary: "#FFC800",
@@ -39,17 +39,18 @@ export const THEME_COLORS = {
   },
   dark: {
     background: "#0A0B0C",
-    foreground: "#FAFBFB",
+    foreground: "#E3E3E3",
     overlay: "#FFFFFF20",
     border: "#E2E7ED",
-    logoPrimary: "#202020",
-    logoSecondary: "#FFC800",
+    shadow: "#000000",
+    logoPrimary: "#FFFFFF",
+    logoSecondary: "#FFE480",
     primary: "#FFC800",
     secondary: "#FFE480",
     primaryForeground: "#374151",
-    secondaryForeground: "#BFBFC2",
+    secondaryForeground: "#BABABA",
     muted: "#242424",
-    mutedForeground: "#7E7E88",
+    mutedForeground: "#858585",
     receive: "#14B8A6",
     receiveForeground: "#022C22",
     sent: "#F59E0B",
@@ -72,43 +73,6 @@ export const THEME_COLORS = {
     notification: "",
   },
 };
-
-export const SHADOWS = StyleSheet.create({
-  small: {
-    ...Platform.select({
-      // make sure bg color is applied to avoid RCTView errors
-      ios: {
-        shadowColor: "#6F8CB0",
-        shadowOpacity: 0.4,
-        shadowOffset: {
-          width: 1.5,
-          height: 1.5,
-        },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  large: {
-    ...Platform.select({
-      // make sure bg color is applied to avoid RCTView errors
-      ios: {
-        shadowColor: "#6F8CB0",
-        shadowOpacity: 0.4,
-        shadowOffset: {
-          width: 1.5,
-          height: 1.5,
-        },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-});
 
 export const SUITE_NAME = "group.com.getalby.mobile.nse";
 

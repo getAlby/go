@@ -12,7 +12,7 @@ export const toastConfig: ToastConfig = {
         <CheckCircleIcon className="text-background" width={16} height={16} />
         <Text className="text-background font-semibold2">{text1}</Text>
       </View>
-      {text2 && <Text className="text-background text-center">{text2}</Text>}
+      {text2 && <Text className="text-background">{text2}</Text>}
     </View>
   ),
   info: ({ text1, text2, hide }) => (
@@ -21,7 +21,7 @@ export const toastConfig: ToastConfig = {
         <XCircleIcon className="text-background" width={16} height={16} />
         <Text className="text-background font-semibold2">{text1}</Text>
       </View>
-      {text2 && <Text className="text-background text-center">{text2}</Text>}
+      {text2 && <Text className="text-background">{text2}</Text>}
     </View>
   ),
   error: ({ text1, text2, hide }) => (
@@ -30,7 +30,7 @@ export const toastConfig: ToastConfig = {
         <XCircleIcon className="text-background" width={16} height={16} />
         <Text className="text-background font-semibold2">{text1}</Text>
       </View>
-      {text2 && <Text className="text-background text-center">{text2}</Text>}
+      {text2 && <Text className="text-background">{text2}</Text>}
     </View>
   ),
   connectionError: ({ text1, text2, hide }) => {

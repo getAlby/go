@@ -316,6 +316,11 @@ export function DualCurrencyInput({
     setInputMode(newMode);
   }
 
+  const displayCharacterCount = React.useMemo(
+    () => formattedText.length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+    [formattedText, bitcoinDisplayFormat],
+  );
+
   return (
     <View className="flex-1 flex flex-col gap-2">
       <View className="flex-1 flex flex-col">
@@ -330,7 +335,7 @@ export function DualCurrencyInput({
               (inputMode === "sats" && bitcoinDisplayFormat === "bip177")) && (
               <Text
                 className={cn(
-                  formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                  displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
                   "text-secondary-foreground font-bold2 leading-[1.5]",
                   !text && "text-muted",
                 )}
@@ -340,10 +345,9 @@ export function DualCurrencyInput({
                   : symbol}
               </Text>
             )}
-            {/* TODO: Size text accordingly */}
             <Text
               className={cn(
-                formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
                 "font-semibold2 leading-[1.5]",
                 !text && "text-muted",
                 validationMessage && "text-destructive",
@@ -364,7 +368,7 @@ export function DualCurrencyInput({
             {inputMode === "sats" && bitcoinDisplayFormat === "sats" && (
               <Text
                 className={cn(
-                  formattedText.length > 10 ? "text-4xl" : "text-5xl",
+                  displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
                   "text-secondary-foreground font-semibold2 leading-[1.5]",
                   !text && "text-muted",
                 )}
