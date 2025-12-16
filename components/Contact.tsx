@@ -48,7 +48,7 @@ export default function Contact({
         <Text className="text-secondary-foreground">{lnAddress}</Text>
       </View>
       {onDelete && (
-        <TouchableOpacity className="px-4 -mr-2" onPress={onDelete}>
+        <TouchableOpacity className="py-2 px-4 -mr-2" onPress={onDelete}>
           <TrashLineIcon
             width={18}
             height={18}
