@@ -8,7 +8,7 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./pages/**/*.{js,jsx,ts,tsx}",
   ],
-  safelist: ["text-error", "text-warning", "text-info"],
+  safelist: ["text-sent", "bg-sent-foreground", "text-warning"],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
@@ -49,20 +49,10 @@ module.exports = {
           DEFAULT: "var(--pending)",
           foreground: "var(--pending-foreground)",
         },
-        info: {
-          DEFAULT: "var(--info)",
-          foreground: "var(--info-foreground)",
-          border: "var(--info-border)",
-        },
         warning: {
           DEFAULT: "var(--warning)",
           foreground: "var(--warning-foreground)",
           border: "var(--warning-border)",
-        },
-        error: {
-          DEFAULT: "var(--error)",
-          foreground: "var(--error-foreground)",
-          border: "var(--error-border)",
         },
       },
       borderWidth: {

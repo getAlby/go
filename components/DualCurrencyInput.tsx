@@ -335,8 +335,11 @@ export function DualCurrencyInput({
               (inputMode === "sats" && bitcoinDisplayFormat === "bip177")) && (
               <Text
                 className={cn(
-                  displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
-                  "text-secondary-foreground font-bold2 leading-[1.5]",
+                  displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                  displayCharacterCount <= 14 &&
+                    displayCharacterCount >= 11 &&
+                    "sm:text-5xl",
+                  "text-secondary-foreground font-bold2 !leading-[1.5]",
                   !text && "text-muted",
                 )}
               >
@@ -347,8 +350,11 @@ export function DualCurrencyInput({
             )}
             <Text
               className={cn(
-                displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
-                "font-semibold2 leading-[1.5]",
+                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 14 &&
+                  displayCharacterCount >= 11 &&
+                  "sm:text-5xl",
+                "font-semibold2 !leading-[1.5]",
                 !text && "text-muted",
                 validationMessage && "text-destructive",
               )}
@@ -368,8 +374,11 @@ export function DualCurrencyInput({
             {inputMode === "sats" && bitcoinDisplayFormat === "sats" && (
               <Text
                 className={cn(
-                  displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
-                  "text-secondary-foreground font-semibold2 leading-[1.5]",
+                  displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                  displayCharacterCount <= 14 &&
+                    displayCharacterCount >= 11 &&
+                    "sm:text-5xl",
+                  "text-secondary-foreground font-semibold2 !leading-[1.5]",
                   !text && "text-muted",
                 )}
               >

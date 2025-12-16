@@ -28,7 +28,7 @@ export function Send() {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      errorToast(new Error("Permission to access camera roll is required."));
+      errorToast(new Error("Enable permissions to access camera roll"));
       return;
     }
 

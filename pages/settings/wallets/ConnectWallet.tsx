@@ -147,7 +147,7 @@ export function ConnectWallet() {
       setConnectionCreated(true);
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to create app");
     }
     setCreatingConnection(false);
   };
@@ -335,7 +335,7 @@ function ConnectView({
                 </View>
               )}
               {returnTo && (
-                <Text className="mt-4 text-center">
+                <Text className="mt-2 text-center text-secondary-foreground text-sm">
                   You will return to {returnTo} after confirming
                 </Text>
               )}
@@ -356,7 +356,7 @@ function ConnectView({
         {hasPayPermissions && (
           <TouchableOpacity
             onPress={() => setShowDetails(true)}
-            className="flex flex-row w-full justify-between items-center rounded-2xl p-4 bg-white"
+            className="flex flex-row w-full justify-between items-center rounded-2xl p-4 bg-white dark:bg-muted"
           >
             <Text className="sm:text-lg font-medium2">
               {budgetRenewal !== "never" && (

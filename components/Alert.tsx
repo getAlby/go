@@ -7,24 +7,24 @@ type Props = {
   type: "error" | "warn" | "info";
   icon: React.FunctionComponent<SvgProps>;
   title: string;
-  description: string;
+  description?: string;
   className?: string;
 };
 
 function Alert({ title, description, type, icon: Icon, className }: Props) {
   const textColor =
     type === "error"
-      ? "text-error"
+      ? "text-destructive"
       : type === "warn"
         ? "text-warning"
-        : "text-info";
+        : "text-background";
   return (
     <View
       className={cn(
-        "flex gap-1 mb-4 border py-3 px-4 rounded-xl",
-        type === "error" && "bg-error-foreground border-error-border",
-        type === "warn" && "bg-warning-foreground border-warning-border",
-        type === "info" && "bg-info-foreground border-info-border",
+        "flex gap-1 mb-4 py-3 px-4 rounded-xl self-stretch",
+        type === "error" && "bg-destructive-foreground",
+        type === "warn" && "bg-sent-foreground",
+        type === "info" && "bg-foreground",
         className,
       )}
     >
@@ -34,7 +34,11 @@ function Alert({ title, description, type, icon: Icon, className }: Props) {
           {title}
         </Text>
       </View>
-      <Text className={cn("text-xs sm:text-sm", textColor)}>{description}</Text>
+      {description && (
+        <Text className={cn("text-xs sm:text-sm", textColor)}>
+          {description}
+        </Text>
+      )}
     </View>
   );
 }

@@ -27,7 +27,7 @@ export function CreateInvoice() {
 
   function generateInvoice(amount?: number) {
     if (!amount) {
-      errorToast(new Error("0-amount invoices are currently not supported"));
+      errorToast(new Error("0-amount invoices are not supported"));
       return;
     }
     (async () => {
@@ -47,7 +47,7 @@ export function CreateInvoice() {
         setInvoice(response.invoice);
       } catch (error) {
         console.error(error);
-        errorToast(error);
+        errorToast(error, "Failed to create invoice");
       }
       setLoading(false);
     })();
@@ -68,17 +68,12 @@ export function CreateInvoice() {
 
   async function share() {
     const message = invoice;
-    try {
-      if (!message) {
-        throw new Error("no lightning address set");
-      }
-      await Share.share({
-        message,
-      });
-    } catch (error) {
-      console.error("Error sharing:", error);
-      errorToast(error);
+    if (!message) {
+      errorToast(new Error("No invoice set"));
     }
+    await Share.share({
+      message,
+    });
   }
 
   React.useEffect(() => {

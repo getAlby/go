@@ -112,7 +112,7 @@ export function Withdraw() {
       }
     } catch (error) {
       console.error("failed to load withdraw info", originalText, error);
-      errorToast(error);
+      errorToast(error, "Failed to load withdraw info");
     } finally {
       setLoading(false);
     }
@@ -155,7 +155,7 @@ export function Withdraw() {
       }
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to withdraw");
     } finally {
       setLoadingConfirm(false);
     }

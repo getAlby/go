@@ -76,7 +76,7 @@ export function ConfirmPayment() {
       });
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to make payment");
     }
     setLoading(false);
   }

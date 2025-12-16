@@ -36,17 +36,17 @@ function QRCode({
             pieceBorderRadius={"50%"}
             outerEyesOptions={{
               topLeft: {
-                borderRadius: ["50%", "50%", "50%", "10%"],
+                borderRadius: ["30%", "30%", "30%", "30%"],
               },
               topRight: {
-                borderRadius: ["50%", "50%", "50%", "10%"],
+                borderRadius: ["30%", "30%", "30%", "30%"],
               },
               bottomLeft: {
-                borderRadius: ["50%", "50%", "50%", "10%"],
+                borderRadius: ["30%", "30%", "30%", "30%"],
               },
             }}
             innerEyesOptions={{
-              borderRadius: ["50%", "50%", "50%", "10%"],
+              borderRadius: ["30%", "30%", "30%", "30%"],
             }}
           />
         </View>

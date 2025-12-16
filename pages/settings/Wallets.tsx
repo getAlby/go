@@ -35,7 +35,8 @@ export function Wallets() {
                     router.navigate("/");
                     Toast.show({
                       type: "success",
-                      text1: `Switched wallet to ${item.item.name || DEFAULT_WALLET_NAME}`,
+                      text1: `Switched wallet`,
+                      text2: `Current wallet set to ${item.item.name || DEFAULT_WALLET_NAME}`,
                       position: "top",
                     });
                   }

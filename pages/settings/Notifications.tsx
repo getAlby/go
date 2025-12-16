@@ -39,7 +39,7 @@ export function Notifications() {
       }
       enabled = useAppStore.getState().wallets.some((wallet) => wallet.pushId);
       if (enabled) {
-        errorToast("Failed to deregister notifications");
+        errorToast(new Error("Failed to deregister notifications"));
       } else {
         if (ttsNotificationsEnabled) {
           useAppStore.getState().setTTSNotificationsEnabled(false);

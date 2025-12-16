@@ -76,7 +76,7 @@ export function LNURLPay() {
       });
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to request invoice");
     }
     setLoading(false);
   }

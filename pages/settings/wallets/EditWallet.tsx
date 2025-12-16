@@ -18,7 +18,6 @@ import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
-import { errorToast } from "~/lib/errorToast";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -35,17 +34,12 @@ export function EditWallet() {
 
   const onDeleteWallet = async () => {
     setIsDeleting(true);
-    try {
-      if (!IS_EXPO_GO && isNotificationsEnabled) {
-        const wallet = wallets[walletId];
-        await deregisterWalletNotifications(wallet, walletId);
-      }
-      useAppStore.getState().removeWallet(walletId);
-    } catch (error) {
-      errorToast(error);
-    } finally {
-      setIsDeleting(false);
+    if (!IS_EXPO_GO && isNotificationsEnabled) {
+      const wallet = wallets[walletId];
+      await deregisterWalletNotifications(wallet, walletId);
     }
+    useAppStore.getState().removeWallet(walletId);
+    setIsDeleting(false);
     if (wallets.length !== 1) {
       router.back();
     }
@@ -76,7 +70,7 @@ export function EditWallet() {
                   ),
               ).join(", ")}`}
               icon={TriangleAlertIcon}
-              className="mb-0"
+              className="mx-6"
             />
           )}
           <Link href={`/settings/wallets/${walletId}/name`} asChild>
@@ -157,10 +151,9 @@ export function EditWallet() {
                       if (isSuperuser) {
                         Toast.show({
                           type: "error",
-                          text1:
-                            "Connection Secret with One Tap Connections cannot be exported",
+                          text1: "Wallet cannot be exported",
                           text2:
-                            "Please create a new connection from Alby Hub instead",
+                            "This wallet supports authorizing new connections and cannot be exported. Please create a new connection from Alby Hub instead",
                         });
                         return;
                       }

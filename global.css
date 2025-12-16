@@ -25,15 +25,9 @@
     --destructive-foreground: #fee2e2;
     --pending: #3b82f6;
     --pending-foreground: #dbeafe;
-    --info: #1d4ed8;
-    --info-foreground: #eff6ff;
-    --info-border: #dbeafe;
     --warning: #c2410c;
     --warning-foreground: #fff7ed;
     --warning-border: #ffedd5;
-    --error: #b91c1c;
-    --error-foreground: #fef2f2;
-    --error-border: #fee2e2;
   }
 
   .dark:root {
@@ -58,14 +52,8 @@
     --destructive-foreground: #4c0519;
     --pending: #0ea5e9;
     --pending-foreground: #082f49;
-    --info: #93c5fd;
-    --info-foreground: #1e3a8a;
-    --info-border: #3659b9;
     --warning: #fdba74;
     --warning-foreground: #7c2d12;
     --warning-border: #c16242;
-    --error: #fca5a5;
-    --error-foreground: #7f1d1d;
-    --error-border: #c24141;
   }
 }

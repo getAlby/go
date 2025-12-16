@@ -27,7 +27,7 @@ export function Security() {
   };
 
   return (
-    <View className="flex-1 p-6">
+    <View className="flex-1 px-6">
       <Screen title="Security" />
       {isSupported === null ? (
         <View className="flex-1 justify-center items-center">
@@ -35,16 +35,16 @@ export function Security() {
         </View>
       ) : (
         <>
-          {!isSupported && (
-            <Alert
-              type="info"
-              title="Setup Device Security"
-              description="To protect your wallet, please set up a phone lock in your device settings first."
-              icon={TriangleAlertIcon}
-            />
-          )}
-          <View className="flex-1">
-            <View className="flex-row items-center justify-between gap-2">
+          <View className="flex-1 mt-4">
+            {!isSupported && (
+              <Alert
+                type="info"
+                title="Setup Device Security"
+                description="To protect your wallet, please set up a phone lock in your device settings first."
+                icon={TriangleAlertIcon}
+              />
+            )}
+            <View className="flex-row items-center justify-between gap-2 mt-2">
               <Pressable
                 onPress={onChange}
                 className={cn(!isSupported && "pointer-events-none")}

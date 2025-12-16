@@ -86,8 +86,8 @@ export function Home() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      new Intl.NumberFormat().format(Math.floor((balance?.balance || 0) / 1000))
-        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+      Math.floor((balance?.balance || 0) / 1000).toString().length +
+      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [bitcoinDisplayFormat, balance?.balance],
   );
 
@@ -165,8 +165,11 @@ export function Home() {
                     <>
                       <Text
                         className={cn(
-                          displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
-                          "text-secondary-foreground leading-[1.5] font-bold2",
+                          displayCharacterCount > 10 ? "text-4xl" : "text-5xl",
+                          displayCharacterCount <= 12 &&
+                            displayCharacterCount >= 10 &&
+                            "sm:text-5xl",
+                          "text-secondary-foreground !leading-[1.5] font-bold2",
                           (balanceDisplayMode === "hidden" ||
                             (balanceDisplayMode === "sats" &&
                               bitcoinDisplayFormat === "sats")) &&
@@ -178,8 +181,11 @@ export function Home() {
                       </Text>
                       <Text
                         className={cn(
-                          displayCharacterCount > 12 ? "text-4xl" : "text-5xl",
-                          "leading-[1.5] font-bold2",
+                          displayCharacterCount > 10 ? "text-4xl" : "text-5xl",
+                          displayCharacterCount <= 12 &&
+                            displayCharacterCount >= 10 &&
+                            "sm:text-5xl",
+                          "!leading-[1.5] font-bold2",
                         )}
                       >
                         {balanceDisplayMode === "sats" &&
@@ -197,10 +203,13 @@ export function Home() {
                         bitcoinDisplayFormat === "sats" && (
                           <Text
                             className={cn(
-                              displayCharacterCount > 12
+                              displayCharacterCount > 10
                                 ? "text-4xl"
                                 : "text-5xl",
-                              "text-secondary-foreground leading-[1.5] font-bold2",
+                              displayCharacterCount <= 12 &&
+                                displayCharacterCount >= 10 &&
+                                "sm:text-5xl",
+                              "text-secondary-foreground !leading-[1.5] font-bold2",
                             )}
                           >
                             sats

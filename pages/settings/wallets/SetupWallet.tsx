@@ -52,7 +52,7 @@ export function SetupWallet() {
       nostrWalletConnectUrl = await Clipboard.getStringAsync();
     } catch (error) {
       console.error("Failed to read clipboard", error);
-      errorToast(error);
+      errorToast(error, "Failed to read clipboard");
       return;
     }
     connect(nostrWalletConnectUrl);
@@ -88,7 +88,7 @@ export function SetupWallet() {
         return true;
       } catch (error) {
         console.error(error);
-        errorToast(error);
+        errorToast(error, "Failed to connect to wallet");
       }
       setConnecting(false);
       return false;

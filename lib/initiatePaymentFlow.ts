@@ -89,7 +89,7 @@ export async function initiatePaymentFlow(
     }
   } catch (error) {
     console.error("failed to load payment", originalText, error);
-    errorToast(error);
+    errorToast(error, "Failed to load payment");
   }
 
   return false;

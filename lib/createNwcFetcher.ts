@@ -30,7 +30,7 @@ export function createNwcFetcher<T>(
         throw new Error("app was backgrounded");
       }
       console.error("NWC request failed", { error });
-      errorToast(error);
+      errorToast(error, "NWC request failed");
       throw error;
     }
   };

@@ -24,7 +24,6 @@ import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -173,17 +172,12 @@ export function Address() {
 
   const onSubmit = async () => {
     setSubmitting(true);
-    try {
-      const result = await initiatePaymentFlow(keyboardText, "");
-      if (contactName && result) {
-        useAppStore.getState().addAddressBookEntry({
-          name: contactName,
-          lightningAddress: keyboardText,
-        });
-      }
-    } catch (error) {
-      console.error("Payment failed:", error);
-      errorToast(error);
+    const result = await initiatePaymentFlow(keyboardText, "");
+    if (contactName && result) {
+      useAppStore.getState().addAddressBookEntry({
+        name: contactName,
+        lightningAddress: keyboardText,
+      });
     }
     setSubmitting(false);
   };

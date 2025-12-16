@@ -37,7 +37,7 @@ function CurrencyList() {
           .sort((a, b) => a[2] - b[2]) as [string, string, number][];
         setCurrencies(mappedCurrencies);
       } catch (error) {
-        errorToast(error);
+        errorToast(error, "Failed to load currency list");
       } finally {
         setLoading(false);
       }

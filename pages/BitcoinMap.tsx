@@ -22,7 +22,7 @@ export function BitcoinMap() {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== Location.PermissionStatus.GRANTED) {
-          throw new Error("Permission to access location was denied.");
+          throw new Error("Enable permissions to access location");
         }
 
         const location = await Location.getCurrentPositionAsync({});

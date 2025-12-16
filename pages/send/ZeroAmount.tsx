@@ -6,7 +6,6 @@ import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { errorToast } from "~/lib/errorToast";
 
 export function ZeroAmount() {
   const { invoice, comment } = useLocalSearchParams() as {
@@ -18,18 +17,13 @@ export function ZeroAmount() {
 
   async function submit() {
     setLoading(true);
-    try {
-      router.push({
-        pathname: "/send/confirm",
-        params: {
-          invoice,
-          amount,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      errorToast(error);
-    }
+    router.push({
+      pathname: "/send/confirm",
+      params: {
+        invoice,
+        amount,
+      },
+    });
     setLoading(false);
   }
 

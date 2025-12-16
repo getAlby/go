@@ -39,17 +39,12 @@ export function Receive() {
 
   async function share() {
     const message = lightningAddress;
-    try {
-      if (!message) {
-        throw new Error("no lightning address set");
-      }
-      await Share.share({
-        message,
-      });
-    } catch (error) {
-      console.error("Error sharing:", error);
-      errorToast(error);
+    if (!message) {
+      throw new Error("No lightning address set");
     }
+    await Share.share({
+      message,
+    });
   }
 
   return (
