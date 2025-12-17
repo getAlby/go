@@ -115,7 +115,7 @@ export function Transactions() {
           )}
         />
       ) : !transactionsLoaded ? (
-        <ScrollView className="mt-2">
+        <ScrollView showsVerticalScrollIndicator={false} className="mt-2">
           {[...Array(20)].map((e, i) => (
             <View
               key={i}
