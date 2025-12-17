@@ -29,7 +29,6 @@ import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import { MAX_SATS_THRESHOLD } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
-import { useColorScheme } from "~/lib/useColorScheme";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn, formatBitcoinAmount } from "~/lib/utils";
 
@@ -56,7 +55,6 @@ function DescriptionInput({
   readOnly,
 }: DescriptionInputProps) {
   const [input, setInput] = useState(description);
-  const { isDarkColorScheme } = useColorScheme();
   const { primary, foreground, background, mutedForeground } = useThemeColor(
     "primary",
     "foreground",
@@ -72,12 +70,12 @@ function DescriptionInput({
         style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={isDarkColorScheme ? 0.3 : 0.7}
+        opacity={0.3}
         pressBehavior="close"
         onPress={Keyboard.dismiss}
       />
     ),
-    [isDarkColorScheme, foreground],
+    [foreground],
   );
 
   const save = () => {

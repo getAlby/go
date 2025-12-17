@@ -11,7 +11,6 @@ import { ChevronDownIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { LNURLPaymentSuccessAction } from "~/lib/lnurl";
-import { useColorScheme } from "~/lib/useColorScheme";
 import { useThemeColor } from "~/lib/useThemeColor";
 
 interface SuccessMessageProps {
@@ -19,7 +18,6 @@ interface SuccessMessageProps {
 }
 
 export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
-  const { isDarkColorScheme } = useColorScheme();
   const { foreground, background, mutedForeground } = useThemeColor(
     "foreground",
     "background",
@@ -34,11 +32,11 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
         style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={isDarkColorScheme ? 0.3 : 0.7}
+        opacity={0.3}
         pressBehavior="close"
       />
     ),
-    [isDarkColorScheme, foreground],
+    [foreground],
   );
 
   if (!lnurlSuccessAction) {
@@ -64,6 +62,7 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
         ref={bottomSheetModalRef}
         backgroundStyle={{
           backgroundColor: background,
+          borderRadius: 24,
         }}
         handleIndicatorStyle={{
           backgroundColor: mutedForeground,

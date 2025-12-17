@@ -11,7 +11,6 @@ import { ChevronDownIcon, WalletIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore, type Wallet } from "~/lib/state/appStore";
-import { useColorScheme } from "~/lib/useColorScheme";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
@@ -24,7 +23,6 @@ export function WalletSwitcher({
   selectedWalletId,
   wallets,
 }: WalletSwitcherProps) {
-  const { isDarkColorScheme } = useColorScheme();
   const { foreground, background, mutedForeground } = useThemeColor(
     "foreground",
     "background",
@@ -50,11 +48,11 @@ export function WalletSwitcher({
         style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={isDarkColorScheme ? 0.3 : 0.7}
+        opacity={0.3}
         pressBehavior="close"
       />
     ),
-    [isDarkColorScheme, foreground],
+    [foreground],
   );
 
   if (wallets.length <= 1) {

@@ -26,7 +26,6 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
-import { useColorScheme } from "~/lib/useColorScheme";
 import { useThemeColor } from "~/lib/useThemeColor";
 
 interface ContactInputProps {
@@ -45,7 +44,6 @@ function ContactInput({
     contactName ||
       (match?.[1] ? match[1].charAt(0).toUpperCase() + match[1].slice(1) : ""),
   );
-  const { isDarkColorScheme } = useColorScheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const { primary, background, mutedForeground, foreground } = useThemeColor(
@@ -62,12 +60,12 @@ function ContactInput({
         style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={isDarkColorScheme ? 0.3 : 0.7}
+        opacity={0.3}
         pressBehavior="close"
         onPress={Keyboard.dismiss}
       />
     ),
-    [isDarkColorScheme, foreground],
+    [foreground],
   );
 
   const save = () => {
