@@ -48,26 +48,31 @@ export function useGetFiatAmount() {
 
   const getFiatAmount = React.useCallback(
     (amount: number, displayCurrencySign = true) => {
-      if (fiatCurrency && rate) {
-        if (displayCurrencySign) {
-          return `${new Intl.NumberFormat(undefined, {
-            style: "currency",
-            currency: fiatCurrency,
-            currencyDisplay: "narrowSymbol",
-          }).format(rate * amount)}`;
-        }
-
-        const amountWithCurrencyCode = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: fiatCurrency,
-          currencyDisplay: "code",
-        }).format(rate * amount);
-
-        return amountWithCurrencyCode.substring(
-          amountWithCurrencyCode.search(/\s/) + 1,
-        );
+      if (!fiatCurrency || !rate) {
+        return undefined;
       }
-      return undefined;
+      const formatterWithCode = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: fiatCurrency,
+        currencyDisplay: "code",
+      });
+      const amountWithCode = formatterWithCode.format(rate * amount);
+      const numericAmount = amountWithCode.substring(
+        amountWithCode.search(/\s/) + 1,
+      );
+
+      if (!displayCurrencySign) {
+        return numericAmount;
+      }
+      const symbol = new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: fiatCurrency,
+        currencyDisplay: "narrowSymbol",
+      })
+        .format(0)
+        .replace(/[0-9.,\s]/g, "");
+
+      return `${symbol} ${numericAmount}`;
     },
     [rate, fiatCurrency],
   );
