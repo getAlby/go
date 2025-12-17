@@ -90,7 +90,7 @@ export function Wallets() {
             size="lg"
             onPress={() => {
               router.dismissAll();
-              router.push("/settings/wallets/setup");
+              router.navigate("/settings/wallets/setup");
             }}
             className="flex flex-row gap-2"
           >

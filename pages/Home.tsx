@@ -98,7 +98,7 @@ export function Home() {
         left={() => (
           <TouchableOpacity
             onPressIn={() => {
-              router.push("/settings");
+              router.navigate("/settings");
             }}
             className="-ml-4 px-6"
           >
@@ -112,7 +112,7 @@ export function Home() {
         right={() => (
           <TouchableOpacity
             onPressIn={() => {
-              router.push("/bitcoin-map");
+              router.navigate("/bitcoin-map");
             }}
             className="-mr-4 px-6"
           >
@@ -142,7 +142,7 @@ export function Home() {
                 <TouchableOpacity
                   className="w-full"
                   onPress={() => {
-                    router.push("/settings/wallets");
+                    router.navigate("/settings/wallets");
                   }}
                 >
                   <Text

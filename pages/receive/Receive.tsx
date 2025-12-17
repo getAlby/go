@@ -58,7 +58,7 @@ export function Receive() {
               <TouchableOpacity
                 className="px-4"
                 onPressIn={() => {
-                  router.push("/receive/lightning-address");
+                  router.navigate("/receive/lightning-address");
                 }}
               >
                 <AddressIcon
@@ -70,7 +70,7 @@ export function Receive() {
               <TouchableOpacity
                 className="-mr-2 px-4"
                 onPressIn={() => {
-                  router.push("receive/withdraw");
+                  router.navigate("receive/withdraw");
                 }}
               >
                 <ScanIcon
@@ -105,7 +105,7 @@ export function Receive() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
               onPress={() => {
-                router.push("/receive/withdraw");
+                router.navigate("/receive/withdraw");
               }}
             >
               <RedeemIcon width={32} height={32} />
@@ -127,7 +127,7 @@ export function Receive() {
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
               onPress={() => {
-                router.push("/receive/invoice");
+                router.navigate("/receive/invoice");
               }}
             >
               <EditIcon

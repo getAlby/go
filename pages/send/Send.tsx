@@ -148,7 +148,7 @@ export function Send() {
                 variant="secondary"
                 className="flex-1 flex flex-col gap-2"
                 onPress={() => {
-                  router.push("/send/address");
+                  router.navigate("/send/address");
                 }}
               >
                 <AddressIcon

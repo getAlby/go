@@ -24,7 +24,10 @@ export function LightningAddress() {
           for fast face-to-face transactions
         </Text>
       </View>
-      <Button size="lg" onPress={() => router.push("/receive/alby-account")}>
+      <Button
+        size="lg"
+        onPress={() => router.navigate("/receive/alby-account")}
+      >
         <Text>Get New Address</Text>
       </Button>
       <Button

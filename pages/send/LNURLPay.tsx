@@ -63,7 +63,7 @@ export function LNURLPay() {
         console.error("failed to parse recipient identifier", error);
       }
       const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-      router.push({
+      router.navigate({
         pathname: "/send/confirm",
         params: {
           invoice: lnurlPayInfo.pr,
