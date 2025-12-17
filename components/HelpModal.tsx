@@ -1,8 +1,15 @@
 import React from "react";
-import { Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { LikeIcon, XIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Text, TextClassContext } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 type HelpModalProps = {
   visible: boolean;
@@ -10,6 +17,7 @@ type HelpModalProps = {
 };
 
 function HelpModal({ visible, onClose }: HelpModalProps) {
+  const { shadow } = useThemeColor("shadow");
   return (
     <Modal
       transparent
@@ -23,7 +31,26 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="p-6 mx-6 bg-background shadow-sm rounded-3xl max-h-[80vh] self-stretch">
+        <View
+          style={{
+            ...Platform.select({
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
+          className="p-6 mx-6 bg-background rounded-3xl max-h-[80vh] self-stretch"
+        >
           <View className="mb-4 relative flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={onClose}

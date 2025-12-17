@@ -254,6 +254,7 @@ function ConnectView({
   returnTo,
   metadata,
 }: Omit<NWAOptions, "appPubkey" | "relayUrls">) {
+  const { shadow } = useThemeColor("shadow");
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
   const onClose = () => setShowDetails(false);
@@ -277,7 +278,26 @@ function ConnectView({
             onPress={onClose}
             className="absolute inset-0"
           />
-          <View className="p-6 mx-6 bg-background shadow-sm rounded-3xl max-h-[80vh] self-stretch">
+          <View
+            style={{
+              ...Platform.select({
+                ios: {
+                  shadowColor: shadow,
+                  shadowOpacity: 0.4,
+                  shadowOffset: {
+                    width: 1.5,
+                    height: 1.5,
+                  },
+                  shadowRadius: 2,
+                },
+                android: {
+                  shadowColor: shadow,
+                  elevation: 3,
+                },
+              }),
+            }}
+            className="p-6 mx-6 bg-background rounded-3xl max-h-[80vh] self-stretch"
+          >
             <View className="mb-4 relative flex flex-row items-center justify-center">
               <TouchableOpacity
                 onPress={onClose}

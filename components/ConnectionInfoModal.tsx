@@ -1,8 +1,15 @@
 import React from "react";
-import { Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
 type ConnectionInfoModalProps = {
@@ -15,6 +22,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
   const wallets = useAppStore((store) => store.wallets);
   const capabilities = wallets[selectedWalletId].nwcCapabilities;
   const nwcClient = useAppStore((store) => store.nwcClient);
+  const { shadow } = useThemeColor("shadow");
   return (
     <Modal
       transparent
@@ -28,7 +36,26 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="p-6 mx-6 bg-background shadow-sm rounded-3xl max-h-[80vh] self-stretch">
+        <View
+          style={{
+            ...Platform.select({
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
+          className="p-6 mx-6 bg-background rounded-3xl max-h-[80vh] self-stretch"
+        >
           <View className="mb-4 relative flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={onClose}

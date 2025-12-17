@@ -1,8 +1,16 @@
 import { openURL } from "expo-linking";
 import React from "react";
-import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 type BTCMapModalProps = {
   visible: boolean;
@@ -10,6 +18,7 @@ type BTCMapModalProps = {
 };
 
 function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
+  const { shadow } = useThemeColor("shadow");
   return (
     <Modal
       transparent
@@ -23,7 +32,26 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="p-6 mx-6 relative bg-background shadow-sm rounded-3xl max-h-[80vh] self-stretch">
+        <View
+          style={{
+            ...Platform.select({
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
+          className="p-6 mx-6 relative bg-background rounded-3xl max-h-[80vh] self-stretch"
+        >
           <TouchableOpacity
             onPress={onClose}
             className="absolute right-0 p-4 z-10"
