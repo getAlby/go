@@ -36,13 +36,13 @@ export function BitcoinUnits() {
             isChecked={bitcoinDisplayFormat === "bip177"}
             onPress={() => setDisplayFormat("bip177")}
           >
-            <Text className="font-medium2">₿</Text>
+            <Text className="sm:text-lg font-semibold2">₿</Text>
           </Checkbox>
           <Checkbox
             isChecked={bitcoinDisplayFormat === "sats"}
             onPress={() => setDisplayFormat("sats")}
           >
-            <Text className="font-medium2">sats</Text>
+            <Text className="sm:text-lg font-semibold2">sats</Text>
           </Checkbox>
         </View>
       </View>

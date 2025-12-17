@@ -18,7 +18,9 @@ export function UnitsAndCurrency() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-xl">Bitcoin Units</Text>
+            <Text className="font-medium2 text-lg sm:text-xl">
+              Bitcoin Units
+            </Text>
             <ChevronRightIcon
               className="ml-auto text-muted-foreground"
               width={20}
@@ -30,7 +32,9 @@ export function UnitsAndCurrency() {
         <Link href="/settings/fiat-currency" asChild>
           <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3 sm:py-4">
             <ShitcoinIcon width={24} height={24} />
-            <Text className="font-medium2 text-xl">Fiat Currency</Text>
+            <Text className="font-medium2 text-lg sm:text-xl">
+              Fiat Currency
+            </Text>
             <ChevronRightIcon
               className="ml-auto text-muted-foreground"
               width={20}
