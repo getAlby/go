@@ -61,16 +61,16 @@ function QRCodeScanner({
       {!isLoading && (
         <>
           {!isScanning && permissionStatus === PermissionStatus.DENIED && (
-            <View className="flex-1 h-full flex flex-col items-center justify-center gap-2 p-6">
+            <View className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
               <CameraOffIcon
-                className="text-foreground"
+                className="text-secondary-foreground"
                 width={64}
                 height={64}
               />
-              <Text className="text-2xl text-center">
+              <Text className="text-xl font-medium2 text-center">
                 Camera Permission Denied
               </Text>
-              <Text className="text-muted-foreground text-xl text-center">
+              <Text className="text-secondary-foreground text-center">
                 It seems you denied permissions to use your camera. You might
                 need to go to your device settings to allow access to your
                 camera again.
