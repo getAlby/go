@@ -286,7 +286,7 @@ function MainButton({
     <>
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
-          className="flex-1 aspect-square rounded-3xl flex shadow shadow-muted"
+          className="flex-1 aspect-square rounded-3xl flex"
           style={{
             ...(pressed && { transform: "scale(0.98)" }),
             ...Platform.select({
@@ -301,7 +301,8 @@ function MainButton({
                 shadowRadius: 2,
               },
               android: {
-                elevation: 2,
+                shadowColor: shadow,
+                elevation: 3,
               },
             }),
           }}

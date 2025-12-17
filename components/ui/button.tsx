@@ -84,7 +84,8 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
                 shadowRadius: 2,
               },
               android: {
-                elevation: 2,
+                shadowColor: shadow,
+                elevation: 3,
               },
             }),
           }}
@@ -131,7 +132,8 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
                 shadowRadius: 2,
               },
               android: {
-                elevation: 2,
+                shadowColor: shadow,
+                elevation: 3,
               },
             }),
           }}

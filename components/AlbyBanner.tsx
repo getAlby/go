@@ -39,7 +39,7 @@ function AlbyBanner() {
 
   return (
     <View
-      className="bg-background dark:bg-muted rounded-2xl flex flex-col gap-3 p-4 relative"
+      className="bg-background dark:bg-muted rounded-2xl flex flex-col gap-3 p-4 relative mx-2"
       style={{
         ...Platform.select({
           // make sure bg color is applied to avoid RCTView errors
@@ -53,7 +53,8 @@ function AlbyBanner() {
             shadowRadius: 2,
           },
           android: {
-            elevation: 2,
+            shadowColor: shadow,
+            elevation: 3,
           },
         }),
       }}

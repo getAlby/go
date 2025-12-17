@@ -445,7 +445,8 @@ function PlugView({
           shadowRadius: 2,
         },
         android: {
-          elevation: 2,
+          shadowColor,
+          elevation: 3,
         },
       }),
     };
