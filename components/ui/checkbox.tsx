@@ -24,7 +24,7 @@ function Checkbox({ className, isChecked, children, ...props }: CheckboxProps) {
     >
       {isChecked ? (
         <LinearGradient
-          className="px-1 rounded-lg aspect-square flex items-center justify-center border-secondary border"
+          className="px-[4px] rounded-lg aspect-square flex items-center justify-center border-secondary border"
           colors={[secondary, primary]}
           start={[0, 0]}
           end={[1, 1]}
