@@ -16,6 +16,7 @@ import { useTransactions } from "~/hooks/useTransactions";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function ConfirmPayment() {
   const { data: transactions } = useTransactions();
@@ -81,21 +82,54 @@ export function ConfirmPayment() {
     setLoading(false);
   }
 
+  const displayCharacterCount = React.useMemo(
+    () =>
+      Math.ceil(amountToPaySats).toString().length +
+      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+    [amountToPaySats, bitcoinDisplayFormat],
+  );
+
   return (
     <>
       <Screen title="Confirm Payment" />
       <View className="flex-1 justify-center items-center gap-16 p-6">
         <View className="flex flex-col gap-2">
-          <Text className="text-center text-muted-foreground font-semibold2 mb-2">
+          <Text className="text-center text-muted-foreground font-medium2 text-xl">
             Send
           </Text>
-          <View className="flex flex-row items-end justify-center gap-2">
-            <Text className="text-5xl leading-[1.5] font-bold2">
-              {bitcoinDisplayFormat === "bip177" && "₿ "}
+          <View className="flex flex-row items-center justify-center gap-2">
+            <Text
+              className={cn(
+                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 10 &&
+                  displayCharacterCount >= 8 &&
+                  "sm:text-5xl",
+                "text-secondary-foreground !leading-[1.5] font-bold2",
+              )}
+            >
+              ₿
+            </Text>
+            <Text
+              className={cn(
+                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 10 &&
+                  displayCharacterCount >= 8 &&
+                  "sm:text-5xl",
+                "!leading-[1.5] font-bold2",
+              )}
+            >
               {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
             </Text>
             {bitcoinDisplayFormat === "sats" && (
-              <Text className="text-5xl leading-[1.5] font-bold2 text-muted-foreground">
+              <Text
+                className={cn(
+                  displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                  displayCharacterCount <= 10 &&
+                    displayCharacterCount >= 8 &&
+                    "sm:text-5xl",
+                  "text-secondary-foreground !leading-[1.5] font-bold2",
+                )}
+              >
                 sats
               </Text>
             )}

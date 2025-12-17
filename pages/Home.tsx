@@ -165,9 +165,9 @@ export function Home() {
                     <>
                       <Text
                         className={cn(
-                          displayCharacterCount > 10 ? "text-4xl" : "text-5xl",
-                          displayCharacterCount <= 12 &&
-                            displayCharacterCount >= 10 &&
+                          displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                          displayCharacterCount <= 10 &&
+                            displayCharacterCount >= 8 &&
                             "sm:text-5xl",
                           "text-secondary-foreground !leading-[1.5] font-bold2",
                           (balanceDisplayMode === "hidden" ||
@@ -181,9 +181,9 @@ export function Home() {
                       </Text>
                       <Text
                         className={cn(
-                          displayCharacterCount > 10 ? "text-4xl" : "text-5xl",
-                          displayCharacterCount <= 12 &&
-                            displayCharacterCount >= 10 &&
+                          displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                          displayCharacterCount <= 10 &&
+                            displayCharacterCount >= 8 &&
                             "sm:text-5xl",
                           "!leading-[1.5] font-bold2",
                         )}
@@ -203,11 +203,11 @@ export function Home() {
                         bitcoinDisplayFormat === "sats" && (
                           <Text
                             className={cn(
-                              displayCharacterCount > 10
+                              displayCharacterCount > 8
                                 ? "text-4xl"
                                 : "text-5xl",
-                              displayCharacterCount <= 12 &&
-                                displayCharacterCount >= 10 &&
+                              displayCharacterCount <= 10 &&
+                                displayCharacterCount >= 8 &&
                                 "sm:text-5xl",
                               "text-secondary-foreground !leading-[1.5] font-bold2",
                             )}
