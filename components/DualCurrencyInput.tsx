@@ -80,7 +80,9 @@ function DescriptionInput({
 
   const save = () => {
     setDescription?.(input);
-    Keyboard.dismiss();
+    if (Keyboard.isVisible()) {
+      Keyboard.dismiss();
+    }
     bottomSheetModalRef.current?.dismiss();
   };
 
@@ -138,7 +140,9 @@ function DescriptionInput({
             <View className="relative flex flex-row items-center justify-center">
               <TouchableOpacity
                 onPress={() => {
-                  Keyboard.dismiss();
+                  if (Keyboard.isVisible()) {
+                    Keyboard.dismiss();
+                  }
                   bottomSheetModalRef.current?.dismiss();
                 }}
                 className="absolute -left-4 p-4"
