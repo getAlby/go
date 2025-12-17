@@ -128,8 +128,8 @@ export default Sentry.wrap(function RootLayout() {
                 <Toast
                   config={toastConfig}
                   position="bottom"
-                  bottomOffset={140}
-                  topOffset={140}
+                  bottomOffset={100}
+                  topOffset={100}
                 />
               </BottomSheetModalProvider>
             </GestureHandlerRootView>
