@@ -1,6 +1,7 @@
 import * as SwitchPrimitives from "@rn-primitives/switch";
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
+import { Platform } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -15,10 +16,11 @@ function Switch({
 }: SwitchPrimitives.RootProps & {
   ref?: React.RefObject<SwitchPrimitives.RootRef>;
 }) {
-  const { primary, secondary, muted, background } = useThemeColor(
+  const { primary, secondary, muted, shadow, background } = useThemeColor(
     "primary",
     "secondary",
     "muted",
+    "shadow",
     "background",
   );
   const translateX = useDerivedValue(() => (props.checked ? 18 : 2));
@@ -47,8 +49,25 @@ function Switch({
       >
         <Animated.View style={animatedThumbStyle}>
           <SwitchPrimitives.Thumb
+            style={{
+              ...Platform.select({
+                ios: {
+                  shadowColor: shadow,
+                  shadowOpacity: 0.4,
+                  shadowOffset: {
+                    width: 1.5,
+                    height: 1.5,
+                  },
+                  shadowRadius: 2,
+                },
+                android: {
+                  shadowColor: shadow,
+                  elevation: 3,
+                },
+              }),
+            }}
             className={cn(
-              "h-[20px] w-[20px] rounded-full bg-background shadow-sm bottom-[1]",
+              "h-[20px] w-[20px] rounded-full bg-background bottom-[1]",
               !props.checked && "dark:bg-muted-foreground",
             )}
           />
