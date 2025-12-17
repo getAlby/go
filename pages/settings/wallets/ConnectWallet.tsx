@@ -320,14 +320,14 @@ function ConnectView({
             >
               <View className="flex gap-2">
                 <Text className="font-semibold2">Requested methods</Text>
-                <Text className="bg-muted p-2 rounded-md font-medium font-mono">
+                <Text className="bg-muted p-2 rounded-md text-sm font-mono">
                   {requestMethods?.join(", ") || "all methods"}
                 </Text>
               </View>
               {notificationTypes && (
                 <View className="flex gap-2">
                   <Text className="font-semibold2">Notification Types</Text>
-                  <Text className="bg-muted p-2 rounded-md font-medium font-mono">
+                  <Text className="bg-muted p-2 rounded-md text-sm font-mono">
                     {notificationTypes.join(", ")}
                   </Text>
                 </View>
@@ -349,7 +349,7 @@ function ConnectView({
               {!!metadata && (
                 <View className="flex gap-2">
                   <Text className="font-semibold2">Metadata</Text>
-                  <Text className="bg-muted p-2 rounded-md font-medium font-mono">
+                  <Text className="bg-muted p-2 rounded-md text-sm font-mono">
                     {JSON.stringify(metadata)}
                   </Text>
                 </View>

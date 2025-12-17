@@ -114,7 +114,7 @@ export function WalletSwitcher({
                     }
                   }}
                   className={cn(
-                    "flex flex-row items-center justify-between px-6 py-4 sm:mb-2 rounded-2xl border-[3px] bg-transparent",
+                    "flex flex-row items-center justify-between px-6 py-4 mb-2 rounded-2xl border-[3px] bg-transparent",
                     active ? "border-primary" : "border-transparent",
                   )}
                 >

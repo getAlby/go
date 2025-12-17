@@ -51,36 +51,39 @@ export function Receive() {
     <>
       <Screen
         title="Receive"
+        className={(!lightningAddress && "ml-16") || undefined}
         animation="slide_from_left"
-        right={() =>
-          !lightningAddress && (
-            <>
-              <TouchableOpacity
-                className="px-4"
-                onPressIn={() => {
-                  router.navigate("/receive/lightning-address");
-                }}
-              >
-                <AddressIcon
-                  className="text-muted-foreground"
-                  width={24}
-                  height={24}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="-mr-2 px-4"
-                onPressIn={() => {
-                  router.navigate("receive/withdraw");
-                }}
-              >
-                <ScanIcon
-                  className="text-muted-foreground"
-                  width={24}
-                  height={24}
-                />
-              </TouchableOpacity>
-            </>
-          )
+        right={
+          !lightningAddress
+            ? () => (
+                <View className="flex flex-row items-center">
+                  <TouchableOpacity
+                    className="px-4"
+                    onPressIn={() => {
+                      router.navigate("/receive/lightning-address");
+                    }}
+                  >
+                    <AddressIcon
+                      className="text-muted-foreground"
+                      width={24}
+                      height={24}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="-mr-2 px-4"
+                    onPressIn={() => {
+                      router.navigate("/receive/withdraw");
+                    }}
+                  >
+                    <ScanIcon
+                      className="text-muted-foreground"
+                      width={24}
+                      height={24}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )
+            : undefined
         }
       />
       {!lightningAddress ? (

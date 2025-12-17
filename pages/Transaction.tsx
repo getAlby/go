@@ -244,7 +244,7 @@ export function Transaction() {
               <TransactionDetailRow
                 title="Metadata"
                 content={JSON.stringify(metadata, null, 2)}
-                className="font-mono font-medium bg-muted p-2 rounded-md"
+                className="text-sm font-mono bg-muted p-2 rounded-md"
                 copy
               />
             )}

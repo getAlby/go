@@ -39,7 +39,7 @@ export function Settings() {
       <Screen title="Settings" />
       <View className="flex-1 flex flex-col mt-4">
         <Link href="/settings/wallets" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
+          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
             <WalletIcon
               className="text-muted-foreground"
               width={24}
@@ -55,7 +55,7 @@ export function Settings() {
         </Link>
 
         <Link href="/settings/address-book" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
+          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
             <AddressBookIcon
               className="text-muted-foreground"
               width={24}
@@ -73,7 +73,7 @@ export function Settings() {
         </Link>
 
         <Link href="/settings/units-and-currency" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
+          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
             <BitcoinIcon
               className="text-muted-foreground"
               width={24}
@@ -92,7 +92,7 @@ export function Settings() {
 
         {!IS_EXPO_GO && (
           <Link href="/settings/notifications" asChild>
-            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
+            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
               <NotificationIcon
                 className="text-muted-foreground"
                 width={24}
@@ -111,7 +111,7 @@ export function Settings() {
         )}
 
         <Link href="/settings/security" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
+          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
             <FingerprintIcon
               className="text-muted-foreground"
               width={24}
@@ -127,7 +127,7 @@ export function Settings() {
         </Link>
 
         <TouchableOpacity
-          className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4"
+          className="flex flex-row items-center gap-4 px-6 py-4"
           onPress={toggleColorScheme}
         >
           <ThemeIcon className="text-muted-foreground" width={24} height={24} />
@@ -142,7 +142,7 @@ export function Settings() {
             <View className="mt-2 flex flex-col">
               <Text className="uppercase px-6 py-3">Developer mode</Text>
               <TouchableOpacity
-                className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4"
+                className="flex flex-row items-center gap-4 px-6 py-4"
                 onPress={() => {
                   signOut();
                 }}
@@ -157,7 +157,7 @@ export function Settings() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4"
+                className="flex flex-row items-center gap-4 px-6 py-4"
                 onPress={() => {
                   router.dismissAll();
                   useAppStore.getState().setOnboarded(false);
@@ -173,7 +173,7 @@ export function Settings() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4"
+                className="flex flex-row items-center gap-4 px-6 py-4"
                 onPress={() => {
                   Alert.alert(
                     "Reset",

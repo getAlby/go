@@ -74,7 +74,7 @@ export function EditWallet() {
             />
           )}
           <Link href={`/settings/wallets/${walletId}/name`} asChild>
-            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
+            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
               <EditIcon
                 className="text-muted-foreground"
                 width={24}
@@ -94,7 +94,7 @@ export function EditWallet() {
             href={`/settings/wallets/${walletId}/lightning-address`}
             asChild
           >
-            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4">
+            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
               <AddressIcon
                 className="text-muted-foreground"
                 width={24}
@@ -115,7 +115,7 @@ export function EditWallet() {
             onClose={() => setShowConnectionInfo(false)}
           />
           <TouchableOpacity
-            className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4"
+            className="flex flex-row items-center gap-4 px-6 py-4"
             onPress={() => setShowConnectionInfo(true)}
           >
             <HelpCircleIcon
@@ -128,7 +128,7 @@ export function EditWallet() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4"
+            className="flex flex-row items-center gap-4 px-6 py-4"
             onPress={() => {
               RNAlert.alert(
                 "Export Wallet",
@@ -186,7 +186,7 @@ export function EditWallet() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex flex-row items-center gap-4 px-6 py-3 sm:py-4"
+            className="flex flex-row items-center gap-4 px-6 py-4"
             onPress={() => {
               RNAlert.alert(
                 "Remove Wallet Connection",

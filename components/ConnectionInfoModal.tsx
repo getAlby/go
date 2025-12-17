@@ -94,21 +94,21 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
 
             <View className="flex gap-2">
               <Text className="font-semibold2">Capabilities</Text>
-              <Text className="bg-muted p-2 rounded-md font-medium font-mono">
+              <Text className="bg-muted p-2 rounded-md text-sm font-mono">
                 {capabilities?.join(", ")}
               </Text>
             </View>
 
             <View className="flex gap-2">
               <Text className="font-semibold2">App Pubkey</Text>
-              <Text className="bg-muted p-2 rounded-md font-medium font-mono">
+              <Text className="bg-muted p-2 rounded-md text-sm font-mono">
                 {nwcClient?.publicKey}
               </Text>
             </View>
 
             <View className="flex gap-2">
               <Text className="font-semibold2">Wallet Pubkey</Text>
-              <Text className="bg-muted p-2 rounded-md font-medium font-mono">
+              <Text className="bg-muted p-2 rounded-md text-sm font-mono">
                 {nwcClient?.walletPubkey}
               </Text>
             </View>

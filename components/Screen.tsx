@@ -12,9 +12,10 @@ type ScreenProps = {
   left?: (props: NativeStackHeaderItemProps) => React.ReactNode;
   right?: (props: NativeStackHeaderItemProps) => React.ReactNode;
   animation?: StackAnimationTypes;
+  className?: string;
 };
 
-function Screen({ title, animation, right, left }: ScreenProps) {
+function Screen({ title, className, animation, right, left }: ScreenProps) {
   const { background } = useThemeColor("background");
 
   return (
@@ -41,6 +42,7 @@ function Screen({ title, animation, right, left }: ScreenProps) {
                   ? "ml-4"
                   : "mr-[42.18]") /* this translates to width of headerLeft button */,
               "text-xl sm:text-2xl text-center font-semibold2",
+              className,
             )}
           >
             {title}

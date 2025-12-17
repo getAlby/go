@@ -53,6 +53,7 @@ export default Sentry.wrap(function RootLayout() {
 
   async function loadFonts() {
     await Font.loadAsync({
+      CourierPrime: require("./../assets/fonts/CourierPrime-Regular.ttf"),
       OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
       "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
       "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),

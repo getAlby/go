@@ -59,6 +59,7 @@ module.exports = {
         hairline: hairlineWidth(),
       },
       fontFamily: {
+        mono: ["CourierPrime"],
         sans: ["OpenRunde"],
         /* For some (unknown) reason the font styles aren't applied
          * if you use the tailwind native names
