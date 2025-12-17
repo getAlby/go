@@ -138,8 +138,8 @@ function ContactInput({
             {isIOS ? (
               <BottomSheetTextInput
                 placeholder="Satoshi Nakamoto"
-                className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
-                placeholderClassName="text-muted-foreground"
+                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
+                placeholderClassName="text-muted"
                 selectionColor={primary}
                 value={input}
                 onChangeText={setInput}

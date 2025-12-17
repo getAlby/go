@@ -16,12 +16,12 @@ function Input({
     <TextInput
       ref={ref}
       className={cn(
-        "min-h-12 rounded-2xl border border-input bg-background px-3 text-foreground",
+        "min-h-12 rounded-2xl border border-input bg-background px-3 text-foreground placeholder:text-muted",
         props.editable === false && "opacity-50 cursor-not-allowed",
         className,
       )}
       selectionColor={primary}
-      placeholderClassName={cn("text-muted-foreground", placeholderClassName)}
+      placeholderClassName={cn("text-muted", placeholderClassName)}
       {...props}
     />
   );

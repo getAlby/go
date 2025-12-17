@@ -59,13 +59,12 @@ export function RenameWallet() {
               Wallet Name
             </Text>
             <Input
-              autoFocus
               className="w-full text-center border-transparent bg-transparent text-2xl font-semibold2"
               placeholder={DEFAULT_WALLET_NAME}
               value={walletName}
               onChangeText={setWalletName}
               returnKeyType="done"
-              // aria-errormessage="inputError"
+              autoFocus
             />
           </View>
           <Button size="lg" onPress={onRenameWallet} disabled={!walletName}>
