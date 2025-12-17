@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import {
   ArrowLeftIcon,
@@ -28,6 +27,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import { MAX_SATS_THRESHOLD } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { useThemeColor } from "~/lib/useThemeColor";
@@ -205,6 +205,29 @@ export function DualCurrencyInput({
   const [text, setText] = React.useState(amount);
   const [inputMode, setInputMode] = React.useState<"sats" | "fiat">("sats");
 
+  const formatPlaceholderNumber = React.useCallback((value: number) => {
+    const suffixes = { M: 1_000_000, k: 1_000 };
+    const abs = Math.abs(value);
+
+    for (const [suffix, divisor] of Object.entries(suffixes)) {
+      if (abs >= divisor) {
+        const scaled = value / divisor;
+        const truncated =
+          scaled >= 0
+            ? Math.floor(scaled * 10) / 10
+            : Math.ceil(scaled * 10) / 10;
+        const display =
+          truncated < 100 && truncated % 1 !== 0
+            ? truncated.toFixed(1)
+            : truncated.toString();
+
+        return `${display}${suffix}`;
+      }
+    }
+
+    return new Intl.NumberFormat().format(value);
+  }, []);
+
   const keypadRows = React.useMemo(
     () => [
       ["1", "2", "3"],
@@ -243,11 +266,12 @@ export function DualCurrencyInput({
   }, [text]);
 
   const showSatsThresholdToast = useCallback(() => {
-    Toast.show({
-      type: "error",
-      text1: `Maximum amount is ${formatBitcoinAmount(MAX_SATS_THRESHOLD, bitcoinDisplayFormat)}`,
-    });
-  }, [bitcoinDisplayFormat]);
+    errorToast(
+      new Error(
+        `Maximum amount is ${formatBitcoinAmount(max || MAX_SATS_THRESHOLD, bitcoinDisplayFormat)}`,
+      ),
+    );
+  }, [bitcoinDisplayFormat, max]);
 
   const handleKeyPress = (key: string) => {
     if (inputMode === "sats") {
@@ -364,10 +388,10 @@ export function DualCurrencyInput({
                 : inputMode === "sats"
                   ? min
                     ? max
-                      ? `${new Intl.NumberFormat().format(min)}-${new Intl.NumberFormat().format(max)}`
-                      : `Min ${new Intl.NumberFormat().format(min)}`
+                      ? `${formatPlaceholderNumber(min)}-${formatPlaceholderNumber(max)}`
+                      : `Min ${formatPlaceholderNumber(min)}`
                     : max
-                      ? `Max ${new Intl.NumberFormat().format(max)}`
+                      ? `Max ${formatPlaceholderNumber(max)}`
                       : "0"
                   : "0.00"}
             </Text>
