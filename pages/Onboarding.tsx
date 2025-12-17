@@ -21,17 +21,15 @@ export function Onboarding() {
           headerShown: false,
         }}
       />
-      <View className="flex-1 flex items-center justify-center gap-4">
-        <AlbyGoLogomark className="mb-10 w-52 h-52" />
-        <Text className="font-semibold2 text-4xl text-center">
+      <View className="flex-1 flex items-center justify-center gap-6">
+        <AlbyGoLogomark className="mb-10 w-48 h-48" />
+        <Text className="font-semibold2 text-4xl sm:text-5xl sm:leading-[1.5] text-center">
           Hello there 👋
         </Text>
-        <Text className="font-medium2 text-xl text-muted-foreground text-center">
-          <Text className="font-semibold2 text-xl text-muted-foreground">
-            Alby Go
-          </Text>{" "}
-          works best with Alby Hub and is the easiest way to use Bitcoin
-          wherever you are.
+        <Text className="font-medium2 text-lg sm:text-xl text-center">
+          <Text className="font-bold2 text-lg sm:text-xl">Alby Go</Text> is a
+          simple mobile wallet interface for your Alby Hub or other lightning
+          nodes and wallets.
         </Text>
       </View>
       <Link href="/" asChild>
