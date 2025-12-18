@@ -286,7 +286,7 @@ function MainButton({
     <>
       <Link href={href} className="flex flex-1" asChild>
         <Pressable
-          className="flex-1 aspect-square rounded-3xl flex"
+          className="bg-background flex-1 aspect-square rounded-3xl flex"
           style={{
             ...(pressed && { transform: "scale(0.98)" }),
             ...Platform.select({
