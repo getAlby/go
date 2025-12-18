@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import { Platform, Pressable, View } from "react-native";
+import { LinearGradient } from "~/components/LinearGradient";
 import { TextClassContext } from "~/components/ui/text";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";

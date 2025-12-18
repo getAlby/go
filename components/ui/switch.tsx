@@ -1,5 +1,4 @@
 import * as SwitchPrimitives from "@rn-primitives/switch";
-import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import { Platform } from "react-native";
 import Animated, {
@@ -7,6 +6,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
+import { LinearGradient } from "~/components/LinearGradient";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 

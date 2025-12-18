@@ -18,11 +18,11 @@ import {
 } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 
-import { LinearGradient } from "expo-linear-gradient";
 import { type SvgProps } from "react-native-svg";
 import AlbyBanner from "~/components/AlbyBanner";
 import LargeArrowDown from "~/components/icons/LargeArrowDown";
 import LargeArrowUp from "~/components/icons/LargeArrowUp";
+import { LinearGradient } from "~/components/LinearGradient";
 import Screen from "~/components/Screen";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";

@@ -1,7 +1,7 @@
-import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import { TouchableOpacity } from "react-native";
 import CheckIcon from "~/components/icons/CheckIcon";
+import { LinearGradient } from "~/components/LinearGradient";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
