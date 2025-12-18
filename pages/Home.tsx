@@ -136,7 +136,7 @@ export function Home() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName="flex-1 px-6"
         >
-          <View className="flex-1 justify-center gap-8">
+          <View className="flex-1 justify-center gap-4 sm:gap-8">
             <View className="flex items-center justify-center gap-2">
               {wallets.length > 1 && (
                 <TouchableOpacity
@@ -243,7 +243,7 @@ export function Home() {
                 )}
               </TouchableOpacity>
             </View>
-            {new Date().getDate() === 21 && <AlbyBanner />}
+            {new Date().getDate() !== 21 && <AlbyBanner />}
           </View>
         </ScrollView>
         <View className="flex items-center justify-center">
