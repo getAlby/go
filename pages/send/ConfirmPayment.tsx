@@ -1,6 +1,5 @@
 import { Invoice } from "@getalby/lightning-tools/bolt11";
-
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
@@ -41,6 +40,8 @@ export function ConfirmPayment() {
   });
   const amountToPaySats = amount ? +amount : decodedInvoice.satoshi;
 
+  const navigation = useNavigation();
+
   async function pay() {
     setLoading(true);
     try {
@@ -64,6 +65,8 @@ export function ConfirmPayment() {
       if (receiver === ALBY_LIGHTNING_ADDRESS) {
         useAppStore.getState().updateLastAlbyPayment();
       }
+
+      if (!navigation.isFocused()) {return;}
 
       router.dismissAll();
       router.replace({
