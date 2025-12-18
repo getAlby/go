@@ -8,7 +8,7 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./pages/**/*.{js,jsx,ts,tsx}",
   ],
-  safelist: ["text-sent", "bg-sent-foreground", "text-warning"],
+  safelist: ["bg-sent-foreground", "text-warning", "p-12"],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {

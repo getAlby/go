@@ -98,6 +98,13 @@ export function Transaction() {
 
   const metadata = transaction.metadata as Nip47TransactionMetadata;
 
+  const displayCharacterCount = React.useMemo(
+    () =>
+      Math.floor(transaction.amount / 1000).toString().length +
+      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+    [transaction.amount, bitcoinDisplayFormat],
+  );
+
   return (
     <>
       <Screen title="Transaction" />
@@ -133,18 +140,31 @@ export function Transaction() {
               <View className="flex items-center gap-2">
                 <Text
                   className={cn(
-                    "text-5xl gap-2 font-semibold2",
-                    bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
+                    "gap-2 font-semibold2",
+                    displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                    displayCharacterCount <= 10 &&
+                      displayCharacterCount >= 8 &&
+                      "sm:text-5xl",
                     transaction.type === "incoming" &&
                       transaction.state === "settled" &&
                       "text-receive",
                   )}
                 >
-                  {transaction.type === "incoming" ? "+" : "-"}{" "}
-                  {bitcoinDisplayFormat === "bip177" && "₿"}{" "}
+                  {transaction.type === "incoming" ? "+" : "-"}
+                  {bitcoinDisplayFormat === "bip177" && " ₿"}{" "}
                   {Math.floor(transaction.amount / 1000)}
                   {bitcoinDisplayFormat === "sats" && (
-                    <Text className="text-3xl font-semibold2"> sats</Text>
+                    <Text
+                      className={cn(
+                        "text-4xl font-semibold2",
+                        transaction.type === "incoming" &&
+                          transaction.state === "settled" &&
+                          "text-receive",
+                      )}
+                    >
+                      {" "}
+                      sats
+                    </Text>
                   )}
                 </Text>
                 {getFiatAmount && (

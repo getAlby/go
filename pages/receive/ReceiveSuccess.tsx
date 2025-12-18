@@ -1,8 +1,10 @@
 import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { router, useLocalSearchParams } from "expo-router";
+import React from "react";
 import { View } from "react-native";
 import { Tick } from "~/animations/Tick";
-import AlbyGoLogo from "~/components/AlbyGoLogo";
+import AlbyGo from "~/components/icons/AlbyGo";
+import { LongTextBottomSheet } from "~/components/LongTextBottomSheet";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -19,58 +21,73 @@ export function ReceiveSuccess() {
   const decodedInvoice = new Invoice({
     pr: invoice,
   });
+
+  const displayCharacterCount = React.useMemo(
+    () =>
+      decodedInvoice.satoshi.toString().length +
+      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+    [decodedInvoice.satoshi, bitcoinDisplayFormat],
+  );
+
   return (
-    <View className="flex-1 flex flex-col">
+    <>
       <Screen title="Success" animation="slide_from_left" />
-      <View className="flex-1">
-        <AlbyGoLogo className="w-52 h-16 mx-auto my-4" />
-        <View className="flex-1 gap-6">
-          <View className="flex-[0.45] flex justify-center items-center">
-            <Tick />
-          </View>
-          <View className="flex-[0.55] flex flex-col justify-center items-center">
-            <Text className="text-2xl font-semibold2 text-muted-foreground">
-              Received
+      <View className="flex flex-1 items-center gap-6 sm:gap-10 justify-center px-6">
+        <Tick />
+        <View className="flex items-center gap-2">
+          <View className="flex flex-row items-center justify-evenly gap-2">
+            <Text
+              className={cn(
+                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 10 &&
+                  displayCharacterCount >= 8 &&
+                  "sm:text-5xl",
+                "text-receive !leading-[1.5] font-bold2",
+              )}
+            >
+              +{bitcoinDisplayFormat === "bip177" && " ₿"}
             </Text>
-            <View className="flex flex-row items-end">
-              <Text
-                className={cn(
-                  "text-5xl gap-2 font-semibold2 text-receive",
-                  bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
-                )}
-              >
-                +{bitcoinDisplayFormat === "bip177" && " ₿"}{" "}
-                {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}
-              </Text>
+            <Text
+              className={cn(
+                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 10 &&
+                  displayCharacterCount >= 8 &&
+                  "sm:text-5xl",
+                "text-receive !leading-[1.5] font-bold2",
+              )}
+            >
+              {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}
               {bitcoinDisplayFormat === "sats" && (
-                <Text className="text-3xl font-semibold2 text-muted-foreground mb-1">
+                <Text
+                  className={cn(
+                    displayCharacterCount > 8 ? "text-3xl" : "text-4xl",
+                    displayCharacterCount <= 10 &&
+                      displayCharacterCount >= 8 &&
+                      "sm:text-4xl",
+                    "text-receive font-semibold2",
+                  )}
+                >
                   {" "}
                   sats
                 </Text>
               )}
-            </View>
-            {getFiatAmount && (
-              <Text className="text-3xl font-semibold2 text-muted-foreground">
-                {getFiatAmount(+decodedInvoice.satoshi)}
-              </Text>
-            )}
-            {decodedInvoice.description && (
-              <View className="flex flex-col gap-2 items-center mt-6">
-                <Text className="text-muted-foreground text-center font-semibold2">
-                  Description
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  className="text-center text-xl font-medium2 px-6"
-                >
-                  {decodedInvoice.description}
-                </Text>
-              </View>
-            )}
+            </Text>
           </View>
+          {getFiatAmount && (
+            <Text className="text-center text-secondary-foreground text-3xl font-semibold2">
+              {"+ "}
+              {getFiatAmount(+decodedInvoice.satoshi)}
+            </Text>
+          )}
         </View>
+        {decodedInvoice.description && (
+          <LongTextBottomSheet
+            title="Description"
+            content={decodedInvoice.description}
+          />
+        )}
       </View>
-      <View className="flex p-6">
+      <View className="p-6 bg-background">
         <Button
           size="lg"
           onPress={() => {
@@ -79,7 +96,10 @@ export function ReceiveSuccess() {
         >
           <Text>Close</Text>
         </Button>
+        <View className="mt-6 flex items-center">
+          <AlbyGo width={80} height={20} />
+        </View>
       </View>
-    </View>
+    </>
   );
 }

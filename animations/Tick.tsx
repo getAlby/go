@@ -1,18 +1,11 @@
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import CheckIcon from "~/components/icons/CheckIcon";
-import { LinearGradient } from "~/components/LinearGradient";
 import { useThemeColor } from "~/lib/useThemeColor";
 
 export function Tick() {
-  const { receive, shadow } = useThemeColor("receive", "shadow");
-
+  const { shadow } = useThemeColor("shadow");
   return (
-    <LinearGradient
-      className="p-12 rounded-full aspect-square flex items-center justify-center border-secondary border"
-      colors={[receive, receive]}
-      start={[0, 0]}
-      end={[1, 1]}
-    >
+    <View className="p-12 bg-receive rounded-full aspect-square flex items-center justify-center">
       <CheckIcon
         style={{
           ...Platform.select({
@@ -35,6 +28,6 @@ export function Tick() {
         width={80}
         height={80}
       />
-    </LinearGradient>
+    </View>
   );
 }

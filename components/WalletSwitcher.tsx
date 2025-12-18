@@ -7,7 +7,7 @@ import {
 import React, { useCallback, useMemo, useRef } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { ChevronDownIcon, WalletIcon } from "~/components/Icons";
+import { ChevronDownIcon, WalletIcon, XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore, type Wallet } from "~/lib/state/appStore";
@@ -90,10 +90,20 @@ export function WalletSwitcher({
         backdropComponent={renderBackdrop}
         enablePanDownToClose
       >
-        <BottomSheetView className="p-6 pt-2">
-          <Text className="text-xl sm:text-2xl text-center font-semibold2 text-secondary-foreground">
-            Switch Wallet
-          </Text>
+        <BottomSheetView className="p-6 pt-2 max-h-[50vh]">
+          <View className="relative flex flex-row items-center justify-center mb-4">
+            <TouchableOpacity
+              onPress={() => {
+                bottomSheetModalRef.current?.dismiss();
+              }}
+              className="absolute -left-4 p-4"
+            >
+              <XIcon className="text-muted-foreground" width={24} height={24} />
+            </TouchableOpacity>
+            <Text className="text-xl sm:text-2xl font-semibold2 text-secondary-foreground">
+              Switch Wallet
+            </Text>
+          </View>
           <FlatList
             className="mt-4"
             data={wallets}

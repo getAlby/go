@@ -270,10 +270,10 @@ export function DualCurrencyInput({
   const showSatsThresholdToast = useCallback(() => {
     errorToast(
       new Error(
-        `Maximum amount is ${formatBitcoinAmount(max || MAX_SATS_THRESHOLD, bitcoinDisplayFormat)}`,
+        `Maximum amount is ${formatBitcoinAmount(MAX_SATS_THRESHOLD, bitcoinDisplayFormat)}`,
       ),
     );
-  }, [bitcoinDisplayFormat, max]);
+  }, [bitcoinDisplayFormat]);
 
   const handleKeyPress = (key: string) => {
     if (inputMode === "sats") {

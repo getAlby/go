@@ -6,6 +6,7 @@ import { Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { AlertCircleIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import { LongTextBottomSheet } from "~/components/LongTextBottomSheet";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -68,9 +69,6 @@ export function ConfirmPayment() {
       router.replace({
         pathname: "/send/success",
         params: {
-          preimage: response.preimage,
-          receiver,
-          invoice,
           amount: amountToPaySats,
           successAction,
         },
@@ -92,23 +90,25 @@ export function ConfirmPayment() {
   return (
     <>
       <Screen title="Confirm Payment" />
-      <View className="flex-1 justify-center items-center gap-16 p-6">
+      <View className="flex-1 justify-around items-center p-6">
         <View className="flex flex-col gap-2">
-          <Text className="text-center text-muted-foreground font-medium2 text-xl">
+          <Text className="text-center text-muted-foreground font-medium2 sm:text-lg">
             Send
           </Text>
           <View className="flex flex-row items-center justify-center gap-2">
-            <Text
-              className={cn(
-                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 10 &&
-                  displayCharacterCount >= 8 &&
-                  "sm:text-5xl",
-                "text-secondary-foreground !leading-[1.5] font-bold2",
-              )}
-            >
-              ₿
-            </Text>
+            {bitcoinDisplayFormat === "bip177" && (
+              <Text
+                className={cn(
+                  displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                  displayCharacterCount <= 10 &&
+                    displayCharacterCount >= 8 &&
+                    "sm:text-5xl",
+                  "text-secondary-foreground !leading-[1.5] font-bold2",
+                )}
+              >
+                ₿
+              </Text>
+            )}
             <Text
               className={cn(
                 displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
@@ -119,56 +119,36 @@ export function ConfirmPayment() {
               )}
             >
               {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
+              {bitcoinDisplayFormat === "sats" && (
+                <Text
+                  className={cn(
+                    displayCharacterCount > 8 ? "text-3xl" : "text-4xl",
+                    displayCharacterCount <= 10 &&
+                      displayCharacterCount >= 8 &&
+                      "sm:text-4xl",
+                    "text-secondary-foreground font-semibold2",
+                  )}
+                >
+                  {" "}
+                  sats
+                </Text>
+              )}
             </Text>
-            {bitcoinDisplayFormat === "sats" && (
-              <Text
-                className={cn(
-                  displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                  displayCharacterCount <= 10 &&
-                    displayCharacterCount >= 8 &&
-                    "sm:text-5xl",
-                  "text-secondary-foreground !leading-[1.5] font-bold2",
-                )}
-              >
-                sats
-              </Text>
-            )}
           </View>
           {getFiatAmount && (
-            <Text className="text-center text-muted-foreground text-3xl font-semibold2">
+            <Text className="text-center text-secondary-foreground text-3xl font-semibold2">
               {getFiatAmount(amountToPaySats)}
             </Text>
           )}
         </View>
         <Receiver lightningAddress={receiver} />
         {decodedInvoice.description ? (
-          <View className="flex flex-col gap-2 justify-center items-center">
-            <Text className="text-muted-foreground text-center font-semibold2">
-              Description
-            </Text>
-            <Text
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              className="text-center text-2xl font-semibold2"
-            >
-              {decodedInvoice.description}
-            </Text>
-          </View>
+          <LongTextBottomSheet
+            title="Description"
+            content={decodedInvoice.description}
+          />
         ) : (
-          comment && (
-            <View className="flex flex-col gap-2">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                Comment
-              </Text>
-              <Text
-                numberOfLines={2}
-                ellipsizeMode="tail"
-                className="text-center text-2xl font-medium2"
-              >
-                {comment}
-              </Text>
-            </View>
-          )
+          comment && <LongTextBottomSheet title="Comment" content={comment} />
         )}
       </View>
       <View className="p-6">
