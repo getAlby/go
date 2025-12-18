@@ -1,18 +1,33 @@
-import LottieView from "lottie-react-native";
-import { Dimensions } from "react-native";
+import { Platform, View } from "react-native";
+import CheckIcon from "~/components/icons/CheckIcon";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 export function Tick() {
-  const dimensions = Dimensions.get("window");
-
+  const { shadow } = useThemeColor("shadow");
   return (
-    <LottieView
-      autoPlay
-      loop={false}
-      style={{
-        width: dimensions.width * 1.5,
-        height: dimensions.width * 1.5,
-      }}
-      source={require("../assets/animations/success.json")}
-    />
+    <View className="p-12 bg-receive rounded-full aspect-square flex items-center justify-center">
+      <CheckIcon
+        style={{
+          ...Platform.select({
+            // make sure bg color is applied to avoid RCTView errors
+            ios: {
+              shadowColor: shadow,
+              shadowOpacity: 0.4,
+              shadowOffset: {
+                width: 1.5,
+                height: 1.5,
+              },
+              shadowRadius: 2,
+            },
+            android: {
+              shadowColor: shadow,
+              elevation: 3,
+            },
+          }),
+        }}
+        width={80}
+        height={80}
+      />
+    </View>
   );
 }

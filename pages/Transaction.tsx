@@ -98,163 +98,185 @@ export function Transaction() {
 
   const metadata = transaction.metadata as Nip47TransactionMetadata;
 
+  const displayCharacterCount = React.useMemo(
+    () =>
+      Math.floor(transaction.amount / 1000).toString().length +
+      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+    [transaction.amount, bitcoinDisplayFormat],
+  );
+
   return (
-    <View className="flex-1 flex flex-col gap-3">
+    <>
       <Screen title="Transaction" />
-      <ScrollView className="p-6">
-        <View className="flex flex-col gap-5 justify-center items-center mb-12">
-          <View
-            className={cn(
-              "my-8 bg-muted rounded-full",
-              transaction.state === "pending" && "animate-pulse",
-            )}
-            style={{ elevation: 2 }}
-          >
-            <TransactionIcon width={128} height={128} />
-          </View>
-          <Text
-            className={cn(
-              "text-4xl font-bold2 text-muted-foreground",
-              transaction.state === "pending" && "animate-pulse",
-            )}
-          >
-            {transaction.type === "incoming"
-              ? transaction.state === "settled"
-                ? "Received"
-                : "Receiving"
-              : transaction.state === "failed"
-                ? "Failed"
-                : transaction.state === "pending"
-                  ? "Sending"
-                  : "Sent"}
-          </Text>
-          <View className="flex flex-col items-center justify-center gap-2">
-            <View className="flex flex-row items-end mt-2">
-              <Text
-                className={cn(
-                  "text-5xl gap-2 font-semibold2",
-                  bitcoinDisplayFormat === "bip177" && "leading-[1.5]",
-                  transaction.type === "incoming" &&
-                    transaction.state === "settled"
-                    ? "text-receive"
-                    : "text-foreground",
-                )}
-              >
-                {transaction.type === "incoming" ? "+" : "-"}{" "}
-                {bitcoinDisplayFormat === "bip177" && "₿"}{" "}
-                {Math.floor(transaction.amount / 1000)}
-                {bitcoinDisplayFormat === "sats" && (
-                  <Text className="text-3xl font-semibold2 text-muted-foreground">
-                    {" "}
-                    sats
+      <View className="flex-1 p-6 pt-12">
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View className="flex gap-10">
+            <View className="flex gap-8 justify-center items-center">
+              <View className="flex items-center gap-8">
+                <View
+                  className={cn(
+                    transaction.state === "pending" && "animate-pulse",
+                  )}
+                >
+                  <TransactionIcon width={128} height={128} />
+                </View>
+                <Text
+                  className={cn(
+                    "text-3xl font-semibold2 text-secondary-foreground",
+                    transaction.state === "pending" && "animate-pulse",
+                  )}
+                >
+                  {transaction.type === "incoming"
+                    ? transaction.state === "settled"
+                      ? "Received"
+                      : "Receiving"
+                    : transaction.state === "failed"
+                      ? "Failed"
+                      : transaction.state === "pending"
+                        ? "Sending"
+                        : "Sent"}
+                </Text>
+              </View>
+              <View className="flex items-center gap-2">
+                <Text
+                  className={cn(
+                    "gap-2 font-semibold2",
+                    displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
+                    displayCharacterCount <= 10 &&
+                      displayCharacterCount >= 8 &&
+                      "sm:text-5xl",
+                    transaction.type === "incoming" &&
+                      transaction.state === "settled" &&
+                      "text-receive",
+                  )}
+                >
+                  {transaction.type === "incoming" ? "+" : "-"}
+                  {bitcoinDisplayFormat === "bip177" && " ₿"}{" "}
+                  {Math.floor(transaction.amount / 1000)}
+                  {bitcoinDisplayFormat === "sats" && (
+                    <Text
+                      className={cn(
+                        "text-4xl font-semibold2",
+                        transaction.type === "incoming" &&
+                          transaction.state === "settled" &&
+                          "text-receive",
+                      )}
+                    >
+                      {" "}
+                      sats
+                    </Text>
+                  )}
+                </Text>
+                {getFiatAmount && (
+                  <Text className="text-3xl font-semibold2 text-secondary-foreground">
+                    {getFiatAmount(Math.floor(transaction.amount / 1000))}
                   </Text>
                 )}
-              </Text>
-            </View>
-            {getFiatAmount && (
-              <Text className="text-3xl font-semibold2 text-muted-foreground">
-                {getFiatAmount(Math.floor(transaction.amount / 1000))}
-              </Text>
-            )}
-          </View>
-          <View className="flex flex-col gap-4 w-full mt-10">
-            {metadata?.recipient_data?.identifier && (
-              <TransactionDetailRow
-                title="To"
-                content={metadata.recipient_data.identifier}
-              />
-            )}
-            {metadata?.payer_data?.name && (
-              <TransactionDetailRow
-                title="From"
-                content={metadata.payer_data.name}
-              />
-            )}
-            <TransactionDetailRow
-              title="Date & Time"
-              content={dayjs
-                .unix(transaction.settled_at || transaction.created_at)
-                .format("D MMMM YYYY, HH:mm")}
-            />
-            <TransactionDetailRow
-              title="Description"
-              content={transaction.description || "-"}
-            />
-            {metadata?.comment && (
-              <TransactionDetailRow
-                title="Comment"
-                content={metadata.comment}
-              />
-            )}
-            {/* for Alby lightning addresses the content of the zap request is
-            automatically extracted and already displayed above as description */}
-            {transaction.metadata?.nostr && eventId && npub && (
-              <View className="flex flex-row gap-3">
-                <Text className="w-32 text-muted-foreground text-lg">
-                  Nostr Zap
-                </Text>
-                <Link
-                  href={`https://njump.me/${nip19.neventEncode({
-                    id: eventId,
-                  })}`}
-                  asChild
-                >
-                  <Pressable className="flex-row flex-1 gap-1 items-center">
-                    <Text className="flex-1 font-medium2 text-lg">
-                      From {npub}
-                    </Text>
-                    <LinkIcon width={16} className="text-primary-foreground" />
-                  </Pressable>
-                </Link>
               </View>
-            )}
-            {boostagram && (
-              <PodcastingInfo
-                boost={boostagram}
-                bitcoinDisplayFormat={bitcoinDisplayFormat}
-              />
-            )}
-            {transaction.state === "settled" &&
-              transaction.type === "outgoing" && (
+            </View>
+            <View className="flex gap-4">
+              {metadata?.recipient_data?.identifier && (
                 <TransactionDetailRow
-                  title="Fee"
-                  content={
-                    formatBitcoinAmount(
-                      Math.floor(transaction.fees_paid / 1000),
-                      bitcoinDisplayFormat,
-                    ) +
-                    " (" +
-                    (
-                      (transaction.fees_paid / transaction.amount) *
-                      100
-                    ).toFixed(2) +
-                    "%)"
-                  }
+                  title="To"
+                  content={metadata.recipient_data.identifier}
                 />
               )}
-            <TransactionDetailRow
-              title="Payment Hash"
-              content={transaction.payment_hash}
-              copy
-            />
-            {transaction.state === "settled" && (
+              {metadata?.payer_data?.name && (
+                <TransactionDetailRow
+                  title="From"
+                  content={metadata.payer_data.name}
+                />
+              )}
               <TransactionDetailRow
-                title="Preimage"
-                content={transaction.preimage}
+                title="Date & Time"
+                content={dayjs
+                  .unix(transaction.settled_at || transaction.created_at)
+                  .format("D MMMM YYYY, HH:mm")}
+              />
+              <TransactionDetailRow
+                title="Description"
+                content={transaction.description || "-"}
+              />
+              {metadata?.comment && (
+                <TransactionDetailRow
+                  title="Comment"
+                  content={metadata.comment}
+                />
+              )}
+              {/* for Alby lightning addresses the content of the zap request is
+            automatically extracted and already displayed above as description */}
+              {transaction.metadata?.nostr && eventId && npub && (
+                <View className="flex flex-row gap-3">
+                  <Text className="w-32 text-muted-foreground text-lg">
+                    Nostr Zap
+                  </Text>
+                  <Link
+                    href={`https://njump.me/${nip19.neventEncode({
+                      id: eventId,
+                    })}`}
+                    asChild
+                  >
+                    <Pressable className="flex-row flex-1 gap-1 items-center">
+                      <Text className="flex-1 font-medium2 text-lg">
+                        From {npub}
+                      </Text>
+                      <LinkIcon
+                        width={16}
+                        className="text-primary-foreground"
+                      />
+                    </Pressable>
+                  </Link>
+                </View>
+              )}
+              {boostagram && (
+                <PodcastingInfo
+                  boost={boostagram}
+                  bitcoinDisplayFormat={bitcoinDisplayFormat}
+                />
+              )}
+              {transaction.state === "settled" &&
+                transaction.type === "outgoing" && (
+                  <TransactionDetailRow
+                    title="Fee"
+                    content={
+                      formatBitcoinAmount(
+                        Math.floor(transaction.fees_paid / 1000),
+                        bitcoinDisplayFormat,
+                      ) +
+                      " (" +
+                      (
+                        (transaction.fees_paid / transaction.amount) *
+                        100
+                      ).toFixed(2) +
+                      "%)"
+                    }
+                  />
+                )}
+              <TransactionDetailRow
+                title="Payment Hash"
+                content={transaction.payment_hash}
                 copy
               />
-            )}
-            {metadata && (
-              <TransactionDetailRow
-                title="Metadata"
-                content={JSON.stringify(metadata, null, 2)}
-                copy
-              />
-            )}
+              {transaction.state === "settled" && (
+                <TransactionDetailRow
+                  title="Preimage"
+                  content={transaction.preimage}
+                  copy
+                />
+              )}
+              {metadata && (
+                <TransactionDetailRow
+                  title="Metadata"
+                  content={JSON.stringify(metadata, null, 2)}
+                  className="text-sm font-mono bg-muted p-2 rounded-md"
+                  copy
+                />
+              )}
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
@@ -262,10 +284,11 @@ function TransactionDetailRow(props: {
   title: string;
   content: string;
   copy?: boolean;
+  className?: string;
 }) {
   return (
     <View className="flex flex-row gap-3">
-      <Text className="w-32 text-muted-foreground text-lg">{props.title}</Text>
+      <Text className="w-32 text-secondary-foreground">{props.title}</Text>
       {props.copy ? (
         <TouchableOpacity
           className="flex-1"
@@ -277,12 +300,12 @@ function TransactionDetailRow(props: {
             });
           }}
         >
-          <Text className="text-foreground font-medium2 text-lg">
+          <Text className={cn("font-medium2", props.className)}>
             {props.content}
           </Text>
         </TouchableOpacity>
       ) : (
-        <Text className="flex-1 text-foreground font-medium2 text-lg">
+        <Text className={cn("font-medium2", props.className)}>
           {props.content}
         </Text>
       )}

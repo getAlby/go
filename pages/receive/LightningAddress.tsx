@@ -17,16 +17,17 @@ export function LightningAddress() {
         <QRIcon className="mb-6 text-muted-foreground" width={96} height={96} />
         <Text className="font-light2 text-3xl text-center text-muted-foreground">
           satoshi
-          <Text className="font-bold2 text-3xl text-foreground">
-            @getalby.com
-          </Text>
+          <Text className="font-bold2 text-3xl">@getalby.com</Text>
         </Text>
         <Text className="font-medium2 text-xl text-muted-foreground text-center">
           Attach your lightning address to this wallet to display it as QR code
           for fast face-to-face transactions
         </Text>
       </View>
-      <Button size="lg" onPress={() => router.push("/receive/alby-account")}>
+      <Button
+        size="lg"
+        onPress={() => router.navigate("/receive/alby-account")}
+      >
         <Text>Get New Address</Text>
       </Button>
       <Button

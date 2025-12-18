@@ -18,7 +18,6 @@ import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
-import { errorToast } from "~/lib/errorToast";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -35,29 +34,26 @@ export function EditWallet() {
 
   const onDeleteWallet = async () => {
     setIsDeleting(true);
-    try {
-      if (!IS_EXPO_GO && isNotificationsEnabled) {
-        const wallet = wallets[walletId];
-        await deregisterWalletNotifications(wallet, walletId);
-      }
-      useAppStore.getState().removeWallet(walletId);
-    } catch (error) {
-      errorToast(error);
-    } finally {
-      setIsDeleting(false);
+    if (!IS_EXPO_GO && isNotificationsEnabled) {
+      const wallet = wallets[walletId];
+      await deregisterWalletNotifications(wallet, walletId);
     }
+    useAppStore.getState().removeWallet(walletId);
+    setIsDeleting(false);
     if (wallets.length !== 1) {
       router.back();
     }
   };
 
   return (
-    <View className="flex-1 flex flex-col">
+    <View className="flex-1">
       <Screen title="Edit Wallet" />
       {isDeleting ? (
         <View className="flex-1 justify-center items-center">
           <Loading />
-          <Text className="text-xl mt-4">Deleting wallet</Text>
+          <Text className="text-lg font-medium2 text-secondary-foreground mt-4">
+            Deleting wallet
+          </Text>
         </View>
       ) : (
         <View className="flex-1 flex flex-col mt-4">
@@ -74,23 +70,23 @@ export function EditWallet() {
                   ),
               ).join(", ")}`}
               icon={TriangleAlertIcon}
-              className="mb-0"
+              className="mx-6"
             />
           )}
           <Link href={`/settings/wallets/${walletId}/name`} asChild>
-            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3">
+            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
               <EditIcon
                 className="text-muted-foreground"
-                width={28}
-                height={28}
+                width={24}
+                height={24}
               />
-              <Text className="font-medium2 text-xl text-foreground">
+              <Text className="font-medium2 text-lg sm:text-xl">
                 Wallet Name
               </Text>
               <ChevronRightIcon
                 className="ml-auto text-muted-foreground "
-                width={20}
-                height={20}
+                width={16}
+                height={16}
               />
             </TouchableOpacity>
           </Link>
@@ -98,19 +94,19 @@ export function EditWallet() {
             href={`/settings/wallets/${walletId}/lightning-address`}
             asChild
           >
-            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3">
+            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
               <AddressIcon
                 className="text-muted-foreground"
-                width={28}
-                height={28}
+                width={24}
+                height={24}
               />
-              <Text className="font-medium2 text-xl text-foreground">
+              <Text className="font-medium2 text-lg sm:text-xl">
                 Lightning Address
               </Text>
               <ChevronRightIcon
                 className="ml-auto text-muted-foreground"
-                width={20}
-                height={20}
+                width={16}
+                height={16}
               />
             </TouchableOpacity>
           </Link>
@@ -119,20 +115,20 @@ export function EditWallet() {
             onClose={() => setShowConnectionInfo(false)}
           />
           <TouchableOpacity
-            className="flex flex-row items-center gap-4 px-6 py-3"
+            className="flex flex-row items-center gap-4 px-6 py-4"
             onPress={() => setShowConnectionInfo(true)}
           >
             <HelpCircleIcon
               className="text-muted-foreground"
-              width={28}
-              height={28}
+              width={24}
+              height={24}
             />
-            <Text className="font-medium2 text-xl text-foreground">
+            <Text className="font-medium2 text-lg sm:text-xl">
               Connection Info
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex flex-row items-center gap-4 px-6 py-3"
+            className="flex flex-row items-center gap-4 px-6 py-4"
             onPress={() => {
               RNAlert.alert(
                 "Export Wallet",
@@ -155,10 +151,9 @@ export function EditWallet() {
                       if (isSuperuser) {
                         Toast.show({
                           type: "error",
-                          text1:
-                            "Connection Secret with One Tap Connections cannot be exported",
+                          text1: "Wallet cannot be exported",
                           text2:
-                            "Please create a new connection from Alby Hub instead",
+                            "This wallet supports authorizing new connections and cannot be exported. Please create a new connection from Alby Hub instead",
                         });
                         return;
                       }
@@ -183,15 +178,15 @@ export function EditWallet() {
           >
             <ShareIcon
               className="text-muted-foreground"
-              width={28}
-              height={28}
+              width={24}
+              height={24}
             />
-            <Text className="font-medium2 text-xl text-foreground">
+            <Text className="font-medium2 text-lg sm:text-xl">
               Export Wallet
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex flex-row items-center gap-4 px-6 py-3"
+            className="flex flex-row items-center gap-4 px-6 py-4"
             onPress={() => {
               RNAlert.alert(
                 "Remove Wallet Connection",
@@ -211,10 +206,10 @@ export function EditWallet() {
           >
             <TrashIcon
               className="text-muted-foreground"
-              width={28}
-              height={28}
+              width={24}
+              height={24}
             />
-            <Text className="font-medium2 text-xl text-foreground">
+            <Text className="font-medium2 text-lg sm:text-xl">
               Delete Wallet
             </Text>
           </TouchableOpacity>

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { TextInput, type TextInputProps } from "react-native";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
 function Input({
@@ -10,16 +11,17 @@ function Input({
 }: TextInputProps & {
   ref?: React.RefObject<TextInput | null>;
 }) {
+  const { primary } = useThemeColor("primary");
   return (
     <TextInput
       ref={ref}
       className={cn(
-        "web:flex min-h-10 native:min-h-12 web:w-full rounded-2xl border border-input bg-background px-3 web:py-2 text-base lg:text-sm native:text-lg native:leading-[1.25] text-foreground web:ring-offset-background file:border-0 file:bg-transparent file:font-medium2 web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2 caret-primary",
-        props.editable === false && "opacity-50 web:cursor-not-allowed",
+        "min-h-12 rounded-2xl border border-input bg-background px-3 text-foreground placeholder:text-muted",
+        props.editable === false && "opacity-50 cursor-not-allowed",
         className,
       )}
-      selectionColor={"hsl(47 100% 50%)"} // translates to primary
-      placeholderClassName={cn("text-muted-foreground", placeholderClassName)}
+      selectionColor={primary}
+      placeholderClassName={cn("text-muted", placeholderClassName)}
       {...props}
     />
   );

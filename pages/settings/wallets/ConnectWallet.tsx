@@ -4,7 +4,14 @@ import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import React from "react";
-import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -12,7 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { Tick } from "~/animations/Tick";
-import { XIcon } from "~/components/Icons";
+import { ChevronRightIcon, XIcon } from "~/components/Icons";
 import NWCIcon from "~/components/icons/NWCIcon";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
@@ -22,6 +29,7 @@ import { WalletSwitcher } from "~/components/WalletSwitcher";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { formatBitcoinAmount } from "~/lib/utils";
 
 export function ConnectWallet() {
@@ -139,7 +147,7 @@ export function ConnectWallet() {
       setConnectionCreated(true);
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to create app");
     }
     setCreatingConnection(false);
   };
@@ -168,22 +176,26 @@ export function ConnectWallet() {
             }}
             className="-mr-4 px-6"
           >
-            <XIcon className="text-muted-foreground" width={24} height={24} />
+            <XIcon
+              className="text-secondary-foreground"
+              width={24}
+              height={24}
+            />
           </TouchableOpacity>
         )}
       />
-      <View className="flex-1 justify-center items-center gap-8 p-6">
+      <View className="flex-1 p-6 justify-center items-center gap-8">
         <PlugView
           connectionCreated={connectionCreated}
           name={name}
           icon={icon}
         />
         {!supportsCreateConnection ? (
-          <View className="flex-1 justify-center items-center p-8">
-            <Text className="text-center">
+          <View className="flex-1 justify-center items-center gap-4">
+            <Text className="text-center text-secondary-foreground">
               This wallet connection does not support one tap connections.
             </Text>
-            <Text className="text-center mt-4">
+            <Text className="text-center text-secondary-foreground">
               {hasCreateConnectionWallet
                 ? "Please switch your wallet and try again."
                 : `Please re-connect Alby Go from Alby Hub using the "One Tap Connections" button.`}
@@ -242,9 +254,10 @@ function ConnectView({
   returnTo,
   metadata,
 }: Omit<NWAOptions, "appPubkey" | "relayUrls">) {
+  const { shadow } = useThemeColor("shadow");
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
-  const closeModal = () => setShowDetails(false);
+  const onClose = () => setShowDetails(false);
   const hasPayPermissions = requestMethods.some((method) =>
     method.includes("pay_"),
   );
@@ -257,22 +270,38 @@ function ConnectView({
         transparent
         animationType="fade"
         visible={showDetails}
-        onRequestClose={closeModal}
+        onRequestClose={onClose}
       >
-        <View className="flex-1 justify-center items-center bg-black/80">
+        <View className="flex-1 justify-center items-center bg-overlay">
           <TouchableOpacity
             activeOpacity={1}
-            onPress={closeModal}
+            onPress={onClose}
             className="absolute inset-0"
           />
-          <View className="w-4/5 max-h-[80vh] max-w-[425px] bg-background border border-border rounded-2xl z-10">
-            <View className="flex-row items-center justify-center relative p-6">
-              <Text className="text-xl font-bold2 text-foreground">
-                Connection Details
-              </Text>
+          <View
+            style={{
+              ...Platform.select({
+                ios: {
+                  shadowColor: shadow,
+                  shadowOpacity: 0.4,
+                  shadowOffset: {
+                    width: 1.5,
+                    height: 1.5,
+                  },
+                  shadowRadius: 2,
+                },
+                android: {
+                  shadowColor: shadow,
+                  elevation: 3,
+                },
+              }),
+            }}
+            className="p-6 mx-6 bg-background rounded-3xl max-h-[80vh] self-stretch"
+          >
+            <View className="mb-4 relative flex flex-row items-center justify-center">
               <TouchableOpacity
-                onPress={closeModal}
-                className="absolute right-0 p-4"
+                onPress={onClose}
+                className="absolute -right-6 p-4"
               >
                 <XIcon
                   className="text-muted-foreground"
@@ -280,75 +309,87 @@ function ConnectView({
                   height={24}
                 />
               </TouchableOpacity>
+              <Text className="text-xl sm:text-2xl text-center font-bold2 text-secondary-foreground">
+                Connection Details
+              </Text>
             </View>
-            <ScrollView className="px-6">
-              <View className="pb-6 flex flex-col gap-8">
-                <Text className="text-xl text-center text-foreground mt-4">
-                  Requested methods:{" "}
-                  <Text className="text-xl font-semibold2 p-8">
-                    {requestMethods?.join(", ") || "all methods"}
-                  </Text>
-                </Text>
-                {notificationTypes && (
-                  <Text className="text-xl text-center text-foreground">
-                    Requested notification types:{" "}
-                    <Text className="text-xl font-semibold2 p-8">
-                      {notificationTypes.join(", ")}
-                    </Text>
-                  </Text>
-                )}
-                {isolated && (
-                  <Text className="text-xl text-center text-foreground font-semibold2">
-                    isolated connection
-                  </Text>
-                )}
-                {!!expiresAt && (
-                  <Text className="text-center mt-4">
-                    Expires {new Date(expiresAt * 1000).toDateString()}
-                  </Text>
-                )}
-                {returnTo && (
-                  <Text className="mt-4 text-center text-foreground">
-                    You will return to {returnTo} after confirming
-                  </Text>
-                )}
-                {!!metadata && (
-                  <Text className="mt-4 text-center text-foreground">
-                    Metadata: {JSON.stringify(metadata)}
-                  </Text>
-                )}
-                <Text className="mt-4 text-center text-foreground">
-                  You can edit permissions and revoke access at any time in your
-                  Alby Hub settings.
+            <ScrollView
+              className="grow-0"
+              showsVerticalScrollIndicator={false}
+              contentContainerClassName="flex flex-col gap-2"
+            >
+              <View className="flex gap-2">
+                <Text className="font-semibold2">Requested methods</Text>
+                <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+                  {requestMethods?.join(", ") || "all methods"}
                 </Text>
               </View>
+              {notificationTypes && (
+                <View className="flex gap-2">
+                  <Text className="font-semibold2">Notification Types</Text>
+                  <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+                    {notificationTypes.join(", ")}
+                  </Text>
+                </View>
+              )}
+              {isolated && (
+                <View className="flex gap-2">
+                  <Text className="font-semibold2">Isolated connection</Text>
+                  <Text className="font-medium2">Yes</Text>
+                </View>
+              )}
+              {!!expiresAt && (
+                <View className="flex gap-2">
+                  <Text className="font-semibold2">Expiry</Text>
+                  <Text className="font-medium2">
+                    {new Date(expiresAt * 1000).toDateString()}
+                  </Text>
+                </View>
+              )}
+              {!!metadata && (
+                <View className="flex gap-2">
+                  <Text className="font-semibold2">Metadata</Text>
+                  <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+                    {JSON.stringify(metadata)}
+                  </Text>
+                </View>
+              )}
+              {returnTo && (
+                <Text className="mt-2 text-center text-secondary-foreground text-sm">
+                  You will return to {returnTo} after confirming
+                </Text>
+              )}
             </ScrollView>
           </View>
         </View>
       </Modal>
-      <Text className="text-xl text-center text-foreground mt-8">
-        <Text className="text-xl font-semibold2">{name}</Text> is requesting{" "}
+      <Text className="sm:text-lg text-center">
+        <Text className="sm:text-lg font-semibold2">{name}</Text> is requesting{" "}
         {!hasPayPermissions && (
-          <Text className="text-xl font-semibold2">receive-only </Text>
+          <Text className="sm:text-lg font-semibold2">receive-only </Text>
         )}
-        access to your <Text className="text-xl font-semibold2">Alby Hub</Text>.
+        access to your{" "}
+        <Text className="sm:text-lg font-semibold2">Alby Hub</Text>.
       </Text>
 
-      <View className="flex-1 flex mt-4 gap-8 justify-center">
-        <View>
-          {hasPayPermissions && (
-            <View className="flex flex-row w-full border-2 border-muted justify-between items-center rounded-2xl p-6 py-4">
-              <Text className="text-xl font-medium2">
-                {budgetRenewal !== "never" && (
-                  <Text className="text-xl font-medium2 capitalize">
-                    {budgetRenewal || "Monthly"}{" "}
-                  </Text>
-                )}
-                budget
-              </Text>
+      <View className="flex-1 flex justify-center">
+        {hasPayPermissions && (
+          <TouchableOpacity
+            onPress={() => setShowDetails(true)}
+            className="flex flex-row w-full justify-between items-center rounded-2xl p-4 bg-white dark:bg-muted"
+          >
+            <Text className="sm:text-lg font-medium2">
+              {budgetRenewal !== "never" && (
+                <Text className="sm:text-lg font-medium2 capitalize">
+                  {budgetRenewal || "Monthly"}{" "}
+                </Text>
+              )}
+              budget
+            </Text>
+            <View className="flex flex-row items-center gap-4">
               {maxAmount && (
                 <View>
-                  <Text className="text-right text-lg text-foreground font-medium2">
+                  <Text className="text-right sm:text-lg text-secondary-foreground font-medium2">
                     {formatBitcoinAmount(
                       Math.floor(maxAmount / 1000),
                       bitcoinDisplayFormat,
@@ -361,12 +402,18 @@ function ConnectView({
                   )}
                 </View>
               )}
+              <ChevronRightIcon
+                className="ml-auto text-muted-foreground"
+                width={24}
+                height={24}
+              />
             </View>
-          )}
-          <TouchableOpacity onPress={() => setShowDetails(true)}>
-            <Text className="text-center p-8">View details</Text>
           </TouchableOpacity>
-        </View>
+        )}
+        <Text className="text-center text-secondary-foreground text-sm px-4 my-2">
+          You can edit permissions and revoke access at any time in your Alby
+          Hub settings.
+        </Text>
       </View>
     </>
   );
@@ -380,11 +427,12 @@ function ConnectedView({
   redirectCountdown?: number;
 }) {
   return (
-    <View className="flex-1 w-full justify-center items-center">
-      <Tick />
-
-      <Text className="my-4 text-lg text-center text-foreground">
-        Connected!{" "}
+    <View className="flex-1 items-center">
+      <View className="flex-1 flex justify-center items-center">
+        <Tick />
+      </View>
+      <Text className="text-center text-secondary-foreground">
+        Connected!{"\n"}
         {returnTo
           ? `Redirecting in ${redirectCountdown} seconds...`
           : `Returning home in ${redirectCountdown} seconds...`}
@@ -402,6 +450,28 @@ function PlugView({
   icon?: string;
   name?: string;
 }) {
+  const { shadow: shadowColor } = useThemeColor("shadow");
+  const shadow = React.useMemo(() => {
+    return {
+      ...Platform.select({
+        // make sure bg color is applied to avoid RCTView errors
+        ios: {
+          shadowColor,
+          shadowOpacity: 0.4,
+          shadowOffset: {
+            width: 1.5,
+            height: 1.5,
+          },
+          shadowRadius: 2,
+        },
+        android: {
+          shadowColor,
+          elevation: 3,
+        },
+      }),
+    };
+  }, [shadowColor]);
+
   const leftPlugTranslateX = useDerivedValue(() =>
     connectionCreated ? -43 : -55,
   );
@@ -423,46 +493,44 @@ function PlugView({
   return (
     <View className="flex flex-row items-start justify-center">
       <View className="flex items-center flex-1">
-        <View className="shadow">
+        <View style={shadow}>
           <Image
             source={require("../../../assets/hub.png")}
             className="my-4 rounded-2xl w-20 h-20"
           />
         </View>
-        <Text className="text-xl font-semibold2 w-40 text-center">
-          Alby Hub
-        </Text>
+        <Text className="font-semibold2 text-center">Alby Hub</Text>
       </View>
 
       <View className="z-[-1] relative w-36 h-28 mb-4 items-center justify-center">
         <Animated.Image
           resizeMode="contain"
           source={require("../../../assets/left-plug.png")}
-          className="absolute w-28 h-28"
+          className="absolute w-24 h-24"
           style={leftPlugAnimatedStyle}
         />
         <Animated.Image
           resizeMode="contain"
           source={require("../../../assets/right-plug.png")}
-          className="absolute w-28 h-28"
+          className="absolute w-24 h-24"
           style={rightPlugAnimatedStyle}
         />
       </View>
 
       <View className="flex items-center flex-1">
-        <View className="shadow">
+        <View style={shadow}>
           {icon ? (
             <Image
               source={{ uri: icon }}
-              className="my-4 rounded-2xl w-20 h-20 bg-white"
+              className="my-4 rounded-2xl w-20 h-20 bg-background"
             />
           ) : (
-            <View className="my-4 rounded-2xl w-20 h-20 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+            <View className="my-4 rounded-2xl w-20 h-20 bg-muted flex items-center justify-center">
               <NWCIcon width={40} height={40} opacity={0.5} />
             </View>
           )}
         </View>
-        <Text className="text-xl font-semibold2 w-40 text-center">
+        <Text className="font-semibold2 text-center" numberOfLines={1}>
           {name || "New App"}
         </Text>
       </View>

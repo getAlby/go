@@ -4,6 +4,7 @@ import { TouchableOpacity, View } from "react-native";
 import { TrashLineIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
+import { useColorScheme } from "~/lib/useColorScheme";
 
 export default function Contact({
   lnAddress,
@@ -14,45 +15,45 @@ export default function Contact({
   name?: string;
   onDelete?: () => void;
 }) {
+  const { isDarkColorScheme } = useColorScheme();
+
+  const baseColor = pastellify(lnAddress, { toCSS: true });
+  const lightColor = lighten(baseColor, 10);
+  const darkColor = darken(baseColor, 30);
+
   return (
     <TouchableOpacity
-      className="flex flex-row items-center gap-4 px-6 py-4"
+      className="flex flex-row items-center gap-4 px-6 py-3"
       onPress={async () => {
         await initiatePaymentFlow(lnAddress);
       }}
     >
       <View
-        className="h-12 w-12 flex items-center justify-center rounded-full"
+        className="h-10 w-10 flex items-center justify-center rounded-full"
         style={{
-          backgroundColor: lighten(
-            pastellify(lnAddress, {
-              toCSS: true,
-            }),
-            10,
-          ),
+          backgroundColor: isDarkColorScheme ? darkColor : lightColor,
         }}
       >
         <Text
           className="text-2xl font-semibold2"
           style={{
-            color: darken(
-              pastellify(lnAddress, {
-                toCSS: true,
-              }),
-              30,
-            ),
+            color: isDarkColorScheme ? lightColor : darkColor,
           }}
         >
           {name?.[0]?.toUpperCase() || lnAddress[0]?.toUpperCase() || "SN"}
         </Text>
       </View>
       <View className="flex flex-1 flex-col">
-        <Text className="text-xl font-semibold2">{name || lnAddress}</Text>
-        <Text className="text-muted-foreground">{lnAddress}</Text>
+        <Text className="text-lg font-semibold2">{name || lnAddress}</Text>
+        <Text className="text-secondary-foreground">{lnAddress}</Text>
       </View>
       {onDelete && (
-        <TouchableOpacity className="p-3" onPress={onDelete}>
-          <TrashLineIcon className="text-muted-foreground" />
+        <TouchableOpacity className="py-2 px-4 -mr-2" onPress={onDelete}>
+          <TrashLineIcon
+            width={18}
+            height={18}
+            className="text-muted-foreground"
+          />
         </TouchableOpacity>
       )}
     </TouchableOpacity>

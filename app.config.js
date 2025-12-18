@@ -69,6 +69,7 @@ export default ({ config }) => {
         "expo-font",
         {
           fonts: [
+            "./assets/fonts/CourierPrime-Regular.ttf",
             "./assets/fonts/OpenRunde-Regular.otf",
             "./assets/fonts/OpenRunde-Medium.otf",
             "./assets/fonts/OpenRunde-Semibold.otf",

@@ -36,7 +36,7 @@ export async function registerForPushNotificationsAsync(): Promise<
   boolean | null
 > {
   if (!Device.isDevice) {
-    errorToast("Must use physical device for push notifications");
+    errorToast(new Error("Must use physical device for push notifications"));
     return false;
   }
 

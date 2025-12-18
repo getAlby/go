@@ -1,8 +1,15 @@
 import React from "react";
-import { Modal, TouchableOpacity, View } from "react-native";
-import { XIcon } from "~/components/Icons";
+import {
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { LikeIcon, XIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
+import { Text, TextClassContext } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 type HelpModalProps = {
   visible: boolean;
@@ -10,6 +17,7 @@ type HelpModalProps = {
 };
 
 function HelpModal({ visible, onClose }: HelpModalProps) {
+  const { shadow } = useThemeColor("shadow");
   return (
     <Modal
       transparent
@@ -17,43 +25,67 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-center items-center bg-black/80">
+      <View className="flex-1 justify-center items-center bg-overlay">
         <TouchableOpacity
           activeOpacity={1}
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="w-4/5 max-w-[425px] bg-background border border-border rounded-2xl z-10">
-          <View className="flex-row items-center justify-center relative p-6">
-            <Text className="text-xl font-bold2 text-foreground">
-              Connect Your Wallet
-            </Text>
+        <View
+          style={{
+            ...Platform.select({
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
+          className="p-6 mx-6 bg-background rounded-3xl max-h-[80vh] self-stretch"
+        >
+          <View className="mb-4 relative flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={onClose}
-              className="absolute right-0 p-4"
+              className="absolute -right-6 p-4"
             >
               <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
+            <Text className="text-xl sm:text-2xl text-center font-bold2 text-secondary-foreground">
+              How To Connect?
+            </Text>
           </View>
-          <View className="p-6 pt-0 flex flex-col">
+          <ScrollView
+            className="grow-0"
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="flex flex-col gap-2"
+          >
             <View className="flex flex-col mb-4">
-              <Text className="text-muted-foreground">
-                Follow these steps to connect Alby Go to your Hub:
-              </Text>
-              <Text className="text-muted-foreground">
-                1. Open your Alby Hub
-              </Text>
-              <Text className="text-muted-foreground">
-                2. Go to App Store &raquo; Alby Go
-              </Text>
-              <Text className="text-muted-foreground">
-                3. Scan the QR code with this app
-              </Text>
+              <TextClassContext.Provider value="text-secondary-foreground">
+                <Text className="font-medium2 mb-2">
+                  Follow these steps to connect Alby Go to your Hub:
+                </Text>
+                <Text>1. Open your Alby Hub</Text>
+                <Text>2. Go to App Store &raquo; Alby Go</Text>
+                <Text>3. Scan the QR code with this app</Text>
+              </TextClassContext.Provider>
             </View>
-            <Button onPress={onClose}>
-              <Text className="font-bold2">OK</Text>
-            </Button>
-          </View>
+          </ScrollView>
+          <Button
+            variant="secondary"
+            className="flex flex-row gap-2"
+            onPress={onClose}
+          >
+            <LikeIcon className="text-muted-foreground" />
+            <Text className="text-lg">Okay</Text>
+          </Button>
         </View>
       </View>
     </Modal>

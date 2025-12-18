@@ -1,8 +1,16 @@
 import { openURL } from "expo-linking";
 import React from "react";
-import { Image, Modal, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 type BTCMapModalProps = {
   visible: boolean;
@@ -10,6 +18,7 @@ type BTCMapModalProps = {
 };
 
 function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
+  const { shadow } = useThemeColor("shadow");
   return (
     <Modal
       transparent
@@ -17,48 +26,70 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-center items-center bg-black/80">
+      <View className="flex-1 justify-center items-center bg-overlay">
         <TouchableOpacity
           activeOpacity={1}
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="w-4/5 max-w-[425px] bg-background border border-border rounded-2xl z-10">
-          <View className="flex-row items-center justify-center relative p-6">
-            <Text className="text-3xl font-semibold2 text-muted-foreground">
-              BTC Map
-            </Text>
-            <TouchableOpacity
-              onPress={onClose}
-              className="absolute right-0 p-4"
-            >
-              <XIcon className="text-muted-foreground" width={24} height={24} />
-            </TouchableOpacity>
-          </View>
-          <View className="p-6 pt-0 flex flex-col items-center">
+        <View
+          style={{
+            ...Platform.select({
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
+          className="p-6 mx-6 relative bg-background rounded-3xl max-h-[80vh] self-stretch"
+        >
+          <TouchableOpacity
+            onPress={onClose}
+            className="absolute right-0 p-4 z-10"
+          >
+            <XIcon className="text-muted-foreground" width={24} height={24} />
+          </TouchableOpacity>
+          <ScrollView
+            className="my-4 grow-0"
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="flex flex-col items-center gap-6"
+          >
+            {/* <View className="pt-0 flex flex-col items-center gap-6"> */}
             <Image
               source={require("./../assets/btc-map.png")}
-              className="w-24 h-24"
+              className="w-16 h-16"
               resizeMode="contain"
             />
-            <View className="mt-6 flex flex-col items-center gap-4">
-              <Text className="text-lg text-center text-muted-foreground">
+            <Text className="text-3xl font-semibold2 text-secondary-foreground">
+              BTC Map
+            </Text>
+            <View className="flex flex-col items-center gap-4">
+              <Text className="text-center">
                 BTC Map is an open-source project with the goal of mapping and
                 maintaining all the merchants accepting Bitcoin around the
                 world.
               </Text>
-              <Text className="text-lg text-center text-muted-foreground">
+              <Text className="text-center">
                 Find merchants nearby, pay for goods and services, and help
                 improve the map by contributing!
               </Text>
               <Text
                 onPress={() => openURL("https://btcmap.org/")}
-                className="text-lg underline font-semibold2 text-muted-foreground"
+                className="text-lg underline font-semibold2 mb-2"
               >
                 Visit btcmap.org
               </Text>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </View>
     </Modal>
