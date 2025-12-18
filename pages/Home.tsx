@@ -100,7 +100,7 @@ export function Home() {
             onPressIn={() => {
               router.navigate("/settings");
             }}
-            className="-ml-4 px-6"
+            className="-ml-4 py-2 px-6"
           >
             <SettingsLineIcon
               className="text-secondary-foreground"
