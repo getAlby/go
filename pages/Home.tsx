@@ -243,7 +243,7 @@ export function Home() {
                 )}
               </TouchableOpacity>
             </View>
-            {new Date().getDate() !== 21 && <AlbyBanner />}
+            {new Date().getDate() === 21 && <AlbyBanner />}
           </View>
         </ScrollView>
         <View className="flex items-center justify-center">
