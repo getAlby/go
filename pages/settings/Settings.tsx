@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Alert, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
 import {
   AddressBookIcon,
   BitcoinIcon,
@@ -35,212 +35,229 @@ export function Settings() {
   const { signOut } = useSession();
 
   return (
-    <View className="flex-1">
+    <>
       <Screen title="Settings" />
-      <View className="flex-1 flex flex-col mt-4">
-        <Link href="/settings/wallets" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
-            <WalletIcon
-              className="text-muted-foreground"
-              width={24}
-              height={24}
-            />
-            <Text className="font-medium2 text-lg sm:text-xl">Wallets</Text>
-            <ChevronRightIcon
-              className="ml-auto text-muted-foreground"
-              width={16}
-              height={16}
-            />
-          </TouchableOpacity>
-        </Link>
+      <View className="flex-1">
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View className="flex-1 flex flex-col mt-4">
+            <Link href="/settings/wallets" asChild>
+              <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
+                <WalletIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
+                <Text className="font-medium2 text-lg sm:text-xl">Wallets</Text>
+                <ChevronRightIcon
+                  className="ml-auto text-muted-foreground"
+                  width={16}
+                  height={16}
+                />
+              </TouchableOpacity>
+            </Link>
 
-        <Link href="/settings/address-book" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
-            <AddressBookIcon
-              className="text-muted-foreground"
-              width={24}
-              height={24}
-            />
-            <Text className="font-medium2 text-lg sm:text-xl">
-              Address Book
-            </Text>
-            <ChevronRightIcon
-              className="ml-auto text-muted-foreground"
-              width={16}
-              height={16}
-            />
-          </TouchableOpacity>
-        </Link>
+            <Link href="/settings/address-book" asChild>
+              <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
+                <AddressBookIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
+                <Text className="font-medium2 text-lg sm:text-xl">
+                  Address Book
+                </Text>
+                <ChevronRightIcon
+                  className="ml-auto text-muted-foreground"
+                  width={16}
+                  height={16}
+                />
+              </TouchableOpacity>
+            </Link>
 
-        <Link href="/settings/units-and-currency" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
-            <BitcoinIcon
-              className="text-muted-foreground"
-              width={24}
-              height={24}
-            />
-            <Text className="font-medium2 text-lg sm:text-xl">
-              Units & Currency
-            </Text>
-            <ChevronRightIcon
-              className="ml-auto text-muted-foreground"
-              width={16}
-              height={16}
-            />
-          </TouchableOpacity>
-        </Link>
+            <Link href="/settings/units-and-currency" asChild>
+              <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
+                <BitcoinIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
+                <Text className="font-medium2 text-lg sm:text-xl">
+                  Units & Currency
+                </Text>
+                <ChevronRightIcon
+                  className="ml-auto text-muted-foreground"
+                  width={16}
+                  height={16}
+                />
+              </TouchableOpacity>
+            </Link>
 
-        {!IS_EXPO_GO && (
-          <Link href="/settings/notifications" asChild>
-            <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
-              <NotificationIcon
+            {!IS_EXPO_GO && (
+              <Link href="/settings/notifications" asChild>
+                <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
+                  <NotificationIcon
+                    className="text-muted-foreground"
+                    width={24}
+                    height={24}
+                  />
+                  <Text className="font-medium2 text-lg sm:text-xl">
+                    Notifications
+                  </Text>
+                  <ChevronRightIcon
+                    className="ml-auto text-muted-foreground"
+                    width={16}
+                    height={16}
+                  />
+                </TouchableOpacity>
+              </Link>
+            )}
+
+            <Link href="/settings/security" asChild>
+              <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
+                <FingerprintIcon
+                  className="text-muted-foreground"
+                  width={24}
+                  height={24}
+                />
+                <Text className="font-medium2 text-lg sm:text-xl">
+                  Security
+                </Text>
+                <ChevronRightIcon
+                  className="ml-auto text-muted-foreground"
+                  width={16}
+                  height={16}
+                />
+              </TouchableOpacity>
+            </Link>
+
+            <TouchableOpacity
+              className="flex flex-row items-center gap-4 px-6 py-4"
+              onPress={toggleColorScheme}
+            >
+              <ThemeIcon
                 className="text-muted-foreground"
                 width={24}
                 height={24}
               />
-              <Text className="font-medium2 text-lg sm:text-xl">
-                Notifications
+              <Text className="font-medium2 text-lg sm:text-xl">Theme</Text>
+              <Text className="text-secondary-foreground text-lg sm:text-xl">
+                (
+                {colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)}
+                )
               </Text>
-              <ChevronRightIcon
-                className="ml-auto text-muted-foreground"
-                width={16}
-                height={16}
-              />
             </TouchableOpacity>
-          </Link>
-        )}
 
-        <Link href="/settings/security" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
-            <FingerprintIcon
-              className="text-muted-foreground"
-              width={24}
-              height={24}
-            />
-            <Text className="font-medium2 text-lg sm:text-xl">Security</Text>
-            <ChevronRightIcon
-              className="ml-auto text-muted-foreground"
-              width={16}
-              height={16}
-            />
-          </TouchableOpacity>
-        </Link>
-
-        <TouchableOpacity
-          className="flex flex-row items-center gap-4 px-6 py-4"
-          onPress={toggleColorScheme}
-        >
-          <ThemeIcon className="text-muted-foreground" width={24} height={24} />
-          <Text className="font-medium2 text-lg sm:text-xl">Theme</Text>
-          <Text className="text-secondary-foreground text-lg sm:text-xl">
-            ({colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)})
-          </Text>
-        </TouchableOpacity>
-
-        {developerMode && (
-          <>
-            <View className="mt-2 flex flex-col">
-              <Text className="uppercase px-6 py-3">Developer mode</Text>
-              <TouchableOpacity
-                className="flex flex-row items-center gap-4 px-6 py-4"
-                onPress={() => {
-                  signOut();
-                }}
-              >
-                <SignOutIcon
-                  className="text-muted-foreground"
-                  width={24}
-                  height={24}
-                />
-                <Text className="font-medium2 text-lg sm:text-xl">
-                  Sign out
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="flex flex-row items-center gap-4 px-6 py-4"
-                onPress={() => {
-                  router.dismissAll();
-                  useAppStore.getState().setOnboarded(false);
-                }}
-              >
-                <OnboardingIcon
-                  className="text-muted-foreground"
-                  width={24}
-                  height={24}
-                />
-                <Text className="font-medium2 text-lg sm:text-xl">
-                  Open Onboarding
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="flex flex-row items-center gap-4 px-6 py-4"
-                onPress={() => {
-                  Alert.alert(
-                    "Reset",
-                    "Are you sure you want to reset? You will be signed out of all your wallets. Your connection secrets and address book will be lost.",
-                    [
-                      {
-                        text: "Cancel",
-                        style: "cancel",
-                      },
-                      {
-                        text: "Confirm",
-                        onPress: async () => {
-                          if (!IS_EXPO_GO) {
-                            for (const [id, wallet] of wallets.entries()) {
-                              await deregisterWalletNotifications(wallet, id);
-                            }
-                            await removeAllInfo();
-                          }
-                          router.dismissAll();
-                          useAppStore.getState().reset();
-                        },
-                      },
-                    ],
-                  );
-                }}
-              >
-                <ResetIcon
-                  className="text-destructive"
-                  width={24}
-                  height={24}
-                />
-                <Text className="text-destructive font-medium2 text-lg sm:text-xl">
-                  Reset Wallet
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </View>
-      <View className="flex flex-col p-4 gap-4">
-        <AlbyBanner />
-        <TouchableOpacity
-          onPress={() => {
-            const newCounter = developerCounter + 1;
-            setDeveloperCounter(newCounter);
-
-            if (newCounter === 5) {
-              setDeveloperMode(true);
-              Toast.show({
-                text1: "You are now a developer",
-              });
-            } else if (newCounter > 1 && newCounter < 5) {
-              Toast.show({
-                text1: `Tap ${5 - newCounter} more times`,
-              });
-            }
-          }}
-        >
-          <View className="flex flex-row items-center justify-center gap-2">
-            <AlbyGo width={82} height={20} />
-            <View className="border-muted-foreground border-[0.5px] py-2" />
-            <Text className="text-muted-foreground font-medium2 text-sm">
-              v{Constants.expoConfig?.version}
-            </Text>
+            {developerMode && (
+              <>
+                <View className="mt-2 flex flex-col">
+                  <Text className="uppercase px-6 py-3">Developer mode</Text>
+                  <TouchableOpacity
+                    className="flex flex-row items-center gap-4 px-6 py-4"
+                    onPress={() => {
+                      signOut();
+                    }}
+                  >
+                    <SignOutIcon
+                      className="text-muted-foreground"
+                      width={24}
+                      height={24}
+                    />
+                    <Text className="font-medium2 text-lg sm:text-xl">
+                      Sign out
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="flex flex-row items-center gap-4 px-6 py-4"
+                    onPress={() => {
+                      router.dismissAll();
+                      useAppStore.getState().setOnboarded(false);
+                    }}
+                  >
+                    <OnboardingIcon
+                      className="text-muted-foreground"
+                      width={24}
+                      height={24}
+                    />
+                    <Text className="font-medium2 text-lg sm:text-xl">
+                      Open Onboarding
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="flex flex-row items-center gap-4 px-6 py-4"
+                    onPress={() => {
+                      Alert.alert(
+                        "Reset",
+                        "Are you sure you want to reset? You will be signed out of all your wallets. Your connection secrets and address book will be lost.",
+                        [
+                          {
+                            text: "Cancel",
+                            style: "cancel",
+                          },
+                          {
+                            text: "Confirm",
+                            onPress: async () => {
+                              if (!IS_EXPO_GO) {
+                                for (const [id, wallet] of wallets.entries()) {
+                                  await deregisterWalletNotifications(
+                                    wallet,
+                                    id,
+                                  );
+                                }
+                                await removeAllInfo();
+                              }
+                              router.dismissAll();
+                              useAppStore.getState().reset();
+                            },
+                          },
+                        ],
+                      );
+                    }}
+                  >
+                    <ResetIcon
+                      className="text-destructive"
+                      width={24}
+                      height={24}
+                    />
+                    <Text className="text-destructive font-medium2 text-lg sm:text-xl">
+                      Reset Wallet
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
           </View>
-        </TouchableOpacity>
+        </ScrollView>
+        <View>
+          <AlbyBanner className="mx-6 absolute bottom-16" />
+          <View className="flex flex-col p-4 gap-4">
+            <TouchableOpacity
+              onPress={() => {
+                const newCounter = developerCounter + 1;
+                setDeveloperCounter(newCounter);
+
+                if (newCounter === 5) {
+                  setDeveloperMode(true);
+                  Toast.show({
+                    text1: "You are now a developer",
+                  });
+                } else if (newCounter > 1 && newCounter < 5) {
+                  Toast.show({
+                    text1: `Tap ${5 - newCounter} more times`,
+                  });
+                }
+              }}
+            >
+              <View className="flex flex-row items-center justify-center gap-2">
+                <AlbyGo width={82} height={20} />
+                <View className="border-muted-foreground border-[0.5px] py-2" />
+                <Text className="text-muted-foreground font-medium2 text-sm">
+                  v{Constants.expoConfig?.version}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </>
   );
 }

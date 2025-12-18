@@ -6,9 +6,10 @@ import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
+import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
 
-function AlbyBanner() {
+function AlbyBanner({ className }: { className?: string }) {
   const { shadow } = useThemeColor("shadow");
   const lastPayment = useAppStore.getState().getLastAlbyPayment();
   const [showBanner, setShowBanner] = useState(
@@ -39,7 +40,10 @@ function AlbyBanner() {
 
   return (
     <View
-      className="bg-background dark:bg-muted rounded-2xl flex flex-col gap-3 p-4 relative mx-2"
+      className={cn(
+        "bg-background dark:bg-muted rounded-2xl flex flex-col gap-3 p-4 relative",
+        className,
+      )}
       style={{
         ...Platform.select({
           // make sure bg color is applied to avoid RCTView errors
