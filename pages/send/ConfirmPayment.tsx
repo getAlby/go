@@ -66,7 +66,9 @@ export function ConfirmPayment() {
         useAppStore.getState().updateLastAlbyPayment();
       }
 
-      if (!navigation.isFocused()) {return;}
+      if (!navigation.isFocused()) {
+        return;
+      }
 
       router.dismissAll();
       router.replace({
