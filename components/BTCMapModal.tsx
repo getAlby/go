@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { XIcon } from "~/components/Icons";
+import { LinkIcon, XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { useThemeColor } from "~/lib/useThemeColor";
 
@@ -82,12 +82,13 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
                 Find merchants nearby, pay for goods and services, and help
                 improve the map by contributing!
               </Text>
-              <Text
+              <TouchableOpacity
+                className="my-2 flex flex-row gap-2 justify-center items-center"
                 onPress={() => openURL("https://btcmap.org/")}
-                className="text-lg underline font-semibold2 mb-2"
               >
-                Visit btcmap.org
-              </Text>
+                <Text className="font-semibold2">Visit btcmap.org</Text>
+                <LinkIcon width={16} className="text-primary-foreground" />
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
