@@ -17,7 +17,7 @@ type ScreenProps = {
 
 function Screen({ title, className, animation, right, left }: ScreenProps) {
   const { background } = useThemeColor("background");
-
+  const canGoBack = router.canGoBack();
   return (
     <Stack.Screen
       options={{
@@ -25,11 +25,20 @@ function Screen({ title, className, animation, right, left }: ScreenProps) {
         animation: animation ? animation : "slide_from_right",
         headerLeft: left
           ? left
-          : ({ canGoBack }) => {
+          : () => {
               return (
                 canGoBack && (
-                  <TouchableOpacity onPress={() => router.back()}>
-                    <ChevronLeftIcon className="text-secondary-foreground p-4 mr-4" />
+                  <TouchableOpacity
+                    onPressIn={() => {
+                      router.back();
+                    }}
+                    className="-ml-4 py-2 px-6"
+                  >
+                    <ChevronLeftIcon
+                      className="text-secondary-foreground"
+                      width={24}
+                      height={24}
+                    />
                   </TouchableOpacity>
                 )
               );
@@ -38,9 +47,7 @@ function Screen({ title, className, animation, right, left }: ScreenProps) {
           <Text
             className={cn(
               Platform.OS === "android" &&
-                (right
-                  ? "ml-4"
-                  : "mr-[42.18]") /* this translates to width of headerLeft button */,
+                (right ? (left || canGoBack ? "" : "ml-[52px]") : "mr-[52px]"),
               "text-xl sm:text-2xl text-center font-semibold2",
               className,
             )}
