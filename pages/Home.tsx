@@ -148,7 +148,7 @@ export function Home() {
                   <Text
                     numberOfLines={1}
                     ellipsizeMode="tail"
-                    className="text-center text-muted-foreground font-medium2 text-xl px-4"
+                    className="text-center text-muted-foreground font-medium2 text-lg sm:text-xl px-4"
                   >
                     {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
                   </Text>

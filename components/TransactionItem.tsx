@@ -71,7 +71,7 @@ export function TransactionItem({ tx }: Props) {
       <View
         className={cn(
           tx.state === "pending" && "animate-pulse",
-          "flex flex-row items-center gap-3 px-6 py-4",
+          "flex flex-row items-center gap-4 px-6 py-4",
         )}
       >
         <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
