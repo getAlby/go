@@ -310,7 +310,7 @@ function MainButton({
           onPressOut={() => setPressed(false)}
         >
           <LinearGradient
-            className="flex-1 p-6 border justify-center items-center border-secondary rounded-3xl "
+            className="flex-1 p-6 border justify-center items-center border-secondary rounded-3xl bg-primary"
             colors={[secondary, primary]}
             start={[0, 0]}
             end={[1, 1]}

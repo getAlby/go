@@ -95,7 +95,7 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
             start={[0, 0]}
             end={[1, 1]}
             className={cn(
-              "border border-secondary",
+              "border border-secondary bg-primary",
               size === "lg" ? "rounded-2xl" : "rounded-xl",
             )}
           >
