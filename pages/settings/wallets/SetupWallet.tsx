@@ -227,7 +227,7 @@ export function SetupWallet() {
                 Wallet name
               </Text>
               <Input
-                className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+                className="w-full text-center border-transparent bg-transparent text-2xl font-semibold2"
                 value={name}
                 onChangeText={setName}
                 placeholder="Enter a name for your wallet"

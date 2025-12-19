@@ -50,7 +50,7 @@ export function SetLightningAddress() {
               Lightning Address
             </Text>
             <Input
-              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+              className="w-full text-center border-transparent bg-transparent text-2xl font-semibold2"
               value={lightningAddress}
               onChangeText={setLightningAddress}
               placeholder="hello@getalby.com"
