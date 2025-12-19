@@ -87,7 +87,7 @@ export function ConfirmPayment() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      Math.ceil(amountToPaySats).toString().length +
+      new Intl.NumberFormat().format(Math.ceil(amountToPaySats)).length +
       (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [amountToPaySats, bitcoinDisplayFormat],
   );
@@ -104,9 +104,9 @@ export function ConfirmPayment() {
             {bitcoinDisplayFormat === "bip177" && (
               <Text
                 className={cn(
-                  displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                  displayCharacterCount <= 10 &&
-                    displayCharacterCount >= 8 &&
+                  displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                  displayCharacterCount <= 14 &&
+                    displayCharacterCount >= 11 &&
                     "sm:text-5xl",
                   "text-secondary-foreground !leading-[1.5] font-bold2",
                 )}
@@ -116,9 +116,9 @@ export function ConfirmPayment() {
             )}
             <Text
               className={cn(
-                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 10 &&
-                  displayCharacterCount >= 8 &&
+                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 14 &&
+                  displayCharacterCount >= 11 &&
                   "sm:text-5xl",
                 "!leading-[1.5] font-bold2",
               )}
@@ -127,9 +127,9 @@ export function ConfirmPayment() {
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
-                    displayCharacterCount > 8 ? "text-3xl" : "text-4xl",
-                    displayCharacterCount <= 10 &&
-                      displayCharacterCount >= 8 &&
+                    displayCharacterCount > 11 ? "text-3xl" : "text-4xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
                       "sm:text-4xl",
                     "text-secondary-foreground font-semibold2",
                   )}

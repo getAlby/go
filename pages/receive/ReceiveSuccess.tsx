@@ -24,7 +24,7 @@ export function ReceiveSuccess() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      decodedInvoice.satoshi.toString().length +
+      new Intl.NumberFormat().format(decodedInvoice.satoshi).length +
       (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [decodedInvoice.satoshi, bitcoinDisplayFormat],
   );
@@ -38,9 +38,9 @@ export function ReceiveSuccess() {
           <View className="flex flex-row items-center justify-evenly gap-2">
             <Text
               className={cn(
-                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 10 &&
-                  displayCharacterCount >= 8 &&
+                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 14 &&
+                  displayCharacterCount >= 11 &&
                   "sm:text-5xl",
                 "text-receive !leading-[1.5] font-bold2",
               )}
@@ -49,9 +49,9 @@ export function ReceiveSuccess() {
             </Text>
             <Text
               className={cn(
-                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 10 &&
-                  displayCharacterCount >= 8 &&
+                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 14 &&
+                  displayCharacterCount >= 11 &&
                   "sm:text-5xl",
                 "text-receive !leading-[1.5] font-bold2",
               )}
@@ -60,9 +60,9 @@ export function ReceiveSuccess() {
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
-                    displayCharacterCount > 8 ? "text-3xl" : "text-4xl",
-                    displayCharacterCount <= 10 &&
-                      displayCharacterCount >= 8 &&
+                    displayCharacterCount > 11 ? "text-3xl" : "text-4xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
                       "sm:text-4xl",
                     "text-receive font-semibold2",
                   )}

@@ -28,7 +28,7 @@ export function PaymentSuccess() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      Math.ceil(+amount).toString().length +
+      new Intl.NumberFormat().format(Math.ceil(+amount)).length +
       (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [amount, bitcoinDisplayFormat],
   );
@@ -42,9 +42,9 @@ export function PaymentSuccess() {
           <View className="flex flex-row items-center justify-evenly gap-2">
             <Text
               className={cn(
-                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 10 &&
-                  displayCharacterCount >= 8 &&
+                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 14 &&
+                  displayCharacterCount >= 11 &&
                   "sm:text-5xl",
                 "text-secondary-foreground !leading-[1.5] font-bold2",
               )}
@@ -53,9 +53,9 @@ export function PaymentSuccess() {
             </Text>
             <Text
               className={cn(
-                displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 10 &&
-                  displayCharacterCount >= 8 &&
+                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                displayCharacterCount <= 14 &&
+                  displayCharacterCount >= 11 &&
                   "sm:text-5xl",
                 "!leading-[1.5] font-bold2",
               )}
@@ -64,9 +64,9 @@ export function PaymentSuccess() {
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
-                    displayCharacterCount > 8 ? "text-3xl" : "text-4xl",
-                    displayCharacterCount <= 10 &&
-                      displayCharacterCount >= 8 &&
+                    displayCharacterCount > 11 ? "text-3xl" : "text-4xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
                       "sm:text-4xl",
                     "text-secondary-foreground font-semibold2",
                   )}

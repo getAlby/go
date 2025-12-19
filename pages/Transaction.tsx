@@ -100,8 +100,8 @@ export function Transaction() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      Math.floor(transaction.amount / 1000).toString().length +
-      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+      new Intl.NumberFormat().format(Math.floor(transaction.amount / 1000))
+        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [transaction.amount, bitcoinDisplayFormat],
   );
 
@@ -141,9 +141,9 @@ export function Transaction() {
                 <Text
                   className={cn(
                     "gap-2 font-semibold2",
-                    displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                    displayCharacterCount <= 10 &&
-                      displayCharacterCount >= 8 &&
+                    displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
                       "sm:text-5xl",
                     transaction.type === "incoming" &&
                       transaction.state === "settled" &&

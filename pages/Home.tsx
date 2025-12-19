@@ -86,8 +86,8 @@ export function Home() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      Math.floor((balance?.balance || 0) / 1000).toString().length +
-      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+      new Intl.NumberFormat().format(Math.floor((balance?.balance || 0) / 1000))
+        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [bitcoinDisplayFormat, balance?.balance],
   );
 
@@ -165,9 +165,9 @@ export function Home() {
                     <>
                       <Text
                         className={cn(
-                          displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                          displayCharacterCount <= 10 &&
-                            displayCharacterCount >= 8 &&
+                          displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                          displayCharacterCount <= 14 &&
+                            displayCharacterCount >= 11 &&
                             "sm:text-5xl",
                           "text-secondary-foreground !leading-[1.5] font-bold2",
                           (balanceDisplayMode === "hidden" ||
@@ -181,9 +181,9 @@ export function Home() {
                       </Text>
                       <Text
                         className={cn(
-                          displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                          displayCharacterCount <= 10 &&
-                            displayCharacterCount >= 8 &&
+                          displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
+                          displayCharacterCount <= 14 &&
+                            displayCharacterCount >= 11 &&
                             "sm:text-5xl",
                           "!leading-[1.5] font-bold2",
                         )}
@@ -203,11 +203,11 @@ export function Home() {
                         bitcoinDisplayFormat === "sats" && (
                           <Text
                             className={cn(
-                              displayCharacterCount > 8
+                              displayCharacterCount > 11
                                 ? "text-4xl"
                                 : "text-5xl",
-                              displayCharacterCount <= 10 &&
-                                displayCharacterCount >= 8 &&
+                              displayCharacterCount <= 14 &&
+                                displayCharacterCount >= 11 &&
                                 "sm:text-5xl",
                               "text-secondary-foreground !leading-[1.5] font-bold2",
                             )}
