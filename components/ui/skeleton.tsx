@@ -19,7 +19,10 @@ function Skeleton({ className, ...props }: Omit<TextProps, "style">) {
         animationTimingFunction: "ease-in-out",
         animationDirection: "alternate",
       }}
-      className={cn("rounded-md bg-muted", className)}
+      className={cn(
+        "rounded-md bg-muted ios:text-base android:text-sm",
+        className,
+      )}
       {...props}
     />
   );

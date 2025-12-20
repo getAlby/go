@@ -119,9 +119,9 @@ export function Transactions() {
           {[...Array(20)].map((e, i) => (
             <View
               key={i}
-              className="flex flex-row items-center gap-2 px-6 py-4"
+              className="flex flex-row items-center gap-3 px-6 py-4"
             >
-              <Skeleton className="rounded-full w-10 h-10" />
+              <Skeleton className="rounded-full w-[40px] h-[40px]" />
               <View className="flex flex-col flex-1 gap-1">
                 <Skeleton className="w-32 ios:text-sm android:text-xs" />
                 <Skeleton className="w-16 ios:text-sm android:text-xs" />
