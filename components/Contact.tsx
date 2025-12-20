@@ -35,7 +35,7 @@ export default function Contact({
         }}
       >
         <Text
-          className="text-2xl font-semibold2"
+          className="ios:text-2xl android:text-xl font-semibold2"
           style={{
             color: isDarkColorScheme ? lightColor : darkColor,
           }}
@@ -44,7 +44,9 @@ export default function Contact({
         </Text>
       </View>
       <View className="flex flex-1 flex-col">
-        <Text className="text-lg font-semibold2">{name || lnAddress}</Text>
+        <Text className="ios:text-lg android:text-base font-semibold2">
+          {name || lnAddress}
+        </Text>
         <Text className="text-secondary-foreground">{lnAddress}</Text>
       </View>
       {onDelete && (

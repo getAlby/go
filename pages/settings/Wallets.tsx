@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import React from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, TouchableOpacity, View } from "react-native";
 import { SettingsIcon, WalletIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 
@@ -58,7 +58,11 @@ export function Wallets() {
                   />
                   <Text
                     className={cn(
-                      "text-lg sm:text-xl pr-16",
+                      Platform.select({
+                        ios: "ios:text-lg ios:sm:text-xl",
+                        android: "android:text-lg",
+                      }),
+                      "pr-16",
                       active ? "font-semibold2" : "font-medium2",
                     )}
                     numberOfLines={1}

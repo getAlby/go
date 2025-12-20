@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { type LNURLPaymentSuccessAction } from "lib/lnurl";
 import React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { Tick } from "~/animations/Tick";
 import AlbyGo from "~/components/icons/AlbyGo";
 import Screen from "~/components/Screen";
@@ -42,10 +42,24 @@ export function PaymentSuccess() {
           <View className="flex flex-row items-center justify-evenly gap-2">
             <Text
               className={cn(
-                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 14 &&
-                  displayCharacterCount >= 11 &&
-                  "sm:text-5xl",
+                Platform.select({
+                  ios: cn(
+                    displayCharacterCount > 11
+                      ? "ios:text-4xl"
+                      : "ios:text-5xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "ios:sm:text-5xl",
+                  ),
+                  android: cn(
+                    displayCharacterCount > 11
+                      ? "android:text-3xl"
+                      : "android:text-[42px]",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "sm:android:text-[42px]",
+                  ),
+                }),
                 "text-secondary-foreground !leading-[1.5] font-bold2",
               )}
             >
@@ -53,10 +67,24 @@ export function PaymentSuccess() {
             </Text>
             <Text
               className={cn(
-                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 14 &&
-                  displayCharacterCount >= 11 &&
-                  "sm:text-5xl",
+                Platform.select({
+                  ios: cn(
+                    displayCharacterCount > 11
+                      ? "ios:text-4xl"
+                      : "ios:text-5xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "ios:sm:text-5xl",
+                  ),
+                  android: cn(
+                    displayCharacterCount > 11
+                      ? "android:text-3xl"
+                      : "android:text-[42px]",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "sm:android:text-[42px]",
+                  ),
+                }),
                 "!leading-[1.5] font-bold2",
               )}
             >
@@ -64,10 +92,24 @@ export function PaymentSuccess() {
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
-                    displayCharacterCount > 11 ? "text-3xl" : "text-4xl",
-                    displayCharacterCount <= 14 &&
-                      displayCharacterCount >= 11 &&
-                      "sm:text-4xl",
+                    Platform.select({
+                      ios: cn(
+                        displayCharacterCount > 11
+                          ? "ios:text-4xl"
+                          : "ios:text-5xl",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "ios:sm:text-5xl",
+                      ),
+                      android: cn(
+                        displayCharacterCount > 11
+                          ? "android:text-3xl"
+                          : "android:text-[42px]",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "sm:android:text-[42px]",
+                      ),
+                    }),
                     "text-secondary-foreground font-semibold2",
                   )}
                 >
@@ -78,7 +120,7 @@ export function PaymentSuccess() {
             </Text>
           </View>
           {getFiatAmount && (
-            <Text className="text-center text-secondary-foreground text-3xl font-semibold2">
+            <Text className="text-center text-secondary-foreground ios:text-3xl android:text-2xl font-semibold2">
               {"- "}
               {getFiatAmount(+amount)}
             </Text>

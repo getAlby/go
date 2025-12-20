@@ -97,7 +97,9 @@ export function Receive() {
                 onPress={copy}
                 className="flex flex-row items-center gap-2 mt-2"
               >
-                <Text className="text-xl font-medium2">{lightningAddress}</Text>
+                <Text className="ios:text-xl android:text-lg font-medium2">
+                  {lightningAddress}
+                </Text>
                 <CopyIcon className="text-muted-foreground" />
               </TouchableOpacity>
             </View>

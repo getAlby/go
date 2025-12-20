@@ -36,7 +36,10 @@ const buttonTextVariants = cva("", {
     size: {
       default: "font-medium2",
       sm: "",
-      lg: "text-xl sm:text-2xl font-bold2",
+      lg: Platform.select({
+        ios: "ios:text-xl ios:sm:text-2xl font-bold2",
+        android: "android:text-xl font-bold2",
+      }),
     },
   },
   defaultVariants: {

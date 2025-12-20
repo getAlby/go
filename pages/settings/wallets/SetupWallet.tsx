@@ -3,7 +3,7 @@ import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
@@ -23,6 +23,7 @@ import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { registerWalletNotifications } from "~/lib/notifications";
+import { cn } from "~/lib/utils";
 
 export function SetupWallet() {
   const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
@@ -227,7 +228,13 @@ export function SetupWallet() {
                 Wallet name
               </Text>
               <Input
-                className="w-full text-center border-transparent bg-transparent text-2xl font-semibold2"
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-xl ios:sm:text-2xl",
+                    android: "android:text-xl",
+                  }),
+                  "w-full text-center border-transparent bg-transparent font-semibold2",
+                )}
                 value={name}
                 onChangeText={setName}
                 placeholder="Enter a name for your wallet"

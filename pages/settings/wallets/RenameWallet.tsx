@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import Screen from "~/components/Screen";
@@ -10,7 +10,7 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME, IS_EXPO_GO } from "~/lib/constants";
 import { storeWalletInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
-import { getPubkeyFromNWCUrl } from "~/lib/utils";
+import { cn, getPubkeyFromNWCUrl } from "~/lib/utils";
 
 export function RenameWallet() {
   const { id } = useLocalSearchParams() as { id: string };
@@ -59,7 +59,13 @@ export function RenameWallet() {
               Wallet Name
             </Text>
             <Input
-              className="w-full text-center border-transparent bg-transparent text-2xl font-semibold2"
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-xl ios:sm:text-2xl",
+                  android: "android:text-xl",
+                }),
+                "w-full text-center border-transparent bg-transparent font-semibold2",
+              )}
               placeholder={DEFAULT_WALLET_NAME}
               value={walletName}
               onChangeText={setWalletName}
@@ -68,7 +74,7 @@ export function RenameWallet() {
             />
           </View>
           <Button size="lg" onPress={onRenameWallet} disabled={!walletName}>
-            <Text className="text-2xl">Save</Text>
+            <Text className="ios:text-2xl android:text-xl">Save</Text>
           </Button>
         </View>
       </DismissableKeyboardView>

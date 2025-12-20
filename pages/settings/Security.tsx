@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { TriangleAlertIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
@@ -50,7 +50,15 @@ export function Security() {
                 className={cn(!isSupported && "pointer-events-none")}
                 disabled={!isSupported}
               >
-                <Text className="sm:text-lg font-semibold2">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-base ios:sm:text-lg",
+                      android: "android:text-base",
+                    }),
+                    "font-semibold2",
+                  )}
+                >
                   Require phone lock to access
                 </Text>
               </Pressable>

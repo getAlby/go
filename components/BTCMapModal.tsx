@@ -69,7 +69,7 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
               className="w-16 h-16"
               resizeMode="contain"
             />
-            <Text className="text-3xl font-semibold2 text-secondary-foreground">
+            <Text className="ios:text-3xl android:text-2xl font-semibold2 text-secondary-foreground">
               BTC Map
             </Text>
             <View className="flex flex-col items-center gap-4">

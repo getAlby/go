@@ -123,12 +123,12 @@ export function Transactions() {
             >
               <Skeleton className="rounded-full w-10 h-10" />
               <View className="flex flex-col flex-1 gap-1">
-                <Skeleton className="w-32 text-sm" />
-                <Skeleton className="w-16 text-sm" />
+                <Skeleton className="w-32 ios:text-sm android:text-xs" />
+                <Skeleton className="w-16 ios:text-sm android:text-xs" />
               </View>
               <View className="flex items-end gap-1">
-                <Skeleton className="w-16 text-sm" />
-                <Skeleton className="w-8 text-sm" />
+                <Skeleton className="w-16 ios:text-sm android:text-xs" />
+                <Skeleton className="w-8 ios:text-sm android:text-xs" />
               </View>
             </View>
           ))}
@@ -136,8 +136,10 @@ export function Transactions() {
       ) : (
         <View className="p-6 flex-1 items-center justify-center gap-5">
           <View className="flex flex-col items-center">
-            <Text className="text-2xl font-semibold2">No transactions yet</Text>
-            <Text className="text-muted-foreground text-xl text-center">
+            <Text className="ios:text-2xl android:text-xl font-semibold2">
+              No transactions yet
+            </Text>
+            <Text className="text-muted-foreground ios:text-xl android:text-lg text-center">
               Top up your wallet to get started
             </Text>
           </View>

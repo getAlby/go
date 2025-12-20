@@ -95,7 +95,7 @@ function DescriptionInput({
         <Text
           numberOfLines={2}
           ellipsizeMode="tail"
-          className="text-secondary-foreground font-medium2 text-lg text-center px-2"
+          className="text-secondary-foreground font-medium2 ios:text-lg android:text-base text-center px-2"
         >
           {description}
         </Text>
@@ -113,7 +113,7 @@ function DescriptionInput({
           <Text
             numberOfLines={2}
             ellipsizeMode="tail"
-            className="text-secondary-foreground font-medium2 text-lg text-center px-2"
+            className="text-secondary-foreground font-medium2 ios:text-lg android:text-base text-center px-2"
           >
             {description || "Add Description"}
           </Text>
@@ -153,14 +153,22 @@ function DescriptionInput({
                   height={24}
                 />
               </TouchableOpacity>
-              <Text className="text-xl sm:text-2xl font-semibold2 text-secondary-foreground">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-xl ios:sm:text-2xl",
+                    android: "android:text-xl",
+                  }),
+                  "font-semibold2 text-secondary-foreground",
+                )}
+              >
                 Add Description
               </Text>
             </View>
             {isIOS ? (
               <BottomSheetTextInput
                 placeholder="Sats for Satoshi"
-                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
+                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border ios:text-xl ios:sm:text-2xl ios:leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted"
                 selectionColor={primary}
                 value={input}
@@ -171,7 +179,7 @@ function DescriptionInput({
             ) : (
               <Input
                 placeholder="Sats for Satoshi"
-                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 text-2xl leading-[1.25] font-semibold2"
+                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 android:text-xl leading-[1.25] font-semibold2"
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}
@@ -361,10 +369,24 @@ export function DualCurrencyInput({
               (inputMode === "sats" && bitcoinDisplayFormat === "bip177")) && (
               <Text
                 className={cn(
-                  displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
-                  displayCharacterCount <= 14 &&
-                    displayCharacterCount >= 11 &&
-                    "sm:text-5xl",
+                  Platform.select({
+                    ios: cn(
+                      displayCharacterCount > 11
+                        ? "ios:text-4xl"
+                        : "ios:text-5xl",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "ios:sm:text-5xl",
+                    ),
+                    android: cn(
+                      displayCharacterCount > 11
+                        ? "android:text-4xl"
+                        : "android:text-[42px]",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "sm:android:text-[42px]",
+                    ),
+                  }),
                   "text-secondary-foreground font-bold2 !leading-[1.5]",
                   !text && "text-muted",
                 )}
@@ -376,10 +398,24 @@ export function DualCurrencyInput({
             )}
             <Text
               className={cn(
-                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 14 &&
-                  displayCharacterCount >= 11 &&
-                  "sm:text-5xl",
+                Platform.select({
+                  ios: cn(
+                    displayCharacterCount > 11
+                      ? "ios:text-4xl"
+                      : "ios:text-5xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "ios:sm:text-5xl",
+                  ),
+                  android: cn(
+                    displayCharacterCount > 11
+                      ? "android:text-4xl"
+                      : "android:text-[42px]",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "sm:android:text-[42px]",
+                  ),
+                }),
                 "font-semibold2 !leading-[1.5]",
                 !text && "text-muted",
                 validationMessage && "text-destructive",
@@ -400,10 +436,24 @@ export function DualCurrencyInput({
             {inputMode === "sats" && bitcoinDisplayFormat === "sats" && (
               <Text
                 className={cn(
-                  displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
-                  displayCharacterCount <= 14 &&
-                    displayCharacterCount >= 11 &&
-                    "sm:text-5xl",
+                  Platform.select({
+                    ios: cn(
+                      displayCharacterCount > 11
+                        ? "ios:text-4xl"
+                        : "ios:text-5xl",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "ios:sm:text-5xl",
+                    ),
+                    android: cn(
+                      displayCharacterCount > 11
+                        ? "android:text-4xl"
+                        : "android:text-[42px]",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "sm:android:text-[42px]",
+                    ),
+                  }),
                   "text-secondary-foreground font-semibold2 !leading-[1.5]",
                   !text && "text-muted",
                 )}
@@ -416,13 +466,13 @@ export function DualCurrencyInput({
             <Pressable onPress={toggleInputMode}>
               <View className="flex flex-row gap-2 items-center justify-center">
                 {getFiatAmount ? (
-                  <Text className="text-secondary-foreground text-3xl font-semibold2">
+                  <Text className="text-secondary-foreground ios:text-3xl android:text-2xl font-semibold2">
                     {inputMode === "fiat"
                       ? formatBitcoinAmount(+amount, bitcoinDisplayFormat)
                       : getFiatAmount(+amount) || ""}
                   </Text>
                 ) : (
-                  <Skeleton className="w-16 text-3xl" />
+                  <Skeleton className="w-16 ios:text-3xl android:text-2xl" />
                 )}
                 <SwapIcon
                   className="text-secondary-foreground"
@@ -502,7 +552,9 @@ export function DualCurrencyInput({
                       <Text
                         className={cn(
                           "font-bold2",
-                          label === "000" ? "text-xl" : "text-3xl",
+                          label === "000"
+                            ? "ios:text-xl android:text-xl"
+                            : "ios:text-3xl android:text-3xl",
                           isDisabledKey && "text-muted-foreground",
                         )}
                       >

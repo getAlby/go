@@ -1,7 +1,7 @@
 import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { AlertCircleIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
@@ -97,17 +97,39 @@ export function ConfirmPayment() {
       <Screen title="Confirm Payment" />
       <View className="flex-1 justify-around items-center p-6">
         <View className="flex flex-col gap-2">
-          <Text className="text-center text-muted-foreground font-medium2 sm:text-lg">
+          <Text
+            className={cn(
+              Platform.select({
+                ios: "ios:text-base ios:sm:text-lg",
+                android: "android:text-base",
+              }),
+              "text-center text-muted-foreground font-medium2",
+            )}
+          >
             Send
           </Text>
           <View className="flex flex-row items-center justify-center gap-2">
             {bitcoinDisplayFormat === "bip177" && (
               <Text
                 className={cn(
-                  displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
-                  displayCharacterCount <= 14 &&
-                    displayCharacterCount >= 11 &&
-                    "sm:text-5xl",
+                  Platform.select({
+                    ios: cn(
+                      displayCharacterCount > 11
+                        ? "ios:text-4xl"
+                        : "ios:text-5xl",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "ios:sm:text-5xl",
+                    ),
+                    android: cn(
+                      displayCharacterCount > 11
+                        ? "android:text-3xl"
+                        : "android:text-[42px]",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "sm:android:text-[42px]",
+                    ),
+                  }),
                   "text-secondary-foreground !leading-[1.5] font-bold2",
                 )}
               >
@@ -116,10 +138,24 @@ export function ConfirmPayment() {
             )}
             <Text
               className={cn(
-                displayCharacterCount > 11 ? "text-4xl" : "text-5xl",
-                displayCharacterCount <= 14 &&
-                  displayCharacterCount >= 11 &&
-                  "sm:text-5xl",
+                Platform.select({
+                  ios: cn(
+                    displayCharacterCount > 11
+                      ? "ios:text-4xl"
+                      : "ios:text-5xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "ios:sm:text-5xl",
+                  ),
+                  android: cn(
+                    displayCharacterCount > 11
+                      ? "android:text-3xl"
+                      : "android:text-[42px]",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "sm:android:text-[42px]",
+                  ),
+                }),
                 "!leading-[1.5] font-bold2",
               )}
             >
@@ -127,10 +163,24 @@ export function ConfirmPayment() {
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
-                    displayCharacterCount > 11 ? "text-3xl" : "text-4xl",
-                    displayCharacterCount <= 14 &&
-                      displayCharacterCount >= 11 &&
-                      "sm:text-4xl",
+                    Platform.select({
+                      ios: cn(
+                        displayCharacterCount > 11
+                          ? "ios:text-4xl"
+                          : "ios:text-5xl",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "ios:sm:text-5xl",
+                      ),
+                      android: cn(
+                        displayCharacterCount > 11
+                          ? "android:text-3xl"
+                          : "android:text-[42px]",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "sm:android:text-[42px]",
+                      ),
+                    }),
                     "text-secondary-foreground font-semibold2",
                   )}
                 >
@@ -141,7 +191,7 @@ export function ConfirmPayment() {
             </Text>
           </View>
           {getFiatAmount && (
-            <Text className="text-center text-secondary-foreground text-3xl font-semibold2">
+            <Text className="text-center text-secondary-foreground ios:text-3xl android:text-2xl font-semibold2">
               {getFiatAmount(amountToPaySats)}
             </Text>
           )}

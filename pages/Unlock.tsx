@@ -46,7 +46,7 @@ export function Unlock() {
       />
       <View className="flex-1 flex items-center justify-center gap-6">
         <AlbyGoLogomark className="mb-10 w-48 h-48" />
-        <Text className="font-semibold2 text-4xl text-center">
+        <Text className="font-semibold2 ios:text-4xl android:text-3xl text-center">
           Unlock to continue
         </Text>
       </View>

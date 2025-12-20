@@ -2,7 +2,7 @@ import type { Nip47Transaction } from "@getalby/sdk";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
-import { Share, View } from "react-native";
+import { Platform, Share, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { CopyIcon, ShareIcon } from "~/components/Icons";
@@ -13,7 +13,7 @@ import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
-import { formatBitcoinAmount } from "~/lib/utils";
+import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 export function CreateInvoice() {
   const getFiatAmount = useGetFiatAmount();
@@ -153,17 +153,41 @@ export function CreateInvoice() {
           <View className="flex-1 justify-center items-center gap-6 mt-4">
             <View className="flex flex-row justify-center items-center gap-2">
               <Loading />
-              <Text className="text-lg sm:text-xl font-medium2">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-lg ios:sm:text-xl",
+                    android: "android:text-lg",
+                  }),
+                  "font-medium2",
+                )}
+              >
                 Waiting for payment
               </Text>
             </View>
             <QRCode value={invoice} showAvatar />
             <View className="flex flex-col items-center justify-center gap-2">
-              <Text className="text-3xl font-semibold2">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-3xl ios:sm:text-4xl",
+                    android: "android:text-3xl",
+                  }),
+                  "font-semibold2",
+                )}
+              >
                 {formatBitcoinAmount(+amount, bitcoinDisplayFormat)}
               </Text>
               {getFiatAmount && (
-                <Text className="text-secondary-foreground text-xl font-semibold2">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-xl ios:sm:text-2xl",
+                      android: "android:text-xl",
+                    }),
+                    "text-secondary-foreground font-semibold2",
+                  )}
+                >
                   {getFiatAmount(+amount)}
                 </Text>
               )}

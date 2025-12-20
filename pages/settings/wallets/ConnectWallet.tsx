@@ -30,7 +30,7 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
-import { formatBitcoinAmount } from "~/lib/utils";
+import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 export function ConnectWallet() {
   let { options: optionsJSON, flow } = useLocalSearchParams<{
@@ -309,7 +309,15 @@ function ConnectView({
                   height={24}
                 />
               </TouchableOpacity>
-              <Text className="text-xl sm:text-2xl text-center font-bold2 text-secondary-foreground">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-xl ios:sm:text-2xl",
+                    android: "android:text-xl",
+                  }),
+                  "text-center font-bold2 text-secondary-foreground",
+                )}
+              >
                 Connection Details
               </Text>
             </View>
@@ -320,14 +328,14 @@ function ConnectView({
             >
               <View className="flex gap-2">
                 <Text className="font-semibold2">Requested methods</Text>
-                <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+                <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                   {requestMethods?.join(", ") || "all methods"}
                 </Text>
               </View>
               {notificationTypes && (
                 <View className="flex gap-2">
                   <Text className="font-semibold2">Notification Types</Text>
-                  <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+                  <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                     {notificationTypes.join(", ")}
                   </Text>
                 </View>
@@ -349,13 +357,13 @@ function ConnectView({
               {!!metadata && (
                 <View className="flex gap-2">
                   <Text className="font-semibold2">Metadata</Text>
-                  <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+                  <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                     {JSON.stringify(metadata)}
                   </Text>
                 </View>
               )}
               {returnTo && (
-                <Text className="mt-2 text-center text-secondary-foreground text-sm">
+                <Text className="mt-2 text-center text-secondary-foreground ios:text-sm android:text-xs">
                   You will return to {returnTo} after confirming
                 </Text>
               )}
@@ -363,13 +371,53 @@ function ConnectView({
           </View>
         </View>
       </Modal>
-      <Text className="sm:text-lg text-center">
-        <Text className="sm:text-lg font-semibold2">{name}</Text> is requesting{" "}
+      <Text
+        className={cn(
+          Platform.select({
+            ios: "ios:text-base ios:sm:text-lg",
+            android: "android:text-base",
+          }),
+          "text-center",
+        )}
+      >
+        <Text
+          className={cn(
+            Platform.select({
+              ios: "ios:text-base ios:sm:text-lg",
+              android: "android:text-base",
+            }),
+            "font-semibold2",
+          )}
+        >
+          {name}
+        </Text>{" "}
+        is requesting{" "}
         {!hasPayPermissions && (
-          <Text className="sm:text-lg font-semibold2">receive-only </Text>
+          <Text
+            className={cn(
+              Platform.select({
+                ios: "ios:text-base ios:sm:text-lg",
+                android: "android:text-base",
+              }),
+              "font-semibold2",
+            )}
+          >
+            receive-only{" "}
+          </Text>
         )}
         access to your{" "}
-        <Text className="sm:text-lg font-semibold2">Alby Hub</Text>.
+        <Text
+          className={cn(
+            Platform.select({
+              ios: "ios:text-base ios:sm:text-lg",
+              android: "android:text-base",
+            }),
+            "font-semibold2",
+          )}
+        >
+          Alby Hub
+        </Text>
+        .
       </Text>
 
       <View className="flex-1 flex justify-center">
@@ -378,9 +426,25 @@ function ConnectView({
             onPress={() => setShowDetails(true)}
             className="flex flex-row w-full justify-between items-center rounded-2xl p-4 bg-white dark:bg-muted"
           >
-            <Text className="sm:text-lg font-medium2">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-base ios:sm:text-lg",
+                  android: "android:text-base",
+                }),
+                "font-medium2",
+              )}
+            >
               {budgetRenewal !== "never" && (
-                <Text className="sm:text-lg font-medium2 capitalize">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-base ios:sm:text-lg",
+                      android: "android:text-base",
+                    }),
+                    "font-medium2 capitalize",
+                  )}
+                >
                   {budgetRenewal || "Monthly"}{" "}
                 </Text>
               )}
@@ -389,14 +453,22 @@ function ConnectView({
             <View className="flex flex-row items-center gap-4">
               {maxAmount && (
                 <View>
-                  <Text className="text-right sm:text-lg text-secondary-foreground font-medium2">
+                  <Text
+                    className={cn(
+                      Platform.select({
+                        ios: "ios:text-base ios:sm:text-lg",
+                        android: "android:text-base",
+                      }),
+                      "text-right text-secondary-foreground font-medium2",
+                    )}
+                  >
                     {formatBitcoinAmount(
                       Math.floor(maxAmount / 1000),
                       bitcoinDisplayFormat,
                     )}
                   </Text>
                   {getFiatAmount && (
-                    <Text className="text-right text-sm text-muted-foreground">
+                    <Text className="text-right ios:text-sm android:text-xs text-muted-foreground">
                       {getFiatAmount(Math.floor(maxAmount / 1000))}
                     </Text>
                   )}
@@ -410,7 +482,7 @@ function ConnectView({
             </View>
           </TouchableOpacity>
         )}
-        <Text className="text-center text-secondary-foreground text-sm px-4 my-2">
+        <Text className="text-center text-secondary-foreground ios:text-sm android:text-xs px-4 my-2">
           You can edit permissions and revoke access at any time in your Alby
           Hub settings.
         </Text>
