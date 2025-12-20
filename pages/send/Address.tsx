@@ -27,6 +27,7 @@ import { Text } from "~/components/ui/text";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
+import { cn } from "~/lib/utils";
 
 interface ContactInputProps {
   lnAddress: string;
@@ -131,14 +132,22 @@ function ContactInput({
                   height={24}
                 />
               </TouchableOpacity>
-              <Text className="text-xl sm:text-2xl font-semibold2 text-secondary-foreground">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-xl ios:sm:text-2xl",
+                    android: "android:text-xl",
+                  }),
+                  "font-semibold2 text-secondary-foreground",
+                )}
+              >
                 Add to Contacts
               </Text>
             </View>
             {isIOS ? (
               <BottomSheetTextInput
                 placeholder="Satoshi Nakamoto"
-                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border text-2xl leading-[1.25] font-semibold2 caret-primary"
+                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border ios:text-xl ios:sm:text-2xl ios:leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted"
                 selectionColor={primary}
                 value={input}
@@ -149,7 +158,7 @@ function ContactInput({
             ) : (
               <Input
                 placeholder="Satoshi Nakamoto"
-                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 text-2xl font-semibold2"
+                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 android:text-xl leading-[1.25] font-semibold2"
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}
@@ -213,7 +222,7 @@ export function Address() {
           <View className="flex-1 flex flex-col gap-8">
             <View className="flex items-center justify-center mt-6 px-12 relative">
               <Input
-                className="text-center border-transparent bg-transparent text-2xl leading-[1.25] font-semibold2 w-full"
+                className="text-center border-transparent bg-transparent ios:text-2xl android:text-xl leading-[1.25] font-semibold2 w-full"
                 placeholder="hello@getalby.com"
                 value={keyboardText}
                 onChangeText={setKeyboardText}
@@ -240,7 +249,7 @@ export function Address() {
                 />
               )}
             <View className="flex-1 gap-4">
-              <Text className="text-xl text-center font-semibold2">
+              <Text className="ios:text-xl android:text-lg text-center font-semibold2">
                 Address Book
               </Text>
               {filteredAddressBookEntries.length > 0 ? (

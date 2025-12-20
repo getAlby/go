@@ -1,10 +1,11 @@
 import { openURL } from "expo-linking";
 import type { ReactNode } from "react";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { LinkIcon } from "~/components/Icons";
 import { LongTextBottomSheet } from "~/components/LongTextBottomSheet";
 import { Text } from "~/components/ui/text";
 import { type LNURLPaymentSuccessAction } from "~/lib/lnurl";
+import { cn } from "~/lib/utils";
 
 interface SuccessMessageProps {
   lnurlSuccessAction?: LNURLPaymentSuccessAction;
@@ -31,7 +32,15 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
         title="Message From Receiver"
         content={lnurlSuccessAction.description}
       >
-        <Text className="text-center sm:text-lg text-secondary-foreground p-3">
+        <Text
+          className={cn(
+            Platform.select({
+              ios: "ios:text-base ios:sm:text-lg",
+              android: "android:text-base",
+            }),
+            "text-center text-secondary-foreground p-3",
+          )}
+        >
           {lnurlSuccessAction.description}
         </Text>
         {lnurlSuccessAction.url && (

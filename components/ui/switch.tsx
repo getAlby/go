@@ -32,7 +32,7 @@ function Switch({
   return (
     <LinearGradient
       className={cn(
-        "h-[26px] w-[42px] rounded-full  border",
+        "h-[26px] w-[42px] rounded-full bg-primary border",
         props.disabled && "opacity-50",
         props.checked ? "border-secondary" : "border-muted",
       )}

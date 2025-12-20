@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Pressable, View } from "react-native";
+import { FlatList, Platform, Pressable, View } from "react-native";
 import Screen from "~/components/Screen";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
@@ -71,7 +71,15 @@ export function Notifications() {
       <View className="flex-1">
         <View className="flex-row items-center justify-between gap-2">
           <Pressable onPress={toggleNotifications}>
-            <Text className="sm:text-lg font-semibold2">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-base ios:sm:text-lg",
+                  android: "android:text-base",
+                }),
+                "font-semibold2",
+              )}
+            >
               Show app notifications
             </Text>
           </Pressable>
@@ -85,7 +93,15 @@ export function Notifications() {
         {wallets.length > 1 && (
           <>
             <View className="px-8 my-6">
-              <Text className="text-sm sm:text-base text-center text-secondary-foreground">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-sm ios:sm:text-base",
+                    android: "android:text-sm",
+                  }),
+                  "text-center text-secondary-foreground",
+                )}
+              >
                 Choose from which wallets you want to receive app notifications
               </Text>
             </View>
@@ -112,7 +128,15 @@ export function Notifications() {
           )}
         >
           <Pressable onPress={toggleTTS}>
-            <Text className="sm:text-lg font-semibold2">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-base ios:sm:text-lg",
+                  android: "android:text-base",
+                }),
+                "font-semibold2",
+              )}
+            >
               Spoken notifications
             </Text>
           </Pressable>
@@ -160,7 +184,17 @@ function WalletNotificationSwitch({
       className="flex-row items-center justify-between gap-2 mb-6"
     >
       <Pressable onPress={handleSwitchToggle}>
-        <Text className="sm:text-lg font-medium2">{wallet.name}</Text>
+        <Text
+          className={cn(
+            Platform.select({
+              ios: "ios:text-base ios:sm:text-lg",
+              android: "android:text-base",
+            }),
+            "font-medium2",
+          )}
+        >
+          {wallet.name}
+        </Text>
       </Pressable>
       <Switch
         disabled={isLoading}

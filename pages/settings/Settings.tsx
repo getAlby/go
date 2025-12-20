@@ -1,5 +1,11 @@
 import { Link, router } from "expo-router";
-import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import {
   AddressBookIcon,
   BitcoinIcon,
@@ -26,6 +32,7 @@ import { deregisterWalletNotifications } from "~/lib/notifications";
 import { removeAllInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { cn } from "~/lib/utils";
 
 export function Settings() {
   const wallets = useAppStore((store) => store.wallets);
@@ -47,7 +54,17 @@ export function Settings() {
                   width={24}
                   height={24}
                 />
-                <Text className="font-medium2 text-lg sm:text-xl">Wallets</Text>
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-lg ios:sm:text-xl",
+                      android: "android:text-lg",
+                    }),
+                    "font-medium2",
+                  )}
+                >
+                  Wallets
+                </Text>
                 <ChevronRightIcon
                   className="ml-auto text-muted-foreground"
                   width={16}
@@ -63,7 +80,15 @@ export function Settings() {
                   width={24}
                   height={24}
                 />
-                <Text className="font-medium2 text-lg sm:text-xl">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-lg ios:sm:text-xl",
+                      android: "android:text-lg",
+                    }),
+                    "font-medium2",
+                  )}
+                >
                   Address Book
                 </Text>
                 <ChevronRightIcon
@@ -81,7 +106,15 @@ export function Settings() {
                   width={24}
                   height={24}
                 />
-                <Text className="font-medium2 text-lg sm:text-xl">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-lg ios:sm:text-xl",
+                      android: "android:text-lg",
+                    }),
+                    "font-medium2",
+                  )}
+                >
                   Units & Currency
                 </Text>
                 <ChevronRightIcon
@@ -100,7 +133,15 @@ export function Settings() {
                     width={24}
                     height={24}
                   />
-                  <Text className="font-medium2 text-lg sm:text-xl">
+                  <Text
+                    className={cn(
+                      Platform.select({
+                        ios: "ios:text-lg ios:sm:text-xl",
+                        android: "android:text-lg",
+                      }),
+                      "font-medium2",
+                    )}
+                  >
                     Notifications
                   </Text>
                   <ChevronRightIcon
@@ -119,7 +160,15 @@ export function Settings() {
                   width={24}
                   height={24}
                 />
-                <Text className="font-medium2 text-lg sm:text-xl">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-lg ios:sm:text-xl",
+                      android: "android:text-lg",
+                    }),
+                    "font-medium2",
+                  )}
+                >
                   Security
                 </Text>
                 <ChevronRightIcon
@@ -139,8 +188,26 @@ export function Settings() {
                 width={24}
                 height={24}
               />
-              <Text className="font-medium2 text-lg sm:text-xl">Theme</Text>
-              <Text className="text-secondary-foreground text-lg sm:text-xl">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-lg ios:sm:text-xl",
+                    android: "android:text-lg",
+                  }),
+                  "font-medium2",
+                )}
+              >
+                Theme
+              </Text>
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-lg ios:sm:text-xl",
+                    android: "android:text-lg",
+                  }),
+                  "text-secondary-foreground",
+                )}
+              >
                 (
                 {colorScheme.charAt(0).toUpperCase() + colorScheme.substring(1)}
                 )
@@ -162,7 +229,15 @@ export function Settings() {
                       width={24}
                       height={24}
                     />
-                    <Text className="font-medium2 text-lg sm:text-xl">
+                    <Text
+                      className={cn(
+                        Platform.select({
+                          ios: "ios:text-lg ios:sm:text-xl",
+                          android: "android:text-lg",
+                        }),
+                        "font-medium2",
+                      )}
+                    >
                       Sign out
                     </Text>
                   </TouchableOpacity>
@@ -178,7 +253,15 @@ export function Settings() {
                       width={24}
                       height={24}
                     />
-                    <Text className="font-medium2 text-lg sm:text-xl">
+                    <Text
+                      className={cn(
+                        Platform.select({
+                          ios: "ios:text-lg ios:sm:text-xl",
+                          android: "android:text-lg",
+                        }),
+                        "font-medium2",
+                      )}
+                    >
                       Open Onboarding
                     </Text>
                   </TouchableOpacity>
@@ -218,7 +301,15 @@ export function Settings() {
                       width={24}
                       height={24}
                     />
-                    <Text className="text-destructive font-medium2 text-lg sm:text-xl">
+                    <Text
+                      className={cn(
+                        Platform.select({
+                          ios: "ios:text-lg ios:sm:text-xl",
+                          android: "android:text-lg",
+                        }),
+                        "text-destructive font-medium2",
+                      )}
+                    >
                       Reset Wallet
                     </Text>
                   </TouchableOpacity>
@@ -250,7 +341,7 @@ export function Settings() {
               <View className="flex flex-row items-center justify-center gap-2">
                 <AlbyGo width={82} height={20} />
                 <View className="border-muted-foreground border-[0.5px] py-2" />
-                <Text className="text-muted-foreground font-medium2 text-sm">
+                <Text className="text-muted-foreground font-medium2 ios:text-sm android:text-xs">
                   v{Constants.expoConfig?.version}
                 </Text>
               </View>

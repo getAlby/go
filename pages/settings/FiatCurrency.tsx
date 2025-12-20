@@ -1,6 +1,12 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Platform,
+  Pressable,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { CountryFlag } from "~/components/Flag";
 import Loading from "~/components/Loading";
@@ -91,10 +97,27 @@ function CurrencyList() {
                   className="rounded border border-muted"
                 />
                 <View className="flex-1 flex flex-row items-center gap-4">
-                  <Text numberOfLines={1} className="sm:text-lg font-medium2">
+                  <Text
+                    numberOfLines={1}
+                    className={cn(
+                      Platform.select({
+                        ios: "ios:text-base ios:sm:text-lg",
+                        android: "android:text-base",
+                      }),
+                      "font-medium2",
+                    )}
+                  >
                     {name}
                   </Text>
-                  <Text className="sm:text-lg font-medium2 text-muted-foreground">
+                  <Text
+                    className={cn(
+                      Platform.select({
+                        ios: "ios:text-base ios:sm:text-lg",
+                        android: "android:text-base",
+                      }),
+                      "font-medium2 text-muted-foreground",
+                    )}
+                  >
                     {code}
                   </Text>
                 </View>
@@ -125,7 +148,12 @@ export function FiatCurrency() {
 
       <View className="flex-row items-center justify-between gap-2 mb-2">
         <Pressable onPress={toggleFiatCurrency}>
-          <Text className="sm:text-lg font-semibold2">
+          <Text
+            className={cn(
+              Platform.OS === "ios" ? "ios:sm:text-lg" : "",
+              "font-semibold2",
+            )}
+          >
             Display fiat currency
           </Text>
         </Pressable>

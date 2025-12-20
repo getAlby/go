@@ -36,7 +36,10 @@ const buttonTextVariants = cva("", {
     size: {
       default: "font-medium2",
       sm: "",
-      lg: "text-xl sm:text-2xl font-bold2",
+      lg: Platform.select({
+        ios: "ios:text-xl ios:sm:text-2xl font-bold2",
+        android: "android:text-xl font-bold2",
+      }),
     },
   },
   defaultVariants: {
@@ -95,7 +98,7 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
             start={[0, 0]}
             end={[1, 1]}
             className={cn(
-              "border border-secondary",
+              "border border-secondary bg-primary",
               size === "lg" ? "rounded-2xl" : "rounded-xl",
             )}
           >

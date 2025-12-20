@@ -86,8 +86,8 @@ export function Home() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      Math.floor((balance?.balance || 0) / 1000).toString().length +
-      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+      new Intl.NumberFormat().format(Math.floor((balance?.balance || 0) / 1000))
+        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [bitcoinDisplayFormat, balance?.balance],
   );
 
@@ -148,7 +148,13 @@ export function Home() {
                   <Text
                     numberOfLines={1}
                     ellipsizeMode="tail"
-                    className="text-center text-muted-foreground font-medium2 text-lg sm:text-xl px-4"
+                    className={cn(
+                      Platform.select({
+                        ios: "ios:text-lg ios:sm:text-xl",
+                        android: "android:text-lg",
+                      }),
+                      "text-center text-muted-foreground font-medium2 px-4",
+                    )}
                   >
                     {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
                   </Text>
@@ -165,10 +171,24 @@ export function Home() {
                     <>
                       <Text
                         className={cn(
-                          displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                          displayCharacterCount <= 10 &&
-                            displayCharacterCount >= 8 &&
-                            "sm:text-5xl",
+                          Platform.select({
+                            ios: cn(
+                              displayCharacterCount > 11
+                                ? "ios:text-4xl"
+                                : "ios:text-5xl",
+                              displayCharacterCount <= 14 &&
+                                displayCharacterCount >= 11 &&
+                                "ios:sm:text-5xl",
+                            ),
+                            android: cn(
+                              displayCharacterCount > 11
+                                ? "android:text-4xl"
+                                : "android:text-[42px]",
+                              displayCharacterCount <= 14 &&
+                                displayCharacterCount >= 11 &&
+                                "sm:android:text-[42px]",
+                            ),
+                          }),
                           "text-secondary-foreground !leading-[1.5] font-bold2",
                           (balanceDisplayMode === "hidden" ||
                             (balanceDisplayMode === "sats" &&
@@ -181,10 +201,24 @@ export function Home() {
                       </Text>
                       <Text
                         className={cn(
-                          displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                          displayCharacterCount <= 10 &&
-                            displayCharacterCount >= 8 &&
-                            "sm:text-5xl",
+                          Platform.select({
+                            ios: cn(
+                              displayCharacterCount > 11
+                                ? "ios:text-4xl"
+                                : "ios:text-5xl",
+                              displayCharacterCount <= 14 &&
+                                displayCharacterCount >= 11 &&
+                                "ios:sm:text-5xl",
+                            ),
+                            android: cn(
+                              displayCharacterCount > 11
+                                ? "android:text-4xl"
+                                : "android:text-[42px]",
+                              displayCharacterCount <= 14 &&
+                                displayCharacterCount >= 11 &&
+                                "sm:android:text-[42px]",
+                            ),
+                          }),
                           "!leading-[1.5] font-bold2",
                         )}
                       >
@@ -203,12 +237,24 @@ export function Home() {
                         bitcoinDisplayFormat === "sats" && (
                           <Text
                             className={cn(
-                              displayCharacterCount > 8
-                                ? "text-4xl"
-                                : "text-5xl",
-                              displayCharacterCount <= 10 &&
-                                displayCharacterCount >= 8 &&
-                                "sm:text-5xl",
+                              Platform.select({
+                                ios: cn(
+                                  displayCharacterCount > 11
+                                    ? "ios:text-4xl"
+                                    : "ios:text-5xl",
+                                  displayCharacterCount <= 14 &&
+                                    displayCharacterCount >= 11 &&
+                                    "ios:sm:text-5xl",
+                                ),
+                                android: cn(
+                                  displayCharacterCount > 11
+                                    ? "android:text-4xl"
+                                    : "android:text-[42px]",
+                                  displayCharacterCount <= 14 &&
+                                    displayCharacterCount >= 11 &&
+                                    "sm:android:text-[42px]",
+                                ),
+                              }),
                               "text-secondary-foreground !leading-[1.5] font-bold2",
                             )}
                           >
@@ -217,7 +263,7 @@ export function Home() {
                         )}
                     </>
                   ) : (
-                    <Skeleton className="w-48 text-5xl my-2.5" />
+                    <Skeleton className="w-48 ios:text-5xl android:text-[42px] my-2.5" />
                   )}
                 </View>
                 {/* Hide conversion if fiat currency is not selected */}
@@ -226,7 +272,7 @@ export function Home() {
                     {balance &&
                     !refreshingBalance &&
                     (balanceDisplayMode === "sats" ? getFiatAmount : true) ? (
-                      <Text className="text-center text-3xl text-secondary-foreground font-semibold2">
+                      <Text className="text-center ios:text-3xl android:text-3xl text-secondary-foreground font-semibold2">
                         {balanceDisplayMode === "sats" &&
                           getFiatAmount?.(Math.floor(balance.balance / 1000))}
                         {balanceDisplayMode === "fiat" &&
@@ -237,7 +283,7 @@ export function Home() {
                         {balanceDisplayMode === "hidden" && " "}
                       </Text>
                     ) : (
-                      <Skeleton className="w-32 text-3xl" />
+                      <Skeleton className="w-32 ios:text-3xl android:text-3xl" />
                     )}
                   </View>
                 )}
@@ -310,14 +356,22 @@ function MainButton({
           onPressOut={() => setPressed(false)}
         >
           <LinearGradient
-            className="flex-1 p-6 border justify-center items-center border-secondary rounded-3xl "
+            className="flex-1 p-6 border justify-center items-center border-secondary rounded-3xl bg-primary"
             colors={[secondary, primary]}
             start={[0, 0]}
             end={[1, 1]}
           >
             <View className="flex flex-col justify-center items-center gap-4">
               <Icon />
-              <Text className="font-bold2 text-2xl sm:text-3xl text-primary-foreground">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-2xl ios:sm:text-3xl",
+                    android: "android:text-2xl",
+                  }),
+                  "font-bold2 text-primary-foreground",
+                )}
+              >
                 {title}
               </Text>
             </View>

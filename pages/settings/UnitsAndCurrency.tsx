@@ -1,10 +1,11 @@
 import { Link } from "expo-router";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import { BitcoinIcon, ChevronRightIcon } from "~/components/Icons";
 import ShitcoinIcon from "~/components/icons/ShitcoinIcon";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
+import { cn } from "~/lib/utils";
 
 export function UnitsAndCurrency() {
   return (
@@ -18,7 +19,15 @@ export function UnitsAndCurrency() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-lg sm:text-xl">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-lg ios:sm:text-xl",
+                  android: "android:text-lg",
+                }),
+                "font-medium2",
+              )}
+            >
               Bitcoin Units
             </Text>
             <ChevronRightIcon
@@ -32,7 +41,14 @@ export function UnitsAndCurrency() {
         <Link href="/settings/fiat-currency" asChild>
           <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-4">
             <ShitcoinIcon width={24} height={24} />
-            <Text className="font-medium2 text-lg sm:text-xl">
+            <Text
+              className={cn(
+                Platform.OS === "ios"
+                  ? "ios:text-lg ios:sm:text-xl"
+                  : "android:text-lg",
+                "font-medium2",
+              )}
+            >
               Fiat Currency
             </Text>
             <ChevronRightIcon

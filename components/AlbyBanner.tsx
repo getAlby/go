@@ -69,7 +69,7 @@ function AlbyBanner({ className }: { className?: string }) {
       >
         <XIcon className="text-muted-foreground" />
       </TouchableOpacity>
-      <Text className="font-semibold2 text-center text-lg">
+      <Text className="font-semibold2 text-center ios:text-lg android:text-base">
         ✨ Enjoying Alby Go?
       </Text>
       <Text className="text-secondary-foreground text-center">

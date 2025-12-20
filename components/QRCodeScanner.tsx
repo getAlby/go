@@ -67,7 +67,7 @@ function QRCodeScanner({
                 width={64}
                 height={64}
               />
-              <Text className="text-xl font-medium2 text-center">
+              <Text className="ios:text-xl android:text-lg font-medium2 text-center">
                 Camera Permission Denied
               </Text>
               <Text className="text-secondary-foreground text-center">

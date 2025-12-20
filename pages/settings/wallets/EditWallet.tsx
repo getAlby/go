@@ -1,7 +1,12 @@
 import * as Clipboard from "expo-clipboard";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { Alert as RNAlert, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  Alert as RNAlert,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import ConnectionInfoModal from "~/components/ConnectionInfoModal";
@@ -20,6 +25,7 @@ import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function EditWallet() {
   const { id } = useLocalSearchParams() as { id: string };
@@ -51,7 +57,7 @@ export function EditWallet() {
       {isDeleting ? (
         <View className="flex-1 justify-center items-center">
           <Loading />
-          <Text className="text-lg font-medium2 text-secondary-foreground mt-4">
+          <Text className="ios:text-lg android:text-base font-medium2 text-secondary-foreground mt-4">
             Deleting wallet
           </Text>
         </View>
@@ -80,7 +86,15 @@ export function EditWallet() {
                 width={24}
                 height={24}
               />
-              <Text className="font-medium2 text-lg sm:text-xl">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-lg ios:sm:text-xl",
+                    android: "android:text-lg",
+                  }),
+                  "font-medium2",
+                )}
+              >
                 Wallet Name
               </Text>
               <ChevronRightIcon
@@ -100,7 +114,15 @@ export function EditWallet() {
                 width={24}
                 height={24}
               />
-              <Text className="font-medium2 text-lg sm:text-xl">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-lg ios:sm:text-xl",
+                    android: "android:text-lg",
+                  }),
+                  "font-medium2",
+                )}
+              >
                 Lightning Address
               </Text>
               <ChevronRightIcon
@@ -123,7 +145,15 @@ export function EditWallet() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-lg sm:text-xl">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-lg ios:sm:text-xl",
+                  android: "android:text-lg",
+                }),
+                "font-medium2",
+              )}
+            >
               Connection Info
             </Text>
           </TouchableOpacity>
@@ -181,7 +211,15 @@ export function EditWallet() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-lg sm:text-xl">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-lg ios:sm:text-xl",
+                  android: "android:text-lg",
+                }),
+                "font-medium2",
+              )}
+            >
               Export Wallet
             </Text>
           </TouchableOpacity>
@@ -209,7 +247,15 @@ export function EditWallet() {
               width={24}
               height={24}
             />
-            <Text className="font-medium2 text-lg sm:text-xl">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-lg ios:sm:text-xl",
+                  android: "android:text-lg",
+                }),
+                "font-medium2",
+              )}
+            >
               Delete Wallet
             </Text>
           </TouchableOpacity>

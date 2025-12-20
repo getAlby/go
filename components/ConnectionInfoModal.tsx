@@ -63,7 +63,15 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
             >
               <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
-            <Text className="text-xl sm:text-2xl text-center font-bold2 text-secondary-foreground">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-xl ios:sm:text-2xl",
+                  android: "android:text-xl",
+                }),
+                "text-center font-bold2 text-secondary-foreground",
+              )}
+            >
               Connection Info
             </Text>
           </View>
@@ -94,21 +102,21 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
 
             <View className="flex gap-2">
               <Text className="font-semibold2">Capabilities</Text>
-              <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+              <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {capabilities?.join(", ")}
               </Text>
             </View>
 
             <View className="flex gap-2">
               <Text className="font-semibold2">App Pubkey</Text>
-              <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+              <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {nwcClient?.publicKey}
               </Text>
             </View>
 
             <View className="flex gap-2">
               <Text className="font-semibold2">Wallet Pubkey</Text>
-              <Text className="bg-muted p-2 rounded-md text-sm font-mono">
+              <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {nwcClient?.walletPubkey}
               </Text>
             </View>

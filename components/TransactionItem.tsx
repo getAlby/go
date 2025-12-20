@@ -84,7 +84,7 @@ export function TransactionItem({ tx }: Props) {
               {from !== undefined && <>&nbsp;{from}</>}
               {to !== undefined && <>&nbsp;{to}</>}
             </Text>
-            <Text className="text-secondary-foreground text-sm">
+            <Text className="text-secondary-foreground ios:text-sm android:text-xs">
               {dayjs.unix(tx.settled_at || tx.created_at).fromNow()}
             </Text>
           </View>

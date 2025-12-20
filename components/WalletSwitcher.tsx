@@ -5,7 +5,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef } from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { ChevronDownIcon, WalletIcon, XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
@@ -69,7 +69,13 @@ export function WalletSwitcher({
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          className="text-muted-foreground font-medium2 sm:text-lg"
+          className={cn(
+            Platform.select({
+              ios: "ios:text-base ios:sm:text-lg",
+              android: "android:text-base",
+            }),
+            "text-muted-foreground font-medium2",
+          )}
         >
           {selectedWallet?.name || DEFAULT_WALLET_NAME}
         </Text>
@@ -100,7 +106,15 @@ export function WalletSwitcher({
             >
               <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
-            <Text className="text-xl sm:text-2xl font-semibold2 text-secondary-foreground">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-xl ios:sm:text-2xl",
+                  android: "android:text-xl",
+                }),
+                "font-semibold2 text-secondary-foreground",
+              )}
+            >
               Switch Wallet
             </Text>
           </View>
@@ -140,7 +154,11 @@ export function WalletSwitcher({
                     />
                     <Text
                       className={cn(
-                        "text-lg sm:text-xl pr-16",
+                        Platform.select({
+                          ios: "ios:text-lg ios:sm:text-xl",
+                          android: "android:text-lg",
+                        }),
+                        "pr-16",
                         active ? "font-semibold2" : "font-medium2",
                       )}
                       numberOfLines={1}

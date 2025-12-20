@@ -5,7 +5,13 @@ import * as Clipboard from "expo-clipboard";
 import { Link, useLocalSearchParams } from "expo-router";
 import { nip19 } from "nostr-tools";
 import React from "react";
-import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { LinkIcon } from "~/components/Icons";
 import AcceptedTransactionIcon from "~/components/icons/AcceptedTransaction";
@@ -100,8 +106,8 @@ export function Transaction() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      Math.floor(transaction.amount / 1000).toString().length +
-      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+      new Intl.NumberFormat().format(Math.floor(transaction.amount / 1000))
+        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [transaction.amount, bitcoinDisplayFormat],
   );
 
@@ -122,7 +128,7 @@ export function Transaction() {
                 </View>
                 <Text
                   className={cn(
-                    "text-3xl font-semibold2 text-secondary-foreground",
+                    "ios:text-3xl android:text-2xl font-semibold2 text-secondary-foreground",
                     transaction.state === "pending" && "animate-pulse",
                   )}
                 >
@@ -140,11 +146,25 @@ export function Transaction() {
               <View className="flex items-center gap-2">
                 <Text
                   className={cn(
+                    Platform.select({
+                      ios: cn(
+                        displayCharacterCount > 11
+                          ? "ios:text-4xl"
+                          : "ios:text-5xl",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "ios:sm:text-5xl",
+                      ),
+                      android: cn(
+                        displayCharacterCount > 11
+                          ? "android:text-3xl"
+                          : "android:text-[42px]",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "sm:android:text-[42px]",
+                      ),
+                    }),
                     "gap-2 font-semibold2",
-                    displayCharacterCount > 8 ? "text-4xl" : "text-5xl",
-                    displayCharacterCount <= 10 &&
-                      displayCharacterCount >= 8 &&
-                      "sm:text-5xl",
                     transaction.type === "incoming" &&
                       transaction.state === "settled" &&
                       "text-receive",
@@ -156,7 +176,7 @@ export function Transaction() {
                   {bitcoinDisplayFormat === "sats" && (
                     <Text
                       className={cn(
-                        "text-4xl font-semibold2",
+                        "ios:text-4xl android:text-3xl font-semibold2",
                         transaction.type === "incoming" &&
                           transaction.state === "settled" &&
                           "text-receive",
@@ -168,7 +188,7 @@ export function Transaction() {
                   )}
                 </Text>
                 {getFiatAmount && (
-                  <Text className="text-3xl font-semibold2 text-secondary-foreground">
+                  <Text className="ios:text-3xl android:text-2xl font-semibold2 text-secondary-foreground">
                     {getFiatAmount(Math.floor(transaction.amount / 1000))}
                   </Text>
                 )}
@@ -207,7 +227,7 @@ export function Transaction() {
             automatically extracted and already displayed above as description */}
               {transaction.metadata?.nostr && eventId && npub && (
                 <View className="flex flex-row gap-3">
-                  <Text className="w-32 text-muted-foreground text-lg">
+                  <Text className="w-32 text-muted-foreground ios:text-lg android:text-base">
                     Nostr Zap
                   </Text>
                   <Link
@@ -217,7 +237,7 @@ export function Transaction() {
                     asChild
                   >
                     <Pressable className="flex-row flex-1 gap-1 items-center">
-                      <Text className="flex-1 font-medium2 text-lg">
+                      <Text className="flex-1 font-medium2 ios:text-lg android:text-base">
                         From {npub}
                       </Text>
                       <LinkIcon
@@ -268,7 +288,7 @@ export function Transaction() {
                 <TransactionDetailRow
                   title="Metadata"
                   content={JSON.stringify(metadata, null, 2)}
-                  className="text-sm font-mono bg-muted p-2 rounded-md"
+                  className="ios:text-sm android:text-xs font-mono bg-muted p-2 rounded-md"
                   copy
                 />
               )}

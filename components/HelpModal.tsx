@@ -10,6 +10,7 @@ import { LikeIcon, XIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Text, TextClassContext } from "~/components/ui/text";
 import { useThemeColor } from "~/lib/useThemeColor";
+import { cn } from "~/lib/utils";
 
 type HelpModalProps = {
   visible: boolean;
@@ -58,7 +59,15 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
             >
               <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
-            <Text className="text-xl sm:text-2xl text-center font-bold2 text-secondary-foreground">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-xl ios:sm:text-2xl",
+                  android: "android:text-xl",
+                }),
+                "text-center font-bold2 text-secondary-foreground",
+              )}
+            >
               How To Connect?
             </Text>
           </View>
@@ -84,7 +93,7 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
             onPress={onClose}
           >
             <LikeIcon className="text-muted-foreground" />
-            <Text className="text-lg">Okay</Text>
+            <Text className="ios:text-lg android:text-base">Okay</Text>
           </Button>
         </View>
       </View>
