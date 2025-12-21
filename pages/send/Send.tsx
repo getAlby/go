@@ -104,13 +104,11 @@ export function Send() {
   React.useEffect(() => {
     if (url) {
       (async () => {
-        const result = await loadPayment(url, amount);
+        await loadPayment(url, amount);
         // Delay the camera to show the error message
-        if (!result) {
-          setTimeout(() => {
-            setStartScanning(true);
-          }, 2000);
-        }
+        setTimeout(() => {
+          setStartScanning(true);
+        }, 2000);
       })();
     } else {
       setStartScanning(true);
