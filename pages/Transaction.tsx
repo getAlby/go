@@ -114,10 +114,10 @@ export function Transaction() {
   return (
     <>
       <Screen title="Transaction" />
-      <View className="flex-1 p-6 pt-12">
+      <View className="flex-1 pt-2">
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View className="flex gap-10">
-            <View className="flex gap-8 justify-center items-center">
+          <View className="flex-1 p-6 pt-10 gap-12">
+            <View className="flex gap-10 justify-center items-center">
               <View className="flex items-center gap-8">
                 <View
                   className={cn(
@@ -320,12 +320,12 @@ function TransactionDetailRow(props: {
             });
           }}
         >
-          <Text className={cn("font-medium2", props.className)}>
+          <Text className={cn("font-medium2 flex-shrink", props.className)}>
             {props.content}
           </Text>
         </TouchableOpacity>
       ) : (
-        <Text className={cn("font-medium2", props.className)}>
+        <Text className={cn("font-medium2 flex-shrink", props.className)}>
           {props.content}
         </Text>
       )}
