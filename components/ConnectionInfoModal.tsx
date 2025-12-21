@@ -18,11 +18,33 @@ type ConnectionInfoModalProps = {
 };
 
 function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
+  const { shadow } = useThemeColor("shadow");
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   const capabilities = wallets[selectedWalletId].nwcCapabilities;
   const nwcClient = useAppStore((store) => store.nwcClient);
-  const { shadow } = useThemeColor("shadow");
+  const [relayStatuses, setRelayStatuses] = React.useState<boolean[]>([]);
+  React.useEffect(() => {
+    if (!nwcClient) {
+      return;
+    }
+    (async () => {
+      const _relayStatuses = [];
+      for (const relayUrl of nwcClient.relayUrls) {
+        try {
+          await nwcClient.pool.ensureRelay(relayUrl, {
+            connectionTimeout: 2000,
+          });
+          _relayStatuses.push(true);
+        } catch (error) {
+          console.error("Failed to connect to relay", { relayUrl, error });
+          _relayStatuses.push(false);
+        }
+      }
+      setRelayStatuses(_relayStatuses);
+    })();
+  }, [nwcClient]);
+
   return (
     <Modal
       transparent
@@ -82,7 +104,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
           >
             <View className="flex gap-2">
               <Text className="font-semibold2">Relays</Text>
-              {nwcClient?.relayUrls.map((relayUrl) => (
+              {nwcClient?.relayUrls.map((relayUrl, index) => (
                 <View
                   className="flex flex-row items-center gap-2"
                   key={relayUrl}
@@ -91,9 +113,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
                   <View
                     className={cn(
                       "rounded-full w-2 h-2",
-                      nwcClient.pool.listConnectionStatus().get(relayUrl)
-                        ? "bg-receive"
-                        : "bg-destructive",
+                      relayStatuses[index] ? "bg-receive" : "bg-destructive",
                     )}
                   ></View>
                 </View>
