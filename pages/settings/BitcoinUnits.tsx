@@ -1,8 +1,8 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Platform, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { CheckIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Text } from "~/components/ui/text";
 import { setNotificationSettings } from "~/lib/notificationsNativeStorage";
 import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
@@ -24,53 +24,57 @@ export function BitcoinUnits() {
   };
 
   return (
-    <View className="flex-1 py-6">
+    <>
       <Screen title="Bitcoin Units" />
       <View className="flex-1">
-        <View className="px-8">
-          <Text className="text-lg text-center text-muted-foreground">
+        <View className="px-8 my-6">
+          <Text
+            className={cn(
+              Platform.select({
+                ios: "ios:text-sm ios:sm:text-base",
+                android: "android:text-sm",
+              }),
+              "text-center text-secondary-foreground",
+            )}
+          >
             Choose which bitcoin units should be displayed in the app.
           </Text>
         </View>
-        <View className="flex gap-6 px-6 mt-12">
-          <View className="flex-row items-center justify-between">
-            <TouchableOpacity
-              onPress={() => setDisplayFormat("bip177")}
-              className="flex flex-row items-center gap-4"
+        <View className="flex gap-6 px-6">
+          <Checkbox
+            isChecked={bitcoinDisplayFormat === "bip177"}
+            onPress={() => setDisplayFormat("bip177")}
+          >
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-base ios:sm:text-lg",
+                  android: "android:text-base",
+                }),
+                "font-semibold2",
+              )}
             >
-              <View
-                className={cn(
-                  bitcoinDisplayFormat === "bip177"
-                    ? "bg-primary border-background/80"
-                    : "border-foreground/5",
-                  "shadow shadow-gray-200 px-1 rounded-xl aspect-square flex items-center justify-center border-2",
-                )}
-              >
-                <CheckIcon className="text-white" width={16} height={16} />
-              </View>
-              <Text className="text-lg font-medium2">₿</Text>
-            </TouchableOpacity>
-          </View>
-          <View className="flex-row items-center justify-between">
-            <TouchableOpacity
-              onPress={() => setDisplayFormat("sats")}
-              className="flex flex-row items-center gap-4"
+              ₿
+            </Text>
+          </Checkbox>
+          <Checkbox
+            isChecked={bitcoinDisplayFormat === "sats"}
+            onPress={() => setDisplayFormat("sats")}
+          >
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-base ios:sm:text-lg",
+                  android: "android:text-base",
+                }),
+                "font-semibold2",
+              )}
             >
-              <View
-                className={cn(
-                  bitcoinDisplayFormat === "sats"
-                    ? "bg-primary border-background/80"
-                    : "border-foreground/5",
-                  "shadow shadow-gray-200 px-1 rounded-xl aspect-square flex items-center justify-center border-2",
-                )}
-              >
-                <CheckIcon className="text-white" width={16} height={16} />
-              </View>
-              <Text className="text-lg font-medium2">sats</Text>
-            </TouchableOpacity>
-          </View>
+              sats
+            </Text>
+          </Checkbox>
         </View>
       </View>
-    </View>
+    </>
   );
 }

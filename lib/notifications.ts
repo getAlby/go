@@ -85,7 +85,7 @@ export async function registerWalletNotifications(
       errorToast(new Error("Failed to save wallet data"));
     }
   } catch (error) {
-    errorToast(error);
+    errorToast(error, "Failed to register notifications");
   }
 }
 

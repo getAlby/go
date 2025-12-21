@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
@@ -11,6 +11,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function SetLightningAddress() {
   const { id } = useLocalSearchParams() as { id: string };
@@ -50,7 +51,13 @@ export function SetLightningAddress() {
               Lightning Address
             </Text>
             <Input
-              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-xl ios:sm:text-2xl",
+                  android: "android:text-xl",
+                }),
+                "w-full text-center border-transparent bg-transparent font-semibold2",
+              )}
               value={lightningAddress}
               onChangeText={setLightningAddress}
               placeholder="hello@getalby.com"

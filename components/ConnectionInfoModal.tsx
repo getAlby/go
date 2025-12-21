@@ -1,9 +1,16 @@
 import React from "react";
-import { Modal, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { XIcon } from "~/components/Icons";
-import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
+import { useThemeColor } from "~/lib/useThemeColor";
+import { cn } from "~/lib/utils";
 
 type ConnectionInfoModalProps = {
   visible: boolean;
@@ -11,6 +18,7 @@ type ConnectionInfoModalProps = {
 };
 
 function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
+  const { shadow } = useThemeColor("shadow");
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   const capabilities = wallets[selectedWalletId].nwcCapabilities;
@@ -36,6 +44,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
       setRelayStatuses(_relayStatuses);
     })();
   }, [nwcClient]);
+
   return (
     <Modal
       transparent
@@ -43,53 +52,95 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-center items-center bg-black/80">
+      <View className="flex-1 justify-center items-center bg-overlay">
         <TouchableOpacity
           activeOpacity={1}
           onPress={onClose}
           className="absolute inset-0"
         />
-        <View className="w-4/5 max-w-[425px] bg-background border border-border rounded-2xl z-10">
-          <View className="flex-row items-center justify-center relative p-6">
-            <Text className="text-xl font-bold2 text-foreground">
-              Connection Info
-            </Text>
+        <View
+          style={{
+            ...Platform.select({
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
+          className="p-6 mx-6 bg-background rounded-3xl max-h-[80vh] self-stretch"
+        >
+          <View className="mb-4 relative flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={onClose}
-              className="absolute right-0 p-4"
+              className="absolute -right-6 p-4"
             >
               <XIcon className="text-muted-foreground" width={24} height={24} />
             </TouchableOpacity>
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-xl ios:sm:text-2xl",
+                  android: "android:text-xl",
+                }),
+                "text-center font-bold2 text-secondary-foreground",
+              )}
+            >
+              Connection Info
+            </Text>
           </View>
-          <View className="p-6 pt-0 flex flex-col">
-            <View className="flex flex-col mb-4">
+          <ScrollView
+            className="grow-0"
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="flex flex-col gap-2"
+          >
+            <View className="flex gap-2">
               <Text className="font-semibold2">Relays</Text>
-
               {nwcClient?.relayUrls.map((relayUrl, index) => (
-                <Text key={relayUrl} className="text-muted-foreground">
-                  {relayUrl} ({relayStatuses[index] ? "online" : "offline"})
-                </Text>
+                <View
+                  className="flex flex-row items-center gap-2"
+                  key={relayUrl}
+                >
+                  <Text className="font-medium2">{relayUrl}</Text>
+                  <View
+                    className={cn(
+                      "rounded-full w-2 h-2",
+                      relayStatuses[index] ? "bg-receive" : "bg-destructive",
+                    )}
+                  ></View>
+                </View>
               ))}
+            </View>
 
-              <Text className="font-semibold2 mt-2">Capabilities</Text>
-              <Text className="text-muted-foreground">
+            <View className="flex gap-2">
+              <Text className="font-semibold2">Capabilities</Text>
+              <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {capabilities?.join(", ")}
               </Text>
+            </View>
 
-              <Text className="font-semibold2 mt-2">App Pubkey</Text>
-              <Text className="text-muted-foreground">
+            <View className="flex gap-2">
+              <Text className="font-semibold2">App Pubkey</Text>
+              <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {nwcClient?.publicKey}
               </Text>
+            </View>
 
-              <Text className="font-semibold2 mt-2">Wallet Pubkey</Text>
-              <Text className="text-muted-foreground">
+            <View className="flex gap-2">
+              <Text className="font-semibold2">Wallet Pubkey</Text>
+              <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {nwcClient?.walletPubkey}
               </Text>
             </View>
-            <Button onPress={onClose}>
-              <Text className="font-bold2">OK</Text>
-            </Button>
-          </View>
+          </ScrollView>
         </View>
       </View>
     </Modal>

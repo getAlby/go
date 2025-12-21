@@ -9,9 +9,12 @@ export function AddressBook() {
   const addressBookEntries = useAppStore((store) => store.addressBookEntries);
 
   return (
-    <View className="flex-1 flex flex-col gap-3">
+    <View className="flex-1">
       <Screen title="Address Book" />
-      <ScrollView className="flex-1 flex flex-col mt-4">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="flex-1 flex flex-col mt-4"
+      >
         {addressBookEntries.length > 0 ? (
           addressBookEntries.map((addressBookEntry, index) => (
             <React.Fragment key={index}>
@@ -25,7 +28,9 @@ export function AddressBook() {
             </React.Fragment>
           ))
         ) : (
-          <Text className="text-lg">No entries yet.</Text>
+          <Text className="text-secondary-foreground text-center">
+            No entries yet.
+          </Text>
         )}
       </ScrollView>
     </View>

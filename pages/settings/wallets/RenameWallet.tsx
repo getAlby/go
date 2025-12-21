@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import Screen from "~/components/Screen";
@@ -10,7 +10,7 @@ import { Text } from "~/components/ui/text";
 import { DEFAULT_WALLET_NAME, IS_EXPO_GO } from "~/lib/constants";
 import { storeWalletInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
-import { getPubkeyFromNWCUrl } from "~/lib/utils";
+import { cn, getPubkeyFromNWCUrl } from "~/lib/utils";
 
 export function RenameWallet() {
   const { id } = useLocalSearchParams() as { id: string };
@@ -56,20 +56,25 @@ export function RenameWallet() {
         <View className="flex-1 p-6">
           <View className="flex-1 flex flex-col items-center justify-center">
             <Text className="text-muted-foreground text-center">
-              Wallet name
+              Wallet Name
             </Text>
             <Input
-              autoFocus
-              className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-xl ios:sm:text-2xl",
+                  android: "android:text-xl",
+                }),
+                "w-full text-center border-transparent bg-transparent font-semibold2",
+              )}
               placeholder={DEFAULT_WALLET_NAME}
               value={walletName}
               onChangeText={setWalletName}
               returnKeyType="done"
-              // aria-errormessage="inputError"
+              autoFocus
             />
           </View>
           <Button size="lg" onPress={onRenameWallet} disabled={!walletName}>
-            <Text>Save</Text>
+            <Text className="ios:text-2xl android:text-xl">Save</Text>
           </Button>
         </View>
       </DismissableKeyboardView>

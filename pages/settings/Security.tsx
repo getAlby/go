@@ -1,10 +1,9 @@
 import React from "react";
-import { View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { TriangleAlertIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
-import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
@@ -23,8 +22,12 @@ export function Security() {
     checkBiometricSupport();
   }, []);
 
+  const onChange = () => {
+    useAppStore.getState().setSecurityEnabled(!isEnabled);
+  };
+
   return (
-    <View className="flex-1 p-6">
+    <View className="flex-1 px-6">
       <Screen title="Security" />
       {isSupported === null ? (
         <View className="flex-1 justify-center items-center">
@@ -32,39 +35,37 @@ export function Security() {
         </View>
       ) : (
         <>
-          {!isSupported && (
-            <Alert
-              type="info"
-              title="Setup Device Security"
-              description="To protect your wallet, please set up a phone lock in your
-                  device settings first."
-              icon={TriangleAlertIcon}
-            />
-          )}
-          <View className="flex-1">
-            <View className="flex-row items-center justify-between gap-2">
-              <Label
-                className={cn(
-                  "text-2xl",
-                  !isSupported && "text-muted-foreground",
-                )}
-                nativeID="security"
-                disabled={isSupported}
-                onPress={() => {
-                  useAppStore.getState().setSecurityEnabled(!isEnabled);
-                }}
+          <View className="flex-1 mt-4">
+            {!isSupported && (
+              <Alert
+                type="info"
+                title="Setup Device Security"
+                description="To protect your wallet, please set up a phone lock in your device settings first."
+                icon={TriangleAlertIcon}
+              />
+            )}
+            <View className="flex-row items-center justify-between gap-2 mt-2">
+              <Pressable
+                onPress={onChange}
+                className={cn(!isSupported && "pointer-events-none")}
+                disabled={!isSupported}
               >
-                <Text className="text-lg font-medium2">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-base ios:sm:text-lg",
+                      android: "android:text-base",
+                    }),
+                    "font-semibold2",
+                  )}
+                >
                   Require phone lock to access
                 </Text>
-              </Label>
+              </Pressable>
               <Switch
                 checked={isEnabled}
                 disabled={!isSupported}
-                onCheckedChange={() => {
-                  useAppStore.getState().setSecurityEnabled(!isEnabled);
-                }}
-                nativeID="security"
+                onCheckedChange={onChange}
               />
             </View>
           </View>

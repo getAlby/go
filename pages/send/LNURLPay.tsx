@@ -63,7 +63,7 @@ export function LNURLPay() {
         console.error("failed to parse recipient identifier", error);
       }
       const lnurlPayInfo = await lnurl.getPayRequest(callback.toString());
-      router.push({
+      router.navigate({
         pathname: "/send/confirm",
         params: {
           invoice: lnurlPayInfo.pr,
@@ -76,7 +76,7 @@ export function LNURLPay() {
       });
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to request invoice");
     }
     setLoading(false);
   }
@@ -84,7 +84,7 @@ export function LNURLPay() {
   return (
     <>
       <Screen title="Send" />
-      <View className="flex flex-1 flex-col">
+      <View className="flex-1">
         <DualCurrencyInput
           amount={amount}
           setAmount={setAmount}

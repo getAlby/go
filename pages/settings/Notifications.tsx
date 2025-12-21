@@ -1,8 +1,6 @@
 import React from "react";
-import { FlatList, View } from "react-native";
-import Loading from "~/components/Loading";
+import { FlatList, Platform, Pressable, View } from "react-native";
 import Screen from "~/components/Screen";
-import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
@@ -41,7 +39,7 @@ export function Notifications() {
       }
       enabled = useAppStore.getState().wallets.some((wallet) => wallet.pushId);
       if (enabled) {
-        errorToast("Failed to deregister notifications");
+        errorToast(new Error("Failed to deregister notifications"));
       } else {
         if (ttsNotificationsEnabled) {
           useAppStore.getState().setTTSNotificationsEnabled(false);
@@ -68,33 +66,48 @@ export function Notifications() {
   };
 
   return (
-    <View className="flex-1 py-6">
+    <View className="flex-1 p-6">
       <Screen title="Notifications" />
       <View className="flex-1">
-        <View className="flex-row items-center justify-between gap-2 px-6">
-          <Label onPress={toggleNotifications} nativeID="notifications">
-            <Text className="text-lg font-medium2">Show app notifications</Text>
-          </Label>
-          {isLoading ? (
-            <Loading className="h-8 mr-4" />
-          ) : (
-            <Switch
-              checked={!!notificationsEnabled}
-              onCheckedChange={toggleNotifications}
-              nativeID="security"
-            />
-          )}
+        <View className="flex-row items-center justify-between gap-2">
+          <Pressable onPress={toggleNotifications}>
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-base ios:sm:text-lg",
+                  android: "android:text-base",
+                }),
+                "font-semibold2",
+              )}
+            >
+              Show app notifications
+            </Text>
+          </Pressable>
+          <Switch
+            disabled={isLoading}
+            checked={!!notificationsEnabled}
+            onCheckedChange={toggleNotifications}
+            nativeID="security"
+          />
         </View>
         {wallets.length > 1 && (
           <>
             <View className="px-8 my-6">
-              <Text className="text-lg text-center text-muted-foreground">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-sm ios:sm:text-base",
+                    android: "android:text-sm",
+                  }),
+                  "text-center text-secondary-foreground",
+                )}
+              >
                 Choose from which wallets you want to receive app notifications
               </Text>
             </View>
             <FlatList
               className={cn(
-                "flex flex-col px-5",
+                "flex flex-col",
                 !notificationsEnabled && "opacity-50 pointer-events-none",
               )}
               data={wallets}
@@ -108,20 +121,31 @@ export function Notifications() {
             />
           </>
         )}
-        <View className="flex-row items-center justify-between gap-2 px-6 mt-8">
-          <Label onPress={toggleTTS} nativeID="notifications">
-            <Text className="text-lg font-medium2">Spoken notifications</Text>
-          </Label>
-          {isLoadingTTS ? (
-            <Loading className="h-8 mr-4" />
-          ) : (
-            <Switch
-              disabled={!notificationsEnabled}
-              checked={!!ttsNotificationsEnabled}
-              onCheckedChange={toggleTTS}
-              nativeID="security"
-            />
+        <View
+          className={cn(
+            "flex-row items-center justify-between gap-2 mt-8",
+            !notificationsEnabled && "opacity-50 pointer-events-none",
           )}
+        >
+          <Pressable onPress={toggleTTS}>
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-base ios:sm:text-lg",
+                  android: "android:text-base",
+                }),
+                "font-semibold2",
+              )}
+            >
+              Spoken notifications
+            </Text>
+          </Pressable>
+          <Switch
+            disabled={isLoadingTTS || !notificationsEnabled}
+            checked={!!ttsNotificationsEnabled}
+            onCheckedChange={toggleTTS}
+            nativeID="security"
+          />
         </View>
       </View>
     </View>
@@ -137,11 +161,12 @@ function WalletNotificationSwitch({
   index: number;
   isEnabled: boolean;
 }) {
+  const checked = isEnabled && !!wallet.pushId;
   const [isLoading, setLoading] = React.useState(false);
 
-  const handleSwitchToggle = async (checked: boolean) => {
+  const handleSwitchToggle = async () => {
     setLoading(true);
-    if (checked) {
+    if (!checked) {
       await registerWalletNotifications(wallet, index);
     } else {
       await deregisterWalletNotifications(wallet, index);
@@ -154,19 +179,29 @@ function WalletNotificationSwitch({
   };
 
   return (
-    <View className="flex-row items-center justify-between gap-2 mb-6">
-      <Label nativeID={`notifications-${index}`}>
-        <Text className="text-lg font-medium2">{wallet.name}</Text>
-      </Label>
-      {isLoading ? (
-        <Loading className="h-8 mr-4" />
-      ) : (
-        <Switch
-          checked={isEnabled && !!wallet.pushId}
-          onCheckedChange={handleSwitchToggle}
-          nativeID={`notifications-${index}`}
-        />
-      )}
+    <View
+      key={index}
+      className="flex-row items-center justify-between gap-2 mb-6"
+    >
+      <Pressable onPress={handleSwitchToggle}>
+        <Text
+          className={cn(
+            Platform.select({
+              ios: "ios:text-base ios:sm:text-lg",
+              android: "android:text-base",
+            }),
+            "font-medium2",
+          )}
+        >
+          {wallet.name}
+        </Text>
+      </Pressable>
+      <Switch
+        disabled={isLoading}
+        checked={checked}
+        onCheckedChange={handleSwitchToggle}
+        nativeID={`notifications-${index}`}
+      />
     </View>
   );
 }

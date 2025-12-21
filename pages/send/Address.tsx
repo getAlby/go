@@ -17,21 +17,17 @@ import {
 } from "react-native";
 import Contact from "~/components/Contact";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
-import {
-  AddUserIcon,
-  CheckIcon,
-  PasteLineIcon,
-  XIcon,
-} from "~/components/Icons";
+import { PasteLineIcon, XIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
-import { useColorScheme } from "~/lib/useColorScheme";
+import { useThemeColor } from "~/lib/useThemeColor";
+import { cn } from "~/lib/utils";
 
 interface ContactInputProps {
   lnAddress: string;
@@ -49,27 +45,35 @@ function ContactInput({
     contactName ||
       (match?.[1] ? match[1].charAt(0).toUpperCase() + match[1].slice(1) : ""),
   );
-  const { isDarkColorScheme } = useColorScheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const { primary, background, mutedForeground, foreground } = useThemeColor(
+    "primary",
+    "background",
+    "mutedForeground",
+    "foreground",
+  );
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={{ backgroundColor: isDarkColorScheme ? "#FFFFFF" : "#09090B" }} // translates to background
+        style={{ backgroundColor: foreground }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={isDarkColorScheme ? 0.3 : 0.7}
+        opacity={0.3}
         pressBehavior="close"
         onPress={Keyboard.dismiss}
       />
     ),
-    [isDarkColorScheme],
+    [foreground],
   );
 
   const save = () => {
     setContactName(input);
-    Keyboard.dismiss();
+    if (Keyboard.isVisible()) {
+      Keyboard.dismiss();
+    }
     bottomSheetModalRef.current?.dismiss();
   };
 
@@ -78,7 +82,8 @@ function ContactInput({
 
   return (
     <>
-      <TouchableOpacity
+      <Checkbox
+        isChecked={!!contactName}
         onPress={() => {
           if (contactName) {
             setInput("");
@@ -90,32 +95,21 @@ function ContactInput({
             bottomSheetModalRef.current?.present();
           }
         }}
-        className="flex flex-row items-center justify-center px-12 py-4"
+        className="flex flex-row items-center justify-center px-12 py-2 gap-2"
       >
-        {contactName ? (
-          <View className="bg-primary px-1 rounded-lg aspect-square flex items-center justify-center">
-            <CheckIcon className="text-white" width={12} height={12} />
-          </View>
-        ) : (
-          <AddUserIcon className="text-muted-foreground" />
-        )}
-        <Text
-          numberOfLines={2}
-          ellipsizeMode="tail"
-          className="text-muted-foreground font-medium2 text-lg text-center px-2"
-        >
+        <Text className="text-secondary-foreground font-medium2">
           Add to Contacts
         </Text>
-      </TouchableOpacity>
+      </Checkbox>
 
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backgroundStyle={{
-          backgroundColor: isDarkColorScheme ? "#09090B" : "#ffffff", // translates to muted
+          backgroundColor: background,
           borderRadius: 24,
         }}
         handleIndicatorStyle={{
-          backgroundColor: isDarkColorScheme ? "#FAFAFA" : "#9BA2AE", // translates to foreground
+          backgroundColor: mutedForeground,
         }}
         backdropComponent={renderBackdrop}
         enablePanDownToClose
@@ -125,7 +119,9 @@ function ContactInput({
             <View className="relative flex flex-row items-center justify-center">
               <TouchableOpacity
                 onPress={() => {
-                  Keyboard.dismiss();
+                  if (Keyboard.isVisible()) {
+                    Keyboard.dismiss();
+                  }
                   bottomSheetModalRef.current?.dismiss();
                 }}
                 className="absolute -left-4 p-4"
@@ -136,16 +132,24 @@ function ContactInput({
                   height={24}
                 />
               </TouchableOpacity>
-              <Text className="text-2xl font-semibold2 text-muted-foreground">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-xl ios:sm:text-2xl",
+                    android: "android:text-xl",
+                  }),
+                  "font-semibold2 text-secondary-foreground",
+                )}
+              >
                 Add to Contacts
               </Text>
             </View>
             {isIOS ? (
               <BottomSheetTextInput
                 placeholder="Satoshi Nakamoto"
-                className="text-foreground border-transparent bg-transparent text-center my-16 p-3 border native:text-2xl leading-[1.25] font-semibold2 caret-primary"
-                placeholderClassName="text-muted-foreground"
-                selectionColor={"hsl(47 100% 50%)"} // translates to primary
+                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border ios:text-xl ios:sm:text-2xl !leading-[1.25] font-semibold2 caret-primary"
+                placeholderClassName="text-muted"
+                selectionColor={primary}
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}
@@ -154,7 +158,7 @@ function ContactInput({
             ) : (
               <Input
                 placeholder="Satoshi Nakamoto"
-                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 native:text-2xl font-semibold2"
+                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 android:text-xl font-semibold2"
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}
@@ -179,17 +183,12 @@ export function Address() {
 
   const onSubmit = async () => {
     setSubmitting(true);
-    try {
-      const result = await initiatePaymentFlow(keyboardText, "");
-      if (contactName && result) {
-        useAppStore.getState().addAddressBookEntry({
-          name: contactName,
-          lightningAddress: keyboardText,
-        });
-      }
-    } catch (error) {
-      console.error("Payment failed:", error);
-      errorToast(error);
+    const result = await initiatePaymentFlow(keyboardText, "");
+    if (contactName && result) {
+      useAppStore.getState().addAddressBookEntry({
+        name: contactName,
+        lightningAddress: keyboardText,
+      });
     }
     setSubmitting(false);
   };
@@ -220,10 +219,10 @@ export function Address() {
       <Screen title="Send to Address" />
       <DismissableKeyboardView>
         <View className="flex-1 flex flex-col">
-          <View className="flex-1 flex flex-col gap-6">
-            <View className="flex items-center justify-center gap-6 mt-6 px-12 relative">
+          <View className="flex-1 flex flex-col gap-8">
+            <View className="flex items-center justify-center mt-6 px-12 relative">
               <Input
-                className="text-center border-transparent bg-transparent native:text-3xl font-semibold2 w-full"
+                className="text-center border-transparent bg-transparent ios:text-2xl android:text-xl !leading-[1.25] font-semibold2 w-full"
                 placeholder="hello@getalby.com"
                 value={keyboardText}
                 onChangeText={setKeyboardText}
@@ -243,33 +242,36 @@ export function Address() {
               !addressBookEntries.some(
                 (entry) => entry.lightningAddress === keyboardText,
               ) && (
-                <View className="flex flex-row items-center justify-center gap-2">
-                  <ContactInput
-                    contactName={contactName}
-                    setContactName={setContactName}
-                    lnAddress={keyboardText}
-                  />
-                </View>
+                <ContactInput
+                  contactName={contactName}
+                  setContactName={setContactName}
+                  lnAddress={keyboardText}
+                />
               )}
-            <Text className="text-xl text-center font-semibold2 text-muted-foreground mt-4">
-              Address Book
-            </Text>
-            {filteredAddressBookEntries.length > 0 ? (
-              <ScrollView className="flex-1 flex flex-col">
-                {filteredAddressBookEntries.map((addressBookEntry, index) => (
-                  <React.Fragment key={index}>
-                    <Contact
-                      name={addressBookEntry.name}
-                      lnAddress={addressBookEntry.lightningAddress}
-                    />
-                  </React.Fragment>
-                ))}
-              </ScrollView>
-            ) : (
-              <Text className="text-muted-foreground text-center">
-                No matching entries.
+            <View className="flex-1 gap-4">
+              <Text className="ios:text-xl android:text-lg text-center font-semibold2">
+                Address Book
               </Text>
-            )}
+              {filteredAddressBookEntries.length > 0 ? (
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  className="flex-1 flex flex-col"
+                >
+                  {filteredAddressBookEntries.map((addressBookEntry, index) => (
+                    <React.Fragment key={index}>
+                      <Contact
+                        name={addressBookEntry.name}
+                        lnAddress={addressBookEntry.lightningAddress}
+                      />
+                    </React.Fragment>
+                  ))}
+                </ScrollView>
+              ) : (
+                <Text className="text-secondary-foreground text-center">
+                  No matching entries.
+                </Text>
+              )}
+            </View>
           </View>
           <View className="p-6 flex flex-col gap-4">
             <Button

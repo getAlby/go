@@ -1,22 +1,76 @@
 import type { Nip47Capability } from "@getalby/sdk/nwc";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-export const NAV_THEME = {
+export const THEME_COLORS = {
   light: {
-    background: "hsl(0 0% 100%)", // background
-    border: "hsl(240 5.9% 90%)", // border
-    card: "hsl(0 0% 100%)", // card
-    notification: "hsl(0 84.2% 60.2%)", // destructive
-    primary: "hsl(240 5.9% 10%)", // primary
-    text: "hsl(240 10% 3.9%)", // foreground
+    background: "#F9FAFB",
+    foreground: "#374151",
+    overlay: "#00000060",
+    border: "#E2E7ED",
+    shadow: "#6F8CB0",
+    logoPrimary: "#202020",
+    logoSecondary: "#FFC800",
+    primary: "#FFC800",
+    secondary: "#FFE480",
+    primaryForeground: "#374151",
+    secondaryForeground: "#6B7280",
+    muted: "#E4E6EA",
+    mutedForeground: "#9BA2AE",
+    receive: "#22C45E",
+    receiveForeground: "#DBFBE6",
+    sent: "#F97316",
+    sentForeground: "#FFEDD5",
+    destructive: "#EF4444",
+    destructiveForeground: "#FEE2E2",
+    pending: "#3B82F6",
+    pendingForeground: "#DBEAFE",
+    info: "#1D4ED8",
+    infoForeground: "#EFF6FF",
+    infoBorder: "#DBEAFE",
+    warning: "#C2410C",
+    warningForeground: "#FFF7ED",
+    warningBorder: "#FFEDD5",
+    error: "#B91C1C",
+    errorForeground: "#FEF2F2",
+    errorBorder: "#FEE2E2",
+    card: "",
+    text: "",
+    notification: "",
   },
   dark: {
-    background: "hsl(240 10% 3.9%)", // background
-    border: "hsl(240 3.7% 15.9%)", // border
-    card: "hsl(240 10% 3.9%)", // card
-    notification: "hsl(0 72% 51%)", // destructive
-    primary: "hsl(0 0% 98%)", // primary
-    text: "hsl(0 0% 98%)", // foreground
+    background: "#0A0B0C",
+    foreground: "#E3E3E3",
+    overlay: "#FFFFFF20",
+    border: "#E2E7ED",
+    shadow: "#000000",
+    logoPrimary: "#FFFFFF",
+    logoSecondary: "#FFE480",
+    primary: "#FFC800",
+    secondary: "#FFE480",
+    primaryForeground: "#374151",
+    secondaryForeground: "#BABABA",
+    muted: "#242424",
+    mutedForeground: "#858585",
+    receive: "#14B8A6",
+    receiveForeground: "#022C22",
+    sent: "#F59E0B",
+    sentForeground: "#451A03",
+    destructive: "#F43F5E",
+    destructiveForeground: "#4C0519",
+    pending: "#0EA5E9",
+    pendingForeground: "#082F49",
+    info: "#93C5FD",
+    infoForeground: "#1E3A8A",
+    infoBorder: "#3659b9",
+    warning: "#FDBA74",
+    warningForeground: "#7C2D12",
+    warningBorder: "#C16242",
+    error: "#FCA5A5",
+    errorForeground: "#7F1D1D",
+    errorBorder: "#C24141",
+    card: "",
+    text: "",
+    notification: "",
   },
 };
 

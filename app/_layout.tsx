@@ -21,7 +21,7 @@ import { NotificationProvider } from "~/context/Notification";
 import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { SessionProvider } from "~/hooks/useSession";
-import { IS_EXPO_GO, NAV_THEME } from "~/lib/constants";
+import { IS_EXPO_GO, THEME_COLORS } from "~/lib/constants";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -33,11 +33,11 @@ Sentry.init({
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
-  colors: NAV_THEME.light,
+  colors: THEME_COLORS.light,
 };
 const DARK_THEME: Theme = {
   ...DarkTheme,
-  colors: NAV_THEME.dark,
+  colors: THEME_COLORS.dark,
 };
 
 // Prevent the splash screen from auto-hiding before getting the color scheme.
@@ -53,6 +53,7 @@ export default Sentry.wrap(function RootLayout() {
 
   async function loadFonts() {
     await Font.loadAsync({
+      CourierPrime: require("./../assets/fonts/CourierPrime-Regular.ttf"),
       OpenRunde: require("./../assets/fonts/OpenRunde-Regular.otf"),
       "OpenRunde-Medium": require("./../assets/fonts/OpenRunde-Medium.otf"),
       "OpenRunde-Semibold": require("./../assets/fonts/OpenRunde-Semibold.otf"),
@@ -128,8 +129,8 @@ export default Sentry.wrap(function RootLayout() {
                 <Toast
                   config={toastConfig}
                   position="bottom"
-                  bottomOffset={140}
-                  topOffset={140}
+                  bottomOffset={100}
+                  topOffset={100}
                 />
               </BottomSheetModalProvider>
             </GestureHandlerRootView>

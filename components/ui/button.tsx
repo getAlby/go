@@ -1,29 +1,23 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
+import { LinearGradient } from "~/components/LinearGradient";
 import { TextClassContext } from "~/components/ui/text";
+import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
-  "group flex items-center justify-center rounded-lg web:ring-offset-background web:transition-colors web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2",
+  "group flex items-center justify-center active:opacity-80",
   {
     variants: {
       variant: {
-        default: "web:hover:opacity-90 active:opacity-90",
-        destructive: "bg-destructive web:hover:opacity-90 active:opacity-90",
-        outline:
-          "border border-input bg-background web:hover:bg-accent web:hover:text-accent-foreground active:bg-accent",
-        secondary: "bg-secondary web:hover:opacity-80 active:opacity-80",
-        ghost:
-          "web:hover:bg-accent web:hover:text-accent-foreground active:bg-accent",
-        link: "web:underline-offset-4 web:hover:underline web:focus:underline",
+        default: "",
+        secondary: "bg-background dark:bg-muted",
       },
       size: {
-        default: "min-h-10 px-4 py-2 native:min-h-12 native:px-3 native:py-3",
-        sm: "min-h-9 rounded-md px-3",
-        lg: "min-h-11 rounded-2xl px-8 native:min-h-16",
-        icon: "min-h-10 w-10",
+        default: "rounded-xl p-3",
+        sm: "rounded-md px-3 py-2",
+        lg: "rounded-2xl px-8 py-4",
       },
     },
     defaultVariants: {
@@ -33,68 +27,90 @@ const buttonVariants = cva(
   },
 );
 
-const buttonTextVariants = cva(
-  "web:whitespace-nowrap text-lg text-foreground web:transition-colors leading-6",
-  {
-    variants: {
-      variant: {
-        default: "text-primary-foreground font-bold2",
-        destructive: "text-destructive-foreground",
-        outline: "group-active:text-accent-foreground",
-        secondary:
-          "text-secondary-foreground group-active:text-secondary-foreground",
-        ghost: "group-active:text-accent-foreground",
-        link: "text-primary group-active:underline",
-      },
-      size: {
-        default: "font-medium2",
-        sm: "",
-        lg: "native:text-2xl font-bold2",
-        icon: "",
-      },
+const buttonTextVariants = cva("", {
+  variants: {
+    variant: {
+      default: "font-bold2 text-primary-foreground",
+      secondary: "group-active:text-secondary-foreground",
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+    size: {
+      default: "font-medium2",
+      sm: "",
+      lg: Platform.select({
+        ios: "ios:text-xl ios:sm:text-2xl font-bold2",
+        android: "android:text-xl font-bold2",
+      }),
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
 
 type ButtonProps = React.ComponentProps<typeof Pressable> &
-  VariantProps<typeof buttonVariants>;
+  VariantProps<typeof buttonVariants> & {
+    size?: "default" | "sm" | "lg";
+  };
 
 function Button({ ref, className, variant, size, ...props }: ButtonProps) {
+  const { primary, secondary, shadow } = useThemeColor(
+    "primary",
+    "secondary",
+    "shadow",
+  );
+  const [pressed, setPressed] = React.useState(false);
   return (
     <TextClassContext.Provider
       value={buttonTextVariants({
         variant,
         size,
-        className: "web:pointer-events-none",
       })}
     >
       {!variant || variant === "default" ? (
         <View
-          style={[
-            {
-              borderRadius: size === "lg" ? 16 : 4,
-              backgroundColor: "white",
-            },
-            shadows.small,
-          ]}
+          className={cn(
+            "bg-background",
+            size === "lg" ? "rounded-2xl" : "rounded-xl flex-1",
+          )}
+          style={{
+            ...(pressed && { transform: "scale(0.98)" }),
+            ...Platform.select({
+              // make sure bg color is applied to avoid RCTView errors
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
         >
           <LinearGradient
-            colors={["#FFE951", "#FFC453"]}
+            colors={[secondary, primary]}
             start={[0, 0]}
             end={[1, 1]}
-            style={{ borderRadius: size === "lg" ? 16 : 4 }}
+            className={cn(
+              "border border-secondary bg-primary",
+              size === "lg" ? "rounded-2xl" : "rounded-xl",
+            )}
           >
             <Pressable
               className={cn(
-                props.disabled && "opacity-50 web:pointer-events-none",
+                props.disabled && "opacity-50",
                 buttonVariants({ variant, size, className }),
               )}
               ref={ref}
               role="button"
+              onPressIn={() => setPressed(true)}
+              onPressOut={() => setPressed(false)}
               {...props}
             />
           </LinearGradient>
@@ -102,10 +118,30 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
       ) : (
         <Pressable
           className={cn(
-            props.disabled && "opacity-50 web:pointer-events-none",
+            props.disabled && "opacity-50",
             buttonVariants({ variant, size, className }),
           )}
-          style={[variant === "ghost" ? {} : shadows.small]}
+          style={{
+            ...(pressed && { transform: "scale(0.98)" }),
+            ...Platform.select({
+              // make sure bg color is applied to avoid RCTView errors
+              ios: {
+                shadowColor: shadow,
+                shadowOpacity: 0.4,
+                shadowOffset: {
+                  width: 1.5,
+                  height: 1.5,
+                },
+                shadowRadius: 2,
+              },
+              android: {
+                shadowColor: shadow,
+                elevation: 3,
+              },
+            }),
+          }}
+          onPressIn={() => setPressed(true)}
+          onPressOut={() => setPressed(false)}
           ref={ref}
           role="button"
           {...props}
@@ -117,23 +153,3 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
 
 export { Button, buttonTextVariants, buttonVariants };
 export type { ButtonProps };
-
-const shadows = StyleSheet.create({
-  small: {
-    ...Platform.select({
-      // make sure bg color is applied to avoid RCTView errors
-      ios: {
-        shadowColor: "black",
-        shadowOpacity: 0.15,
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-});

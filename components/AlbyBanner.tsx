@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
+import { useThemeColor } from "~/lib/useThemeColor";
+import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
 
-function AlbyBanner() {
+function AlbyBanner({ className }: { className?: string }) {
+  const { shadow } = useThemeColor("shadow");
   const lastPayment = useAppStore.getState().getLastAlbyPayment();
   const [showBanner, setShowBanner] = useState(
     isPaymentOlderThan24Hours(lastPayment),
@@ -36,24 +39,47 @@ function AlbyBanner() {
   }
 
   return (
-    <View className="border bg-card border-muted rounded-2xl mt-5 flex flex-col gap-3 p-5 relative">
+    <View
+      className={cn(
+        "bg-background dark:bg-muted rounded-2xl flex flex-col gap-3 p-4 relative",
+        className,
+      )}
+      style={{
+        ...Platform.select({
+          // make sure bg color is applied to avoid RCTView errors
+          ios: {
+            shadowColor: shadow,
+            shadowOpacity: 0.4,
+            shadowOffset: {
+              width: 1.5,
+              height: 1.5,
+            },
+            shadowRadius: 2,
+          },
+          android: {
+            shadowColor: shadow,
+            elevation: 3,
+          },
+        }),
+      }}
+    >
       <TouchableOpacity
         onPress={() => setShowBanner(false)}
         className="absolute z-10 right-0 p-4"
       >
         <XIcon className="text-muted-foreground" />
       </TouchableOpacity>
-      <Text className="font-semibold2 text-center">✨ Enjoying Alby Go?</Text>
-      <Text className="text-muted-foreground text-center">
+      <Text className="font-semibold2 text-center ios:text-lg android:text-base">
+        ✨ Enjoying Alby Go?
+      </Text>
+      <Text className="text-secondary-foreground text-center">
         Help us grow and improve by supporting our development.
       </Text>
       <View className="flex flex-row gap-3 mt-3">
         {amounts.map(({ value, label, emoji }) => (
           <Button
             key={value}
-            variant="secondary"
             size="sm"
-            className="flex-1"
             onPress={async () => {
               await initiatePaymentFlow(
                 ALBY_LIGHTNING_ADDRESS,

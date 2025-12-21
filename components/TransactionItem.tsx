@@ -71,34 +71,36 @@ export function TransactionItem({ tx }: Props) {
       <View
         className={cn(
           tx.state === "pending" && "animate-pulse",
-          "flex flex-row items-center gap-3 px-6 py-2 my-2",
+          "flex flex-row items-center gap-4 px-6 py-4",
         )}
       >
-        <View className="w-[44px] h-[44px] bg-muted rounded-full flex flex-col items-center justify-center">
+        <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
           <Icon />
         </View>
         <View className="flex flex-col flex-1">
           <View className="flex flex-row items-center gap-2">
-            <Text
-              numberOfLines={1}
-              className="font-medium2 text-lg flex-initial"
-            >
+            <Text numberOfLines={1} className="font-medium2 flex-initial">
               {typeStateText}
               {from !== undefined && <>&nbsp;{from}</>}
               {to !== undefined && <>&nbsp;{to}</>}
             </Text>
-            <Text className="text-muted-foreground text-sm">
+            <Text className="text-secondary-foreground ios:text-sm android:text-xs">
               {dayjs.unix(tx.settled_at || tx.created_at).fromNow()}
             </Text>
           </View>
           {(tx.description || metadata?.comment) && (
-            <Text numberOfLines={1}>{tx.description || metadata?.comment}</Text>
+            <Text
+              className="text-secondary-foreground font-medium2"
+              numberOfLines={1}
+            >
+              {tx.description || metadata?.comment}
+            </Text>
           )}
         </View>
         <View>
           <Text
             className={cn(
-              "text-right font-medium2 text-lg",
+              "text-right font-medium2",
               tx.type === "incoming" ? "text-receive" : "text-foreground",
             )}
           >
@@ -109,7 +111,7 @@ export function TransactionItem({ tx }: Props) {
             )}
           </Text>
           {getFiatAmount && (
-            <Text className="text-right text-sm text-muted-foreground font-medium2">
+            <Text className="text-right text-secondary-foreground font-medium2">
               {getFiatAmount(Math.floor(tx.amount / 1000))}
             </Text>
           )}

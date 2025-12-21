@@ -1,7 +1,6 @@
 import {
   PopiconsAddressBookSolid as AddressBookIcon,
   PopiconsAtSymbolSolid as AddressIcon,
-  PopiconsUserPlusLine as AddUserIcon,
   PopiconsCircleExclamationLine as AlertCircleIcon,
   PopiconsArrowLeftSolid as ArrowLeftIcon,
   PopiconsBitcoinSolid as BitcoinIcon,
@@ -17,7 +16,9 @@ import {
   PopiconsEditLine as EditLineIcon,
   PopiconsTouchIdSolid as FingerprintIcon,
   PopiconsCircleInfoSolid as HelpCircleIcon,
+  PopiconsCircleInfoLine as HelpCircleLineIcon,
   PopiconsImageSolid as ImageIcon,
+  PopiconsLikeSolid as LikeIcon,
   PopiconsLinkExternalSolid as LinkIcon,
   PopiconsMapLine as MapLineIcon,
   PopiconsNotePlusLine as NotesIcon,
@@ -59,7 +60,6 @@ function interopIcon(icon: React.FunctionComponent<SvgProps>) {
 
 interopIcon(AddressBookIcon);
 interopIcon(AddressIcon);
-interopIcon(AddUserIcon);
 interopIcon(AlertCircleIcon);
 interopIcon(ArrowLeftIcon);
 interopIcon(BitcoinIcon);
@@ -75,7 +75,9 @@ interopIcon(EditIcon);
 interopIcon(EditLineIcon);
 interopIcon(FingerprintIcon);
 interopIcon(HelpCircleIcon);
+interopIcon(HelpCircleLineIcon);
 interopIcon(ImageIcon);
+interopIcon(LikeIcon);
 interopIcon(LinkIcon);
 interopIcon(MapLineIcon);
 interopIcon(NotesIcon);
@@ -103,7 +105,6 @@ interopIcon(ZapIcon);
 export {
   AddressBookIcon,
   AddressIcon,
-  AddUserIcon,
   AlertCircleIcon,
   ArrowLeftIcon,
   BitcoinIcon,
@@ -119,7 +120,9 @@ export {
   EditLineIcon,
   FingerprintIcon,
   HelpCircleIcon,
+  HelpCircleLineIcon,
   ImageIcon,
+  LikeIcon,
   LinkIcon,
   MapLineIcon,
   NotesIcon,

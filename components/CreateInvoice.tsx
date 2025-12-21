@@ -2,7 +2,7 @@ import type { Nip47Transaction } from "@getalby/sdk";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
-import { Share, View } from "react-native";
+import { Platform, Share, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { CopyIcon, ShareIcon } from "~/components/Icons";
@@ -13,7 +13,7 @@ import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
-import { formatBitcoinAmount } from "~/lib/utils";
+import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 export function CreateInvoice() {
   const getFiatAmount = useGetFiatAmount();
@@ -27,7 +27,7 @@ export function CreateInvoice() {
 
   function generateInvoice(amount?: number) {
     if (!amount) {
-      errorToast(new Error("0-amount invoices are currently not supported"));
+      errorToast(new Error("0-amount invoices are not supported"));
       return;
     }
     (async () => {
@@ -47,7 +47,7 @@ export function CreateInvoice() {
         setInvoice(response.invoice);
       } catch (error) {
         console.error(error);
-        errorToast(error);
+        errorToast(error, "Failed to create invoice");
       }
       setLoading(false);
     })();
@@ -68,17 +68,12 @@ export function CreateInvoice() {
 
   async function share() {
     const message = invoice;
-    try {
-      if (!message) {
-        throw new Error("no lightning address set");
-      }
-      await Share.share({
-        message,
-      });
-    } catch (error) {
-      console.error("Error sharing:", error);
-      errorToast(error);
+    if (!message) {
+      errorToast(new Error("No invoice set"));
     }
+    await Share.share({
+      message,
+    });
   }
 
   React.useEffect(() => {
@@ -154,19 +149,45 @@ export function CreateInvoice() {
   return (
     <>
       {invoice ? (
-        <>
-          <View className="flex-1 justify-center items-center gap-6">
-            <View className="flex flex-row justify-center items-center gap-3">
+        <View className="flex-1">
+          <View className="flex-1 justify-center items-center gap-6 mt-4">
+            <View className="flex flex-row justify-center items-center gap-2">
               <Loading />
-              <Text className="text-xl">Waiting for payment</Text>
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-lg ios:sm:text-xl",
+                    android: "android:text-lg",
+                  }),
+                  "font-medium2",
+                )}
+              >
+                Waiting for payment
+              </Text>
             </View>
             <QRCode value={invoice} showAvatar />
             <View className="flex flex-col items-center justify-center gap-2">
-              <Text className="text-foreground text-3xl font-semibold2">
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-3xl ios:sm:text-4xl",
+                    android: "android:text-3xl",
+                  }),
+                  "font-semibold2",
+                )}
+              >
                 {formatBitcoinAmount(+amount, bitcoinDisplayFormat)}
               </Text>
               {getFiatAmount && (
-                <Text className="text-muted-foreground text-2xl font-medium2">
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-xl ios:sm:text-2xl",
+                      android: "android:text-xl",
+                    }),
+                    "text-secondary-foreground font-semibold2",
+                  )}
+                >
                   {getFiatAmount(+amount)}
                 </Text>
               )}
@@ -174,25 +195,33 @@ export function CreateInvoice() {
           </View>
           <View className="flex flex-row gap-3 p-6">
             <Button
-              onPress={share}
               variant="secondary"
               className="flex-1 flex flex-col gap-2"
+              onPress={share}
             >
-              <ShareIcon className="text-muted-foreground" />
+              <ShareIcon
+                width={32}
+                height={32}
+                className="text-muted-foreground"
+              />
               <Text>Share</Text>
             </Button>
             <Button
               variant="secondary"
-              onPress={copy}
               className="flex-1 flex flex-col gap-2"
+              onPress={copy}
             >
-              <CopyIcon className="text-muted-foreground" />
+              <CopyIcon
+                width={32}
+                height={32}
+                className="text-muted-foreground"
+              />
               <Text>Copy</Text>
             </Button>
           </View>
-        </>
+        </View>
       ) : (
-        <View className="flex flex-1 flex-col">
+        <View className="flex-1">
           <DualCurrencyInput
             amount={amount}
             setAmount={setAmount}

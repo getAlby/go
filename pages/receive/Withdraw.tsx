@@ -112,7 +112,7 @@ export function Withdraw() {
       }
     } catch (error) {
       console.error("failed to load withdraw info", originalText, error);
-      errorToast(error);
+      errorToast(error, "Failed to load withdraw info");
     } finally {
       setLoading(false);
     }
@@ -155,7 +155,7 @@ export function Withdraw() {
       }
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to withdraw");
     } finally {
       setLoadingConfirm(false);
     }
@@ -164,70 +164,77 @@ export function Withdraw() {
   return (
     <>
       <Screen title="Redeem" animation="slide_from_left" />
-      {isLoading && (
-        <View className="flex-1 flex flex-col items-center justify-center">
-          <Loading className="text-primary-foreground" />
-        </View>
-      )}
-      {!isLoading && (
-        <>
-          {!lnurlDetails && (
-            <>
-              <View className="p-4">
-                <Text className="text-lg text-center font-medium2 text-secondary-foreground">
-                  Scan a LNURL QR code to withdraw
-                </Text>
-              </View>
-              <QRCodeScanner
-                onScanned={handleScanned}
-                startScanning={startScanning}
-              />
-              <View className="flex flex-row items-stretch justify-center gap-4 p-6">
-                <Button
-                  onPress={paste}
-                  variant="secondary"
-                  className="flex flex-col gap-2 flex-1"
-                >
-                  <PasteIcon className="text-muted-foreground" />
-                  <Text numberOfLines={1}>Paste</Text>
-                </Button>
-              </View>
-            </>
-          )}
-          {lnurlDetails && (
-            <View className="flex-1 flex flex-col">
-              <DualCurrencyInput
-                amount={valueSat}
-                setAmount={setValueSat}
-                description={lnurlDetails.defaultDescription}
-                min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
-                max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
-                isAmountReadOnly={
-                  lnurlDetails.minWithdrawable === lnurlDetails.maxWithdrawable
-                }
-                isDescriptionReadOnly
-              />
-              <View className="p-6 bg-background">
-                <WalletSwitcher
-                  selectedWalletId={selectedWalletId}
-                  wallets={wallets}
+      <View className="flex-1">
+        {isLoading && (
+          <View className="flex-1 flex flex-col items-center justify-center">
+            <Loading className="text-primary-foreground" />
+          </View>
+        )}
+        {!isLoading && (
+          <>
+            {!lnurlDetails && (
+              <>
+                <View className="p-4">
+                  <Text className="text-center text-secondary-foreground font-medium2">
+                    Scan a LNURL QR code to withdraw
+                  </Text>
+                </View>
+                <QRCodeScanner
+                  onScanned={handleScanned}
+                  startScanning={startScanning}
                 />
-                <Button
-                  size="lg"
-                  className="flex flex-row gap-2"
-                  onPress={confirm}
-                  disabled={loadingConfirm || isAmountInvalid}
-                >
-                  {loadingConfirm && (
-                    <Loading className="text-primary-foreground" />
-                  )}
-                  <Text>Confirm Withdrawal</Text>
-                </Button>
+                <View className="flex flex-row items-stretch justify-center gap-4 p-6">
+                  <Button
+                    onPress={paste}
+                    variant="secondary"
+                    className="flex flex-col gap-2 flex-1"
+                  >
+                    <PasteIcon
+                      width={32}
+                      height={32}
+                      className="text-muted-foreground"
+                    />
+                    <Text numberOfLines={1}>Paste</Text>
+                  </Button>
+                </View>
+              </>
+            )}
+            {lnurlDetails && (
+              <View className="flex-1 flex flex-col">
+                <DualCurrencyInput
+                  amount={valueSat}
+                  setAmount={setValueSat}
+                  description={lnurlDetails.defaultDescription}
+                  min={Math.floor(lnurlDetails.minWithdrawable / 1000)}
+                  max={Math.floor(lnurlDetails.maxWithdrawable / 1000)}
+                  isAmountReadOnly={
+                    lnurlDetails.minWithdrawable ===
+                    lnurlDetails.maxWithdrawable
+                  }
+                  isDescriptionReadOnly
+                />
+                <View className="p-6">
+                  <WalletSwitcher
+                    selectedWalletId={selectedWalletId}
+                    wallets={wallets}
+                  />
+                  <Button
+                    size="lg"
+                    className="flex flex-row gap-2"
+                    onPress={confirm}
+                    disabled={loadingConfirm || isAmountInvalid}
+                  >
+                    {loadingConfirm && (
+                      <Loading className="text-primary-foreground" />
+                    )}
+                    <Text>Confirm Withdrawal</Text>
+                  </Button>
+                </View>
               </View>
-            </View>
-          )}
-        </>
-      )}
+            )}
+          </>
+        )}
+      </View>
     </>
   );
 }

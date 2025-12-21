@@ -3,12 +3,13 @@ import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
-import { Modal, TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
+import HelpModal from "~/components/HelpModal";
 import {
-  HelpCircleIcon,
+  HelpCircleLineIcon,
   PasteIcon,
   TriangleAlertIcon,
   XIcon,
@@ -22,6 +23,7 @@ import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { registerWalletNotifications } from "~/lib/notifications";
+import { cn } from "~/lib/utils";
 
 export function SetupWallet() {
   const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
@@ -51,7 +53,7 @@ export function SetupWallet() {
       nostrWalletConnectUrl = await Clipboard.getStringAsync();
     } catch (error) {
       console.error("Failed to read clipboard", error);
-      errorToast(error);
+      errorToast(error, "Failed to read clipboard");
       return;
     }
     connect(nostrWalletConnectUrl);
@@ -87,7 +89,7 @@ export function SetupWallet() {
         return true;
       } catch (error) {
         console.error(error);
-        errorToast(error);
+        errorToast(error, "Failed to connect to wallet");
       }
       setConnecting(false);
       return false;
@@ -177,7 +179,7 @@ export function SetupWallet() {
                 onPressIn={() => setShowHelp(true)}
                 className="-mr-4 px-6"
               >
-                <HelpCircleIcon
+                <HelpCircleLineIcon
                   className="text-muted-foreground"
                   width={24}
                   height={24}
@@ -197,9 +199,9 @@ export function SetupWallet() {
           <Text className="mt-4">Connecting to your Wallet</Text>
         </View>
       ) : !nostrWalletConnectUrl ? (
-        <>
+        <View className="flex-1">
           <View className="p-4">
-            <Text className="text-lg text-center font-medium2 text-secondary-foreground">
+            <Text className="text-center text-secondary-foreground font-medium2">
               Scan a NWC connection secret to add a wallet
             </Text>
           </View>
@@ -217,7 +219,7 @@ export function SetupWallet() {
               <Text>Paste</Text>
             </Button>
           </View>
-        </>
+        </View>
       ) : (
         <DismissableKeyboardView>
           <View className="flex-1 p-6">
@@ -226,7 +228,13 @@ export function SetupWallet() {
                 Wallet name
               </Text>
               <Input
-                className="w-full text-center border-transparent bg-transparent native:text-2xl font-semibold2"
+                className={cn(
+                  Platform.select({
+                    ios: "ios:text-xl ios:sm:text-2xl",
+                    android: "android:text-xl",
+                  }),
+                  "w-full text-center border-transparent bg-transparent font-semibold2",
+                )}
                 value={name}
                 onChangeText={setName}
                 placeholder="Enter a name for your wallet"
@@ -260,62 +268,5 @@ export function SetupWallet() {
         </DismissableKeyboardView>
       )}
     </>
-  );
-}
-
-function HelpModal({
-  visible,
-  onClose,
-}: {
-  visible: boolean;
-  onClose: () => void;
-}) {
-  return (
-    <Modal
-      transparent
-      animationType="fade"
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <View className="flex-1 justify-center items-center bg-black/80">
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={onClose}
-          className="absolute inset-0"
-        />
-        <View className="w-4/5 max-w-[425px] bg-background border border-border rounded-2xl z-10">
-          <View className="flex-row items-center justify-center relative p-6">
-            <Text className="text-xl font-bold2 text-foreground">
-              Connect Your Wallet
-            </Text>
-            <TouchableOpacity
-              onPress={onClose}
-              className="absolute right-0 p-4"
-            >
-              <XIcon className="text-muted-foreground" width={24} height={24} />
-            </TouchableOpacity>
-          </View>
-          <View className="p-6 pt-0 flex flex-col">
-            <View className="flex flex-col mb-4">
-              <Text className="text-muted-foreground">
-                Follow these steps to connect Alby Go to your Hub:
-              </Text>
-              <Text className="text-muted-foreground">
-                1. Open your Alby Hub
-              </Text>
-              <Text className="text-muted-foreground">
-                2. Go to App Store &raquo; Alby Go
-              </Text>
-              <Text className="text-muted-foreground">
-                3. Scan the QR code with this app
-              </Text>
-            </View>
-            <Button onPress={onClose}>
-              <Text className="font-bold2">OK</Text>
-            </Button>
-          </View>
-        </View>
-      </View>
-    </Modal>
   );
 }

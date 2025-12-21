@@ -44,9 +44,9 @@ export function Unlock() {
           headerShown: false,
         }}
       />
-      <View className="flex-1 flex items-center justify-center gap-4">
-        <AlbyGoLogomark className="mb-10 w-52 h-52" />
-        <Text className="font-semibold2 text-4xl text-center text-foreground">
+      <View className="flex-1 flex items-center justify-center gap-6">
+        <AlbyGoLogomark className="mb-10 w-48 h-48" />
+        <Text className="font-semibold2 ios:text-4xl android:text-3xl text-center">
           Unlock to continue
         </Text>
       </View>

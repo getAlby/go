@@ -8,50 +8,70 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./pages/**/*.{js,jsx,ts,tsx}",
   ],
+  safelist: ["bg-sent-foreground", "text-warning", "p-12"],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      fontSize: {
+        xs: ["12px", { lineHeight: "16px" }],
+        sm: ["14px", { lineHeight: "20px" }],
+        base: ["16px", { lineHeight: "24px" }],
+        lg: ["18px", { lineHeight: "28px" }],
+        xl: ["20px", { lineHeight: "28px" }],
+        "2xl": ["24px", { lineHeight: "32px" }],
+        "3xl": ["30px", { lineHeight: "36px" }],
+        "4xl": ["36px", { lineHeight: "40px" }],
+        "5xl": ["48px", { lineHeight: "1" }],
+        "6xl": ["60px", { lineHeight: "1" }],
+      },
       colors: {
-        receive: "#47A66D",
-        send: "#E26842",
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        overlay: "var(--overlay)",
+        border: "var(--border)",
+        logo: {
+          primary: "var(--logo-primary)",
+          secondary: "var(--logo-secondary)",
+        },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+        receive: {
+          DEFAULT: "var(--receive)",
+          foreground: "var(--receive-foreground)",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        sent: {
+          DEFAULT: "var(--sent)",
+          foreground: "var(--sent-foreground)",
         },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        destructive: {
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
+        },
+        pending: {
+          DEFAULT: "var(--pending)",
+          foreground: "var(--pending-foreground)",
+        },
+        warning: {
+          DEFAULT: "var(--warning)",
+          foreground: "var(--warning-foreground)",
+          border: "var(--warning-border)",
         },
       },
       borderWidth: {
         hairline: hairlineWidth(),
       },
       fontFamily: {
+        mono: ["CourierPrime"],
         sans: ["OpenRunde"],
         /* For some (unknown) reason the font styles aren't applied
          * if you use the tailwind native names
@@ -60,6 +80,9 @@ module.exports = {
         medium2: ["OpenRunde-Medium"],
         semibold2: ["OpenRunde-Semibold"],
         bold2: ["OpenRunde-Bold"],
+      },
+      screens: {
+        sm: "376px",
       },
     },
   },

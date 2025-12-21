@@ -1,10 +1,11 @@
 import { Link } from "expo-router";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import { BitcoinIcon, ChevronRightIcon } from "~/components/Icons";
 import ShitcoinIcon from "~/components/icons/ShitcoinIcon";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
+import { cn } from "~/lib/utils";
 
 export function UnitsAndCurrency() {
   return (
@@ -12,13 +13,21 @@ export function UnitsAndCurrency() {
       <Screen title="Units & Currency" />
       <View className="flex-1 flex flex-col mt-4">
         <Link href="/settings/bitcoin-units" asChild>
-          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-3">
+          <TouchableOpacity className="flex flex-row items-center gap-4 px-6 py-4">
             <BitcoinIcon
               className="text-muted-foreground"
-              width={28}
-              height={28}
+              width={24}
+              height={24}
             />
-            <Text className="font-medium2 text-xl text-foreground">
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: "ios:text-lg ios:sm:text-xl",
+                  android: "android:text-lg",
+                }),
+                "font-medium2",
+              )}
+            >
               Bitcoin Units
             </Text>
             <ChevronRightIcon
@@ -30,13 +39,16 @@ export function UnitsAndCurrency() {
         </Link>
 
         <Link href="/settings/fiat-currency" asChild>
-          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-3">
-            <ShitcoinIcon
-              className="text-muted-foreground"
-              width={28}
-              height={28}
-            />
-            <Text className="text-foreground font-medium2 text-xl">
+          <TouchableOpacity className="flex flex-row gap-4 items-center px-6 py-4">
+            <ShitcoinIcon width={24} height={24} />
+            <Text
+              className={cn(
+                Platform.OS === "ios"
+                  ? "ios:text-lg ios:sm:text-xl"
+                  : "android:text-lg",
+                "font-medium2",
+              )}
+            >
               Fiat Currency
             </Text>
             <ChevronRightIcon

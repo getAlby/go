@@ -18,7 +18,7 @@ function Text({
   return (
     <Component
       className={cn(
-        "text-base text-foreground web:select-text font-sans",
+        "ios:text-base android:text-sm text-foreground web:select-text font-sans",
         textClass,
         className,
       )}

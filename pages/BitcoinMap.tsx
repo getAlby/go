@@ -3,14 +3,16 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { WebView } from "react-native-webview";
 import BTCMapModal from "~/components/BTCMapModal";
-import { HelpCircleIcon } from "~/components/Icons";
+import { HelpCircleLineIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
+import { useThemeColor } from "~/lib/useThemeColor";
 
 export function BitcoinMap() {
+  const { background } = useThemeColor("background");
   const [showModal, setShowModal] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [mapUrl, setMapUrl] = React.useState("https://btcmap.org/map");
@@ -20,7 +22,7 @@ export function BitcoinMap() {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== Location.PermissionStatus.GRANTED) {
-          throw new Error("Permission to access location was denied.");
+          throw new Error("Enable permissions to access location");
         }
 
         const location = await Location.getCurrentPositionAsync({});
@@ -36,7 +38,7 @@ export function BitcoinMap() {
   }, []);
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 pt-2">
       <Screen
         title="Bitcoin Map"
         right={() => (
@@ -45,8 +47,8 @@ export function BitcoinMap() {
               onPressIn={() => setShowModal(true)}
               className="-mr-4 px-6"
             >
-              <HelpCircleIcon
-                className="text-muted-foreground"
+              <HelpCircleLineIcon
+                className="text-secondary-foreground"
                 width={24}
                 height={24}
               />
@@ -67,6 +69,9 @@ export function BitcoinMap() {
       ) : (
         <WebView
           source={{ uri: mapUrl }}
+          style={{
+            backgroundColor: background,
+          }}
           className="flex-1"
           geolocationEnabled
         />

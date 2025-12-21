@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { XIcon } from "~/components/Icons";
+import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { TransactionItem } from "~/components/TransactionItem";
 import { Button } from "~/components/ui/button";
@@ -62,7 +63,7 @@ export function Transactions() {
   }, [refreshingTransactions, reloadTransactions]);
 
   return (
-    <View className="flex-1 flex flex-col gap-3">
+    <>
       <Screen
         title="Transactions"
         animation="slide_from_bottom"
@@ -73,13 +74,17 @@ export function Transactions() {
             }}
             className="-mr-4 px-6"
           >
-            <XIcon className="text-muted-foreground" width={24} height={24} />
+            <XIcon
+              className="text-secondary-foreground"
+              width={24}
+              height={24}
+            />
           </TouchableOpacity>
         )}
       />
       {allTransactions && allTransactions.length ? (
         <FlatList
-          className="mt-3"
+          className="mt-2"
           refreshControl={
             <RefreshControl
               refreshing={refreshingTransactions}
@@ -88,9 +93,10 @@ export function Transactions() {
           }
           ListFooterComponent={
             loadingNextPage ? (
-              <Text className="text-center mb-5 animate-pulse">
-                Loading more transactions...
-              </Text>
+              <View className="flex flex-row justify-center items-center gap-3 mb-6">
+                <Loading />
+                <Text className="animate-pulse">Loading more transactions</Text>
+              </View>
             ) : undefined
           }
           data={allTransactions}
@@ -109,20 +115,20 @@ export function Transactions() {
           )}
         />
       ) : !transactionsLoaded ? (
-        <ScrollView className="mt-3">
+        <ScrollView showsVerticalScrollIndicator={false} className="mt-2">
           {[...Array(20)].map((e, i) => (
             <View
               key={i}
-              className="flex flex-row items-center gap-3 px-6 py-2 my-2"
+              className="flex flex-row items-center gap-3 px-6 py-4"
             >
-              <Skeleton className="rounded-full w-[44px] h-[44px]" />
-              <View className="flex flex-col flex-1 gap-2 h-[44px]">
-                <Skeleton className="w-32 text-lg" />
-                <Skeleton className="w-16 text-base" />
+              <Skeleton className="rounded-full w-[40px] h-[40px]" />
+              <View className="flex flex-col flex-1 gap-1">
+                <Skeleton className="w-32 ios:text-sm android:text-xs" />
+                <Skeleton className="w-16 ios:text-sm android:text-xs" />
               </View>
-              <View className="flex items-end gap-2 h-[44px]">
-                <Skeleton className="w-16 text-lg" />
-                <Skeleton className="w-8 text-sm" />
+              <View className="flex items-end gap-1">
+                <Skeleton className="w-16 ios:text-sm android:text-xs" />
+                <Skeleton className="w-8 ios:text-sm android:text-xs" />
               </View>
             </View>
           ))}
@@ -130,8 +136,10 @@ export function Transactions() {
       ) : (
         <View className="p-6 flex-1 items-center justify-center gap-5">
           <View className="flex flex-col items-center">
-            <Text className="text-2xl font-semibold2">No transactions yet</Text>
-            <Text className="text-muted-foreground text-xl text-center">
+            <Text className="ios:text-2xl android:text-xl font-semibold2">
+              No transactions yet
+            </Text>
+            <Text className="text-muted-foreground ios:text-xl android:text-lg text-center">
               Top up your wallet to get started
             </Text>
           </View>
@@ -142,6 +150,6 @@ export function Transactions() {
           </Link>
         </View>
       )}
-    </View>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 import { Image } from "react-native";
 import { useColorScheme } from "~/lib/useColorScheme";
 
+// TODO: Remove this in favour of components/icons/AlbyGo.tsx
 function AlbyGoLogo({ className = "" }) {
   const { isDarkColorScheme } = useColorScheme();
 

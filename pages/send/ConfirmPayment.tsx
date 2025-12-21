@@ -1,11 +1,11 @@
 import { Invoice } from "@getalby/lightning-tools/bolt11";
-
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { AlertCircleIcon, ZapIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import { LongTextBottomSheet } from "~/components/LongTextBottomSheet";
 import { Receiver } from "~/components/Receiver";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -16,6 +16,7 @@ import { useTransactions } from "~/hooks/useTransactions";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { cn } from "~/lib/utils";
 
 export function ConfirmPayment() {
   const { data: transactions } = useTransactions();
@@ -38,6 +39,8 @@ export function ConfirmPayment() {
     pr: invoice,
   });
   const amountToPaySats = amount ? +amount : decodedInvoice.satoshi;
+
+  const navigation = useNavigation();
 
   async function pay() {
     setLoading(true);
@@ -63,81 +66,147 @@ export function ConfirmPayment() {
         useAppStore.getState().updateLastAlbyPayment();
       }
 
+      if (!navigation.isFocused()) {
+        return;
+      }
+
       router.dismissAll();
       router.replace({
         pathname: "/send/success",
         params: {
-          preimage: response.preimage,
-          receiver,
-          invoice,
           amount: amountToPaySats,
           successAction,
         },
       });
     } catch (error) {
       console.error(error);
-      errorToast(error);
+      errorToast(error, "Failed to make payment");
     }
     setLoading(false);
   }
 
+  const displayCharacterCount = React.useMemo(
+    () =>
+      new Intl.NumberFormat().format(Math.ceil(amountToPaySats)).length +
+      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+    [amountToPaySats, bitcoinDisplayFormat],
+  );
+
   return (
     <>
       <Screen title="Confirm Payment" />
-      <View className="flex-1 justify-center items-center gap-16 p-6">
+      <View className="flex-1 justify-around items-center p-6">
         <View className="flex flex-col gap-2">
-          <Text className="text-center text-muted-foreground font-semibold2 mb-2">
+          <Text
+            className={cn(
+              Platform.select({
+                ios: "ios:text-base ios:sm:text-lg",
+                android: "android:text-base",
+              }),
+              "text-center text-muted-foreground font-medium2",
+            )}
+          >
             Send
           </Text>
-          <View className="flex flex-row items-end justify-center gap-2">
-            <Text className="text-5xl leading-[1.5] font-bold2 text-foreground">
-              {bitcoinDisplayFormat === "bip177" && "₿ "}
-              {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
-            </Text>
-            {bitcoinDisplayFormat === "sats" && (
-              <Text className="text-5xl leading-[1.5] font-bold2 text-muted-foreground">
-                sats
+          <View className="flex flex-row items-center justify-center gap-2">
+            {bitcoinDisplayFormat === "bip177" && (
+              <Text
+                className={cn(
+                  Platform.select({
+                    ios: cn(
+                      displayCharacterCount > 11
+                        ? "ios:text-4xl"
+                        : "ios:text-5xl",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "ios:sm:text-5xl",
+                    ),
+                    android: cn(
+                      displayCharacterCount > 11
+                        ? "android:text-3xl"
+                        : "android:text-[42px]",
+                      displayCharacterCount <= 14 &&
+                        displayCharacterCount >= 11 &&
+                        "sm:android:text-[42px]",
+                    ),
+                  }),
+                  "text-secondary-foreground !leading-[1.5] font-bold2",
+                )}
+              >
+                ₿
               </Text>
             )}
+            <Text
+              className={cn(
+                Platform.select({
+                  ios: cn(
+                    displayCharacterCount > 11
+                      ? "ios:text-4xl"
+                      : "ios:text-5xl",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "ios:sm:text-5xl",
+                  ),
+                  android: cn(
+                    displayCharacterCount > 11
+                      ? "android:text-3xl"
+                      : "android:text-[42px]",
+                    displayCharacterCount <= 14 &&
+                      displayCharacterCount >= 11 &&
+                      "sm:android:text-[42px]",
+                  ),
+                }),
+                "!leading-[1.5] font-bold2",
+              )}
+            >
+              {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
+              {bitcoinDisplayFormat === "sats" && (
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: cn(
+                        displayCharacterCount > 11
+                          ? "ios:text-4xl"
+                          : "ios:text-5xl",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "ios:sm:text-5xl",
+                      ),
+                      android: cn(
+                        displayCharacterCount > 11
+                          ? "android:text-3xl"
+                          : "android:text-[42px]",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "sm:android:text-[42px]",
+                      ),
+                    }),
+                    "text-secondary-foreground font-semibold2",
+                  )}
+                >
+                  {" "}
+                  sats
+                </Text>
+              )}
+            </Text>
           </View>
           {getFiatAmount && (
-            <Text className="text-center text-muted-foreground text-3xl font-semibold2">
+            <Text className="text-center text-secondary-foreground ios:text-3xl android:text-2xl font-semibold2">
               {getFiatAmount(amountToPaySats)}
             </Text>
           )}
         </View>
         <Receiver lightningAddress={receiver} />
         {decodedInvoice.description ? (
-          <View className="flex flex-col gap-2 justify-center items-center">
-            <Text className="text-muted-foreground text-center font-semibold2">
-              Description
-            </Text>
-            <Text
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              className="text-center text-foreground text-2xl font-semibold2"
-            >
-              {decodedInvoice.description}
-            </Text>
-          </View>
+          <LongTextBottomSheet
+            title="Description"
+            content={decodedInvoice.description}
+          />
         ) : (
-          comment && (
-            <View className="flex flex-col gap-2">
-              <Text className="text-muted-foreground text-center font-semibold2">
-                Comment
-              </Text>
-              <Text
-                numberOfLines={2}
-                ellipsizeMode="tail"
-                className="text-center text-foreground text-2xl font-medium2"
-              >
-                {comment}
-              </Text>
-            </View>
-          )
+          comment && <LongTextBottomSheet title="Comment" content={comment} />
         )}
       </View>
-      <View className="p-6 bg-background">
+      <View className="p-6">
         <WalletSwitcher selectedWalletId={selectedWalletId} wallets={wallets} />
         {transactions?.transactions.some(
           (transaction) => transaction.state === "pending",
