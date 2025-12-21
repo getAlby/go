@@ -168,7 +168,7 @@ function DescriptionInput({
             {isIOS ? (
               <BottomSheetTextInput
                 placeholder="Sats for Satoshi"
-                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border ios:text-xl ios:sm:text-2xl ios:leading-[1.25] font-semibold2 caret-primary"
+                className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border ios:text-xl ios:sm:text-2xl !leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted"
                 selectionColor={primary}
                 value={input}
@@ -179,7 +179,7 @@ function DescriptionInput({
             ) : (
               <Input
                 placeholder="Sats for Satoshi"
-                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 android:text-xl leading-[1.25] font-semibold2"
+                className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 android:text-xl font-semibold2"
                 value={input}
                 onChangeText={setInput}
                 onSubmitEditing={save}
