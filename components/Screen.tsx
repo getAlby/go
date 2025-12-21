@@ -47,7 +47,13 @@ function Screen({ title, className, animation, right, left }: ScreenProps) {
           <Text
             className={cn(
               Platform.OS === "android" &&
-                (right ? (left || canGoBack ? "" : "ml-[52px]") : "mr-[52px]"),
+                (right
+                  ? left || canGoBack
+                    ? ""
+                    : "ml-[52px]"
+                  : left || canGoBack
+                    ? "mr-[52px]"
+                    : ""),
               Platform.select({
                 ios: "ios:text-xl ios:sm:text-2xl",
                 android: "android:text-xl",
