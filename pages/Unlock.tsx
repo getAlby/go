@@ -10,6 +10,8 @@ import { useSession } from "~/hooks/useSession";
 
 export function Unlock() {
   const [isUnlocking, setIsUnlocking] = React.useState(false);
+  const [isAutoPrompted, setIsAutoPrompted] = React.useState(false);
+
   const { signIn } = useSession();
 
   const handleUnlock = useCallback(async () => {
@@ -35,6 +37,13 @@ export function Unlock() {
       setIsUnlocking(false);
     }
   }, [isUnlocking, signIn]);
+
+  React.useEffect(() => {
+    if (!isAutoPrompted) {
+      handleUnlock();
+    }
+    setIsAutoPrompted(true);
+  }, [isAutoPrompted, handleUnlock]);
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">
