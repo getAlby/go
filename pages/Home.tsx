@@ -364,6 +364,7 @@ function MainButton({
             <View className="flex flex-col justify-center items-center gap-4">
               <Icon />
               <Text
+                numberOfLines={1}
                 className={cn(
                   Platform.select({
                     ios: "ios:text-2xl ios:sm:text-3xl",
