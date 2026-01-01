@@ -365,6 +365,7 @@ function MainButton({
               <Icon />
               <Text
                 numberOfLines={1}
+                adjustsFontSizeToFit
                 className={cn(
                   Platform.select({
                     ios: "ios:text-2xl ios:sm:text-3xl",
