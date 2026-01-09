@@ -7,6 +7,7 @@ import React from "react";
 import { Alert, View } from "react-native";
 import { AddressIcon, ImageIcon, PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import NFCScanner from "~/components/NFCScanner";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
@@ -22,6 +23,7 @@ export function Send() {
 
   const [isLoading, setLoading] = React.useState(false);
   const [startScanning, setStartScanning] = React.useState(false);
+  const [scannerType, setScannerType] = React.useState<"qr" | "nfc">("qr");
 
   async function pickImage() {
     const permissionResult =
@@ -125,10 +127,17 @@ export function Send() {
           </View>
         ) : (
           <>
-            <QRCodeScanner
-              onScanned={handleScanned}
-              startScanning={startScanning}
-            />
+            {scannerType === "qr" ? (
+              <QRCodeScanner
+                onScanned={handleScanned}
+                startScanning={startScanning}
+              />
+            ) : (
+              <NFCScanner
+                onScanned={handleScanned}
+                startScanning={startScanning}
+              />
+            )}
             <View className="flex flex-row items-stretch justify-center gap-4 p-6">
               <Button
                 variant="secondary"
@@ -141,6 +150,18 @@ export function Send() {
                   className="text-muted-foreground"
                 />
                 <Text numberOfLines={1}>Import</Text>
+              </Button>
+              <Button
+                variant="secondary"
+                className="flex-1 flex flex-col gap-2"
+                onPress={() =>
+                  setScannerType(scannerType === "qr" ? "nfc" : "qr")
+                }
+              >
+                <Text className="text-muted-foreground">
+                  {scannerType === "qr" ? "NFC" : "QR"}
+                </Text>
+                <Text numberOfLines={1}>Scan</Text>
               </Button>
               <Button
                 variant="secondary"
