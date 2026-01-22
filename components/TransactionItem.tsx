@@ -24,22 +24,22 @@ export function TransactionItem({ tx }: Props) {
   );
 
   const typeStateText =
-    tx.state === "failed"
-      ? "Failed"
-      : tx.state === "pending"
-        ? "Sending"
-        : tx.type === "outgoing"
-          ? "Sent"
-          : "Received";
+    tx.type === "incoming"
+      ? "Received"
+      : tx.state === "settled"
+        ? "Sent"
+        : tx.state === "pending"
+          ? "Sending"
+          : "Failed";
 
   const Icon =
-    tx.state === "failed"
-      ? FailedTransactionIcon
-      : tx.state === "pending"
-        ? PendingTransactionIcon
-        : tx.type === "outgoing"
-          ? SentTransactionIcon
-          : ReceivedTransactionIcon;
+    tx.type === "incoming"
+      ? ReceivedTransactionIcon
+      : tx.state === "settled"
+        ? SentTransactionIcon
+        : tx.state === "pending"
+          ? PendingTransactionIcon
+          : FailedTransactionIcon;
 
   const pubkey = tx.metadata?.nostr?.pubkey;
   const npub = pubkey ? safeNpubEncode(pubkey) : undefined;
