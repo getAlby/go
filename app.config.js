@@ -116,6 +116,7 @@ export default ({ config }) => {
       infoPlist: {
         LSMinimumSystemVersion: "13.0",
         UIBackgroundModes: ["audio", "remote-notification"],
+        UIDesignRequiresCompatibility: true,
       },
       userInterfaceStyle: "automatic",
     },
