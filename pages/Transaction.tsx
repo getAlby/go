@@ -64,8 +64,11 @@ export function Transaction() {
   }, [appPubkey]);
 
   const TransactionIcon = React.useMemo(() => {
-    if (transaction.state === "failed") {
-      return FailedTransactionIcon;
+    if (transaction.type === "incoming") {
+      return ReceivedTransactionIcon;
+    }
+    if (transaction.state === "settled") {
+      return SentTransactionIcon;
     }
     if (transaction.state === "pending") {
       return PendingTransactionIcon;
@@ -73,9 +76,7 @@ export function Transaction() {
     if (transaction.state === "accepted") {
       return AcceptedTransactionIcon;
     }
-    return transaction.type === "incoming"
-      ? ReceivedTransactionIcon
-      : SentTransactionIcon;
+    return FailedTransactionIcon;
   }, [transaction.state, transaction.type]);
 
   const boostagram = React.useMemo(() => {
