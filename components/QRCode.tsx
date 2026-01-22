@@ -2,6 +2,7 @@ import { LinearGradient } from "components/LinearGradient";
 import { Dimensions, View } from "react-native";
 import QRCodeStyled from "react-native-qrcode-styled";
 import AlbyGoLogomark from "~/components/AlbyGoLogomark";
+import { THEME_COLORS } from "~/lib/constants";
 import { useThemeColor } from "~/lib/useThemeColor";
 
 function QRCode({
@@ -11,11 +12,8 @@ function QRCode({
   value: string;
   showAvatar?: boolean;
 }) {
-  const { primary, secondary, foreground } = useThemeColor(
-    "primary",
-    "secondary",
-    "foreground",
-  );
+  const { primary, secondary } = useThemeColor("primary", "secondary");
+  const { background, foreground } = THEME_COLORS.light;
   const dimensions = Dimensions.get("window");
   const qrSize = Math.round((dimensions.width * 5) / 7);
   const avatarSize = qrSize * 0.15;
@@ -28,7 +26,10 @@ function QRCode({
         start={[0, 1]}
         end={[1, 0]}
       >
-        <View className="flex items-center justify-center p-4 rounded-3xl bg-background">
+        <View
+          className="flex items-center justify-center p-4 rounded-3xl"
+          style={{ backgroundColor: background }}
+        >
           <QRCodeStyled
             data={value}
             size={qrSize}
