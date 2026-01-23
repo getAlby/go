@@ -161,8 +161,11 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
         val formattedAmount = if (bitcoinDisplayMode == "bip177") "₿ $amount" else "$amount sats"
 
         var descriptionText = notification.optString("description", "")
-        if (descriptionText.isEmpty()) {
-            descriptionText = notification.optJSONObject("metadata")?.optString("comment", "") ?: ""
+        if (descriptionText.isBlank() || descriptionText == "null") {
+            descriptionText = notification.optJSONObject("metadata")
+            ?.optString("comment", "")
+            ?.takeIf { it.isNotBlank() && it != "null" }
+            ?: ""
         }
         val hasDescription = descriptionText.isNotEmpty()
 
