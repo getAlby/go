@@ -93,6 +93,7 @@ export default ({ config }) => {
       "expo-location",
       "expo-router",
       "expo-secure-store",
+      "react-native-nfc-manager",
       [
         "@sentry/react-native/expo",
         {
@@ -132,6 +133,7 @@ export default ({ config }) => {
         "android.permission.CAMERA",
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT",
+        "android.permission.NFC",
       ],
       userInterfaceStyle: "automatic",
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
