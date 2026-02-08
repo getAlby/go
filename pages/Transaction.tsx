@@ -2,7 +2,7 @@ import type { Nip47Transaction, Nip47TransactionMetadata } from "@getalby/sdk";
 import { hexToBytes } from "@noble/hashes/utils";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { nip19 } from "nostr-tools";
 import React from "react";
 import {
@@ -51,19 +51,23 @@ export function Transaction() {
     transactionJSON: string;
     appPubkey?: string; // only specified when opening from push notification
   };
-  const transaction: Nip47Transaction = JSON.parse(transactionJSON);
+
+  let transaction: Nip47Transaction | null = null;
+  try {
+    transaction = JSON.parse(decodeURIComponent(transactionJSON));
+  } catch (e) {
+    console.error("Failed to parse transaction JSON:", e);
+  }
+
   const getFiatAmount = useGetFiatAmount();
   const bitcoinDisplayFormat = useAppStore(
     (store) => store.bitcoinDisplayFormat,
   );
 
-  React.useEffect(() => {
-    if (appPubkey) {
-      useAppStore.getState().setSelectedWallet(appPubkey);
-    }
-  }, [appPubkey]);
-
   const TransactionIcon = React.useMemo(() => {
+    if (!transaction) {
+      return FailedTransactionIcon;
+    }
     if (transaction.type === "incoming") {
       return ReceivedTransactionIcon;
     }
@@ -77,9 +81,12 @@ export function Transaction() {
       return AcceptedTransactionIcon;
     }
     return FailedTransactionIcon;
-  }, [transaction.state, transaction.type]);
+  }, [transaction]);
 
   const boostagram = React.useMemo(() => {
+    if (!transaction) {
+      return undefined;
+    }
     let parsedBoostagram;
     try {
       const tlvRecord = (
@@ -94,7 +101,38 @@ export function Transaction() {
       console.error(e);
     }
     return parsedBoostagram;
-  }, [transaction.metadata]);
+  }, [transaction]);
+
+  const displayCharacterCount = React.useMemo(() => {
+    if (!transaction) {
+      return 0;
+    }
+    return (
+      new Intl.NumberFormat().format(Math.floor(transaction.amount / 1000))
+        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4)
+    );
+  }, [transaction, bitcoinDisplayFormat]);
+
+  React.useEffect(() => {
+    if (!transaction) {
+      Toast.show({
+        type: "error",
+        text1: "Failed to load transaction",
+        text2: "Could not parse transaction details.",
+      });
+      router.back();
+    }
+  }, [transaction]);
+
+  React.useEffect(() => {
+    if (appPubkey) {
+      useAppStore.getState().setSelectedWallet(appPubkey);
+    }
+  }, [appPubkey]);
+
+  if (!transaction) {
+    return null;
+  }
 
   const eventId = transaction.metadata?.nostr?.tags?.find(
     (t) => t[0] === "e",
@@ -104,13 +142,6 @@ export function Transaction() {
   const npub = pubkey ? safeNpubEncode(pubkey) : undefined;
 
   const metadata = transaction.metadata as Nip47TransactionMetadata;
-
-  const displayCharacterCount = React.useMemo(
-    () =>
-      new Intl.NumberFormat().format(Math.floor(transaction.amount / 1000))
-        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
-    [transaction.amount, bitcoinDisplayFormat],
-  );
 
   return (
     <>
