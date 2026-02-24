@@ -7,10 +7,12 @@ import React from "react";
 import { Alert, View } from "react-native";
 import { AddressIcon, ImageIcon, PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
+import { NFCScanner } from "~/components/NFCScanner";
 import QRCodeScanner from "~/components/QRCodeScanner";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { useNfc } from "~/hooks/useNfc";
 import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 
@@ -20,6 +22,7 @@ export function Send() {
     amount: string;
   }>();
 
+  const { nfcAvailable } = useNfc();
   const [isLoading, setLoading] = React.useState(false);
   const [startScanning, setStartScanning] = React.useState(false);
 
@@ -168,6 +171,7 @@ export function Send() {
                 />
                 <Text numberOfLines={1}>Paste</Text>
               </Button>
+              {nfcAvailable && <NFCScanner onScanned={handleScanned} />}
             </View>
           </>
         )}

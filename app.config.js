@@ -117,6 +117,11 @@ export default ({ config }) => {
         LSMinimumSystemVersion: "13.0",
         UIBackgroundModes: ["audio", "remote-notification"],
         UIDesignRequiresCompatibility: true,
+        NFCReaderUsageDescription:
+          "Allow Alby Go to use NFC to send and receive Bitcoin Lightning payments by tapping devices.",
+      },
+      entitlements: {
+        "com.apple.developer.nfc.readersession.formats": ["NDEF"],
       },
       userInterfaceStyle: "automatic",
     },
@@ -132,6 +137,7 @@ export default ({ config }) => {
         "android.permission.CAMERA",
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT",
+        "android.permission.NFC",
       ],
       userInterfaceStyle: "automatic",
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON,

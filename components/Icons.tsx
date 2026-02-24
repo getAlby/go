@@ -44,7 +44,8 @@ import {
   PopiconsBoltSolid as ZapIcon,
 } from "@popicons/react-native";
 import { cssInterop } from "nativewind";
-import { type SvgProps } from "react-native-svg";
+import React from "react";
+import { Path, Svg, type SvgProps } from "react-native-svg";
 
 function interopIcon(icon: React.FunctionComponent<SvgProps>) {
   cssInterop(icon, {
@@ -102,6 +103,40 @@ interopIcon(XCircleIcon);
 interopIcon(XIcon);
 interopIcon(ZapIcon);
 
+// Custom NFC icon (not available in @popicons/react-native)
+function NfcIcon({
+  width = 24,
+  height = 24,
+  color,
+  style,
+  ...props
+}: SvgProps) {
+  return (
+    <Svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      style={style}
+      {...props}
+    >
+      <Path
+        d="M20 2H4C2.9 2 2 2.9 2 4V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V4C22 2.9 21.1 2 20 2ZM13 17H11V7H13V17ZM17 17H15V10H17V17ZM9 17H7V13H9V17Z"
+        fill={(color as string) ?? "currentColor"}
+      />
+    </Svg>
+  );
+}
+cssInterop(NfcIcon, {
+  className: {
+    target: "style",
+    nativeStyleToProp: {
+      color: true,
+      opacity: true,
+    },
+  },
+});
+
 export {
   AddressBookIcon,
   AddressIcon,
@@ -125,6 +160,7 @@ export {
   LikeIcon,
   LinkIcon,
   MapLineIcon,
+  NfcIcon,
   NotesIcon,
   NotificationIcon,
   OnboardingIcon,

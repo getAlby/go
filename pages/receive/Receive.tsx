@@ -1,13 +1,14 @@
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
-import { Share, TouchableOpacity, View } from "react-native";
+import { Alert, Share, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { CreateInvoice } from "~/components/CreateInvoice";
 import {
   AddressIcon,
   CopyIcon,
   EditIcon,
+  NfcIcon,
   ScanIcon,
   ShareIcon,
 } from "~/components/Icons";
@@ -16,6 +17,7 @@ import QRCode from "~/components/QRCode";
 import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { useNfc, writeNfcTag } from "~/hooks/useNfc";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -23,6 +25,9 @@ export function Receive() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   const lightningAddress = wallets[selectedWalletId].lightningAddress;
+
+  const { nfcAvailable } = useNfc();
+  const [nfcSharing, setNfcSharing] = React.useState(false);
 
   function copy() {
     const text = lightningAddress;
@@ -45,6 +50,27 @@ export function Receive() {
     await Share.share({
       message,
     });
+  }
+
+  async function shareViaNfc() {
+    if (!lightningAddress) {
+      errorToast(new Error("No lightning address set"));
+      return;
+    }
+    setNfcSharing(true);
+    try {
+      await writeNfcTag(lightningAddress);
+      Toast.show({
+        type: "success",
+        text1: "Written to NFC tag",
+        text2: "The other device can now tap to pay you.",
+      });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Failed to write NFC tag.";
+      Alert.alert("NFC Error", msg);
+    } finally {
+      setNfcSharing(false);
+    }
   }
 
   return (
@@ -142,6 +168,21 @@ export function Receive() {
               />
               <Text numberOfLines={1}>Amount</Text>
             </Button>
+            {nfcAvailable && (
+              <Button
+                variant="secondary"
+                className="flex-1 flex flex-col gap-2"
+                onPress={shareViaNfc}
+                disabled={nfcSharing}
+              >
+                <NfcIcon
+                  width={32}
+                  height={32}
+                  className="text-muted-foreground"
+                />
+                <Text numberOfLines={1}>{nfcSharing ? "Writing…" : "NFC"}</Text>
+              </Button>
+            )}
           </View>
         </View>
       )}
