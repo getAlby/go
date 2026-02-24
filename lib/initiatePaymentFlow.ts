@@ -15,8 +15,10 @@ export async function initiatePaymentFlow(
 
   try {
     if (text.startsWith("bitcoin:")) {
-      const universalUrl = text.replace("bitcoin:", "http://");
-      const url = new URL(universalUrl);
+      // BIP21 URIs can have no host (e.g. bitcoin:?lightning=lnbc...)
+      // so we use a dummy base URL to parse query params reliably.
+      const bip21Path = text.substring("bitcoin:".length);
+      const url = new URL(bip21Path, "http://localhost");
       const lightningParam = url.searchParams.get("lightning");
       if (!lightningParam) {
         throw new Error("No lightning param found in bitcoin payment link");

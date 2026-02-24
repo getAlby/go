@@ -96,12 +96,21 @@ const testVectors: Record<string, { path: string; params: any }> = {
     params: { url: "lnbc123" },
   },
 
-  // BIP21
+  // BIP21 – with address
   "bitcoin:bitcoinaddress?lightning=lnbc123": {
     path: "/send",
     params: { url: "lnbc123" },
   },
   "BITCOIN:bitcoinaddress?lightning=lnbc123": {
+    path: "/send",
+    params: { url: "lnbc123" },
+  },
+  // BIP21 – no address (Phoenix wallet style)
+  "bitcoin:?lightning=lnbc123": {
+    path: "/send",
+    params: { url: "lnbc123" },
+  },
+  "BITCOIN:?lightning=lnbc123": {
     path: "/send",
     params: { url: "lnbc123" },
   },
