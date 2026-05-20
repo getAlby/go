@@ -1,5 +1,5 @@
 import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
-import { hexToBytes } from "@noble/hashes/utils";
+import { hexToBytes } from "@noble/hashes/utils.js";
 import { getPublicKey } from "nostr-tools";
 import { create } from "zustand";
 import { secureStorage } from "../secureStorage";
