@@ -29,8 +29,8 @@
   "dependencies": {
     "@alevy97/react-native-userdefaults": "^0.2.2",
     "@getalby/expo-shared-preferences": "^0.0.1",
-    "@getalby/lightning-tools": "^6.0.0",
-    "@getalby/sdk": "^7.0.0",
+    "@getalby/lightning-tools": "^8.1.1",
+    "@getalby/sdk": "^8.0.1",
     "@gorhom/bottom-sheet": "^5.2.6",
     "@noble/curves": "^1.6.0",
     "@popicons/react-native": "^0.0.22",

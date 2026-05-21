@@ -1,5 +1,5 @@
 import type { NWAOptions } from "@getalby/sdk";
-import { bytesToHex } from "@noble/hashes/utils";
+import { bytesToHex } from "@noble/hashes/utils.js";
 import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { generateSecretKey, getPublicKey } from "nostr-tools";

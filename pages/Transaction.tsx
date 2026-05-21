@@ -1,5 +1,5 @@
 import type { Nip47Transaction, Nip47TransactionMetadata } from "@getalby/sdk";
-import { hexToBytes } from "@noble/hashes/utils";
+import { hexToBytes } from "@noble/hashes/utils.js";
 import dayjs from "dayjs";
 import * as Clipboard from "expo-clipboard";
 import { Link, useLocalSearchParams } from "expo-router";
