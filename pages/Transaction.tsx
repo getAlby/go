@@ -276,13 +276,11 @@ export function Transaction() {
               <TransactionDetailRow
                 title="Payment Hash"
                 content={transaction.payment_hash}
-                copy
               />
               {transaction.state === "settled" && (
                 <TransactionDetailRow
                   title="Preimage"
                   content={transaction.preimage}
-                  copy
                 />
               )}
               {metadata && (
@@ -290,7 +288,6 @@ export function Transaction() {
                   title="Metadata"
                   content={JSON.stringify(metadata, null, 2)}
                   className="ios:text-sm android:text-xs font-mono bg-muted p-2 rounded-md"
-                  copy
                 />
               )}
             </View>
@@ -304,32 +301,25 @@ export function Transaction() {
 function TransactionDetailRow(props: {
   title: string;
   content: string;
-  copy?: boolean;
   className?: string;
 }) {
   return (
     <View className="flex flex-row gap-3">
       <Text className="w-32 text-secondary-foreground">{props.title}</Text>
-      {props.copy ? (
-        <TouchableOpacity
-          className="flex-1"
-          onPress={() => {
-            Clipboard.setStringAsync(props.content);
-            Toast.show({
-              type: "success",
-              text1: "Copied to clipboard",
-            });
-          }}
-        >
-          <Text className={cn("font-medium2 flex-shrink", props.className)}>
-            {props.content}
-          </Text>
-        </TouchableOpacity>
-      ) : (
+      <TouchableOpacity
+        className="flex-1"
+        onPress={() => {
+          Clipboard.setStringAsync(props.content);
+          Toast.show({
+            type: "success",
+            text1: "Copied to clipboard",
+          });
+        }}
+      >
         <Text className={cn("font-medium2 flex-shrink", props.className)}>
           {props.content}
         </Text>
-      )}
+      </TouchableOpacity>
     </View>
   );
 }
