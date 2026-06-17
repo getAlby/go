@@ -1,5 +1,4 @@
 import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
-import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
@@ -23,7 +22,7 @@ import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
 import { registerWalletNotifications } from "~/lib/notifications";
-import { cn } from "~/lib/utils";
+import { cn, readClipboardText } from "~/lib/utils";
 
 export function SetupWallet() {
   const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
@@ -48,15 +47,10 @@ export function SetupWallet() {
   };
 
   async function paste() {
-    let nostrWalletConnectUrl;
-    try {
-      nostrWalletConnectUrl = await Clipboard.getStringAsync();
-    } catch (error) {
-      console.error("Failed to read clipboard", error);
-      errorToast(error, "Failed to read clipboard");
-      return;
+    const nostrWalletConnectUrl = await readClipboardText();
+    if (nostrWalletConnectUrl) {
+      connect(nostrWalletConnectUrl);
     }
-    connect(nostrWalletConnectUrl);
   }
 
   const connect = React.useCallback(

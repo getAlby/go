@@ -1,4 +1,3 @@
-import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import {
   lnurl as lnurlLib,
@@ -16,6 +15,7 @@ import { Text } from "~/components/ui/text";
 import { WalletSwitcher } from "~/components/WalletSwitcher";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { readClipboardText } from "~/lib/utils";
 
 export function Withdraw() {
   const { url } = useLocalSearchParams<{ url: string }>();
@@ -57,14 +57,10 @@ export function Withdraw() {
   }, [url]);
 
   async function paste() {
-    let clipboardText;
-    try {
-      clipboardText = await Clipboard.getStringAsync();
-    } catch (error) {
-      console.error("Failed to read clipboard", error);
-      return;
+    const clipboardText = await readClipboardText();
+    if (clipboardText) {
+      loadWithdrawal(clipboardText);
     }
-    loadWithdrawal(clipboardText);
   }
 
   const handleScanned = (data: string) => {
@@ -72,11 +68,6 @@ export function Withdraw() {
   };
 
   async function loadWithdrawal(text: string): Promise<boolean> {
-    if (!text) {
-      errorToast(new Error("Your clipboard is empty."));
-      return false;
-    }
-
     text = text.toLowerCase();
 
     console.info("loading withdrawal", text);

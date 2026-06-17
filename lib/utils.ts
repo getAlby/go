@@ -5,8 +5,11 @@ import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex, hexToBytes, utf8ToBytes } from "@noble/hashes/utils.js";
 import { Buffer } from "buffer";
 import { clsx, type ClassValue } from "clsx";
+import * as Clipboard from "expo-clipboard";
 import { getPublicKey, nip19 } from "nostr-tools";
+import Toast from "react-native-toast-message";
 import { twMerge } from "tailwind-merge";
+import { errorToast } from "~/lib/errorToast";
 import { BitcoinDisplayFormat } from "~/lib/state/appStore";
 
 export function cn(...inputs: ClassValue[]) {
@@ -35,6 +38,34 @@ export function safeNpubEncode(hex: string): string | undefined {
   try {
     return nip19.npubEncode(hex);
   } catch {
+    return undefined;
+  }
+}
+
+export async function copyToClipboard(
+  text: string,
+  successMessage = "Copied to clipboard",
+) {
+  // Clipboard.setStringAsync always resolves to true in iOS and
+  // android so we don't have to add a catch block for errors
+  await Clipboard.setStringAsync(text);
+  Toast.show({
+    type: "success",
+    text1: successMessage,
+  });
+}
+
+export async function readClipboardText() {
+  try {
+    const text = await Clipboard.getStringAsync();
+    if (!text) {
+      errorToast(new Error("Your clipboard is empty."));
+      return undefined;
+    }
+    return text;
+  } catch (error) {
+    console.error("Failed to read clipboard", error);
+    errorToast(error, "Failed to read clipboard");
     return undefined;
   }
 }
