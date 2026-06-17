@@ -1,6 +1,5 @@
 import { NWAClient } from "@getalby/sdk/nwc";
 import { Camera } from "expo-camera";
-import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
@@ -13,6 +12,7 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
+import { readClipboardText } from "~/lib/utils";
 
 export function Send() {
   const { url, amount } = useLocalSearchParams<{
@@ -63,14 +63,10 @@ export function Send() {
   }
 
   async function paste() {
-    let clipboardText;
-    try {
-      clipboardText = await Clipboard.getStringAsync();
-    } catch (error) {
-      console.error("Failed to read clipboard", error);
-      return;
+    const clipboardText = await readClipboardText();
+    if (clipboardText) {
+      await loadPayment(clipboardText);
     }
-    await loadPayment(clipboardText);
   }
 
   const handleScanned = async (data: string) => {
@@ -78,11 +74,6 @@ export function Send() {
   };
 
   const loadPayment = async (text: string, amount = "") => {
-    if (!text) {
-      errorToast(new Error("Your clipboard is empty."));
-      return false;
-    }
-
     if (text.startsWith("nostr+walletauth") /* can have : or +alby: */) {
       const nwaOptions = NWAClient.parseWalletAuthUrl(text);
       router.replace({

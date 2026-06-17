@@ -1,7 +1,6 @@
 import type { Nip47Transaction, Nip47TransactionMetadata } from "@getalby/sdk";
 import { hexToBytes } from "@noble/hashes/utils.js";
 import dayjs from "dayjs";
-import * as Clipboard from "expo-clipboard";
 import { Link, useLocalSearchParams } from "expo-router";
 import { nip19 } from "nostr-tools";
 import React from "react";
@@ -12,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Toast from "react-native-toast-message";
 import { LinkIcon } from "~/components/Icons";
 import AcceptedTransactionIcon from "~/components/icons/AcceptedTransaction";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
@@ -23,7 +21,12 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
-import { cn, formatBitcoinAmount, safeNpubEncode } from "~/lib/utils";
+import {
+  cn,
+  copyToClipboard,
+  formatBitcoinAmount,
+  safeNpubEncode,
+} from "~/lib/utils";
 
 type TLVRecord = {
   type: number;
@@ -308,12 +311,8 @@ function TransactionDetailRow(props: {
       <Text className="w-32 text-secondary-foreground">{props.title}</Text>
       <TouchableOpacity
         className="flex-1"
-        onPress={() => {
-          Clipboard.setStringAsync(props.content);
-          Toast.show({
-            type: "success",
-            text1: "Copied to clipboard",
-          });
+        onPress={async () => {
+          await copyToClipboard(props.content);
         }}
       >
         <Text className={cn("font-medium2 flex-shrink", props.className)}>

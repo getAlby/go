@@ -6,7 +6,6 @@ import {
   BottomSheetTextInput,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import * as Clipboard from "expo-clipboard";
 import React, { useCallback, useRef, useState } from "react";
 import {
   Keyboard,
@@ -27,7 +26,7 @@ import { Text } from "~/components/ui/text";
 import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
-import { cn } from "~/lib/utils";
+import { cn, readClipboardText } from "~/lib/utils";
 
 interface ContactInputProps {
   lnAddress: string;
@@ -204,14 +203,10 @@ export function Address() {
   }, [addressBookEntries, keyboardText]);
 
   const paste = async () => {
-    let clipboardText;
-    try {
-      clipboardText = await Clipboard.getStringAsync();
-    } catch (error) {
-      console.error("Failed to read clipboard", error);
-      return;
+    const clipboardText = await readClipboardText();
+    if (clipboardText) {
+      setKeyboardText(clipboardText);
     }
-    setKeyboardText(clipboardText);
   };
 
   return (
