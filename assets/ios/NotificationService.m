@@ -149,6 +149,12 @@
     NSString *formattedAmount = isBip177 ? [NSString stringWithFormat:@"₿ %.0f", amountInSats] : [NSString stringWithFormat:@"%.0f sats", amountInSats];
 
     NSString *descriptionText = notificationDict[@"description"];
+    if (![descriptionText isKindOfClass:[NSString class]] || descriptionText.length == 0) {
+        NSDictionary *metadata = notificationDict[@"metadata"];
+        if ([metadata isKindOfClass:[NSDictionary class]]) {
+            descriptionText = metadata[@"comment"];
+        }
+    }
     BOOL hasDescription       = [descriptionText isKindOfClass:[NSString class]] && descriptionText.length > 0;
 
     NSString *notificationTitle = [notificationType isEqualToString:@"hold_invoice_accepted"]
