@@ -136,6 +136,44 @@ describe("handleLink", () => {
     expect(router.push).not.toHaveBeenCalled();
   });
 
+  it("should preserve decoded callback and app icon params", async () => {
+    await handleLink(
+      "nostrnwc://connect?appname=Test%20App&callback=myapp%3A%2F%2Fopen%3Fredirect%3Dhttps%253A%252F%252Fdev.example.com%252Fdone&appicon=https%3A%2F%2Fcdn.example.com%2Ficon.png",
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: "/settings/wallets/connect",
+      params: {
+        options: JSON.stringify({
+          icon: "https://cdn.example.com/icon.png",
+          name: "Test App",
+          returnTo:
+            "myapp://open?redirect=https%3A%2F%2Fdev.example.com%2Fdone",
+        }),
+        flow: "deeplink",
+      },
+    });
+  });
+
+  it("should open payment notifications without decoding nested payloads twice", async () => {
+    await handleLink(
+      "alby://payment_notification?app_pubkey=abc&transaction=%7B%22type%22%3A%22incoming%22%2C%22state%22%3A%22settled%22%2C%22invoice%22%3A%22lnbc123%22%2C%22description%22%3A%22myapp%3A%2F%2Fopen%3Fredirect%3Dhttps%253A%252F%252Fdev.example.com%252Fdone%26payload%3D%257B%2522screen%2522%253A%2522payment%2522%257D%22%2C%22description_hash%22%3A%22%22%2C%22preimage%22%3A%22abc%22%2C%22payment_hash%22%3A%22def%22%2C%22amount%22%3A21000%2C%22fees_paid%22%3A0%2C%22created_at%22%3A1753275708%2C%22expires_at%22%3A1753362108%2C%22settled_at%22%3A1753275741%2C%22settle_deadline%22%3Anull%2C%22metadata%22%3Anull%7D",
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: "/transaction",
+      params: {
+        appPubkey: "abc",
+        transactionJSON:
+          '{"type":"incoming","state":"settled","invoice":"lnbc123","description":"myapp://open?redirect=https%3A%2F%2Fdev.example.com%2Fdone&payload=%7B%22screen%22%3A%22payment%22%7D","description_hash":"","preimage":"abc","payment_hash":"def","amount":21000,"fees_paid":0,"created_at":1753275708,"expires_at":1753362108,"settled_at":1753275741,"settle_deadline":null,"metadata":null}',
+      },
+    });
+  });
+
   describe("Expo links", () => {
     test.each(Object.entries(testVectors))(
       "should parse the URL '%s' and navigate correctly",
