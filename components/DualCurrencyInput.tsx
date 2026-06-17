@@ -556,7 +556,7 @@ export function DualCurrencyInput({
                 <View className="-mb-2 size-3 rotate-45 bg-foreground" />
                 <Pressable
                   onPress={paste}
-                  className="bg-foreground rounded-xl bg-card px-5 py-2"
+                  className="bg-foreground rounded-xl px-5 py-2"
                 >
                   <Text className="font-medium2 text-background">Paste</Text>
                 </Pressable>
