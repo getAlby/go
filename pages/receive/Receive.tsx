@@ -1,8 +1,6 @@
-import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React from "react";
 import { Share, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
 import { CreateInvoice } from "~/components/CreateInvoice";
 import {
   AddressIcon,
@@ -18,23 +16,20 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
+import { copyToClipboard } from "~/lib/utils";
 
 export function Receive() {
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   const lightningAddress = wallets[selectedWalletId].lightningAddress;
 
-  function copy() {
+  async function copy() {
     const text = lightningAddress;
     if (!text) {
       errorToast(new Error("Nothing to copy"));
       return;
     }
-    Clipboard.setStringAsync(text);
-    Toast.show({
-      type: "success",
-      text1: "Copied to clipboard",
-    });
+    await copyToClipboard(text);
   }
 
   async function share() {

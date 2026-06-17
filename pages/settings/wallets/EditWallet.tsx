@@ -1,4 +1,3 @@
-import * as Clipboard from "expo-clipboard";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -25,7 +24,7 @@ import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
-import { cn } from "~/lib/utils";
+import { cn, copyToClipboard } from "~/lib/utils";
 
 export function EditWallet() {
   const { id } = useLocalSearchParams() as { id: string };
@@ -171,7 +170,7 @@ export function EditWallet() {
                   },
                   {
                     text: "Confirm",
-                    onPress: () => {
+                    onPress: async () => {
                       const isSuperuser = useAppStore
                         .getState()
                         .wallets[
@@ -195,11 +194,10 @@ export function EditWallet() {
                       if (!nwcUrl) {
                         return;
                       }
-                      Clipboard.setStringAsync(nwcUrl);
-                      Toast.show({
-                        type: "success",
-                        text1: "Connection Secret copied to clipboard",
-                      });
+                      await copyToClipboard(
+                        nwcUrl,
+                        "Connection Secret copied to clipboard",
+                      );
                     },
                   },
                 ],
