@@ -5,6 +5,8 @@ import {
   BottomSheetTextInput,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import * as Clipboard from "expo-clipboard";
+import * as Haptics from "expo-haptics";
 import React, { useCallback, useRef, useState } from "react";
 import {
   Keyboard,
@@ -214,6 +216,7 @@ export function DualCurrencyInput({
   );
   const [text, setText] = React.useState(amount);
   const [inputMode, setInputMode] = React.useState<"sats" | "fiat">("sats");
+  const [showPasteAction, setShowPasteAction] = React.useState(false);
 
   const formatPlaceholderNumber = React.useCallback((value: number) => {
     const suffixes = { M: 1_000_000, k: 1_000 };
@@ -282,6 +285,73 @@ export function DualCurrencyInput({
       ),
     );
   }, [bitcoinDisplayFormat]);
+
+  const applyPastedValue = useCallback(
+    (rawValue: string) => {
+      if (inputMode === "sats") {
+        const [integerPart = ""] = rawValue.split(".");
+        const next = integerPart.replace(/\D/g, "").replace(/^0+/, "");
+        if (!next) {
+          errorToast(
+            new Error("Your clipboard does not contain a valid amount."),
+          );
+          return;
+        }
+        if (Number(next) > MAX_SATS_THRESHOLD) {
+          showSatsThresholdToast();
+          return;
+        }
+        setText(next);
+        setAmount(next);
+        return;
+      }
+
+      const sanitized = rawValue.replace(/,/g, "").replace(/[^\d.]/g, "");
+
+      const [integerPart = "", ...decimalParts] = sanitized.split(".");
+      const hasDecimal = decimalParts.length > 0;
+
+      const normalizedInteger = integerPart.replace(/^0+(?=\d)/, "");
+      const normalizedDecimal = decimalParts.join("").slice(0, 2);
+
+      const next = hasDecimal
+        ? `${normalizedInteger || "0"}.${normalizedDecimal}`
+        : normalizedInteger;
+
+      if (!next) {
+        errorToast(
+          new Error("Your clipboard does not contain a valid amount."),
+        );
+        return;
+      }
+
+      const satsAmount = getSatsAmount?.(+next);
+      if (satsAmount !== undefined && satsAmount > MAX_SATS_THRESHOLD) {
+        showSatsThresholdToast();
+        return;
+      }
+
+      setText(next);
+      if (getSatsAmount) {
+        setAmount(satsAmount?.toString() || "");
+      }
+    },
+    [getSatsAmount, inputMode, setAmount, showSatsThresholdToast],
+  );
+
+  const paste = useCallback(async () => {
+    let clipboardText;
+    try {
+      clipboardText = await Clipboard.getStringAsync();
+    } catch (error) {
+      console.error("Failed to read clipboard", error);
+      errorToast(new Error("Failed to read clipboard."));
+      return;
+    }
+
+    applyPastedValue(clipboardText);
+    setShowPasteAction(false);
+  }, [applyPastedValue]);
 
   const handleKeyPress = (key: string) => {
     if (inputMode === "sats") {
@@ -357,6 +427,12 @@ export function DualCurrencyInput({
 
   return (
     <View className="flex-1 flex flex-col gap-2">
+      {showPasteAction && (
+        <Pressable
+          className="absolute inset-0 z-40"
+          onPress={() => setShowPasteAction(false)}
+        />
+      )}
       <View className="flex-1 flex flex-col">
         <View className="flex-1 flex items-center justify-center">
           {validationMessage !== "" && (
@@ -364,102 +440,127 @@ export function DualCurrencyInput({
           )}
         </View>
         <View className="flex-[2] w-full flex flex-col items-center justify-center gap-2">
-          <View className="flex flex-row items-center justify-center gap-2">
-            {(inputMode === "fiat" ||
-              (inputMode === "sats" && bitcoinDisplayFormat === "bip177")) && (
-              <Text
-                className={cn(
-                  Platform.select({
-                    ios: cn(
-                      displayCharacterCount > 11
-                        ? "ios:text-4xl"
-                        : "ios:text-5xl",
-                      displayCharacterCount <= 14 &&
-                        displayCharacterCount >= 11 &&
-                        "ios:sm:text-5xl",
-                    ),
-                    android: cn(
-                      displayCharacterCount > 11
-                        ? "android:text-4xl"
-                        : "android:text-[42px]",
-                      displayCharacterCount <= 14 &&
-                        displayCharacterCount >= 11 &&
-                        "sm:android:text-[42px]",
-                    ),
-                  }),
-                  "text-secondary-foreground font-bold2 !leading-[1.5]",
-                  !text && "text-muted",
-                )}
-              >
-                {inputMode === "sats" && bitcoinDisplayFormat === "bip177"
-                  ? "₿"
-                  : symbol}
-              </Text>
-            )}
-            <Text
-              className={cn(
-                Platform.select({
-                  ios: cn(
-                    displayCharacterCount > 11
-                      ? "ios:text-4xl"
-                      : "ios:text-5xl",
-                    displayCharacterCount <= 14 &&
-                      displayCharacterCount >= 11 &&
-                      "ios:sm:text-5xl",
-                  ),
-                  android: cn(
-                    displayCharacterCount > 11
-                      ? "android:text-4xl"
-                      : "android:text-[42px]",
-                    displayCharacterCount <= 14 &&
-                      displayCharacterCount >= 11 &&
-                      "sm:android:text-[42px]",
-                  ),
-                }),
-                "font-semibold2 !leading-[1.5]",
-                !text && "text-muted",
-                validationMessage && "text-destructive",
-              )}
+          <View className="relative">
+            <Pressable
+              disabled={isAmountReadOnly}
+              onLongPress={() => {
+                if (!text) {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                  setShowPasteAction(true);
+                }
+              }}
+              delayLongPress={300}
             >
-              {text
-                ? formattedText
-                : inputMode === "sats"
-                  ? min
-                    ? max
-                      ? `${formatPlaceholderNumber(min)}-${formatPlaceholderNumber(max)}`
-                      : `Min ${formatPlaceholderNumber(min)}`
-                    : max
-                      ? `Max ${formatPlaceholderNumber(max)}`
-                      : "0"
-                  : "0.00"}
-            </Text>
-            {inputMode === "sats" && bitcoinDisplayFormat === "sats" && (
-              <Text
-                className={cn(
-                  Platform.select({
-                    ios: cn(
-                      displayCharacterCount > 11
-                        ? "ios:text-4xl"
-                        : "ios:text-5xl",
-                      displayCharacterCount <= 14 &&
-                        displayCharacterCount >= 11 &&
-                        "ios:sm:text-5xl",
-                    ),
-                    android: cn(
-                      displayCharacterCount > 11
-                        ? "android:text-4xl"
-                        : "android:text-[42px]",
-                      displayCharacterCount <= 14 &&
-                        displayCharacterCount >= 11 &&
-                        "sm:android:text-[42px]",
-                    ),
-                  }),
-                  "text-secondary-foreground font-semibold2 !leading-[1.5]",
-                  !text && "text-muted",
+              <View className="flex flex-row items-center justify-center gap-2">
+                {(inputMode === "fiat" ||
+                  (inputMode === "sats" &&
+                    bitcoinDisplayFormat === "bip177")) && (
+                  <Text
+                    className={cn(
+                      Platform.select({
+                        ios: cn(
+                          displayCharacterCount > 11
+                            ? "ios:text-4xl"
+                            : "ios:text-5xl",
+                          displayCharacterCount <= 14 &&
+                            displayCharacterCount >= 11 &&
+                            "ios:sm:text-5xl",
+                        ),
+                        android: cn(
+                          displayCharacterCount > 11
+                            ? "android:text-4xl"
+                            : "android:text-[42px]",
+                          displayCharacterCount <= 14 &&
+                            displayCharacterCount >= 11 &&
+                            "sm:android:text-[42px]",
+                        ),
+                      }),
+                      "text-secondary-foreground font-bold2 !leading-[1.5]",
+                      !text && "text-muted",
+                    )}
+                  >
+                    {inputMode === "sats" && bitcoinDisplayFormat === "bip177"
+                      ? "₿"
+                      : symbol}
+                  </Text>
                 )}
-              >
-                {+amount === 1 ? "sat" : "sats"}
-              </Text>
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: cn(
+                        displayCharacterCount > 11
+                          ? "ios:text-4xl"
+                          : "ios:text-5xl",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "ios:sm:text-5xl",
+                      ),
+                      android: cn(
+                        displayCharacterCount > 11
+                          ? "android:text-4xl"
+                          : "android:text-[42px]",
+                        displayCharacterCount <= 14 &&
+                          displayCharacterCount >= 11 &&
+                          "sm:android:text-[42px]",
+                      ),
+                    }),
+                    "font-semibold2 !leading-[1.5]",
+                    !text && "text-muted",
+                    validationMessage && "text-destructive",
+                  )}
+                >
+                  {text
+                    ? formattedText
+                    : inputMode === "sats"
+                      ? min
+                        ? max
+                          ? `${formatPlaceholderNumber(min)}-${formatPlaceholderNumber(max)}`
+                          : `Min ${formatPlaceholderNumber(min)}`
+                        : max
+                          ? `Max ${formatPlaceholderNumber(max)}`
+                          : "0"
+                      : "0.00"}
+                </Text>
+                {inputMode === "sats" && bitcoinDisplayFormat === "sats" && (
+                  <Text
+                    className={cn(
+                      Platform.select({
+                        ios: cn(
+                          displayCharacterCount > 11
+                            ? "ios:text-4xl"
+                            : "ios:text-5xl",
+                          displayCharacterCount <= 14 &&
+                            displayCharacterCount >= 11 &&
+                            "ios:sm:text-5xl",
+                        ),
+                        android: cn(
+                          displayCharacterCount > 11
+                            ? "android:text-4xl"
+                            : "android:text-[42px]",
+                          displayCharacterCount <= 14 &&
+                            displayCharacterCount >= 11 &&
+                            "sm:android:text-[42px]",
+                        ),
+                      }),
+                      "text-secondary-foreground font-semibold2 !leading-[1.5]",
+                      !text && "text-muted",
+                    )}
+                  >
+                    {+amount === 1 ? "sat" : "sats"}
+                  </Text>
+                )}
+              </View>
+            </Pressable>
+            {showPasteAction && (
+              <View className="absolute top-full left-0 right-0 -mt-1 z-50 items-center">
+                <View className="-mb-2 size-3 rotate-45 bg-foreground" />
+                <Pressable
+                  onPress={paste}
+                  className="bg-foreground rounded-xl bg-card px-5 py-2"
+                >
+                  <Text className="font-medium2 text-background">Paste</Text>
+                </Pressable>
+              </View>
             )}
           </View>
           {fiatCurrency && (
