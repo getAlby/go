@@ -125,14 +125,26 @@
         return;
     }
 
-    NSString *transactionJSON    = [[NSString alloc] initWithData:transactionData encoding:NSUTF8StringEncoding];
-    NSString *encodedTransaction = [transactionJSON stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    if (!encodedTransaction) {
+    NSString *transactionJSON = [[NSString alloc] initWithData:transactionData encoding:NSUTF8StringEncoding];
+    if (!transactionJSON) {
         self.contentHandler(nil);
         return;
     }
 
-    NSString *deepLink  = [NSString stringWithFormat:@"alby://payment_notification?transaction=%@&app_pubkey=%@", encodedTransaction, appPubkey];
+    NSURLComponents *components = [[NSURLComponents alloc] init];
+    components.scheme = @"alby";
+    components.host = @"payment_notification";
+    components.queryItems = @[
+        [NSURLQueryItem queryItemWithName:@"transaction" value:transactionJSON],
+        [NSURLQueryItem queryItemWithName:@"app_pubkey" value:appPubkey],
+    ];
+
+    NSString *deepLink = components.string;
+    if (!deepLink) {
+        self.contentHandler(nil);
+        return;
+    }
+
     NSMutableDictionary *newUserInfo = [self.bestAttemptContent.userInfo mutableCopy] ?: [NSMutableDictionary dictionary];
     NSMutableDictionary *newBodyDict = [newUserInfo[@"body"] mutableCopy] ?: [NSMutableDictionary dictionary];
 

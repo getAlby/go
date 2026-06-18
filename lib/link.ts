@@ -85,14 +85,11 @@ export const handleLink = async (url: string) => {
     if (parsedUrl.protocol.startsWith("nostrnwc")) {
       const params = new URLSearchParams(search);
       const appname = params.get("appname");
-      const rawCallback = params.get("callback");
-      const rawAppIcon = params.get("appicon");
-      if (!appname || !rawCallback || !rawAppIcon) {
+      const callback = params.get("callback");
+      const appicon = params.get("appicon");
+      if (!appname || !callback || !appicon) {
         return;
       }
-
-      const appicon = decodeURIComponent(rawAppIcon);
-      const callback = decodeURIComponent(rawCallback);
 
       console.info("Navigating to NWA flow");
       safeRouterPush({
@@ -148,11 +145,10 @@ export const handleLink = async (url: string) => {
     if (hostname === "payment_notification") {
       const urlParams = new URLSearchParams(search);
       const appPubkey = urlParams.get("app_pubkey");
-      const transaction = urlParams.get("transaction");
-      if (!transaction || !appPubkey) {
+      const transactionJSON = urlParams.get("transaction");
+      if (!transactionJSON || !appPubkey) {
         return;
       }
-      const transactionJSON = decodeURIComponent(transaction);
       safeRouterPush({
         pathname: "/transaction",
         params: { transactionJSON, appPubkey },
