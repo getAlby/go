@@ -81,10 +81,10 @@ export function Transaction() {
   }, [transaction]);
 
   React.useEffect(() => {
-    if (appPubkey) {
+    if (transaction && appPubkey) {
       useAppStore.getState().setSelectedWallet(appPubkey);
     }
-  }, [appPubkey]);
+  }, [appPubkey, transaction]);
 
   if (!transaction) {
     return null;
