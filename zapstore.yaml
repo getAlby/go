@@ -1,6 +1,7 @@
-identifier: com.getalby.mobile
-name: Alby Go
-license: MIT
-description: A simple lightning mobile wallet interface that works great with Alby Hub.
+# Migrated from zapstore-cli format
+
 repository: https://github.com/getAlby/go
-blossom_server: https://cdn.zapstore.dev
+
+name: Alby Go
+description: A simple lightning mobile wallet interface that works great with Alby Hub.
+license: MIT
