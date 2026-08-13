@@ -29,7 +29,6 @@ import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
 import { IS_EXPO_GO } from "~/lib/constants";
 import { deregisterWalletNotifications } from "~/lib/notifications";
-import { removeAllInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { cn } from "~/lib/utils";
@@ -281,15 +280,18 @@ export function Settings() {
                             onPress: async () => {
                               if (!IS_EXPO_GO) {
                                 for (const [id, wallet] of wallets.entries()) {
+                                  // clears each wallet's remote push
+                                  // subscription and local notification data;
+                                  // reset() below also clears any remaining
+                                  // native notification data
                                   await deregisterWalletNotifications(
                                     wallet,
                                     id,
                                   );
                                 }
-                                await removeAllInfo();
                               }
                               router.dismissAll();
-                              useAppStore.getState().reset();
+                              await useAppStore.getState().reset();
                             },
                           },
                         ],

@@ -32,16 +32,13 @@ export function EditWallet() {
   const { id } = useLocalSearchParams() as { id: string };
   const wallets = useAppStore((store) => store.wallets);
   const [isDeleting, setIsDeleting] = useState(false);
-  const isNotificationsEnabled = useAppStore(
-    (store) => store.isNotificationsEnabled,
-  );
   const [showConnectionInfo, setShowConnectionInfo] = React.useState(false);
 
   let walletId = parseInt(id);
 
   const onDeleteWallet = async () => {
     setIsDeleting(true);
-    if (!IS_EXPO_GO && isNotificationsEnabled) {
+    if (!IS_EXPO_GO) {
       const wallet = wallets[walletId];
       await deregisterWalletNotifications(wallet, walletId);
     }

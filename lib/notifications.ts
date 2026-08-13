@@ -65,7 +65,7 @@ export async function registerWalletNotifications(
         walletId,
       );
     } else {
-      new Error(`Error: ${response.status} ${response.statusText}`);
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
 
     const walletData: WalletInfo = {
