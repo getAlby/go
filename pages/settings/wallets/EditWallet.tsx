@@ -64,9 +64,14 @@ export function EditWallet() {
         {
           text: "Confirm",
           onPress: async () => {
-            const isSuperuser = useAppStore
-              .getState()
-              .wallets[walletId].nwcCapabilities?.includes("create_connection");
+            const wallet = useAppStore.getState().wallets[walletId];
+            if (!wallet) {
+              errorToast(new Error("Wallet not found"));
+              return;
+            }
+
+            const isSuperuser =
+              wallet.nwcCapabilities?.includes("create_connection");
 
             if (isSuperuser) {
               Toast.show({
@@ -93,8 +98,7 @@ export function EditWallet() {
               return;
             }
 
-            const nwcUrl =
-              useAppStore.getState().wallets[walletId].nostrWalletConnectUrl;
+            const nwcUrl = wallet.nostrWalletConnectUrl;
             if (!nwcUrl) {
               return;
             }
