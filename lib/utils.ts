@@ -1,5 +1,5 @@
 import { NWCClient } from "@getalby/sdk/nwc";
-import { secp256k1 } from "@noble/curves/secp256k1";
+import { secp256k1 } from "@noble/curves/secp256k1.js";
 import { extract as hkdf_extract } from "@noble/hashes/hkdf.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex, hexToBytes, utf8ToBytes } from "@noble/hashes/utils.js";
@@ -17,13 +17,18 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function computeSharedSecret(pub: string, sk: string): string {
-  const sharedSecret = secp256k1.getSharedSecret(sk, "02" + pub);
+  const sharedSecret = secp256k1.getSharedSecret(
+    hexToBytes(sk),
+    hexToBytes("02" + pub),
+  );
   const normalizedKey = sharedSecret.slice(1);
   return Buffer.from(normalizedKey).toString("hex");
 }
 
 export function getConversationKey(pub: string, sk: string): string {
-  const sharedX = secp256k1.getSharedSecret(sk, "02" + pub).subarray(1, 33);
+  const sharedX = secp256k1
+    .getSharedSecret(hexToBytes(sk), hexToBytes("02" + pub))
+    .subarray(1, 33);
   return bytesToHex(hkdf_extract(sha256, sharedX, utf8ToBytes("nip44-v2")));
 }
 
