@@ -1,3 +1,4 @@
+import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
 import React from "react";
 import {
   Modal,
@@ -6,33 +7,57 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { XIcon } from "~/components/Icons";
+import Toast from "react-native-toast-message";
+import Alert from "~/components/Alert";
+import { TriangleAlertIcon, XIcon } from "~/components/Icons";
+import { toastConfig } from "~/components/ToastConfig";
 import { Text } from "~/components/ui/text";
-import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
-import { cn } from "~/lib/utils";
+import { cn, getPubkeyFromNWCUrl } from "~/lib/utils";
 
 type ConnectionInfoModalProps = {
   visible: boolean;
   onClose: () => void;
+  nostrWalletConnectUrl: string | undefined;
+  capabilities?: Nip47Capability[];
 };
 
-function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
+function ConnectionInfoModal({
+  visible,
+  onClose,
+  nostrWalletConnectUrl,
+  capabilities,
+}: ConnectionInfoModalProps) {
   const { shadow } = useThemeColor("shadow");
-  const selectedWalletId = useAppStore((store) => store.selectedWalletId);
-  const wallets = useAppStore((store) => store.wallets);
-  const capabilities = wallets[selectedWalletId].nwcCapabilities;
-  const nwcClient = useAppStore((store) => store.nwcClient);
+  const nwcInfo = React.useMemo(
+    () =>
+      nostrWalletConnectUrl
+        ? NWCClient.parseWalletConnectUrl(nostrWalletConnectUrl)
+        : undefined,
+    [nostrWalletConnectUrl],
+  );
+  const appPubkey = nostrWalletConnectUrl
+    ? getPubkeyFromNWCUrl(nostrWalletConnectUrl)
+    : undefined;
+  const insecureRelays =
+    nwcInfo?.relayUrls.filter((relayUrl) => !relayUrl.startsWith("wss://")) ??
+    [];
+
   const [relayStatuses, setRelayStatuses] = React.useState<boolean[]>([]);
   React.useEffect(() => {
-    if (!nwcClient) {
+    if (!visible || !nwcInfo) {
       return;
     }
+    const pool = new NWCClient({
+      relayUrls: nwcInfo.relayUrls,
+      walletPubkey: nwcInfo.walletPubkey,
+    }).pool;
+    let cancelled = false;
     (async () => {
-      const _relayStatuses = [];
-      for (const relayUrl of nwcClient.relayUrls) {
+      const _relayStatuses: boolean[] = [];
+      for (const relayUrl of nwcInfo.relayUrls) {
         try {
-          await nwcClient.pool.ensureRelay(relayUrl, {
+          await pool.ensureRelay(relayUrl, {
             connectionTimeout: 2000,
           });
           _relayStatuses.push(true);
@@ -40,9 +65,15 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
           _relayStatuses.push(false);
         }
       }
-      setRelayStatuses(_relayStatuses);
+      if (!cancelled) {
+        setRelayStatuses(_relayStatuses);
+      }
     })();
-  }, [nwcClient]);
+    return () => {
+      cancelled = true;
+      pool.destroy();
+    };
+  }, [visible, nwcInfo]);
 
   return (
     <Modal
@@ -103,7 +134,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
           >
             <View className="flex gap-2">
               <Text className="font-semibold2">Relays</Text>
-              {nwcClient?.relayUrls.map((relayUrl, index) => (
+              {nwcInfo?.relayUrls.map((relayUrl, index) => (
                 <View
                   className="flex flex-row items-center gap-2"
                   key={relayUrl}
@@ -117,7 +148,26 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
                   ></View>
                 </View>
               ))}
+              {!!insecureRelays.length && (
+                <Alert
+                  type="warn"
+                  title="Insecure relay"
+                  description={`${insecureRelays.join(", ")} ${
+                    insecureRelays.length > 1 ? "are" : "is"
+                  } not using a secure (wss) connection.`}
+                  icon={TriangleAlertIcon}
+                />
+              )}
             </View>
+
+            {!!nwcInfo?.lud16 && (
+              <View className="flex gap-2">
+                <Text className="font-semibold2">Lightning Address</Text>
+                <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
+                  {nwcInfo.lud16}
+                </Text>
+              </View>
+            )}
 
             <View className="flex gap-2">
               <Text className="font-semibold2">Capabilities</Text>
@@ -129,19 +179,25 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
             <View className="flex gap-2">
               <Text className="font-semibold2">App Pubkey</Text>
               <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
-                {nwcClient?.publicKey}
+                {appPubkey}
               </Text>
             </View>
 
             <View className="flex gap-2">
               <Text className="font-semibold2">Wallet Pubkey</Text>
               <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
-                {nwcClient?.walletPubkey}
+                {nwcInfo?.walletPubkey}
               </Text>
             </View>
           </ScrollView>
         </View>
       </View>
+      <Toast
+        config={toastConfig}
+        position="bottom"
+        bottomOffset={100}
+        topOffset={100}
+      />
     </Modal>
   );
 }

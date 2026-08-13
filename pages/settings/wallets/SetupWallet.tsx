@@ -5,6 +5,7 @@ import React from "react";
 import { Platform, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
+import ConnectionInfoModal from "~/components/ConnectionInfoModal";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import HelpModal from "~/components/HelpModal";
 import {
@@ -41,6 +42,27 @@ export function SetupWallet() {
   const [startScanning, setStartScanning] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showHelp, setShowHelp] = React.useState(false);
+  const [showConnectionInfo, setShowConnectionInfo] = React.useState(false);
+
+  const nwcInfo = nostrWalletConnectUrl
+    ? NWCClient.parseWalletConnectUrl(nostrWalletConnectUrl)
+    : undefined;
+  const existingWalletMatch = nwcInfo
+    ? wallets.some((wallet) => {
+        if (
+          nwcInfo.lud16 &&
+          wallet.lightningAddress?.trim().toLowerCase() ===
+            nwcInfo.lud16.trim().toLowerCase()
+        ) {
+          return true;
+        }
+        return (
+          !!wallet.nostrWalletConnectUrl &&
+          NWCClient.parseWalletConnectUrl(wallet.nostrWalletConnectUrl)
+            .walletPubkey === nwcInfo.walletPubkey
+        );
+      })
+    : false;
 
   const handleScanned = (data: string) => {
     return connect(data);
@@ -70,13 +92,7 @@ export function SetupWallet() {
         setNostrWalletConnectUrl(nostrWalletConnectUrl);
         setCapabilities(capabilities);
         setName(nwcClient.lud16 || "");
-
-        Toast.show({
-          type: "success",
-          text1: "Connection successful",
-          text2: "Please set your wallet name to finish",
-          position: "top",
-        });
+        setShowConnectionInfo(true);
         setConnecting(false);
         return true;
       } catch (error) {
@@ -87,6 +103,21 @@ export function SetupWallet() {
     },
     [],
   );
+
+  // Deferred to a post-render effect (rather than shown inline in connect())
+  // so it fires after ConnectionInfoModal has mounted its own Toast host —
+  // otherwise this toast registers on the root Toast host and renders
+  // beneath the modal that opens in the same update.
+  React.useEffect(() => {
+    if (nostrWalletConnectUrl) {
+      Toast.show({
+        type: "success",
+        text1: "Connection successful",
+        text2: "Review connection info and set your wallet name to finish",
+        position: "top",
+      });
+    }
+  }, [nostrWalletConnectUrl]);
 
   const addWallet = async () => {
     if (isLoading || !nostrWalletConnectUrl) {
@@ -214,6 +245,20 @@ export function SetupWallet() {
       ) : (
         <DismissableKeyboardView>
           <View className="flex-1 p-6">
+            <ConnectionInfoModal
+              visible={showConnectionInfo}
+              onClose={() => setShowConnectionInfo(false)}
+              nostrWalletConnectUrl={nostrWalletConnectUrl}
+              capabilities={capabilities}
+            />
+            {existingWalletMatch && (
+              <Alert
+                type="warn"
+                title="You may already have this wallet"
+                description="A wallet with this lightning address or wallet connection is already set up."
+                icon={TriangleAlertIcon}
+              />
+            )}
             <View className="flex-1 flex flex-col items-center justify-center">
               <Text className="text-muted-foreground text-center">
                 Wallet name
@@ -230,7 +275,6 @@ export function SetupWallet() {
                 onChangeText={setName}
                 placeholder="Enter a name for your wallet"
                 returnKeyType="done"
-                autoFocus
               />
             </View>
             {capabilities &&
