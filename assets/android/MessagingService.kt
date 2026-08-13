@@ -190,6 +190,7 @@ class MessagingService : FirebaseMessagingService(), OnInitListener {
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse("alby://payment_notification?transaction=${Uri.encode(transaction)}&app_pubkey=${appPubkey}")
+            setPackage(packageName)
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
