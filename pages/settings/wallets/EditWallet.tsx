@@ -134,6 +134,8 @@ export function EditWallet() {
           <ConnectionInfoModal
             visible={showConnectionInfo}
             onClose={() => setShowConnectionInfo(false)}
+            nostrWalletConnectUrl={wallets[walletId]?.nostrWalletConnectUrl}
+            capabilities={wallets[walletId]?.nwcCapabilities}
           />
           <TouchableOpacity
             className="flex flex-row items-center gap-4 px-6 py-4"
