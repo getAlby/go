@@ -210,7 +210,6 @@ export function ConnectWallet() {
             budgetRenewal={budgetRenewal}
             maxAmount={maxAmount}
             expiresAt={expiresAt}
-            returnTo={returnTo}
             metadata={metadata}
           />
         )}
@@ -232,6 +231,15 @@ export function ConnectWallet() {
             )}
             <Text>Confirm Connection</Text>
           </Button>
+          {returnTo && (
+            <Text className="px-4 mt-2 text-center text-secondary-foreground ios:text-sm android:text-xs">
+              You will be redirected to{" "}
+              <Text className="font-semibold2 ios:text-sm android:text-xs">
+                {returnTo}
+              </Text>{" "}
+              after confirming.
+            </Text>
+          )}
         </View>
       )}
     </>
@@ -246,7 +254,6 @@ function ConnectView({
   budgetRenewal,
   maxAmount,
   expiresAt,
-  returnTo,
   metadata,
 }: Omit<NWAOptions, "appPubkey" | "relayUrls">) {
   const { shadow } = useThemeColor("shadow");
@@ -356,11 +363,6 @@ function ConnectView({
                     {JSON.stringify(metadata)}
                   </Text>
                 </View>
-              )}
-              {returnTo && (
-                <Text className="mt-2 text-center text-secondary-foreground ios:text-sm android:text-xs">
-                  You will return to {returnTo} after confirming
-                </Text>
               )}
             </ScrollView>
           </View>

@@ -152,6 +152,7 @@ function ConnectionInfoModal({
                 <Alert
                   type="warn"
                   title="Insecure relay"
+                  className="mb-0"
                   description={`${insecureRelays.join(", ")} ${
                     insecureRelays.length > 1 ? "are" : "is"
                   } not using a secure (wss) connection.`}
