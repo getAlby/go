@@ -83,8 +83,8 @@ const normalizeLnurl = (lnurlString: string) => {
   try {
     const url = bech32Decode(lnurlString);
     return new URL(url);
-  } catch (e) {
-    console.info("ignoring bech32 parsing error", e);
+  } catch {
+    // not bech32 encoded, fall through
   }
 
   //maybe it's already a URL?
@@ -134,8 +134,6 @@ export const lnurl = {
 
       const data: LNURLDetails | LNURLError = await response.json();
 
-      console.info("Got LNURL details", data);
-
       const lnurlDetails = data as LNURLDetails;
 
       if (this.isLNURLDetailsError(lnurlDetails)) {
@@ -168,8 +166,6 @@ export const lnurl = {
       // Tests:
       // lnurl1dp68gurn8ghj7em9w3skccne9e3k7mf09emk2mrv944kummhdchkcmn4wfk8qtmjdak85mn6dk7p2p
       const data: LNURLPaymentInfo | LNURLError = await response.json();
-
-      console.info("Got LNURL payment info", data);
 
       const lnurlPaymentInfo = data as LNURLPaymentInfo;
 

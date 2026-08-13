@@ -39,12 +39,8 @@ export function CreateInvoice() {
           amount: amount * 1000 /*FIXME: allow 0-amount invoices */,
           ...(comment ? { description: comment } : {}),
         });
-
-        console.info("makeInvoice Response", response);
-
         setInvoice(response.invoice);
       } catch (error) {
-        console.error(error);
         errorToast(error, "Failed to create invoice");
       }
       setLoading(false);

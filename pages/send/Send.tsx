@@ -51,8 +51,7 @@ export function Send() {
           );
         }
       }
-    } catch (error) {
-      console.error("Error scanning image:", error);
+    } catch {
       Alert.alert(
         "Error Scanning Image",
         "An error occurred while trying to scan the image for a QR code.",

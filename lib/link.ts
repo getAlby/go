@@ -1,6 +1,7 @@
 import { NWAClient, type NWAOptions } from "@getalby/sdk/nwc";
 import { router, type Href } from "expo-router";
 import { InteractionManager } from "react-native";
+import { errorToast } from "~/lib/errorToast";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
 
@@ -54,16 +55,10 @@ const handleLnurl = async (lnurl: string) => {
 
 export const handleLink = async (url: string) => {
   if (!url) {
-    console.error("no url to handle");
     return;
   }
-  // to test opening a transaction:
-  //url = "alby://payment_notification?app_pubkey=ffa0c4a95734243b466d406a1a3ebf4a055bd3a1ef31794e0e3705ee3e6c887b&transaction=%7B%22type%22%3A%22incoming%22%2C%22state%22%3A%22settled%22%2C%22invoice%22%3A%22lnbc200n1p5gphfudqqnp4q228a2ztxkwzaypvzrsh823qngmv97f2v9puwvtsadetypmutyscwpp55s7kzj07uefua5hygqmu34jau0jjp5ck4efvalakj8ztqxntdpkqsp5sxh7kfylhxw6lk336499dpm3w84f6c89h3w8mn95ujm2wnsl4srs9qyysgqcqpcxqyz5vq392s8kt5nhsyywxx0jtjxq3nl6m9yg4zsjqc8mnnj25wmv94hasq8tsl52cnnm02klzy249d4k57qt9pc2ujr9nhf5xq97ne0zgv02gprywph3%22%2C%22description%22%3A%22%22%2C%22description_hash%22%3A%22%22%2C%22preimage%22%3A%22f2fbb43593dd7d7e694d7e330645916c321c730055038fe48f3d6ea858aa9a14%22%2C%22payment_hash%22%3A%22a43d6149fee653ced2e44037c8d65de3e520d316ae52ceffb691c4b01a6b686c%22%2C%22amount%22%3A20000%2C%22fees_paid%22%3A0%2C%22created_at%22%3A1753275708%2C%22expires_at%22%3A1753362108%2C%22settled_at%22%3A1753275741%2C%22settle_deadline%22%3Anull%2C%22metadata%22%3Anull%7D";
-  console.info("handling link", url);
-
   const parsedUrl = new URL(url);
   if (!parsedUrl.protocol) {
-    console.error("no protocol in URL", url);
     return;
   }
 
@@ -91,7 +86,6 @@ export const handleLink = async (url: string) => {
         return;
       }
 
-      console.info("Navigating to NWA flow");
       safeRouterPush({
         pathname: "/settings/wallets/connect",
         params: {
@@ -107,7 +101,6 @@ export const handleLink = async (url: string) => {
     }
 
     if (parsedUrl.protocol === "nostr+walletconnect:") {
-      console.info("Navigating to wallet setup");
       safeRouterPush({
         pathname: "/settings/wallets/setup",
         params: {
@@ -132,8 +125,6 @@ export const handleLink = async (url: string) => {
     }
 
     let fullUrl = `${protocol}${username ? username + "@" : ""}${hostname}${pathname}${search}`;
-
-    console.info("Navigating to", fullUrl);
 
     if (parsedUrl.protocol.startsWith("lnurl")) {
       handleLnurl(fullUrl);
@@ -179,7 +170,7 @@ export const handleLink = async (url: string) => {
       });
     }
   } else {
-    console.error("Unsupported scheme", url);
+    errorToast(new Error("Unsupported link"));
     // Redirect the user to the home screen
     // if no match was found
     router.replace({

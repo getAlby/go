@@ -400,12 +400,10 @@ export const useAppStore = create<AppState>()((set, get) => {
 function getNWCClient(walletId: number): NWCClient | undefined {
   const walletJSON = secureStorage.getItem(getWalletKey(walletId));
   if (!walletJSON) {
-    console.info("No wallet set", walletId);
     return undefined;
   }
   const wallet: Wallet = JSON.parse(walletJSON);
   if (!wallet.nostrWalletConnectUrl) {
-    console.info("No wallet NWC URL set");
     return undefined;
   }
 

@@ -43,7 +43,6 @@ function QRCodeScanner({
 
   const handleScanned = async (data: string) => {
     if (isScanning) {
-      console.info(`Bar code with data ${data} has been scanned!`);
       const result = await onScanned(data);
       setScanning(!result);
     }

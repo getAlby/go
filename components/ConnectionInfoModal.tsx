@@ -36,8 +36,7 @@ function ConnectionInfoModal({ visible, onClose }: ConnectionInfoModalProps) {
             connectionTimeout: 2000,
           });
           _relayStatuses.push(true);
-        } catch (error) {
-          console.error("Failed to connect to relay", { relayUrl, error });
+        } catch {
           _relayStatuses.push(false);
         }
       }
