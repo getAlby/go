@@ -43,21 +43,15 @@ function ConnectionInfoModal({
     nwcInfo?.relayUrls.filter((relayUrl) => !relayUrl.startsWith("wss://")) ??
     [];
 
-  const pool = React.useMemo(() => {
-    if (!nwcInfo) {
-      return undefined;
+  const [relayStatuses, setRelayStatuses] = React.useState<boolean[]>([]);
+  React.useEffect(() => {
+    if (!visible || !nwcInfo) {
+      return;
     }
-    return new NWCClient({
+    const pool = new NWCClient({
       relayUrls: nwcInfo.relayUrls,
       walletPubkey: nwcInfo.walletPubkey,
     }).pool;
-  }, [nwcInfo]);
-
-  const [relayStatuses, setRelayStatuses] = React.useState<boolean[]>([]);
-  React.useEffect(() => {
-    if (!pool || !nwcInfo) {
-      return;
-    }
     let cancelled = false;
     (async () => {
       const _relayStatuses: boolean[] = [];
@@ -79,7 +73,7 @@ function ConnectionInfoModal({
       cancelled = true;
       pool.destroy();
     };
-  }, [pool, nwcInfo]);
+  }, [visible, nwcInfo]);
 
   return (
     <Modal
