@@ -1568,10 +1568,10 @@
   resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-8.1.1.tgz#4bf8be9f30dd76f7dd082262e862e63c16591fae"
   integrity sha512-gB+3fvTGz9bbl31JNgKMWqG4dZWgCxSB51fYn+F4tZ3x2h5oI/yHjvb6W9GBo2Zscr5gMP64gs0LlzKYoETlvQ==
 
-"@getalby/sdk@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-8.0.1.tgz#6202ad96692e54e37bd7b3d0b530b7b1bb03f9b6"
-  integrity sha512-DaRmP5/0z0Xh+UqV4UgCLeYv05SkGsq+BS4sQr5dTI342IKz57T/5YaRGcCipmYPWXL88HObaivd8oJgf9LP3A==
+"@getalby/sdk@8.0.3":
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-8.0.3.tgz#dd59ce94682c1c041fa90b42c16e959aa2d59f03"
+  integrity sha512-vPEogAWwLHbL55COeXrRN7yRBXMDGDxX1M2A+o3Lqw60FFng6fa9FK9sw8ptdILMD1dQZq8FzPXuabQ7seoDBA==
   dependencies:
     "@getalby/lightning-tools" "^8.1.1"
     nostr-tools "^2.23.3"
@@ -1949,18 +1949,6 @@
   integrity sha512-vs1Az2OOTBiP4q0pwjW5aF0xp9n4MxVrmkFBxc6EKZc6ddYx5gaZiAsZoq0uRRXWbi3AT/sBqn05eRPtn1JCPw==
   dependencies:
     "@noble/hashes" "2.0.1"
-
-"@noble/curves@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.6.0.tgz#be5296ebcd5a1730fccea4786d420f87abfeb40b"
-  integrity sha512-TlaHRXDehJuRNR9TfZDNQ45mMEd5dwUwmicsafcIX4SsNiqnCHKjE/1alYPd/lDRVhxdhUAlv8uEhMCI5zjIJQ==
-  dependencies:
-    "@noble/hashes" "1.5.0"
-
-"@noble/hashes@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.5.0.tgz#abadc5ca20332db2b1b2aa3e496e9af1213570b0"
-  integrity sha512-1j6kQFb7QRru7eKN3ZDvRcP13rugwdxZqCjbiAVZfIJwgj2A65UmT4TgARXGlXgnRkORLTDTrO19ZErt7+QXgA==
 
 "@noble/hashes@2.0.1":
   version "2.0.1"
@@ -7842,7 +7830,7 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
-nostr-tools@^2.23.3:
+nostr-tools@2.23.5, nostr-tools@^2.23.3:
   version "2.23.5"
   resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-2.23.5.tgz#46fa68a35cf6e918c4f59208a2ed7585c72a68a0"
   integrity sha512-Fa7ZlUdjfUW1P4E7H3yBexhOHYi18XNyvd2n7eNHkYR085xADX6Y8V8Vm7nT/XQajaFOBrptXmVIGkJ2E4vfVw==
