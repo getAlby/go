@@ -7,6 +7,7 @@ import AlbyGoLogomark from "~/components/AlbyGoLogomark";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
+import { errorToast } from "~/lib/errorToast";
 
 export function Unlock() {
   const [isUnlocking, setIsUnlocking] = React.useState(false);
@@ -32,7 +33,7 @@ export function Unlock() {
         router.replace("/");
       }
     } catch (e) {
-      console.error(e);
+      errorToast(e, "Failed to unlock");
     } finally {
       setIsUnlocking(false);
     }

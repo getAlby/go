@@ -80,8 +80,7 @@ export async function registerWalletNotifications(
 
     try {
       await storeWalletInfo(nwcClient.publicKey, walletData);
-    } catch (storageError) {
-      console.error(storageError);
+    } catch {
       errorToast(new Error("Failed to save wallet data"));
     }
   } catch (error) {

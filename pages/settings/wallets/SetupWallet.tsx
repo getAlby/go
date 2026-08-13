@@ -67,8 +67,6 @@ export function SetupWallet() {
           capabilities.push("notifications");
         }
 
-        console.info("NWC connected", info);
-
         setNostrWalletConnectUrl(nostrWalletConnectUrl);
         setCapabilities(capabilities);
         setName(nwcClient.lud16 || "");
@@ -82,7 +80,6 @@ export function SetupWallet() {
         setConnecting(false);
         return true;
       } catch (error) {
-        console.error(error);
         errorToast(error, "Failed to connect to wallet");
       }
       setConnecting(false);

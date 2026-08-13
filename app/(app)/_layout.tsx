@@ -12,19 +12,16 @@ export default function AppLayout() {
   useHandleLinking();
 
   if (!isOnboarded) {
-    console.info("Not onboarded, redirecting to /onboarding");
     return <Redirect href="/onboarding" />;
   }
 
   if (!hasSession) {
-    console.info("Not authenticated, redirecting to /unlock");
     return <Redirect href="/unlock" />;
   }
 
   const connectionPage = "/settings/wallets/setup";
   // Check the current pathname to prevent redirect loops
   if (!wallets.length && route.pathname !== connectionPage) {
-    console.info("No wallets available, redirecting to setup");
     return <Redirect href={connectionPage} />;
   }
 

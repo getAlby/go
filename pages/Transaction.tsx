@@ -63,7 +63,7 @@ export function Transaction() {
     try {
       return JSON.parse(transactionJSON) as Nip47Transaction;
     } catch (error) {
-      console.error("Failed to parse transaction", error);
+      errorToast(error, "Failed to load transaction");
       return null;
     }
   }, [transactionJSON]);
@@ -336,8 +336,7 @@ function getEncodedEventId(transaction: Nip47Transaction) {
 
   try {
     return nip19.neventEncode({ id: eventId });
-  } catch (error) {
-    console.error("Failed to encode nostr event id", error);
+  } catch {
     return undefined;
   }
 }
@@ -357,8 +356,7 @@ function getBoostagram(
     return JSON.parse(
       new TextDecoder().decode(hexToBytes(tlvRecord.value)),
     ) as Boostagram;
-  } catch (error) {
-    console.error(error);
+  } catch {
     return undefined;
   }
 }

@@ -23,13 +23,8 @@ export function createNwcFetcher<T>(
       ) {
         // the user backgrounded the app, on iOS the websocket connection
         // is severed
-        console.info(
-          "app was backgrounded while doing NWC request, ignoring error",
-          { error },
-        );
         throw new Error("app was backgrounded");
       }
-      console.error("NWC request failed", { error });
       errorToast(error, "NWC request failed");
       throw error;
     }

@@ -10,8 +10,6 @@ export async function initiatePaymentFlow(
 ): Promise<boolean> {
   // Some apps use uppercased LIGHTNING: prefixes
   text = text.toLowerCase();
-  console.info("loading payment", text);
-  const originalText = text;
 
   try {
     if (text.startsWith("bitcoin:")) {
@@ -35,7 +33,6 @@ export async function initiatePaymentFlow(
     }
 
     const lnurl = lnurlLib.findLnurl(text);
-    console.info("Checked lnurl value", text, lnurl);
 
     if (lnurl) {
       const lnurlDetails = await lnurlLib.getDetails(lnurl);
@@ -88,7 +85,6 @@ export async function initiatePaymentFlow(
       return true;
     }
   } catch (error) {
-    console.error("failed to load payment", originalText, error);
     errorToast(error, "Failed to load payment");
   }
 

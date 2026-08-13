@@ -70,8 +70,6 @@ export function Withdraw() {
   async function loadWithdrawal(text: string): Promise<boolean> {
     text = text.toLowerCase();
 
-    console.info("loading withdrawal", text);
-    const originalText = text;
     setLoading(true);
     try {
       if (text.startsWith("lightning:")) {
@@ -83,7 +81,6 @@ export function Withdraw() {
       } else {
         lnurl = lnurlLib.findLnurl(text);
       }
-      console.info("Checked lnurl value", text, lnurl);
       if (lnurl) {
         const lnurlDetails = await lnurlLib.getDetails(lnurl);
 
@@ -102,7 +99,6 @@ export function Withdraw() {
         throw new Error("Invalid LNURL");
       }
     } catch (error) {
-      console.error("failed to load withdraw info", originalText, error);
       errorToast(error, "Failed to load withdraw info");
     } finally {
       setLoading(false);
@@ -145,7 +141,6 @@ export function Withdraw() {
         throw new Error(data.reason);
       }
     } catch (error) {
-      console.error(error);
       errorToast(error, "Failed to withdraw");
     } finally {
       setLoadingConfirm(false);

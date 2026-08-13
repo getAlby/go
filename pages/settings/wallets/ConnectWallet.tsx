@@ -84,10 +84,8 @@ export function ConnectWallet() {
             url.searchParams.set("value", deeplinkConnectionSecret);
           }
           try {
-            console.info("opening URL", url.toString());
             await openURL(url.toString());
-          } catch (error) {
-            console.error(error);
+          } catch {
             errorToast(
               new Error("Couldn't open URL, do you have the app installed?"),
             );
@@ -134,8 +132,6 @@ export function ConnectWallet() {
         metadata,
       });
 
-      console.info("createConnection response", response);
-
       if (flow === "deeplink") {
         setDeeplinkConnectionSecret(
           `nostr+walletconnect://${response.wallet_pubkey}?secret=${
@@ -146,7 +142,6 @@ export function ConnectWallet() {
       setRedirectCountdown(3);
       setConnectionCreated(true);
     } catch (error) {
-      console.error(error);
       errorToast(error, "Failed to create app");
     }
     setCreatingConnection(false);

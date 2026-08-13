@@ -343,8 +343,7 @@ export function DualCurrencyInput({
     let clipboardText;
     try {
       clipboardText = await Clipboard.getStringAsync();
-    } catch (error) {
-      console.error("Failed to read clipboard", error);
+    } catch {
       errorToast(new Error("Failed to read clipboard."));
       return;
     }

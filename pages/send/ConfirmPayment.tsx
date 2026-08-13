@@ -49,7 +49,7 @@ export function ConfirmPayment() {
       if (!nwcClient) {
         throw new Error("NWC client not connected");
       }
-      const response = await nwcClient.payInvoice({
+      await nwcClient.payInvoice({
         invoice,
         amount: amount ? amountToPaySats * 1000 : undefined,
         metadata: {
@@ -59,8 +59,6 @@ export function ConfirmPayment() {
           }),
         },
       });
-
-      console.info("payInvoice Response", response);
 
       if (receiver === ALBY_LIGHTNING_ADDRESS) {
         useAppStore.getState().updateLastAlbyPayment();
@@ -79,7 +77,6 @@ export function ConfirmPayment() {
         },
       });
     } catch (error) {
-      console.error(error);
       errorToast(error, "Failed to make payment");
     }
     setLoading(false);

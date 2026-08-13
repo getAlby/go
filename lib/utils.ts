@@ -64,7 +64,6 @@ export async function readClipboardText() {
     }
     return text;
   } catch (error) {
-    console.error("Failed to read clipboard", error);
     errorToast(error, "Failed to read clipboard");
     return undefined;
   }
