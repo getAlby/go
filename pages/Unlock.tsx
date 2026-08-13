@@ -31,9 +31,11 @@ export function Unlock() {
       if (biometricAuth.success) {
         signIn();
         router.replace("/");
+      } else {
+        throw new Error("Failed to unlock");
       }
     } catch (e) {
-      errorToast(e, "Failed to unlock");
+      errorToast(e);
     } finally {
       setIsUnlocking(false);
     }

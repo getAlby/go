@@ -1,3 +1,4 @@
+import * as LocalAuthentication from "expo-local-authentication";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -22,6 +23,7 @@ import Loading from "~/components/Loading";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
 import { deregisterWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn, copyToClipboard } from "~/lib/utils";
@@ -48,6 +50,62 @@ export function EditWallet() {
     if (wallets.length !== 1) {
       router.back();
     }
+  };
+
+  const onExportWallet = () => {
+    RNAlert.alert(
+      "Export Wallet",
+      "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: async () => {
+            const isSuperuser = useAppStore
+              .getState()
+              .wallets[walletId].nwcCapabilities?.includes("create_connection");
+
+            if (isSuperuser) {
+              Toast.show({
+                type: "error",
+                text1: "Wallet cannot be exported",
+                text2:
+                  "This wallet supports authorizing new connections and cannot be exported. Please create a new connection from Alby Hub instead",
+              });
+              return;
+            }
+
+            try {
+              if (useAppStore.getState().isSecurityEnabled) {
+                const biometricAuth =
+                  await LocalAuthentication.authenticateAsync({
+                    promptMessage: "Authenticate to export wallet",
+                  });
+                if (!biometricAuth.success) {
+                  throw new Error("Failed to authenticate");
+                }
+              }
+            } catch (e) {
+              errorToast(e);
+              return;
+            }
+
+            const nwcUrl =
+              useAppStore.getState().wallets[walletId].nostrWalletConnectUrl;
+            if (!nwcUrl) {
+              return;
+            }
+            await copyToClipboard(
+              nwcUrl,
+              "Connection Secret copied to clipboard",
+            );
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -160,51 +218,7 @@ export function EditWallet() {
           </TouchableOpacity>
           <TouchableOpacity
             className="flex flex-row items-center gap-4 px-6 py-4"
-            onPress={() => {
-              RNAlert.alert(
-                "Export Wallet",
-                "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
-
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Confirm",
-                    onPress: async () => {
-                      const isSuperuser = useAppStore
-                        .getState()
-                        .wallets[
-                          walletId
-                        ].nwcCapabilities?.includes("create_connection");
-
-                      if (isSuperuser) {
-                        Toast.show({
-                          type: "error",
-                          text1: "Wallet cannot be exported",
-                          text2:
-                            "This wallet supports authorizing new connections and cannot be exported. Please create a new connection from Alby Hub instead",
-                        });
-                        return;
-                      }
-
-                      const nwcUrl =
-                        useAppStore.getState().wallets[
-                          useAppStore.getState().selectedWalletId
-                        ].nostrWalletConnectUrl;
-                      if (!nwcUrl) {
-                        return;
-                      }
-                      await copyToClipboard(
-                        nwcUrl,
-                        "Connection Secret copied to clipboard",
-                      );
-                    },
-                  },
-                ],
-              );
-            }}
+            onPress={onExportWallet}
           >
             <ShareIcon
               className="text-muted-foreground"
