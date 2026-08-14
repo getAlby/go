@@ -251,7 +251,7 @@ export function SetupWallet() {
               nostrWalletConnectUrl={nostrWalletConnectUrl}
               capabilities={capabilities}
             />
-            {existingWalletMatch && (
+            {existingWalletMatch && !isLoading && (
               <Alert
                 type="warn"
                 title="You may already have this wallet"
