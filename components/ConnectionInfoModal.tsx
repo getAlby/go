@@ -43,32 +43,39 @@ function ConnectionInfoModal({
     nwcInfo?.relayUrls.filter((relayUrl) => !relayUrl.startsWith("wss://")) ??
     [];
 
-  const [relayStatuses, setRelayStatuses] = React.useState<boolean[]>([]);
+  const [relayStatuses, setRelayStatuses] = React.useState<
+    (boolean | undefined)[]
+  >([]);
   React.useEffect(() => {
     if (!visible || !nwcInfo) {
       return;
     }
+    setRelayStatuses(nwcInfo.relayUrls.map(() => undefined));
     const pool = new NWCClient({
       relayUrls: nwcInfo.relayUrls,
       walletPubkey: nwcInfo.walletPubkey,
     }).pool;
     let cancelled = false;
-    (async () => {
-      const _relayStatuses: boolean[] = [];
-      for (const relayUrl of nwcInfo.relayUrls) {
+    nwcInfo.relayUrls.forEach((relayUrl, index) => {
+      (async () => {
+        let status: boolean;
         try {
           await pool.ensureRelay(relayUrl, {
             connectionTimeout: 2000,
           });
-          _relayStatuses.push(true);
+          status = true;
         } catch {
-          _relayStatuses.push(false);
+          status = false;
         }
-      }
-      if (!cancelled) {
-        setRelayStatuses(_relayStatuses);
-      }
-    })();
+        if (!cancelled) {
+          setRelayStatuses((current) => {
+            const next = [...current];
+            next[index] = status;
+            return next;
+          });
+        }
+      })();
+    });
     return () => {
       cancelled = true;
       pool.destroy();
@@ -143,7 +150,11 @@ function ConnectionInfoModal({
                   <View
                     className={cn(
                       "rounded-full w-2 h-2",
-                      relayStatuses[index] ? "bg-receive" : "bg-destructive",
+                      relayStatuses[index] === undefined
+                        ? "bg-muted-foreground"
+                        : relayStatuses[index]
+                          ? "bg-receive"
+                          : "bg-destructive",
                     )}
                   ></View>
                 </View>
