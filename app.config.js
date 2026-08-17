@@ -7,7 +7,7 @@ export default ({ config }) => {
     ...config,
     name: "Alby Go",
     slug: "alby-mobile",
-    version: "2.0.2",
+    version: "2.1.0",
     scheme: [
       "lightning",
       "bitcoin",
