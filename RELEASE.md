@@ -23,13 +23,9 @@
 
 # Zapstore
 
-Install required software:
-
-- `sudo apt install apksigner apktool`
-- https://github.com/sibprogrammer/xq
-- https://github.com/zapstore/zapstore-cli
+Install [zsp](https://github.com/zapstore/zsp)
 
 Then publish the release
 
-1. `zapstore publish albygo -v <version>` (<version> without the `v` prefix)
+1. `zsp publish --wizard`
 1. Use nsec to sign release events
