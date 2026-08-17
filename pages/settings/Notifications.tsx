@@ -34,19 +34,24 @@ export function Notifications() {
       enabled = await registerForPushNotificationsAsync();
     } else {
       const wallets = useAppStore.getState().wallets;
-      for (const [id, wallet] of wallets.entries()) {
-        await deregisterWalletNotifications(wallet, id);
-      }
-      enabled = useAppStore.getState().wallets.some((wallet) => wallet.pushId);
-      if (enabled) {
-        errorToast(new Error("Failed to deregister notifications"));
-      } else {
-        if (ttsNotificationsEnabled) {
-          useAppStore.getState().setTTSNotificationsEnabled(false);
-          await setNotificationSettings({
-            ttsEnabled: false,
-          });
+      try {
+        for (const [id, wallet] of wallets.entries()) {
+          await deregisterWalletNotifications(wallet, id);
         }
+      } catch (error) {
+        errorToast(
+          error,
+          "Failed to deregister notifications, please try again",
+        );
+        setLoading(false);
+        return;
+      }
+      enabled = false;
+      if (ttsNotificationsEnabled) {
+        useAppStore.getState().setTTSNotificationsEnabled(false);
+        await setNotificationSettings({
+          ttsEnabled: false,
+        });
       }
     }
     useAppStore.getState().setNotificationsEnabled(enabled);
@@ -169,7 +174,16 @@ function WalletNotificationSwitch({
     if (!checked) {
       await registerWalletNotifications(wallet, index);
     } else {
-      await deregisterWalletNotifications(wallet, index);
+      try {
+        await deregisterWalletNotifications(wallet, index);
+      } catch (error) {
+        errorToast(
+          error,
+          "Failed to deregister notifications, please try again",
+        );
+        setLoading(false);
+        return;
+      }
       const hasNotificationsEnabled = useAppStore
         .getState()
         .wallets.some((wallet) => wallet.pushId);

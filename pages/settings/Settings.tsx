@@ -28,8 +28,8 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useSession } from "~/hooks/useSession";
 import { IS_EXPO_GO } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
 import { deregisterWalletNotifications } from "~/lib/notifications";
-import { removeAllInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { cn } from "~/lib/utils";
@@ -280,16 +280,30 @@ export function Settings() {
                             text: "Confirm",
                             onPress: async () => {
                               if (!IS_EXPO_GO) {
-                                for (const [id, wallet] of wallets.entries()) {
-                                  await deregisterWalletNotifications(
-                                    wallet,
+                                try {
+                                  for (const [
                                     id,
+                                    wallet,
+                                  ] of wallets.entries()) {
+                                    // clears each wallet's remote push
+                                    // subscription and local notification
+                                    // data; reset() below also clears any
+                                    // remaining native notification data
+                                    await deregisterWalletNotifications(
+                                      wallet,
+                                      id,
+                                    );
+                                  }
+                                } catch (error) {
+                                  errorToast(
+                                    error,
+                                    "Failed to deregister notifications, please try again",
                                   );
+                                  return;
                                 }
-                                await removeAllInfo();
                               }
                               router.dismissAll();
-                              useAppStore.getState().reset();
+                              await useAppStore.getState().reset();
                             },
                           },
                         ],

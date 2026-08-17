@@ -2,6 +2,7 @@ import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
 import { hexToBytes } from "@noble/hashes/utils.js";
 import { getPublicKey } from "nostr-tools";
 import { create } from "zustand";
+import { removeAllInfo } from "~/lib/notificationsNativeStorage";
 import { secureStorage } from "../secureStorage";
 
 interface AppState {
@@ -40,7 +41,7 @@ interface AppState {
   addWallet(wallet: Wallet): void;
   addAddressBookEntry(entry: AddressBookEntry): void;
   removeAddressBookEntry: (index: number) => void;
-  reset(): void;
+  reset(): Promise<void>;
   getLastAlbyPayment(): Date | null;
   updateLastAlbyPayment(): void;
 }
@@ -353,7 +354,9 @@ export const useAppStore = create<AppState>()((set, get) => {
       set({
         lastAppStateChangeTime,
       }),
-    reset() {
+    async reset() {
+      await removeAllInfo();
+
       // clear wallets
       for (let i = 0; i < get().wallets.length; i++) {
         secureStorage.removeItem(getWalletKey(i));

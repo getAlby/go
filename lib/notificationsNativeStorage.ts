@@ -1,6 +1,6 @@
 import { Platform } from "react-native";
 import { IS_EXPO_GO, SUITE_NAME } from "~/lib/constants";
-import { BitcoinDisplayFormat } from "~/lib/state/appStore";
+import type { BitcoinDisplayFormat } from "~/lib/state/appStore";
 
 // this is done because accessing values stored from expo-secure-store
 // is quite difficult and we do not wish to complicate the notification
@@ -131,4 +131,50 @@ function removeWallet(wallets: Wallets, publicKey: string): Wallets {
     delete wallets[publicKey];
   }
   return wallets;
+}
+
+// Removes any stored wallet notification data whose public key does not
+// belong to a currently-configured wallet. This catches entries left behind
+// by earlier app versions or edge cases (e.g. a crash between removing a
+// wallet and its notification data being cleared).
+export async function sweepOrphanedWalletInfo(activePublicKeys: string[]) {
+  if (IS_EXPO_GO) {
+    return;
+  }
+  const activeSet = new Set(activePublicKeys);
+  if (Platform.OS === "ios") {
+    const UserDefaults = await getUserDefaultsModule();
+    const groupDefaults = new UserDefaults(SUITE_NAME);
+    const wallets: Wallets | undefined = await groupDefaults.get("wallets");
+    if (!wallets) {
+      return;
+    }
+    const orphanedPublicKeys = Object.keys(wallets).filter(
+      (publicKey) => !activeSet.has(publicKey),
+    );
+    if (!orphanedPublicKeys.length) {
+      return;
+    }
+    for (const publicKey of orphanedPublicKeys) {
+      delete wallets[publicKey];
+    }
+    await groupDefaults.set("wallets", wallets);
+  } else {
+    const SharedPreferences = await getSharedPreferencesModule();
+    const walletsString = await SharedPreferences.getItemAsync("wallets");
+    if (!walletsString) {
+      return;
+    }
+    const wallets: Wallets = JSON.parse(walletsString);
+    const orphanedPublicKeys = Object.keys(wallets).filter(
+      (publicKey) => !activeSet.has(publicKey),
+    );
+    if (!orphanedPublicKeys.length) {
+      return;
+    }
+    for (const publicKey of orphanedPublicKeys) {
+      delete wallets[publicKey];
+    }
+    await SharedPreferences.setItemAsync("wallets", JSON.stringify(wallets));
+  }
 }

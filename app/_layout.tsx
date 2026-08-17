@@ -22,9 +22,12 @@ import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { SessionProvider } from "~/hooks/useSession";
 import { IS_EXPO_GO, THEME_COLORS } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
+import { sweepOrphanedWalletInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { getPubkeyFromNWCUrl } from "~/lib/utils";
 import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 Sentry.init({
@@ -78,6 +81,18 @@ export default Sentry.wrap(function RootLayout() {
     }
   }
 
+  // Removes any stored notification data for wallets that no longer exist
+  // in the app (e.g. left behind by a previous app version).
+  async function sweepOrphanedNotificationData() {
+    const activePublicKeys = useAppStore
+      .getState()
+      .wallets.map((wallet) =>
+        getPubkeyFromNWCUrl(wallet.nostrWalletConnectUrl ?? ""),
+      )
+      .filter((publicKey): publicKey is string => !!publicKey);
+    await sweepOrphanedWalletInfo(activePublicKeys);
+  }
+
   const loadTheme = React.useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       const theme = useAppStore.getState().theme;
@@ -96,10 +111,16 @@ export default Sentry.wrap(function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
-        if (!IS_EXPO_GO) {
-          await checkAndPromptForNotifications();
+        try {
+          if (!IS_EXPO_GO) {
+            await checkAndPromptForNotifications();
+            await sweepOrphanedNotificationData();
+          }
+        } catch (error) {
+          errorToast(error, "Failed to set up notifications");
+        } finally {
+          SplashScreen.hide();
         }
-        SplashScreen.hide();
       }
     };
 

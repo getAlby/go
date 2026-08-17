@@ -65,7 +65,7 @@ export async function registerWalletNotifications(
         walletId,
       );
     } else {
-      new Error(`Error: ${response.status} ${response.statusText}`);
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
 
     const walletData: WalletInfo = {
@@ -95,31 +95,28 @@ export async function deregisterWalletNotifications(
   if (!wallet.pushId) {
     return;
   }
-  try {
-    // TODO: wallets with the same secret if added will have the same token,
-    // hence deregistering one might make others not work but will show
-    // as ON because their push ids are not removed from the wallet store
-    const response = await fetch(
-      `${NOSTR_API_URL}/subscriptions/${wallet.pushId}`,
-      {
-        method: "DELETE",
-      },
-    );
-    // FIXME: if deregistering fails, app will keep receiving notifications from the server
-    if (!response.ok) {
-      throw new Error("Failed to deregister push notifications");
-    }
-    useAppStore.getState().updateWallet(
-      {
-        pushId: "",
-      },
-      walletId,
-    );
-    const pubkey = getPubkeyFromNWCUrl(wallet.nostrWalletConnectUrl ?? "");
-    if (pubkey) {
-      await removeWalletInfo(pubkey);
-    }
-  } catch (error) {
-    errorToast(error);
+  // TODO: wallets with the same secret if added will have the same token,
+  // hence deregistering one might make others not work but will show
+  // as ON because their push ids are not removed from the wallet store
+  const response = await fetch(
+    `${NOSTR_API_URL}/subscriptions/${wallet.pushId}`,
+    {
+      method: "DELETE",
+    },
+  );
+  // Callers must not remove local wallet/notification data if this throws,
+  // otherwise the remote subscription is orphaned with no pushId to retry.
+  if (!response.ok) {
+    throw new Error("Failed to deregister push notifications");
+  }
+  useAppStore.getState().updateWallet(
+    {
+      pushId: "",
+    },
+    walletId,
+  );
+  const pubkey = getPubkeyFromNWCUrl(wallet.nostrWalletConnectUrl ?? "");
+  if (pubkey) {
+    await removeWalletInfo(pubkey);
   }
 }
