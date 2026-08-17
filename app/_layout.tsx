@@ -22,6 +22,7 @@ import { UserInactivityProvider } from "~/context/UserInactivity";
 import "~/global.css";
 import { SessionProvider } from "~/hooks/useSession";
 import { IS_EXPO_GO, THEME_COLORS } from "~/lib/constants";
+import { errorToast } from "~/lib/errorToast";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { sweepOrphanedWalletInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
@@ -110,11 +111,16 @@ export default Sentry.wrap(function RootLayout() {
         await Promise.all([loadTheme(), loadFonts(), checkBiometricStatus()]);
       } finally {
         setResourcesLoaded(true);
-        if (!IS_EXPO_GO) {
-          await checkAndPromptForNotifications();
-          await sweepOrphanedNotificationData();
+        try {
+          if (!IS_EXPO_GO) {
+            await checkAndPromptForNotifications();
+            await sweepOrphanedNotificationData();
+          }
+        } catch (error) {
+          errorToast(error, "Failed to set up notifications");
+        } finally {
+          SplashScreen.hide();
         }
-        SplashScreen.hide();
       }
     };
 

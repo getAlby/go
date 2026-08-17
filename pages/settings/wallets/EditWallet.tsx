@@ -40,7 +40,16 @@ export function EditWallet() {
     setIsDeleting(true);
     if (!IS_EXPO_GO) {
       const wallet = wallets[walletId];
-      await deregisterWalletNotifications(wallet, walletId);
+      try {
+        await deregisterWalletNotifications(wallet, walletId);
+      } catch (error) {
+        errorToast(
+          error,
+          "Failed to deregister notifications, please try again",
+        );
+        setIsDeleting(false);
+        return;
+      }
     }
     useAppStore.getState().removeWallet(walletId);
     setIsDeleting(false);
