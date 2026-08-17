@@ -28,8 +28,8 @@ export const NotificationProvider = ({ children }: any) => {
     const handleNotification = (
       notification: ExpoNotifications.Notification,
     ) => {
-      const deepLink = notification.request.content.data?.deepLink as string;
-      if (deepLink) {
+      const deepLink = notification.request.content.data?.deepLink;
+      if (typeof deepLink === "string" && deepLink) {
         handleLink(deepLink);
       }
     };
