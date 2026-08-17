@@ -18,9 +18,13 @@ export function SetLightningAddress() {
   const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
   const [lightningAddress, setLightningAddress] = React.useState("");
-  React.useEffect(() => {
+  const [loadedWalletId, setLoadedWalletId] = React.useState<number | null>(
+    null,
+  );
+  if (walletId !== loadedWalletId) {
+    setLoadedWalletId(walletId);
     setLightningAddress(wallets[walletId].lightningAddress || "");
-  }, [wallets, walletId]);
+  }
   const [isLoading, setLoading] = React.useState(false);
 
   const updateLightningAddress = async () => {

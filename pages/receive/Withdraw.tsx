@@ -39,34 +39,6 @@ export function Withdraw() {
     return Number(valueSat) < min || Number(valueSat) > max;
   }, [valueSat, lnurlDetails]);
 
-  // Delay starting the QR scanner if url has valid lnurl withdraw info
-  useEffect(() => {
-    if (url) {
-      (async () => {
-        const result = await loadWithdrawal(url);
-        // Delay the camera to show the error message
-        if (!result) {
-          setTimeout(() => {
-            setStartScanning(true);
-          }, 2000);
-        }
-      })();
-    } else {
-      setStartScanning(true);
-    }
-  }, [url]);
-
-  async function paste() {
-    const clipboardText = await readClipboardText();
-    if (clipboardText) {
-      loadWithdrawal(clipboardText);
-    }
-  }
-
-  const handleScanned = (data: string) => {
-    return loadWithdrawal(data);
-  };
-
   async function loadWithdrawal(text: string): Promise<boolean> {
     text = text.toLowerCase();
 
@@ -106,6 +78,35 @@ export function Withdraw() {
 
     return false;
   }
+
+  // Delay starting the QR scanner if url has valid lnurl withdraw info
+  useEffect(() => {
+    if (url) {
+      (async () => {
+        const result = await loadWithdrawal(url);
+        // Delay the camera to show the error message
+        if (!result) {
+          setTimeout(() => {
+            setStartScanning(true);
+          }, 2000);
+        }
+      })();
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- mirrors the async branch above, which must stay in this effect
+      setStartScanning(true);
+    }
+  }, [url]);
+
+  async function paste() {
+    const clipboardText = await readClipboardText();
+    if (clipboardText) {
+      loadWithdrawal(clipboardText);
+    }
+  }
+
+  const handleScanned = (data: string) => {
+    return loadWithdrawal(data);
+  };
 
   async function confirm() {
     try {

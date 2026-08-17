@@ -1,5 +1,5 @@
-import { useIsFocused } from "@react-navigation/native";
 import { Camera, PermissionStatus } from "expo-camera";
+import { useIsFocused } from "expo-router";
 import React, { useEffect } from "react";
 import { View } from "react-native";
 import { CameraOffIcon } from "~/components/Icons";
@@ -23,10 +23,17 @@ function QRCodeScanner({
     PermissionStatus.UNDETERMINED,
   );
 
+  async function scan() {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    setPermissionStatus(status);
+    setScanning(status === "granted");
+  }
+
   useEffect(() => {
     // Add some timeout to allow the screen transition to finish before
     // starting the camera to avoid stutters
     if (startScanning) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- pairs with the delayed scan() below, both belong to this effect
       setLoading(true);
       window.setTimeout(async () => {
         await scan();
@@ -34,12 +41,6 @@ function QRCodeScanner({
       }, 200);
     }
   }, [startScanning]);
-
-  async function scan() {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setPermissionStatus(status);
-    setScanning(status === "granted");
-  }
 
   const handleScanned = async (data: string) => {
     if (isScanning) {

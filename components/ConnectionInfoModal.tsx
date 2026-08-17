@@ -50,6 +50,7 @@ function ConnectionInfoModal({
     if (!visible || !nwcInfo) {
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resets statuses for the new connection before the probe below starts; both belong to this effect
     setRelayStatuses(nwcInfo.relayUrls.map(() => undefined));
     const pool = new NWCClient({
       relayUrls: nwcInfo.relayUrls,

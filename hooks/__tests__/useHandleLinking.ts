@@ -1,12 +1,5 @@
 import { router } from "expo-router";
-import * as RN from "react-native";
 import { handleLink } from "../../lib/link";
-
-jest.spyOn(RN.InteractionManager, "runAfterInteractions").mockImplementation(
-  jest.fn().mockImplementation((callback) => {
-    callback();
-  }),
-);
 
 jest.mock("expo-router");
 
@@ -141,8 +134,6 @@ describe("handleLink", () => {
       "nostrnwc://connect?appname=Test%20App&callback=myapp%3A%2F%2Fopen%3Fredirect%3Dhttps%253A%252F%252Fdev.example.com%252Fdone&appicon=https%3A%2F%2Fcdn.example.com%2Ficon.png",
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
     expect(router.push).toHaveBeenCalledWith({
       pathname: "/settings/wallets/connect",
       params: {
@@ -162,8 +153,6 @@ describe("handleLink", () => {
       "alby://payment_notification?app_pubkey=abc&transaction=%7B%22type%22%3A%22incoming%22%2C%22state%22%3A%22settled%22%2C%22invoice%22%3A%22lnbc123%22%2C%22description%22%3A%22myapp%3A%2F%2Fopen%3Fredirect%3Dhttps%253A%252F%252Fdev.example.com%252Fdone%26payload%3D%257B%2522screen%2522%253A%2522payment%2522%257D%22%2C%22description_hash%22%3A%22%22%2C%22preimage%22%3A%22abc%22%2C%22payment_hash%22%3A%22def%22%2C%22amount%22%3A21000%2C%22fees_paid%22%3A0%2C%22created_at%22%3A1753275708%2C%22expires_at%22%3A1753362108%2C%22settled_at%22%3A1753275741%2C%22settle_deadline%22%3Anull%2C%22metadata%22%3Anull%7D",
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
     expect(router.push).toHaveBeenCalledWith({
       pathname: "/transaction",
       params: {
@@ -179,7 +168,9 @@ describe("handleLink", () => {
       "should parse the URL '%s' and navigate correctly",
       async (url, expectedOutput) => {
         await handleLink("exp://127.0.0.1:8081/--/" + url);
-        await new Promise((resolve) => setTimeout(resolve, 100)); // due to safeRouterPush
+        // handleLnurl is fire-and-forget from handleLink, so wait for its
+        // internal lnurlLib.getDetails() lookup to resolve before asserting
+        await new Promise((resolve) => setTimeout(resolve, 100));
         assertRedirect(expectedOutput.path, expectedOutput.params);
       },
     );
@@ -190,7 +181,9 @@ describe("handleLink", () => {
       "should parse the URL '%s' and navigate correctly",
       async (url, expectedOutput) => {
         await handleLink(url);
-        await new Promise((resolve) => setTimeout(resolve, 100)); // due to safeRouterPush
+        // handleLnurl is fire-and-forget from handleLink, so wait for its
+        // internal lnurlLib.getDetails() lookup to resolve before asserting
+        await new Promise((resolve) => setTimeout(resolve, 100));
         assertRedirect(expectedOutput.path, expectedOutput.params);
       },
     );

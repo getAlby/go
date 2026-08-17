@@ -93,6 +93,7 @@ export default ({ config }) => {
       "expo-location",
       "expo-router",
       "expo-secure-store",
+      "expo-status-bar",
       [
         "@sentry/react-native/expo",
         {

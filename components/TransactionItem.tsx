@@ -1,7 +1,6 @@
 import type { Nip47Transaction } from "@getalby/sdk";
 import dayjs from "dayjs";
 import { router } from "expo-router";
-import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import PendingTransactionIcon from "~/components/icons/PendingTransaction";
@@ -74,7 +73,7 @@ export function TransactionItem({ tx }: Props) {
           "flex flex-row items-center gap-4 px-6 py-4",
         )}
       >
-        <View className="w-10 h-10 bg-muted rounded-full flex flex-col items-center justify-center">
+        <View className="w-[40px] h-[40px] bg-muted rounded-full flex flex-col items-center justify-center">
           <Icon />
         </View>
         <View className="flex flex-col flex-1">

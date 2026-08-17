@@ -1,13 +1,13 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import * as Sentry from "@sentry/react-native";
+import * as Font from "expo-font";
 import {
   DarkTheme,
   DefaultTheme,
+  Slot,
   type Theme,
   ThemeProvider,
-} from "@react-navigation/native";
-import * as Sentry from "@sentry/react-native";
-import * as Font from "expo-font";
-import { Slot } from "expo-router";
+} from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
