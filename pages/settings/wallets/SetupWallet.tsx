@@ -44,11 +44,14 @@ export function SetupWallet() {
   const [showHelp, setShowHelp] = React.useState(false);
   const [showConnectionInfo, setShowConnectionInfo] = React.useState(false);
 
+  // Snapshot the wallets present when this screen mounted, so this
+  // check isn't recalculated once addWallet() pushes the new wallet
+  const [existingWallets] = React.useState(wallets);
   const nwcInfo = nostrWalletConnectUrl
     ? NWCClient.parseWalletConnectUrl(nostrWalletConnectUrl)
     : undefined;
   const existingWalletMatch = nwcInfo
-    ? wallets.some((wallet) => {
+    ? existingWallets.some((wallet) => {
         if (
           nwcInfo.lud16 &&
           wallet.lightningAddress?.trim().toLowerCase() ===
