@@ -1,3 +1,4 @@
+import withIncreasedGradleHeap from "./plugins/android/withIncreasedGradleHeap";
 import withMessagingServicePlugin from "./plugins/android/withMessageServicePlugin";
 import withOpenSSLPlugin from "./plugins/ios/withOpenSSLPlugin";
 
@@ -32,6 +33,7 @@ export default ({ config }) => {
         },
       ],
       [withOpenSSLPlugin],
+      [withIncreasedGradleHeap],
       [
         "expo-notification-service-extension-plugin",
         {
@@ -93,6 +95,7 @@ export default ({ config }) => {
       "expo-location",
       "expo-router",
       "expo-secure-store",
+      "expo-status-bar",
       [
         "@sentry/react-native/expo",
         {

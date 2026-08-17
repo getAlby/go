@@ -1,6 +1,5 @@
 import { NWAClient, type NWAOptions } from "@getalby/sdk/nwc";
-import { router, type Href } from "expo-router";
-import { InteractionManager } from "react-native";
+import { router } from "expo-router";
 import { errorToast } from "~/lib/errorToast";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
@@ -24,18 +23,10 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
   SUPPORTED_SCHEMES.push("exp:");
 }
 
-const safeRouterPush = async (href: Href) => {
-  // This resolves the action 'PUSH' with payload was not handled by any navigator errors
-  await new Promise<void>((resolve) =>
-    InteractionManager.runAfterInteractions(resolve),
-  );
-  router.push(href);
-};
-
 const handleLnurl = async (lnurl: string) => {
   const lnurlDetails = await lnurlLib.getDetails(lnurl);
   if (lnurlDetails.tag === "withdrawRequest") {
-    safeRouterPush({
+    router.push({
       pathname: "/receive/withdraw",
       params: {
         url: lnurl,
@@ -43,7 +34,7 @@ const handleLnurl = async (lnurl: string) => {
     });
   }
   if (lnurlDetails.tag === "payRequest") {
-    safeRouterPush({
+    router.push({
       pathname: "/send/lnurl-pay",
       params: {
         lnurlDetailsJSON: JSON.stringify(lnurlDetails),
@@ -67,7 +58,7 @@ export const handleLink = async (url: string) => {
     if (parsedUrl.protocol.startsWith("nostr+walletauth")) {
       const nwaOptions = NWAClient.parseWalletAuthUrl(url);
 
-      safeRouterPush({
+      router.push({
         pathname: "/settings/wallets/connect",
         params: {
           options: JSON.stringify(nwaOptions),
@@ -86,7 +77,7 @@ export const handleLink = async (url: string) => {
         return;
       }
 
-      safeRouterPush({
+      router.push({
         pathname: "/settings/wallets/connect",
         params: {
           options: JSON.stringify({
@@ -101,7 +92,7 @@ export const handleLink = async (url: string) => {
     }
 
     if (parsedUrl.protocol === "nostr+walletconnect:") {
-      safeRouterPush({
+      router.push({
         pathname: "/settings/wallets/setup",
         params: {
           nwcUrl: protocol + hostname + search,
@@ -140,7 +131,7 @@ export const handleLink = async (url: string) => {
       if (!transactionJSON || !appPubkey) {
         return;
       }
-      safeRouterPush({
+      router.push({
         pathname: "/transaction",
         params: { transactionJSON, appPubkey },
       });
@@ -162,7 +153,7 @@ export const handleLink = async (url: string) => {
     const bolt11Match = trimmedUrl.match(BOLT11_REGEX);
     if (bolt11Match) {
       const bolt11 = bolt11Match[1];
-      safeRouterPush({
+      router.push({
         pathname: "/send",
         params: {
           url: bolt11,

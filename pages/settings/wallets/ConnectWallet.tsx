@@ -48,7 +48,6 @@ export function ConnectWallet() {
     isolated,
     metadata,
   } = options;
-  let pubkey = appPubkey;
   const budgetRenewal = options.budgetRenewal || "monthly";
   const requestMethods = options.requestMethods || [
     "get_info",
@@ -114,6 +113,7 @@ export function ConnectWallet() {
       }
 
       let secretKey: string | undefined;
+      let pubkey = appPubkey;
       if (!pubkey) {
         const secretKeyBytes = generateSecretKey();
         secretKey = bytesToHex(secretKeyBytes);

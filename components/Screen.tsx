@@ -1,5 +1,4 @@
-import { type NativeStackHeaderItemProps } from "@react-navigation/native-stack";
-import { router, Stack } from "expo-router";
+import { type NativeStackHeaderItemProps, router, Stack } from "expo-router";
 import { Platform, TouchableOpacity } from "react-native";
 import { type StackAnimationTypes } from "react-native-screens";
 import { ChevronLeftIcon } from "~/components/Icons";

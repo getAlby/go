@@ -10,6 +10,7 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
+import { errorToast } from "~/lib/errorToast";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
@@ -18,12 +19,20 @@ export function SetLightningAddress() {
   const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
   const [lightningAddress, setLightningAddress] = React.useState("");
-  React.useEffect(() => {
-    setLightningAddress(wallets[walletId].lightningAddress || "");
-  }, [wallets, walletId]);
+  const [loadedWalletId, setLoadedWalletId] = React.useState<number | null>(
+    null,
+  );
+  if (walletId !== loadedWalletId) {
+    setLoadedWalletId(walletId);
+    setLightningAddress(wallets[walletId]?.lightningAddress || "");
+  }
   const [isLoading, setLoading] = React.useState(false);
 
   const updateLightningAddress = async () => {
+    if (!wallets[walletId]) {
+      errorToast(new Error("Wallet not found"));
+      return;
+    }
     setLoading(true);
     useAppStore.getState().updateWallet({ lightningAddress }, walletId);
     Toast.show({

@@ -101,6 +101,7 @@ export function Send() {
         }, 2000);
       })();
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- mirrors the async branch above, which must stay in this effect
       setStartScanning(true);
     }
   }, [url, amount]);

@@ -11,7 +11,7 @@ import { errorToast } from "~/lib/errorToast";
 
 export function Unlock() {
   const [isUnlocking, setIsUnlocking] = React.useState(false);
-  const [isAutoPrompted, setIsAutoPrompted] = React.useState(false);
+  const hasAutoPrompted = React.useRef(false);
 
   const { signIn } = useSession();
 
@@ -42,11 +42,11 @@ export function Unlock() {
   }, [isUnlocking, signIn]);
 
   React.useEffect(() => {
-    if (!isAutoPrompted) {
+    if (!hasAutoPrompted.current) {
+      hasAutoPrompted.current = true;
       handleUnlock();
     }
-    setIsAutoPrompted(true);
-  }, [isAutoPrompted, handleUnlock]);
+  }, [handleUnlock]);
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">

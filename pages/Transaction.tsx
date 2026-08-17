@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { type SvgProps } from "react-native-svg";
 import { LinkIcon } from "~/components/Icons";
 import AcceptedTransactionIcon from "~/components/icons/AcceptedTransaction";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
@@ -127,7 +128,6 @@ function TransactionSummary({
   bitcoinDisplayFormat: BitcoinDisplayFormat;
 }) {
   const getFiatAmount = useGetFiatAmount();
-  const TransactionIcon = getTransactionIcon(transaction);
   const displayCharacterCount =
     new Intl.NumberFormat().format(Math.floor(transaction.amount / 1000))
       .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4);
@@ -138,7 +138,7 @@ function TransactionSummary({
         <View
           className={cn(transaction.state === "pending" && "animate-pulse")}
         >
-          <TransactionIcon width={128} height={128} />
+          {renderTransactionIcon(transaction, { width: 128, height: 128 })}
         </View>
         <Text
           className={cn(
@@ -296,20 +296,20 @@ function TransactionDetails({
   );
 }
 
-function getTransactionIcon(transaction: Nip47Transaction) {
+function renderTransactionIcon(transaction: Nip47Transaction, props: SvgProps) {
   if (transaction.type === "incoming") {
-    return ReceivedTransactionIcon;
+    return <ReceivedTransactionIcon {...props} />;
   }
   if (transaction.state === "settled") {
-    return SentTransactionIcon;
+    return <SentTransactionIcon {...props} />;
   }
   if (transaction.state === "pending") {
-    return PendingTransactionIcon;
+    return <PendingTransactionIcon {...props} />;
   }
   if (transaction.state === "accepted") {
-    return AcceptedTransactionIcon;
+    return <AcceptedTransactionIcon {...props} />;
   }
-  return FailedTransactionIcon;
+  return <FailedTransactionIcon {...props} />;
 }
 
 function getTransactionStatus(transaction: Nip47Transaction) {

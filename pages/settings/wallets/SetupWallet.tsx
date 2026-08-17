@@ -44,11 +44,14 @@ export function SetupWallet() {
   const [showHelp, setShowHelp] = React.useState(false);
   const [showConnectionInfo, setShowConnectionInfo] = React.useState(false);
 
+  // Snapshot the wallets present when this screen mounted, so this
+  // check isn't recalculated once addWallet() pushes the new wallet
+  const [existingWallets] = React.useState(wallets);
   const nwcInfo = nostrWalletConnectUrl
     ? NWCClient.parseWalletConnectUrl(nostrWalletConnectUrl)
     : undefined;
   const existingWalletMatch = nwcInfo
-    ? wallets.some((wallet) => {
+    ? existingWallets.some((wallet) => {
         if (
           nwcInfo.lud16 &&
           wallet.lightningAddress?.trim().toLowerCase() ===
@@ -75,6 +78,7 @@ export function SetupWallet() {
     }
   }
 
+  /* eslint-disable react-hooks/preserve-manual-memoization -- React Compiler can't yet verify this callback's memoization is safe to preserve; the deps array ([]) is correct since it only closes over stable setState setters and errorToast */
   const connect = React.useCallback(
     async (nostrWalletConnectUrl: string): Promise<boolean> => {
       try {
@@ -97,12 +101,13 @@ export function SetupWallet() {
         return true;
       } catch (error) {
         errorToast(error, "Failed to connect to wallet");
+        setConnecting(false);
+        return false;
       }
-      setConnecting(false);
-      return false;
     },
     [],
   );
+  /* eslint-enable react-hooks/preserve-manual-memoization */
 
   // Deferred to a post-render effect (rather than shown inline in connect())
   // so it fires after ConnectionInfoModal has mounted its own Toast host —
@@ -171,6 +176,7 @@ export function SetupWallet() {
         }
       })();
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- mirrors the async branch above, which must stay in this effect
       setStartScanning(true);
     }
   }, [connect, nwcUrlFromSchemeLink]);

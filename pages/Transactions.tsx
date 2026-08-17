@@ -30,24 +30,22 @@ export function Transactions() {
   const [refreshingTransactions, setRefreshingTransactions] =
     React.useState(false);
 
-  React.useEffect(() => {
-    if (
-      !refreshingTransactions &&
-      transactions?.transactions.length &&
-      !allTransactions.some((t) =>
-        transactions.transactions.some(
-          (other: Nip47Transaction) => t.payment_hash === other.payment_hash,
-        ),
-      )
-    ) {
-      setAllTransactions([...allTransactions, ...transactions.transactions]);
-      setLoadingNextPage(false);
-    }
+  if (
+    !refreshingTransactions &&
+    transactions?.transactions.length &&
+    !allTransactions.some((t) =>
+      transactions.transactions.some(
+        (other: Nip47Transaction) => t.payment_hash === other.payment_hash,
+      ),
+    )
+  ) {
+    setAllTransactions([...allTransactions, ...transactions.transactions]);
+    setLoadingNextPage(false);
+  }
 
-    if (transactions) {
-      setTransactionsLoaded(true);
-    }
-  }, [allTransactions, transactions, refreshingTransactions]);
+  if (transactions && !transactionsLoaded) {
+    setTransactionsLoaded(true);
+  }
 
   const onRefresh = React.useCallback(() => {
     if (refreshingTransactions) {
