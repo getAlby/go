@@ -1,7 +1,6 @@
-# Migrated from zapstore-cli format
-
 repository: https://github.com/getAlby/go
-
 name: Alby Go
 description: A simple lightning mobile wallet interface that works great with Alby Hub.
 license: MIT
+metadata_sources:
+  - github
