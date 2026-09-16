@@ -9,25 +9,16 @@ describe("FocusableCamera", () => {
     jest.restoreAllMocks();
   });
 
-  it("uses Expo's continuous autofocus mode on iOS", () => {
-    jest.replaceProperty(Platform, "OS", "ios");
-
-    const camera = FocusableCamera({ onScanned: jest.fn() });
-
-    expect(camera.type).toBe(CameraView);
-    // In expo-camera 57, iOS "off" maps to continuousAutoFocus; "on" locks
-    // focus after one adjustment. This only tests the prop, not native optics.
-    expect(camera.props.autofocus).toBe("off");
-  });
-
-  it.each(["android", "web"] as const)(
-    "preserves the existing autofocus setting on %s",
+  it.each(["ios", "android", "web"] as const)(
+    "leaves autofocus at Expo's default on %s",
     (platform) => {
       jest.replaceProperty(Platform, "OS", platform);
 
       const camera = FocusableCamera({ onScanned: jest.fn() });
 
-      expect(camera.props.autofocus).toBe("on");
+      expect(camera.type).toBe(CameraView);
+      // Verify the prop contract, not native camera focus behavior.
+      expect(camera.props).not.toHaveProperty("autofocus");
     },
   );
 
