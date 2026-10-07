@@ -5,7 +5,6 @@ import React from "react";
 import { Platform, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
-import ConnectionInfoModal from "~/components/ConnectionInfoModal";
 import DismissableKeyboardView from "~/components/DismissableKeyboardView";
 import HelpModal from "~/components/HelpModal";
 import {
@@ -42,7 +41,6 @@ export function SetupWallet() {
   const [startScanning, setStartScanning] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showHelp, setShowHelp] = React.useState(false);
-  const [showConnectionInfo, setShowConnectionInfo] = React.useState(false);
 
   // Snapshot the wallets present when this screen mounted, so this
   // check isn't recalculated once addWallet() pushes the new wallet
@@ -50,6 +48,9 @@ export function SetupWallet() {
   const nwcInfo = nostrWalletConnectUrl
     ? NWCClient.parseWalletConnectUrl(nostrWalletConnectUrl)
     : undefined;
+  const insecureRelays =
+    nwcInfo?.relayUrls.filter((relayUrl) => !relayUrl.startsWith("wss://")) ??
+    [];
   const existingWalletMatch = nwcInfo
     ? existingWallets.some((wallet) => {
         if (
@@ -96,7 +97,13 @@ export function SetupWallet() {
         setNostrWalletConnectUrl(nostrWalletConnectUrl);
         setCapabilities(capabilities);
         setName(nwcClient.lud16 || "");
-        setShowConnectionInfo(true);
+
+        Toast.show({
+          type: "success",
+          text1: "Connection successful",
+          text2: "Please set your wallet name to finish",
+          position: "top",
+        });
         setConnecting(false);
         return true;
       } catch (error) {
@@ -108,21 +115,6 @@ export function SetupWallet() {
     [],
   );
   /* eslint-enable react-hooks/preserve-manual-memoization */
-
-  // Deferred to a post-render effect (rather than shown inline in connect())
-  // so it fires after ConnectionInfoModal has mounted its own Toast host —
-  // otherwise this toast registers on the root Toast host and renders
-  // beneath the modal that opens in the same update.
-  React.useEffect(() => {
-    if (nostrWalletConnectUrl) {
-      Toast.show({
-        type: "success",
-        text1: "Connection successful",
-        text2: "Review connection info and set your wallet name to finish",
-        position: "top",
-      });
-    }
-  }, [nostrWalletConnectUrl]);
 
   const addWallet = async () => {
     if (isLoading || !nostrWalletConnectUrl) {
@@ -251,12 +243,16 @@ export function SetupWallet() {
       ) : (
         <DismissableKeyboardView>
           <View className="flex-1 p-6">
-            <ConnectionInfoModal
-              visible={showConnectionInfo}
-              onClose={() => setShowConnectionInfo(false)}
-              nostrWalletConnectUrl={nostrWalletConnectUrl}
-              capabilities={capabilities}
-            />
+            {!!insecureRelays.length && (
+              <Alert
+                type="warn"
+                title="Insecure relay"
+                description={`${insecureRelays.join(", ")} ${
+                  insecureRelays.length > 1 ? "are" : "is"
+                } not using a secure (wss) connection.`}
+                icon={TriangleAlertIcon}
+              />
+            )}
             {existingWalletMatch && !isLoading && (
               <Alert
                 type="warn"
@@ -281,6 +277,7 @@ export function SetupWallet() {
                 onChangeText={setName}
                 placeholder="Enter a name for your wallet"
                 returnKeyType="done"
+                autoFocus
               />
             </View>
             {capabilities &&
