@@ -48,6 +48,9 @@ export function SetupWallet() {
   const nwcInfo = nostrWalletConnectUrl
     ? NWCClient.parseWalletConnectUrl(nostrWalletConnectUrl)
     : undefined;
+  const insecureRelays =
+    nwcInfo?.relayUrls.filter((relayUrl) => !relayUrl.startsWith("wss://")) ??
+    [];
   const existingWalletMatch = nwcInfo
     ? existingWallets.some((wallet) => {
         if (
@@ -240,6 +243,16 @@ export function SetupWallet() {
       ) : (
         <DismissableKeyboardView>
           <View className="flex-1 p-6">
+            {!!insecureRelays.length && (
+              <Alert
+                type="warn"
+                title="Insecure relay"
+                description={`${insecureRelays.join(", ")} ${
+                  insecureRelays.length > 1 ? "are" : "is"
+                } not using a secure (wss) connection.`}
+                icon={TriangleAlertIcon}
+              />
+            )}
             {existingWalletMatch && !isLoading && (
               <Alert
                 type="warn"
