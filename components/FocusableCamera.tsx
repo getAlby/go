@@ -16,7 +16,6 @@ export function FocusableCamera({ onScanned }: FocusableCameraProps) {
       barcodeScannerSettings={{
         barcodeTypes: ["qr"],
       }}
-      autofocus={"on"}
     />
   );
 }
