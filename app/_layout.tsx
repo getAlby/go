@@ -12,6 +12,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { swrConfiguration } from "lib/swr";
 import * as React from "react";
+import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -45,6 +46,10 @@ const DARK_THEME: Theme = {
 
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
+
+// expo-router calls Linking.createURL("/") without a scheme on startup, and expo-linking
+// warns in dev because we register several schemes (lightning:, bitcoin:, nostr+walletconnect:, ...)
+LogBox.ignoreLogs(["Linking found multiple possible URI schemes"]);
 
 export const unstable_settings = {
   initialRouteName: "(app)/index",
