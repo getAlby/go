@@ -3,7 +3,8 @@ import {
   lnurl as lnurlLib,
   type LNURLWithdrawServiceResponse,
 } from "lib/lnurl";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { PasteIcon } from "~/components/Icons";
@@ -18,6 +19,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { readClipboardText } from "~/lib/utils";
 
 export function Withdraw() {
+  const { t } = useTranslation();
   const { url } = useLocalSearchParams<{ url: string }>();
   const [isLoading, setLoading] = React.useState(false);
   const [loadingConfirm, setLoadingConfirm] = React.useState(false);
@@ -39,45 +41,50 @@ export function Withdraw() {
     return Number(valueSat) < min || Number(valueSat) > max;
   }, [valueSat, lnurlDetails]);
 
-  async function loadWithdrawal(text: string): Promise<boolean> {
-    text = text.toLowerCase();
+  const loadWithdrawal = useCallback(
+    async (text: string): Promise<boolean> => {
+      text = text.toLowerCase();
 
-    setLoading(true);
-    try {
-      if (text.startsWith("lightning:")) {
-        text = text.substring("lightning:".length);
-      }
-      let lnurl;
-      if (text.startsWith("lnurlw:")) {
-        lnurl = text;
-      } else {
-        lnurl = lnurlLib.findLnurl(text);
-      }
-      if (lnurl) {
-        const lnurlDetails = await lnurlLib.getDetails(lnurl);
-
-        if (lnurlDetails.tag !== "withdrawRequest") {
-          throw new Error("LNURL tag " + lnurlDetails.tag + " not supported");
+      setLoading(true);
+      try {
+        if (text.startsWith("lightning:")) {
+          text = text.substring("lightning:".length);
         }
+        let lnurl;
+        if (text.startsWith("lnurlw:")) {
+          lnurl = text;
+        } else {
+          lnurl = lnurlLib.findLnurl(text);
+        }
+        if (lnurl) {
+          const lnurlDetails = await lnurlLib.getDetails(lnurl);
 
-        setLnurlDetails(lnurlDetails);
-        setValueSat(
-          (lnurlDetails.maxWithdrawable &&
-            Math.floor(+lnurlDetails.maxWithdrawable / 1000).toString()) ||
-            "",
-        );
-        return true;
-      } else {
-        throw new Error("Invalid LNURL");
+          if (lnurlDetails.tag !== "withdrawRequest") {
+            throw new Error(
+              t("receive.withdraw.tagNotSupported", { tag: lnurlDetails.tag }),
+            );
+          }
+
+          setLnurlDetails(lnurlDetails);
+          setValueSat(
+            (lnurlDetails.maxWithdrawable &&
+              Math.floor(+lnurlDetails.maxWithdrawable / 1000).toString()) ||
+              "",
+          );
+          return true;
+        } else {
+          throw new Error(t("receive.withdraw.invalidLnurl"));
+        }
+      } catch (error) {
+        errorToast(error, t("receive.withdraw.loadFailed"));
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      errorToast(error, "Failed to load withdraw info");
-    } finally {
-      setLoading(false);
-    }
 
-    return false;
-  }
+      return false;
+    },
+    [t],
+  );
 
   // Delay starting the QR scanner if url has valid lnurl withdraw info
   useEffect(() => {
@@ -95,7 +102,7 @@ export function Withdraw() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- mirrors the async branch above, which must stay in this effect
       setStartScanning(true);
     }
-  }, [url]);
+  }, [url, loadWithdrawal]);
 
   async function paste() {
     const clipboardText = await readClipboardText();
@@ -142,7 +149,7 @@ export function Withdraw() {
         throw new Error(data.reason);
       }
     } catch (error) {
-      errorToast(error, "Failed to withdraw");
+      errorToast(error, t("receive.withdraw.failed"));
     } finally {
       setLoadingConfirm(false);
     }
@@ -150,7 +157,7 @@ export function Withdraw() {
 
   return (
     <>
-      <Screen title="Redeem" animation="slide_from_left" />
+      <Screen title={t("receive.withdraw.title")} animation="slide_from_left" />
       <View className="flex-1">
         {isLoading && (
           <View className="flex-1 flex flex-col items-center justify-center">
@@ -163,7 +170,7 @@ export function Withdraw() {
               <>
                 <View className="p-4">
                   <Text className="text-center text-secondary-foreground font-medium2">
-                    Scan a LNURL QR code to withdraw
+                    {t("receive.withdraw.scanHint")}
                   </Text>
                 </View>
                 <QRCodeScanner
@@ -181,7 +188,7 @@ export function Withdraw() {
                       height={32}
                       className="text-muted-foreground"
                     />
-                    <Text numberOfLines={1}>Paste</Text>
+                    <Text numberOfLines={1}>{t("common.paste")}</Text>
                   </Button>
                 </View>
               </>
@@ -214,7 +221,7 @@ export function Withdraw() {
                     {loadingConfirm && (
                       <Loading className="text-primary-foreground" />
                     )}
-                    <Text>Confirm Withdrawal</Text>
+                    <Text>{t("receive.withdraw.confirmWithdrawal")}</Text>
                   </Button>
                 </View>
               </View>

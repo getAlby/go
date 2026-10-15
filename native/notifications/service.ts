@@ -3,6 +3,7 @@ import * as Device from "expo-device";
 import * as ExpoNotifications from "expo-notifications";
 import { Platform } from "react-native";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { registerWalletNotifications } from "~/lib/notifications";
 import { useAppStore } from "~/lib/state/appStore";
 
@@ -24,7 +25,7 @@ async function getPushTokenWithTimeout({
 
   const timeoutPromise = new Promise<string>((_resolve, reject) => {
     timeoutId = setTimeout(
-      () => reject(new Error("FCM not available or not responding")),
+      () => reject(new Error(i18n.t("errors.notifications.fcmUnavailable"))),
       timeoutMs,
     );
   });
@@ -36,7 +37,9 @@ export async function registerForPushNotificationsAsync(): Promise<
   boolean | null
 > {
   if (!Device.isDevice) {
-    errorToast(new Error("Must use physical device for push notifications"));
+    errorToast(
+      new Error(i18n.t("errors.notifications.physicalDeviceRequired")),
+    );
     return false;
   }
 
@@ -61,7 +64,7 @@ export async function registerForPushNotificationsAsync(): Promise<
   }
   if (finalStatus === "denied") {
     if (existingStatus === "denied") {
-      errorToast(new Error("Enable app notifications in device settings"));
+      errorToast(new Error(i18n.t("errors.notifications.enableInSettings")));
     }
     return false;
   }
@@ -69,7 +72,7 @@ export async function registerForPushNotificationsAsync(): Promise<
     Constants?.expoConfig?.extra?.eas?.projectId ??
     Constants?.easConfig?.projectId;
   if (!projectId) {
-    errorToast(new Error("Project ID not found"));
+    errorToast(new Error(i18n.t("errors.notifications.projectIdNotFound")));
   }
   try {
     const pushToken = await getPushTokenWithTimeout({

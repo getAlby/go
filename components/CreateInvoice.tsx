@@ -1,6 +1,7 @@
 import type { Nip47Transaction } from "@getalby/sdk";
 import { router } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, Share, View } from "react-native";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import { CopyIcon, ShareIcon } from "~/components/Icons";
@@ -10,10 +11,12 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
+import { formatBitcoinAmount } from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
-import { cn, copyToClipboard, formatBitcoinAmount } from "~/lib/utils";
+import { cn, copyToClipboard } from "~/lib/utils";
 
 export function CreateInvoice() {
+  const { t } = useTranslation();
   const getFiatAmount = useGetFiatAmount();
   const [isLoading, setLoading] = React.useState(false);
   const [invoice, setInvoice] = React.useState("");
@@ -25,7 +28,7 @@ export function CreateInvoice() {
 
   function generateInvoice(amount?: number) {
     if (!amount) {
-      errorToast(new Error("0-amount invoices are not supported"));
+      errorToast(new Error(t("receive.createInvoice.zeroAmountNotSupported")));
       return;
     }
     (async () => {
@@ -41,7 +44,7 @@ export function CreateInvoice() {
         });
         setInvoice(response.invoice);
       } catch (error) {
-        errorToast(error, "Failed to create invoice");
+        errorToast(error, t("receive.createInvoice.failed"));
       }
       setLoading(false);
     })();
@@ -50,7 +53,7 @@ export function CreateInvoice() {
   async function copy() {
     const text = invoice;
     if (!text) {
-      errorToast(new Error("Nothing to copy"));
+      errorToast(new Error(t("receive.nothingToCopy")));
       return;
     }
     await copyToClipboard(text);
@@ -59,7 +62,7 @@ export function CreateInvoice() {
   async function share() {
     const message = invoice;
     if (!message) {
-      errorToast(new Error("No invoice set"));
+      errorToast(new Error(t("receive.createInvoice.noInvoiceSet")));
     }
     await Share.share({
       message,
@@ -152,7 +155,7 @@ export function CreateInvoice() {
                   "font-medium2",
                 )}
               >
-                Waiting for payment
+                {t("receive.createInvoice.waitingForPayment")}
               </Text>
             </View>
             <QRCode value={invoice} showAvatar />
@@ -194,7 +197,7 @@ export function CreateInvoice() {
                 height={32}
                 className="text-muted-foreground"
               />
-              <Text>Share</Text>
+              <Text>{t("common.share")}</Text>
             </Button>
             <Button
               variant="secondary"
@@ -206,7 +209,7 @@ export function CreateInvoice() {
                 height={32}
                 className="text-muted-foreground"
               />
-              <Text>Copy</Text>
+              <Text>{t("common.copy")}</Text>
             </Button>
           </View>
         </View>
@@ -226,7 +229,7 @@ export function CreateInvoice() {
               disabled={!+amount || isLoading}
             >
               {isLoading && <Loading className="text-primary-foreground" />}
-              <Text>Create Invoice</Text>
+              <Text>{t("receive.createInvoice.createButton")}</Text>
             </Button>
           </View>
         </View>

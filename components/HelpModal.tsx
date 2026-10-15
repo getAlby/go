@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Modal,
   Platform,
@@ -18,6 +19,7 @@ type HelpModalProps = {
 };
 
 function HelpModal({ visible, onClose }: HelpModalProps) {
+  const { t } = useTranslation();
   const { shadow } = useThemeColor("shadow");
   return (
     <Modal
@@ -68,7 +70,7 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
                 "text-center font-bold2 text-secondary-foreground",
               )}
             >
-              How To Connect?
+              {t("wallets.help.title")}
             </Text>
           </View>
           <ScrollView
@@ -79,11 +81,11 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
             <View className="flex flex-col mb-4">
               <TextClassContext.Provider value="text-secondary-foreground">
                 <Text className="font-medium2 mb-2">
-                  Follow these steps to connect Alby Go to your Hub:
+                  {t("wallets.help.intro")}
                 </Text>
-                <Text>1. Open your Alby Hub</Text>
-                <Text>2. Go to App Store &raquo; Alby Go</Text>
-                <Text>3. Scan the QR code with this app</Text>
+                <Text>{t("wallets.help.step1")}</Text>
+                <Text>{t("wallets.help.step2")}</Text>
+                <Text>{t("wallets.help.step3")}</Text>
               </TextClassContext.Provider>
             </View>
           </ScrollView>
@@ -93,7 +95,9 @@ function HelpModal({ visible, onClose }: HelpModalProps) {
             onPress={onClose}
           >
             <LikeIcon className="text-muted-foreground" />
-            <Text className="ios:text-lg android:text-base">Okay</Text>
+            <Text className="ios:text-lg android:text-base">
+              {t("common.okay")}
+            </Text>
           </Button>
         </View>
       </View>

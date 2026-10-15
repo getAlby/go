@@ -1,6 +1,7 @@
 import { Camera, PermissionStatus } from "expo-camera";
 import { useIsFocused } from "expo-router";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { CameraOffIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
@@ -16,6 +17,7 @@ function QRCodeScanner({
   onScanned,
   startScanning = true,
 }: QRCodeScannerProps) {
+  const { t } = useTranslation();
   const isFocused = useIsFocused();
   const [isScanning, setScanning] = React.useState(startScanning);
   const [isLoading, setLoading] = React.useState(false);
@@ -68,12 +70,10 @@ function QRCodeScanner({
                 height={64}
               />
               <Text className="ios:text-xl android:text-lg font-medium2 text-center">
-                Camera Permission Denied
+                {t("send.scanner.permissionDeniedTitle")}
               </Text>
               <Text className="text-secondary-foreground text-center">
-                It seems you denied permissions to use your camera. You might
-                need to go to your device settings to allow access to your
-                camera again.
+                {t("send.scanner.permissionDeniedDescription")}
               </Text>
             </View>
           )}

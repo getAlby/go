@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { type LNURLPaymentSuccessAction } from "lib/lnurl";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, View } from "react-native";
 import { Tick } from "~/animations/Tick";
 import AlbyGo from "~/components/icons/AlbyGo";
@@ -9,10 +10,12 @@ import { SuccessMessage } from "~/components/SuccessMessage";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { formatNumber, formatSatsUnit } from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function PaymentSuccess() {
+  const { t } = useTranslation();
   const getFiatAmount = useGetFiatAmount();
   const bitcoinDisplayFormat = useAppStore(
     (store) => store.bitcoinDisplayFormat,
@@ -28,14 +31,14 @@ export function PaymentSuccess() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      new Intl.NumberFormat().format(Math.ceil(+amount)).length +
+      formatNumber(Math.ceil(+amount)).length +
       (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [amount, bitcoinDisplayFormat],
   );
 
   return (
     <>
-      <Screen title="Success" />
+      <Screen title={t("send.success.title")} />
       <View className="flex flex-1 items-center gap-6 sm:gap-10 justify-center px-6">
         <Tick />
         <View className="flex items-center gap-2">
@@ -88,7 +91,7 @@ export function PaymentSuccess() {
                 "!leading-[1.5] font-bold2",
               )}
             >
-              {new Intl.NumberFormat().format(Math.ceil(+amount))}
+              {formatNumber(Math.ceil(+amount))}
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
@@ -114,7 +117,7 @@ export function PaymentSuccess() {
                   )}
                 >
                   {" "}
-                  sats
+                  {formatSatsUnit(Math.ceil(+amount))}
                 </Text>
               )}
             </Text>
@@ -135,7 +138,7 @@ export function PaymentSuccess() {
             router.replace("/");
           }}
         >
-          <Text>Close</Text>
+          <Text>{t("common.close")}</Text>
         </Button>
         <View className="mt-6 flex items-center">
           <AlbyGo width={80} height={20} />

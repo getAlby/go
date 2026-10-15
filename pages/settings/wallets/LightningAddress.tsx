@@ -1,5 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
@@ -15,6 +16,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function SetLightningAddress() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams() as { id: string };
   const walletId = parseInt(id);
   const wallets = useAppStore((store) => store.wallets);
@@ -30,14 +32,14 @@ export function SetLightningAddress() {
 
   const updateLightningAddress = async () => {
     if (!wallets[walletId]) {
-      errorToast(new Error("Wallet not found"));
+      errorToast(new Error(t("wallets.common.walletNotFound")));
       return;
     }
     setLoading(true);
     useAppStore.getState().updateWallet({ lightningAddress }, walletId);
     Toast.show({
       type: "success",
-      text1: "Lightning address updated",
+      text1: t("wallets.lightningAddress.updated"),
     });
     router.back();
     setLoading(false);
@@ -45,19 +47,19 @@ export function SetLightningAddress() {
 
   return (
     <>
-      <Screen title="Lightning Address" />
+      <Screen title={t("wallets.lightningAddress.title")} />
       <DismissableKeyboardView>
         <View className="flex-1 p-6">
           <Alert
             type="warn"
-            title="Only add lightning address you own"
-            description="This feature does not create a new lightning address for you. It adds an existing address to your Receive page."
+            title={t("wallets.lightningAddress.onlyOwnTitle")}
+            description={t("wallets.lightningAddress.onlyOwnDescription")}
             icon={AlertCircleIcon}
             className="mb-0"
           />
           <View className="flex-1 flex flex-col items-center justify-center">
             <Text className="text-muted-foreground text-center">
-              Lightning Address
+              {t("wallets.lightningAddress.title")}
             </Text>
             <Input
               className={cn(
@@ -83,7 +85,7 @@ export function SetLightningAddress() {
             onPress={updateLightningAddress}
           >
             {isLoading && <Loading className="text-primary-foreground" />}
-            <Text>Save</Text>
+            <Text>{t("common.save")}</Text>
           </Button>
         </View>
       </DismissableKeyboardView>

@@ -5,11 +5,11 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Platform, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { ChevronDownIcon, WalletIcon, XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore, type Wallet } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn } from "~/lib/utils";
@@ -23,6 +23,7 @@ export function WalletSwitcher({
   selectedWalletId,
   wallets,
 }: WalletSwitcherProps) {
+  const { t } = useTranslation();
   const { foreground, background, mutedForeground } = useThemeColor(
     "foreground",
     "background",
@@ -77,7 +78,7 @@ export function WalletSwitcher({
             "text-muted-foreground font-medium2",
           )}
         >
-          {selectedWallet?.name || DEFAULT_WALLET_NAME}
+          {selectedWallet?.name || t("wallets.common.defaultName")}
         </Text>
         {wallets.length > 1 && (
           <ChevronDownIcon className="text-muted-foreground" />
@@ -115,7 +116,7 @@ export function WalletSwitcher({
                 "font-semibold2 text-secondary-foreground",
               )}
             >
-              Switch Wallet
+              {t("wallets.switcher.title")}
             </Text>
           </View>
           <FlatList
@@ -131,7 +132,9 @@ export function WalletSwitcher({
                       useAppStore.getState().setSelectedWalletId(index);
                       Toast.show({
                         type: "success",
-                        text1: `Switched wallet to ${wallet.name || DEFAULT_WALLET_NAME}`,
+                        text1: t("wallets.switcher.switchedTo", {
+                          name: wallet.name || t("wallets.common.defaultName"),
+                        }),
                         position: "top",
                       });
                       bottomSheetModalRef.current?.dismiss();
@@ -164,7 +167,7 @@ export function WalletSwitcher({
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {wallet.name || DEFAULT_WALLET_NAME}
+                      {wallet.name || t("wallets.common.defaultName")}
                     </Text>
                   </View>
                 </TouchableOpacity>

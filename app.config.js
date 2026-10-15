@@ -1,6 +1,23 @@
+/* eslint-env node */
+import fs from "fs";
+import path from "path";
 import withIncreasedGradleHeap from "./plugins/android/withIncreasedGradleHeap";
 import withMessagingServicePlugin from "./plugins/android/withMessageServicePlugin";
 import withOpenSSLPlugin from "./plugins/ios/withOpenSSLPlugin";
+
+// translations of the iOS permission dialog texts set by the plugins below:
+// every locales/native/<code>.json is picked up, nothing to register here
+const projectDir = typeof __dirname !== "undefined" ? __dirname : process.cwd();
+const nativeLocalesDir = path.join(projectDir, "locales", "native");
+const nativeLocales = Object.fromEntries(
+  (fs.existsSync(nativeLocalesDir) ? fs.readdirSync(nativeLocalesDir) : [])
+    .filter((fileName) => fileName.endsWith(".json"))
+    .sort()
+    .map((fileName) => [
+      path.basename(fileName, ".json"),
+      `./locales/native/${fileName}`,
+    ]),
+);
 
 export default ({ config }) => {
   return {
@@ -25,6 +42,7 @@ export default ({ config }) => {
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     assetBundlePatterns: ["**/*"],
+    locales: nativeLocales,
     plugins: [
       [
         withMessagingServicePlugin,

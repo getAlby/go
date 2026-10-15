@@ -1,6 +1,6 @@
 import type { Nip47Transaction } from "@getalby/sdk";
-import dayjs from "dayjs";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity, View } from "react-native";
 import FailedTransactionIcon from "~/components/icons/FailedTransaction";
 import PendingTransactionIcon from "~/components/icons/PendingTransaction";
@@ -8,14 +8,16 @@ import ReceivedTransactionIcon from "~/components/icons/ReceivedTransaction";
 import SentTransactionIcon from "~/components/icons/SentTransaction";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { formatBitcoinAmount, formatRelativeTime } from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
-import { cn, formatBitcoinAmount, safeNpubEncode } from "~/lib/utils";
+import { cn, safeNpubEncode } from "~/lib/utils";
 
 type Props = {
   tx: Nip47Transaction;
 };
 
 export function TransactionItem({ tx }: Props) {
+  const { t } = useTranslation();
   const metadata = tx.metadata;
   const getFiatAmount = useGetFiatAmount();
   const bitcoinDisplayFormat = useAppStore(
@@ -24,12 +26,12 @@ export function TransactionItem({ tx }: Props) {
 
   const typeStateText =
     tx.type === "incoming"
-      ? "Received"
+      ? t("transactions.status.received")
       : tx.state === "settled"
-        ? "Sent"
+        ? t("transactions.status.sent")
         : tx.state === "pending"
-          ? "Sending"
-          : "Failed";
+          ? t("transactions.status.sending")
+          : t("transactions.status.failed");
 
   const Icon =
     tx.type === "incoming"
@@ -45,14 +47,16 @@ export function TransactionItem({ tx }: Props) {
 
   const payerName = tx.metadata?.payer_data?.name;
   const from = payerName
-    ? `from ${payerName}`
+    ? t("transactions.item.from", { name: payerName })
     : npub
-      ? `zap from ${npub.substring(0, 12)}...`
+      ? t("transactions.item.zapFrom", { npub: npub.substring(0, 12) })
       : undefined;
 
   const recipientIdentifier = tx.metadata?.recipient_data?.identifier;
   const to = recipientIdentifier
-    ? `${tx.state === "failed" ? "payment " : ""}to ${recipientIdentifier}`
+    ? tx.state === "failed"
+      ? t("transactions.item.paymentTo", { recipient: recipientIdentifier })
+      : t("transactions.item.to", { recipient: recipientIdentifier })
     : undefined;
 
   return (
@@ -84,7 +88,7 @@ export function TransactionItem({ tx }: Props) {
               {to !== undefined && <>&nbsp;{to}</>}
             </Text>
             <Text className="text-secondary-foreground ios:text-sm android:text-xs">
-              {dayjs.unix(tx.settled_at || tx.created_at).fromNow()}
+              {formatRelativeTime(tx.settled_at || tx.created_at)}
             </Text>
           </View>
           {(tx.description || metadata?.comment) && (

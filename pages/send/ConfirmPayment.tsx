@@ -1,6 +1,7 @@
 import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { AlertCircleIcon, ZapIcon } from "~/components/Icons";
@@ -15,10 +16,12 @@ import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { useTransactions } from "~/hooks/useTransactions";
 import { ALBY_LIGHTNING_ADDRESS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import { formatNumber, formatSatsUnit } from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function ConfirmPayment() {
+  const { t } = useTranslation();
   const { data: transactions } = useTransactions();
   const { invoice, comment, successAction, amount, receiver } =
     useLocalSearchParams() as {
@@ -77,21 +80,21 @@ export function ConfirmPayment() {
         },
       });
     } catch (error) {
-      errorToast(error, "Failed to make payment");
+      errorToast(error, t("send.confirm.failed"));
     }
     setLoading(false);
   }
 
   const displayCharacterCount = React.useMemo(
     () =>
-      new Intl.NumberFormat().format(Math.ceil(amountToPaySats)).length +
+      formatNumber(Math.ceil(amountToPaySats)).length +
       (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [amountToPaySats, bitcoinDisplayFormat],
   );
 
   return (
     <>
-      <Screen title="Confirm Payment" />
+      <Screen title={t("send.confirm.title")} />
       <View className="flex-1 justify-around items-center p-6">
         <View className="flex flex-col gap-2">
           <Text
@@ -103,7 +106,7 @@ export function ConfirmPayment() {
               "text-center text-muted-foreground font-medium2",
             )}
           >
-            Send
+            {t("send.confirm.sendLabel")}
           </Text>
           <View className="flex flex-row items-center justify-center gap-2">
             {bitcoinDisplayFormat === "bip177" && (
@@ -156,7 +159,7 @@ export function ConfirmPayment() {
                 "!leading-[1.5] font-bold2",
               )}
             >
-              {new Intl.NumberFormat().format(Math.ceil(amountToPaySats))}
+              {formatNumber(Math.ceil(amountToPaySats))}
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
@@ -182,7 +185,7 @@ export function ConfirmPayment() {
                   )}
                 >
                   {" "}
-                  sats
+                  {formatSatsUnit(Math.ceil(amountToPaySats))}
                 </Text>
               )}
             </Text>
@@ -196,11 +199,16 @@ export function ConfirmPayment() {
         <Receiver lightningAddress={receiver} />
         {decodedInvoice.description ? (
           <LongTextBottomSheet
-            title="Description"
+            title={t("common.description")}
             content={decodedInvoice.description}
           />
         ) : (
-          comment && <LongTextBottomSheet title="Comment" content={comment} />
+          comment && (
+            <LongTextBottomSheet
+              title={t("common.comment")}
+              content={comment}
+            />
+          )
         )}
       </View>
       <View className="p-6">
@@ -212,8 +220,8 @@ export function ConfirmPayment() {
             <Pressable>
               <Alert
                 type="info"
-                title="One or more pending payments"
-                description="Please check your transaction list before paying to ensure you do not make a payment twice."
+                title={t("send.confirm.pendingPaymentsTitle")}
+                description={t("send.confirm.pendingPaymentsDescription")}
                 icon={AlertCircleIcon}
               />
             </Pressable>
@@ -230,7 +238,7 @@ export function ConfirmPayment() {
           ) : (
             <ZapIcon className="text-primary-foreground" />
           )}
-          <Text>Pay</Text>
+          <Text>{t("send.confirm.pay")}</Text>
         </Button>
       </View>
     </>

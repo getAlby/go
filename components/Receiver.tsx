@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
@@ -9,6 +10,7 @@ interface ReceiverProps {
 }
 
 export function Receiver({ lightningAddress, title }: ReceiverProps) {
+  const { t } = useTranslation();
   const shouldShowReceiver =
     lightningAddress &&
     lightningAddress.toLowerCase().replace("lightning:", "").includes("@");
@@ -28,7 +30,7 @@ export function Receiver({ lightningAddress, title }: ReceiverProps) {
           "text-center text-muted-foreground font-medium2",
         )}
       >
-        {title ? title : "To"}
+        {title ? title : t("send.receiver.to")}
       </Text>
       <Text
         className={cn(

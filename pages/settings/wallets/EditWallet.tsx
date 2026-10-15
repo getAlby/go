@@ -1,6 +1,7 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Platform,
   Alert as RNAlert,
@@ -29,6 +30,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { cn, copyToClipboard } from "~/lib/utils";
 
 export function EditWallet() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams() as { id: string };
   const wallets = useAppStore((store) => store.wallets);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -43,10 +45,7 @@ export function EditWallet() {
       try {
         await deregisterWalletNotifications(wallet, walletId);
       } catch (error) {
-        errorToast(
-          error,
-          "Failed to deregister notifications, please try again",
-        );
+        errorToast(error, t("settings.notifications.deregisterFailed"));
         setIsDeleting(false);
         return;
       }
@@ -60,19 +59,19 @@ export function EditWallet() {
 
   const onExportWallet = () => {
     RNAlert.alert(
-      "Export Wallet",
-      "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
+      t("wallets.edit.exportWallet"),
+      t("wallets.edit.exportMessage"),
       [
         {
-          text: "Cancel",
+          text: t("common.cancel"),
           style: "cancel",
         },
         {
-          text: "Confirm",
+          text: t("common.confirm"),
           onPress: async () => {
             const wallet = useAppStore.getState().wallets[walletId];
             if (!wallet) {
-              errorToast(new Error("Wallet not found"));
+              errorToast(new Error(t("wallets.common.walletNotFound")));
               return;
             }
 
@@ -82,9 +81,8 @@ export function EditWallet() {
             if (isSuperuser) {
               Toast.show({
                 type: "error",
-                text1: "Wallet cannot be exported",
-                text2:
-                  "This wallet supports authorizing new connections and cannot be exported. Please create a new connection from Alby Hub instead",
+                text1: t("wallets.edit.cannotExportTitle"),
+                text2: t("wallets.edit.cannotExportMessage"),
               });
               return;
             }
@@ -93,10 +91,10 @@ export function EditWallet() {
               if (useAppStore.getState().isSecurityEnabled) {
                 const biometricAuth =
                   await LocalAuthentication.authenticateAsync({
-                    promptMessage: "Authenticate to export wallet",
+                    promptMessage: t("wallets.edit.authenticateToExport"),
                   });
                 if (!biometricAuth.success) {
-                  throw new Error("Failed to authenticate");
+                  throw new Error(t("wallets.edit.authenticateFailed"));
                 }
               }
             } catch (e) {
@@ -108,10 +106,7 @@ export function EditWallet() {
             if (!nwcUrl) {
               return;
             }
-            await copyToClipboard(
-              nwcUrl,
-              "Connection Secret copied to clipboard",
-            );
+            await copyToClipboard(nwcUrl, t("wallets.edit.secretCopied"));
           },
         },
       ],
@@ -120,12 +115,12 @@ export function EditWallet() {
 
   return (
     <View className="flex-1">
-      <Screen title="Edit Wallet" />
+      <Screen title={t("wallets.edit.title")} />
       {isDeleting ? (
         <View className="flex-1 justify-center items-center">
           <Loading />
           <Text className="ios:text-lg android:text-base font-medium2 text-secondary-foreground mt-4">
-            Deleting wallet
+            {t("wallets.edit.deleting")}
           </Text>
         </View>
       ) : (
@@ -135,13 +130,15 @@ export function EditWallet() {
           ) && (
             <Alert
               type="warn"
-              title="This wallet might not work as expected"
-              description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
-                (capability) =>
-                  !(wallets[walletId]?.nwcCapabilities || []).includes(
-                    capability,
-                  ),
-              ).join(", ")}`}
+              title={t("wallets.edit.mightNotWorkTitle")}
+              description={t("wallets.common.missingCapabilities", {
+                capabilities: REQUIRED_CAPABILITIES.filter(
+                  (capability) =>
+                    !(wallets[walletId]?.nwcCapabilities || []).includes(
+                      capability,
+                    ),
+                ).join(", "),
+              })}
               icon={TriangleAlertIcon}
               className="mx-6"
             />
@@ -162,7 +159,7 @@ export function EditWallet() {
                   "font-medium2",
                 )}
               >
-                Wallet Name
+                {t("wallets.rename.title")}
               </Text>
               <ChevronRightIcon
                 className="ml-auto text-muted-foreground "
@@ -190,7 +187,7 @@ export function EditWallet() {
                   "font-medium2",
                 )}
               >
-                Lightning Address
+                {t("wallets.lightningAddress.title")}
               </Text>
               <ChevronRightIcon
                 className="ml-auto text-muted-foreground"
@@ -223,7 +220,7 @@ export function EditWallet() {
                 "font-medium2",
               )}
             >
-              Connection Info
+              {t("wallets.connectionInfo.title")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -244,22 +241,22 @@ export function EditWallet() {
                 "font-medium2",
               )}
             >
-              Export Wallet
+              {t("wallets.edit.exportWallet")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="flex flex-row items-center gap-4 px-6 py-4"
             onPress={() => {
               RNAlert.alert(
-                "Remove Wallet Connection",
-                "Are you sure you want to remove this wallet connection? This cannot be undone.",
+                t("wallets.edit.removeTitle"),
+                t("wallets.edit.removeMessage"),
                 [
                   {
-                    text: "Cancel",
+                    text: t("common.cancel"),
                     style: "cancel",
                   },
                   {
-                    text: "Confirm",
+                    text: t("common.confirm"),
                     onPress: onDeleteWallet,
                   },
                 ],
@@ -280,7 +277,7 @@ export function EditWallet() {
                 "font-medium2",
               )}
             >
-              Delete Wallet
+              {t("wallets.edit.deleteWallet")}
             </Text>
           </TouchableOpacity>
         </View>

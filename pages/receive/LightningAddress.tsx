@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { QRIcon } from "~/components/Icons";
 import Screen from "~/components/Screen";
@@ -8,11 +9,12 @@ import { Text } from "~/components/ui/text";
 import { useAppStore } from "~/lib/state/appStore";
 
 export function LightningAddress() {
+  const { t } = useTranslation();
   const walletId = useAppStore((store) => store.selectedWalletId);
 
   return (
     <View className="flex-1 flex flex-col p-6 gap-3">
-      <Screen title="Lightning Address" />
+      <Screen title={t("receive.lightningAddress.title")} />
       <View className="flex-1 flex items-center justify-center gap-4">
         <QRIcon className="mb-6 text-muted-foreground" width={96} height={96} />
         <Text className="font-light2 ios:text-3xl android:text-2xl text-center text-muted-foreground">
@@ -22,15 +24,14 @@ export function LightningAddress() {
           </Text>
         </Text>
         <Text className="font-medium2 ios:text-xl android:text-lg text-muted-foreground text-center">
-          Attach your lightning address to this wallet to display it as QR code
-          for fast face-to-face transactions
+          {t("receive.lightningAddress.description")}
         </Text>
       </View>
       <Button
         size="lg"
         onPress={() => router.navigate("/receive/alby-account")}
       >
-        <Text>Get New Address</Text>
+        <Text>{t("receive.lightningAddress.getNewAddress")}</Text>
       </Button>
       <Button
         variant="secondary"
@@ -39,7 +40,7 @@ export function LightningAddress() {
           router.replace(`/settings/wallets/${walletId}/lightning-address`)
         }
       >
-        <Text>Add Existing</Text>
+        <Text>{t("receive.lightningAddress.addExisting")}</Text>
       </Button>
     </View>
   );

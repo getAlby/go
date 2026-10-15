@@ -1,6 +1,7 @@
 import type { Nip47Transaction } from "@getalby/sdk";
 import { Link, router } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   FlatList,
   RefreshControl,
@@ -19,6 +20,7 @@ import { useTransactions } from "~/hooks/useTransactions";
 import { TRANSACTIONS_PAGE_SIZE } from "~/lib/constants";
 
 export function Transactions() {
+  const { t } = useTranslation();
   const [page, setPage] = React.useState(1);
   const { data: transactions, mutate: reloadTransactions } =
     useTransactions(page);
@@ -63,7 +65,7 @@ export function Transactions() {
   return (
     <>
       <Screen
-        title="Transactions"
+        title={t("transactions.title")}
         animation="slide_from_bottom"
         right={() => (
           <TouchableOpacity
@@ -93,7 +95,9 @@ export function Transactions() {
             loadingNextPage ? (
               <View className="flex flex-row justify-center items-center gap-3 mb-6">
                 <Loading />
-                <Text className="animate-pulse">Loading more transactions</Text>
+                <Text className="animate-pulse">
+                  {t("transactions.loadingMore")}
+                </Text>
               </View>
             ) : undefined
           }
@@ -135,15 +139,15 @@ export function Transactions() {
         <View className="p-6 flex-1 items-center justify-center gap-5">
           <View className="flex flex-col items-center">
             <Text className="ios:text-2xl android:text-xl font-semibold2">
-              No transactions yet
+              {t("transactions.empty.title")}
             </Text>
             <Text className="text-muted-foreground ios:text-xl android:text-lg text-center">
-              Top up your wallet to get started
+              {t("transactions.empty.description")}
             </Text>
           </View>
           <Link href="/receive" asChild>
             <Button size="lg">
-              <Text>Receive</Text>
+              <Text>{t("transactions.empty.receive")}</Text>
             </Button>
           </Link>
         </View>

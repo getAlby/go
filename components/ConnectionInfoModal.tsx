@@ -1,5 +1,6 @@
 import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Modal,
   Platform,
@@ -28,6 +29,7 @@ function ConnectionInfoModal({
   nostrWalletConnectUrl,
   capabilities,
 }: ConnectionInfoModalProps) {
+  const { t } = useTranslation();
   const { shadow } = useThemeColor("shadow");
   const nwcInfo = React.useMemo(
     () =>
@@ -132,7 +134,7 @@ function ConnectionInfoModal({
                 "text-center font-bold2 text-secondary-foreground",
               )}
             >
-              Connection Info
+              {t("wallets.connectionInfo.title")}
             </Text>
           </View>
           <ScrollView
@@ -141,7 +143,9 @@ function ConnectionInfoModal({
             contentContainerClassName="flex flex-col gap-2"
           >
             <View className="flex gap-2">
-              <Text className="font-semibold2">Relays</Text>
+              <Text className="font-semibold2">
+                {t("wallets.connectionInfo.relays")}
+              </Text>
               {nwcInfo?.relayUrls.map((relayUrl, index) => (
                 <View
                   className="flex flex-row items-center gap-2"
@@ -163,11 +167,12 @@ function ConnectionInfoModal({
               {!!insecureRelays.length && (
                 <Alert
                   type="warn"
-                  title="Insecure relay"
+                  title={t("wallets.common.insecureRelayTitle")}
                   className="mb-0"
-                  description={`${insecureRelays.join(", ")} ${
-                    insecureRelays.length > 1 ? "are" : "is"
-                  } not using a secure (wss) connection.`}
+                  description={t("wallets.common.insecureRelayDescription", {
+                    count: insecureRelays.length,
+                    relays: insecureRelays.join(", "),
+                  })}
                   icon={TriangleAlertIcon}
                 />
               )}
@@ -175,7 +180,9 @@ function ConnectionInfoModal({
 
             {!!nwcInfo?.lud16 && (
               <View className="flex gap-2">
-                <Text className="font-semibold2">Lightning Address</Text>
+                <Text className="font-semibold2">
+                  {t("wallets.connectionInfo.lightningAddress")}
+                </Text>
                 <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                   {nwcInfo.lud16}
                 </Text>
@@ -183,21 +190,27 @@ function ConnectionInfoModal({
             )}
 
             <View className="flex gap-2">
-              <Text className="font-semibold2">Capabilities</Text>
+              <Text className="font-semibold2">
+                {t("wallets.connectionInfo.capabilities")}
+              </Text>
               <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {capabilities?.join(", ")}
               </Text>
             </View>
 
             <View className="flex gap-2">
-              <Text className="font-semibold2">App Pubkey</Text>
+              <Text className="font-semibold2">
+                {t("wallets.connectionInfo.appPubkey")}
+              </Text>
               <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {appPubkey}
               </Text>
             </View>
 
             <View className="flex gap-2">
-              <Text className="font-semibold2">Wallet Pubkey</Text>
+              <Text className="font-semibold2">
+                {t("wallets.connectionInfo.walletPubkey")}
+              </Text>
               <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                 {nwcInfo?.walletPubkey}
               </Text>

@@ -1,6 +1,7 @@
 import { Platform } from "react-native";
 import { NOSTR_API_URL } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import {
   removeWalletInfo,
   storeWalletInfo,
@@ -19,7 +20,9 @@ export async function registerWalletNotifications(
 ) {
   try {
     if (!(wallet.nwcCapabilities || []).includes("notifications")) {
-      throw new Error(`${wallet.name} does not have notifications capability`);
+      throw new Error(
+        i18n.t("settings.notifications.noCapability", { name: wallet.name }),
+      );
     }
 
     const nwcClient = useAppStore.getState().getNWCClient(walletId);
@@ -32,7 +35,7 @@ export async function registerWalletNotifications(
 
     const pushToken = useAppStore.getState().expoPushToken;
     if (!pushToken) {
-      throw new Error("Push token is not set");
+      throw new Error(i18n.t("settings.notifications.pushTokenNotSet"));
     }
 
     const body = {
@@ -65,7 +68,12 @@ export async function registerWalletNotifications(
         walletId,
       );
     } else {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        i18n.t("settings.notifications.httpError", {
+          status: response.status,
+          statusText: response.statusText,
+        }),
+      );
     }
 
     const walletData: WalletInfo = {
@@ -81,10 +89,12 @@ export async function registerWalletNotifications(
     try {
       await storeWalletInfo(nwcClient.publicKey, walletData);
     } catch {
-      errorToast(new Error("Failed to save wallet data"));
+      errorToast(
+        new Error(i18n.t("settings.notifications.saveWalletDataFailed")),
+      );
     }
   } catch (error) {
-    errorToast(error, "Failed to register notifications");
+    errorToast(error, i18n.t("settings.notifications.registerFailed"));
   }
 }
 
@@ -107,7 +117,7 @@ export async function deregisterWalletNotifications(
   // Callers must not remove local wallet/notification data if this throws,
   // otherwise the remote subscription is orphaned with no pushId to retry.
   if (!response.ok) {
-    throw new Error("Failed to deregister push notifications");
+    throw new Error(i18n.t("settings.notifications.deregisterPushFailed"));
   }
   useAppStore.getState().updateWallet(
     {

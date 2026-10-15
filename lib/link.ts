@@ -1,6 +1,7 @@
 import { NWAClient, type NWAOptions } from "@getalby/sdk/nwc";
 import { router } from "expo-router";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { BOLT11_REGEX } from "./constants";
 import { lnurl as lnurlLib } from "./lnurl";
 
@@ -161,7 +162,7 @@ export const handleLink = async (url: string) => {
       });
     }
   } else {
-    errorToast(new Error("Unsupported link"));
+    errorToast(new Error(i18n.t("errors.unsupportedLink")));
     // Redirect the user to the home screen
     // if no match was found
     router.replace({

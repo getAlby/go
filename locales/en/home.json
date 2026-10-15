@@ -1,0 +1,11 @@
+{
+  "receive": "Receive",
+  "send": "Send",
+  "albyBanner": {
+    "title": "✨ Enjoying Alby Go?",
+    "description": "Help us grow and improve by supporting our development."
+  },
+  "wildcard": {
+    "loading": "Loading"
+  }
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Screen from "~/components/Screen";
@@ -9,6 +10,7 @@ import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function BitcoinUnits() {
+  const { t } = useTranslation();
   const bitcoinDisplayFormat = useAppStore(
     (store) => store.bitcoinDisplayFormat,
   );
@@ -20,12 +22,12 @@ export function BitcoinUnits() {
     setNotificationSettings({
       bitcoinDisplayFormat,
     });
-    Toast.show({ type: "success", text1: "Bitcoin unit updated" });
+    Toast.show({ type: "success", text1: t("settings.bitcoinUnits.updated") });
   };
 
   return (
     <>
-      <Screen title="Bitcoin Units" />
+      <Screen title={t("settings.bitcoinUnits.title")} />
       <View className="flex-1">
         <View className="px-8 my-6">
           <Text
@@ -37,7 +39,7 @@ export function BitcoinUnits() {
               "text-center text-secondary-foreground",
             )}
           >
-            Choose which bitcoin units should be displayed in the app.
+            {t("settings.bitcoinUnits.description")}
           </Text>
         </View>
         <View className="flex gap-6 px-6">
@@ -70,7 +72,7 @@ export function BitcoinUnits() {
                 "font-semibold2",
               )}
             >
-              sats
+              {t("settings.bitcoinUnits.sats")}
             </Text>
           </Checkbox>
         </View>
