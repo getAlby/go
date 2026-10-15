@@ -84,7 +84,6 @@ export const TRANSACTIONS_PAGE_SIZE = 20;
 
 export const DEFAULT_CURRENCY = "USD";
 export const BTC_RATE_REFRESH_INTERVAL = 5 * 60 * 1000;
-export const DEFAULT_WALLET_NAME = "Default Wallet";
 export const ALBY_LIGHTNING_ADDRESS = "go@getalby.com";
 export const ALBY_URL = "https://getalby.com";
 export const NOSTR_API_URL = "https://api.getalby.com/nwc";

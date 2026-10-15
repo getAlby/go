@@ -1,5 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
 import Loading from "~/components/Loading";
@@ -8,6 +9,7 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
 export function ZeroAmount() {
+  const { t } = useTranslation();
   const { invoice, comment } = useLocalSearchParams() as {
     invoice: string;
     comment: string;
@@ -29,7 +31,7 @@ export function ZeroAmount() {
 
   return (
     <>
-      <Screen title="Send" />
+      <Screen title={t("send.title")} />
       <View className="flex flex-1 flex-col">
         <DualCurrencyInput
           amount={amount}
@@ -46,7 +48,7 @@ export function ZeroAmount() {
             disabled={!+amount || isLoading}
           >
             {isLoading && <Loading className="text-primary-foreground" />}
-            <Text>Next</Text>
+            <Text>{t("common.next")}</Text>
           </Button>
         </View>
       </View>

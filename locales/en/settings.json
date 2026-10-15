@@ -1,0 +1,65 @@
+{
+  "main": {
+    "title": "Settings",
+    "wallets": "Wallets"
+  },
+  "theme": {
+    "title": "Theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "title": "Language",
+    "description": "Choose which language should be used in the app.",
+    "systemDefault": "System default",
+    "updated": "Language updated"
+  },
+  "developer": {
+    "title": "Developer mode",
+    "signOut": "Sign out",
+    "openOnboarding": "Open Onboarding",
+    "resetWallet": "Reset Wallet",
+    "resetTitle": "Reset",
+    "resetMessage": "Are you sure you want to reset? You will be signed out of all your wallets. Your connection secrets and address book will be lost.",
+    "nowDeveloper": "You are now a developer",
+    "tapMore": "Tap {{remaining}} more times"
+  },
+  "unitsAndCurrency": {
+    "title": "Units & Currency"
+  },
+  "bitcoinUnits": {
+    "title": "Bitcoin Units",
+    "description": "Choose which bitcoin units should be displayed in the app.",
+    "sats": "sats",
+    "updated": "Bitcoin unit updated"
+  },
+  "fiatCurrency": {
+    "title": "Fiat Currency",
+    "display": "Display fiat currency",
+    "updated": "Fiat currency updated",
+    "loadFailed": "Failed to load currency list"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "showAppNotifications": "Show app notifications",
+    "chooseWallets": "Choose from which wallets you want to receive app notifications",
+    "spokenNotifications": "Spoken notifications",
+    "deregisterFailed": "Failed to deregister notifications, please try again",
+    "noCapability": "{{name}} does not have notifications capability",
+    "pushTokenNotSet": "Push token is not set",
+    "httpError": "Error: {{status}} {{statusText}}",
+    "saveWalletDataFailed": "Failed to save wallet data",
+    "registerFailed": "Failed to register notifications",
+    "deregisterPushFailed": "Failed to deregister push notifications"
+  },
+  "security": {
+    "title": "Security",
+    "setupTitle": "Setup Device Security",
+    "setupDescription": "To protect your wallet, please set up a phone lock in your device settings first.",
+    "requirePhoneLock": "Require phone lock to access"
+  },
+  "addressBook": {
+    "title": "Address Book",
+    "noEntries": "No entries yet."
+  }
+}

@@ -1,9 +1,10 @@
 import type { Nip47Transaction, Nip47TransactionMetadata } from "@getalby/sdk";
 import { hexToBytes } from "@noble/hashes/utils.js";
-import dayjs from "dayjs";
 import { Link, router, useLocalSearchParams } from "expo-router";
+import type { TFunction } from "i18next";
 import { nip19 } from "nostr-tools";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Platform,
   Pressable,
@@ -22,13 +23,14 @@ import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
-import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
 import {
-  cn,
-  copyToClipboard,
   formatBitcoinAmount,
-  safeNpubEncode,
-} from "~/lib/utils";
+  formatDateTime,
+  formatNumber,
+  formatSatsUnit,
+} from "~/lib/format";
+import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
+import { cn, copyToClipboard, safeNpubEncode } from "~/lib/utils";
 
 type TransactionRouteParams = {
   transactionJSON: string;
@@ -57,6 +59,7 @@ type Boostagram = {
 };
 
 export function Transaction() {
+  const { t } = useTranslation();
   const { transactionJSON, appPubkey } =
     useLocalSearchParams<TransactionRouteParams>();
 
@@ -64,10 +67,10 @@ export function Transaction() {
     try {
       return JSON.parse(transactionJSON) as Nip47Transaction;
     } catch (error) {
-      errorToast(error, "Failed to load transaction");
+      errorToast(error, t("transactions.detail.loadFailed"));
       return null;
     }
-  }, [transactionJSON]);
+  }, [transactionJSON, t]);
 
   React.useEffect(() => {
     if (transaction) {
@@ -75,11 +78,11 @@ export function Transaction() {
     }
 
     errorToast(
-      new Error("Invalid transaction data"),
-      "Failed to open transaction",
+      new Error(t("transactions.detail.invalidData")),
+      t("transactions.detail.openFailed"),
     );
     router.replace("/");
-  }, [transaction]);
+  }, [transaction, t]);
 
   React.useEffect(() => {
     if (transaction && appPubkey) {
@@ -95,13 +98,14 @@ export function Transaction() {
 }
 
 function TransactionScreen({ transaction }: { transaction: Nip47Transaction }) {
+  const { t } = useTranslation();
   const bitcoinDisplayFormat = useAppStore(
     (store) => store.bitcoinDisplayFormat,
   );
 
   return (
     <>
-      <Screen title="Transaction" />
+      <Screen title={t("transactions.detail.title")} />
       <View className="flex-1 pt-2">
         <ScrollView showsVerticalScrollIndicator={false}>
           <View className="flex-1 p-6 pt-10 gap-12">
@@ -127,10 +131,11 @@ function TransactionSummary({
   transaction: Nip47Transaction;
   bitcoinDisplayFormat: BitcoinDisplayFormat;
 }) {
+  const { t } = useTranslation();
   const getFiatAmount = useGetFiatAmount();
   const displayCharacterCount =
-    new Intl.NumberFormat().format(Math.floor(transaction.amount / 1000))
-      .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4);
+    formatNumber(Math.floor(transaction.amount / 1000)).length +
+    (bitcoinDisplayFormat === "bip177" ? 1 : 4);
 
   return (
     <View className="flex gap-10 justify-center items-center">
@@ -146,7 +151,7 @@ function TransactionSummary({
             transaction.state === "pending" && "animate-pulse",
           )}
         >
-          {getTransactionStatus(transaction)}
+          {getTransactionStatus(transaction, t)}
         </Text>
       </View>
       <View className="flex items-center gap-2">
@@ -187,7 +192,7 @@ function TransactionSummary({
               )}
             >
               {" "}
-              sats
+              {formatSatsUnit(Math.floor(transaction.amount / 1000))}
             </Text>
           )}
         </Text>
@@ -208,6 +213,7 @@ function TransactionDetails({
   transaction: Nip47Transaction;
   bitcoinDisplayFormat: BitcoinDisplayFormat;
 }) {
+  const { t } = useTranslation();
   const encodedEventId = getEncodedEventId(transaction);
   const boostagram = React.useMemo(
     () => getBoostagram(transaction.metadata),
@@ -221,37 +227,43 @@ function TransactionDetails({
     <View className="flex gap-4">
       {metadata?.recipient_data?.identifier && (
         <TransactionDetailRow
-          title="To"
+          title={t("transactions.detail.to")}
           content={metadata.recipient_data.identifier}
         />
       )}
       {metadata?.payer_data?.name && (
-        <TransactionDetailRow title="From" content={metadata.payer_data.name} />
+        <TransactionDetailRow
+          title={t("transactions.detail.from")}
+          content={metadata.payer_data.name}
+        />
       )}
       <TransactionDetailRow
-        title="Date & Time"
-        content={dayjs
-          .unix(transaction.settled_at || transaction.created_at)
-          .format("D MMMM YYYY, HH:mm")}
+        title={t("transactions.detail.dateTime")}
+        content={formatDateTime(
+          transaction.settled_at || transaction.created_at,
+        )}
       />
       <TransactionDetailRow
-        title="Description"
+        title={t("common.description")}
         content={transaction.description || "-"}
       />
       {metadata?.comment && (
-        <TransactionDetailRow title="Comment" content={metadata.comment} />
+        <TransactionDetailRow
+          title={t("common.comment")}
+          content={metadata.comment}
+        />
       )}
       {/* for Alby lightning addresses the content of the zap request is
       automatically extracted and already displayed above as description */}
       {transaction.metadata?.nostr && encodedEventId && npub && (
         <View className="flex flex-row gap-3">
           <Text className="w-32 text-muted-foreground ios:text-lg android:text-base">
-            Nostr Zap
+            {t("transactions.detail.nostrZap")}
           </Text>
           <Link href={`https://njump.me/${encodedEventId}`} asChild>
             <Pressable className="flex-row flex-1 gap-1 items-center">
               <Text className="flex-1 font-medium2 ios:text-lg android:text-base">
-                From {npub}
+                {t("transactions.detail.zapFrom", { npub })}
               </Text>
               <LinkIcon width={16} className="text-primary-foreground" />
             </Pressable>
@@ -266,28 +278,36 @@ function TransactionDetails({
       )}
       {transaction.state === "settled" && transaction.type === "outgoing" && (
         <TransactionDetailRow
-          title="Fee"
-          content={
-            formatBitcoinAmount(
+          title={t("transactions.detail.fee")}
+          content={t("transactions.detail.feeValue", {
+            amount: formatBitcoinAmount(
               Math.floor(transaction.fees_paid / 1000),
               bitcoinDisplayFormat,
-            ) +
-            " (" +
-            ((transaction.fees_paid / transaction.amount) * 100).toFixed(2) +
-            "%)"
-          }
+            ),
+            percent: formatNumber(
+              (transaction.fees_paid / transaction.amount) * 100,
+              {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+                useGrouping: false,
+              },
+            ),
+          })}
         />
       )}
       <TransactionDetailRow
-        title="Payment Hash"
+        title={t("transactions.detail.paymentHash")}
         content={transaction.payment_hash}
       />
       {transaction.state === "settled" && (
-        <TransactionDetailRow title="Preimage" content={transaction.preimage} />
+        <TransactionDetailRow
+          title={t("transactions.detail.preimage")}
+          content={transaction.preimage}
+        />
       )}
       {metadata && (
         <TransactionDetailRow
-          title="Metadata"
+          title={t("transactions.detail.metadata")}
           content={JSON.stringify(metadata, null, 2)}
           className="ios:text-sm android:text-xs font-mono bg-muted p-2 rounded-md"
         />
@@ -312,17 +332,19 @@ function renderTransactionIcon(transaction: Nip47Transaction, props: SvgProps) {
   return <FailedTransactionIcon {...props} />;
 }
 
-function getTransactionStatus(transaction: Nip47Transaction) {
+function getTransactionStatus(transaction: Nip47Transaction, t: TFunction) {
   if (transaction.type === "incoming") {
-    return transaction.state === "settled" ? "Received" : "Receiving";
+    return transaction.state === "settled"
+      ? t("transactions.status.received")
+      : t("transactions.status.receiving");
   }
   if (transaction.state === "failed") {
-    return "Failed";
+    return t("transactions.status.failed");
   }
   if (transaction.state === "pending") {
-    return "Sending";
+    return t("transactions.status.sending");
   }
-  return "Sent";
+  return t("transactions.status.sent");
 }
 
 function getEncodedEventId(transaction: Nip47Transaction) {
@@ -390,6 +412,7 @@ function PodcastingInfo({
   boost: Boostagram;
   bitcoinDisplayFormat: BitcoinDisplayFormat;
 }) {
+  const { t } = useTranslation();
   const renderDetail = (title: string, content: any) => {
     if (content === 0 || !!content) {
       return <TransactionDetailRow title={title} content={String(content)} />;
@@ -399,13 +422,13 @@ function PodcastingInfo({
 
   return (
     <>
-      {renderDetail("Message", boost.message)}
-      {renderDetail("Podcast", boost.podcast)}
-      {renderDetail("Episode", boost.episode)}
-      {renderDetail("Action", boost.action)}
-      {renderDetail("Timestamp", boost.ts)}
+      {renderDetail(t("transactions.detail.boostagram.message"), boost.message)}
+      {renderDetail(t("transactions.detail.boostagram.podcast"), boost.podcast)}
+      {renderDetail(t("transactions.detail.boostagram.episode"), boost.episode)}
+      {renderDetail(t("transactions.detail.boostagram.action"), boost.action)}
+      {renderDetail(t("transactions.detail.boostagram.timestamp"), boost.ts)}
       {renderDetail(
-        "Total amount",
+        t("transactions.detail.boostagram.totalAmount"),
         boost.value_msat_total
           ? formatBitcoinAmount(
               Math.floor(boost.value_msat_total / 1000),
@@ -413,8 +436,11 @@ function PodcastingInfo({
             )
           : null,
       )}
-      {renderDetail("Sender", boost.sender_name)}
-      {renderDetail("App", boost.app_name)}
+      {renderDetail(
+        t("transactions.detail.boostagram.sender"),
+        boost.sender_name,
+      )}
+      {renderDetail(t("transactions.detail.boostagram.app"), boost.app_name)}
     </>
   );
 }

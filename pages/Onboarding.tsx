@@ -1,6 +1,7 @@
 import { openURL } from "expo-linking";
 import { Link, Stack, router } from "expo-router";
 import React from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { Platform, View } from "react-native";
 import AlbyGoLogomark from "~/components/AlbyGoLogomark";
 import { Button } from "~/components/ui/button";
@@ -9,6 +10,8 @@ import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function Onboarding() {
+  const { t } = useTranslation();
+
   async function finish() {
     useAppStore.getState().setOnboarded(true);
     router.replace("/");
@@ -18,7 +21,7 @@ export function Onboarding() {
     <View className="flex-1 flex flex-col p-6 gap-3">
       <Stack.Screen
         options={{
-          title: "Onboarding",
+          title: t("onboarding.title"),
           headerShown: false,
         }}
       />
@@ -33,7 +36,7 @@ export function Onboarding() {
             "font-semibold2 sm:leading-[1.5] text-center",
           )}
         >
-          Hello there 👋
+          {t("onboarding.greeting")}
         </Text>
         <Text
           className={cn(
@@ -44,24 +47,27 @@ export function Onboarding() {
             "font-medium2 text-center",
           )}
         >
-          <Text
-            className={cn(
-              Platform.select({
-                ios: "ios:text-lg ios:sm:text-xl",
-                android: "android:text-lg",
-              }),
-              "font-bold2",
-            )}
-          >
-            Alby Go
-          </Text>{" "}
-          is a simple mobile wallet interface for your Alby Hub or other
-          lightning nodes and wallets.
+          <Trans
+            i18nKey="onboarding.intro"
+            components={{
+              bold: (
+                <Text
+                  className={cn(
+                    Platform.select({
+                      ios: "ios:text-lg ios:sm:text-xl",
+                      android: "android:text-lg",
+                    }),
+                    "font-bold2",
+                  )}
+                />
+              ),
+            }}
+          />
         </Text>
       </View>
       <Link href="/" asChild>
         <Button size="lg" onPress={finish}>
-          <Text>Connect Wallet</Text>
+          <Text>{t("onboarding.connectWallet")}</Text>
         </Button>
       </Link>
       <Button
@@ -69,7 +75,7 @@ export function Onboarding() {
         size="lg"
         onPress={() => openURL("https://albyhub.com/")}
       >
-        <Text>Learn more</Text>
+        <Text>{t("onboarding.learnMore")}</Text>
       </Button>
     </View>
   );

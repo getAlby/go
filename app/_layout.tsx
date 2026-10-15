@@ -1,3 +1,4 @@
+import "~/lib/i18n"; // must be initialized before any screen renders
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import * as Sentry from "@sentry/react-native";
 import * as Font from "expo-font";
@@ -24,6 +25,7 @@ import "~/global.css";
 import { SessionProvider } from "~/hooks/useSession";
 import { IS_EXPO_GO, THEME_COLORS } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import i18n, { applyLanguage, resolveLanguage } from "~/lib/i18n";
 import { isBiometricSupported } from "~/lib/isBiometricSupported";
 import { sweepOrphanedWalletInfo } from "~/lib/notificationsNativeStorage";
 import { useAppStore } from "~/lib/state/appStore";
@@ -117,12 +119,15 @@ export default Sentry.wrap(function RootLayout() {
       } finally {
         setResourcesLoaded(true);
         try {
+          // mirrors the resolved language into the native notification
+          // storage at startup (otherwise only done when the setting changes)
+          await applyLanguage(resolveLanguage(useAppStore.getState().language));
           if (!IS_EXPO_GO) {
             await checkAndPromptForNotifications();
             await sweepOrphanedNotificationData();
           }
         } catch (error) {
-          errorToast(error, "Failed to set up notifications");
+          errorToast(error, i18n.t("errors.notifications.setupFailed"));
         } finally {
           SplashScreen.hide();
         }

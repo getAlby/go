@@ -1,0 +1,8 @@
+{
+  "title": "Unlock",
+  "promptMessage": "Unlock Alby Go",
+  "heading": "Unlock to continue",
+  "unlockWallet": "Unlock Wallet",
+  "unlocking": "Unlocking...",
+  "failed": "Failed to unlock"
+}

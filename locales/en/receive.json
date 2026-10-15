@@ -1,0 +1,46 @@
+{
+  "title": "Receive",
+  "redeem": "Redeem",
+  "nothingToCopy": "Nothing to copy",
+  "invoice": {
+    "title": "Invoice"
+  },
+  "createInvoice": {
+    "zeroAmountNotSupported": "0-amount invoices are not supported",
+    "failed": "Failed to create invoice",
+    "noInvoiceSet": "No invoice set",
+    "waitingForPayment": "Waiting for payment",
+    "createButton": "Create Invoice"
+  },
+  "lightningAddress": {
+    "title": "Lightning Address",
+    "description": "Attach your lightning address to this wallet to display it as QR code for fast face-to-face transactions",
+    "getNewAddress": "Get New Address",
+    "addExisting": "Add Existing"
+  },
+  "albyAccount": {
+    "title": "Get Alby Account",
+    "heading": "Get your lightning address with Alby Account",
+    "features": {
+      "lightningAddress": "Lightning address & Nostr identifier,",
+      "tippingPage": "Personal tipping page,",
+      "podcasting": "Access to podcasting 2.0 apps,",
+      "buyBitcoin": "Buy bitcoin directly to your wallet,",
+      "emailNotifications": "Useful email wallet notifications,",
+      "prioritySupport": "Priority support."
+    },
+    "getAccountButton": "Get Alby Account"
+  },
+  "success": {
+    "title": "Success"
+  },
+  "withdraw": {
+    "title": "Redeem",
+    "scanHint": "Scan a LNURL QR code to withdraw",
+    "confirmWithdrawal": "Confirm Withdrawal",
+    "tagNotSupported": "LNURL tag {{tag}} not supported",
+    "invalidLnurl": "Invalid LNURL",
+    "loadFailed": "Failed to load withdraw info",
+    "failed": "Failed to withdraw"
+  }
+}

@@ -1,5 +1,6 @@
 import { openURL } from "expo-linking";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, TouchableOpacity } from "react-native";
 import { LinkIcon } from "~/components/Icons";
 import { LongTextBottomSheet } from "~/components/LongTextBottomSheet";
@@ -13,6 +14,8 @@ interface SuccessMessageProps {
 }
 
 export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
+  const { t } = useTranslation();
+
   if (!lnurlSuccessAction) {
     return null;
   }
@@ -20,7 +23,7 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
   if (lnurlSuccessAction.tag === "message" && lnurlSuccessAction.message) {
     return (
       <LongTextBottomSheet
-        title="Message From Receiver"
+        title={t("send.successMessage.title")}
         content={lnurlSuccessAction.message}
       />
     );
@@ -29,7 +32,7 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
   if (lnurlSuccessAction.tag === "url" && lnurlSuccessAction.description) {
     return (
       <LongTextBottomSheet
-        title="Message From Receiver"
+        title={t("send.successMessage.title")}
         content={lnurlSuccessAction.description}
       >
         <Text
@@ -48,7 +51,9 @@ export function SuccessMessage({ lnurlSuccessAction }: SuccessMessageProps) {
             className="mt-4 flex flex-row gap-2 justify-center items-center"
             onPress={() => openURL(lnurlSuccessAction.url ?? "")}
           >
-            <Text className="font-semibold2">Open Link</Text>
+            <Text className="font-semibold2">
+              {t("send.successMessage.openLink")}
+            </Text>
             <LinkIcon width={16} className="text-primary-foreground" />
           </TouchableOpacity>
         )}

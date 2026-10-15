@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, Pressable, View } from "react-native";
 import Alert from "~/components/Alert";
 import { TriangleAlertIcon } from "~/components/Icons";
@@ -11,6 +12,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function Security() {
+  const { t } = useTranslation();
   const [isSupported, setIsSupported] = React.useState<boolean | null>(null);
   const isEnabled = useAppStore((store) => store.isSecurityEnabled);
 
@@ -28,7 +30,7 @@ export function Security() {
 
   return (
     <View className="flex-1 px-6">
-      <Screen title="Security" />
+      <Screen title={t("settings.security.title")} />
       {isSupported === null ? (
         <View className="flex-1 justify-center items-center">
           <Loading />
@@ -39,8 +41,8 @@ export function Security() {
             {!isSupported && (
               <Alert
                 type="info"
-                title="Setup Device Security"
-                description="To protect your wallet, please set up a phone lock in your device settings first."
+                title={t("settings.security.setupTitle")}
+                description={t("settings.security.setupDescription")}
                 icon={TriangleAlertIcon}
               />
             )}
@@ -59,7 +61,7 @@ export function Security() {
                     "font-semibold2",
                   )}
                 >
-                  Require phone lock to access
+                  {t("settings.security.requirePhoneLock")}
                 </Text>
               </Pressable>
               <Switch

@@ -1,6 +1,7 @@
 import { getFiatBtcRate } from "@getalby/lightning-tools/fiat";
 import React from "react";
 import { BTC_RATE_REFRESH_INTERVAL } from "~/lib/constants";
+import { formatFiatNumber, getCurrencySymbol } from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
 
 interface RateCacheEntry {
@@ -51,26 +52,12 @@ export function useGetFiatAmount() {
       if (!fiatCurrency || !rate) {
         return undefined;
       }
-      const formatterWithCode = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: fiatCurrency,
-        currencyDisplay: "code",
-      });
-      const amountWithCode = formatterWithCode.format(rate * amount);
-      const numericAmount = amountWithCode.substring(
-        amountWithCode.search(/\s/) + 1,
-      );
+      const numericAmount = formatFiatNumber(rate * amount, fiatCurrency);
 
       if (!displayCurrencySign) {
         return numericAmount;
       }
-      const symbol = new Intl.NumberFormat(undefined, {
-        style: "currency",
-        currency: fiatCurrency,
-        currencyDisplay: "narrowSymbol",
-      })
-        .format(0)
-        .replace(/[0-9.,\s]/g, "");
+      const symbol = getCurrencySymbol(fiatCurrency);
 
       return `${symbol} ${numericAmount}`;
     },

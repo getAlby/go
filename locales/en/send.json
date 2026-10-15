@@ -1,0 +1,69 @@
+{
+  "title": "Send",
+  "scan": {
+    "cameraRollPermission": "Enable permissions to access camera roll",
+    "noQrCodeTitle": "No QR Code Found",
+    "noQrCodeMessage": "Could not find a QR code in the selected image.",
+    "scanImageErrorTitle": "Error Scanning Image",
+    "scanImageErrorMessage": "An error occurred while trying to scan the image for a QR code.",
+    "import": "Import",
+    "address": "Address"
+  },
+  "address": {
+    "title": "Send to Address",
+    "placeholder": "hello@getalby.com",
+    "addToContacts": "Add to Contacts",
+    "contactNamePlaceholder": "Satoshi Nakamoto",
+    "addressBook": "Address Book",
+    "noMatchingEntries": "No matching entries."
+  },
+  "confirm": {
+    "title": "Confirm Payment",
+    "sendLabel": "Send",
+    "pendingPaymentsTitle": "One or more pending payments",
+    "pendingPaymentsDescription": "Please check your transaction list before paying to ensure you do not make a payment twice.",
+    "pay": "Pay",
+    "failed": "Failed to make payment"
+  },
+  "lnurlPay": {
+    "fixedAmountInvoice": "You are paying a fixed amount invoice",
+    "requestInvoiceFailed": "Failed to request invoice"
+  },
+  "success": {
+    "title": "Success"
+  },
+  "successMessage": {
+    "title": "Message From Receiver",
+    "openLink": "Open Link"
+  },
+  "receiver": {
+    "to": "To"
+  },
+  "scanner": {
+    "permissionDeniedTitle": "Camera Permission Denied",
+    "permissionDeniedDescription": "It seems you denied permissions to use your camera. You might need to go to your device settings to allow access to your camera again."
+  },
+  "amountInput": {
+    "addDescription": "Add Description",
+    "descriptionPlaceholder": "Sats for Satoshi",
+    "min": "Min {{amount}}",
+    "max": "Max {{amount}}",
+    "between": "Between {{min}} and {{max}}",
+    "notLessThan": "Should not be less than {{min}}",
+    "notMoreThan": "Should not be more than {{max}}",
+    "maximumAmount": "Maximum amount is {{amount}}",
+    "invalidClipboardAmount": "Your clipboard does not contain a valid amount.",
+    "clipboardReadFailed": "Failed to read clipboard."
+  },
+  "lnurl": {
+    "nonOkResponse": "Non-OK response from request to {{url}}: {{status}}",
+    "error": "LNURL Error: {{reason}}",
+    "connectionProblem": "Connection problem or invalid lnurl / lightning address: {{reason}}",
+    "missingInvoice": "No pr in LNURL callback response data"
+  },
+  "paymentFlow": {
+    "noLightningParam": "No lightning param found in bitcoin payment link",
+    "lnurlTagNotSupported": "LNURL tag not supported",
+    "failed": "Failed to load payment"
+  }
+}

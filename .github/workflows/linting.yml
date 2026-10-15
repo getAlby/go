@@ -43,3 +43,6 @@ jobs:
 
       - name: 🔎 Typechecking
         run: yarn tsc:compile
+
+      - name: 🌐 Translations
+        run: yarn i18n:check

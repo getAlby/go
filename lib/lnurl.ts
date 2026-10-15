@@ -1,5 +1,6 @@
 // modified from https://github.com/getAlby/lightning-browser-extension/blob/master/src/common/lib/lnurl.ts
 
+import i18n from "~/lib/i18n";
 import { bech32Decode } from "./bech32";
 
 interface LNURLError {
@@ -128,7 +129,10 @@ export const lnurl = {
 
       if (!response.ok) {
         throw new Error(
-          "Non-OK response from request to " + url + ": " + response.status,
+          i18n.t("send.lnurl.nonOkResponse", {
+            url: url.toString(),
+            status: response.status,
+          }),
         );
       }
 
@@ -137,7 +141,9 @@ export const lnurl = {
       const lnurlDetails = data as LNURLDetails;
 
       if (this.isLNURLDetailsError(lnurlDetails)) {
-        throw new Error(`LNURL Error: ${lnurlDetails.reason}`);
+        throw new Error(
+          i18n.t("send.lnurl.error", { reason: lnurlDetails.reason }),
+        );
       }
 
       lnurlDetails.domain = url.hostname;
@@ -146,9 +152,9 @@ export const lnurl = {
       return lnurlDetails;
     } catch (e) {
       throw new Error(
-        `Connection problem or invalid lnurl / lightning address: ${
-          e instanceof Error ? e.message : ""
-        }`,
+        i18n.t("send.lnurl.connectionProblem", {
+          reason: e instanceof Error ? e.message : "",
+        }),
       );
     }
   },
@@ -159,7 +165,10 @@ export const lnurl = {
 
       if (!response.ok) {
         throw new Error(
-          "Non-OK response from request to " + url + ": " + response.status,
+          i18n.t("send.lnurl.nonOkResponse", {
+            url,
+            status: response.status,
+          }),
         );
       }
 
@@ -170,19 +179,21 @@ export const lnurl = {
       const lnurlPaymentInfo = data as LNURLPaymentInfo;
 
       if (this.isLNURLDetailsError(lnurlPaymentInfo)) {
-        throw new Error(`LNURL Error: ${lnurlPaymentInfo.reason}`);
+        throw new Error(
+          i18n.t("send.lnurl.error", { reason: lnurlPaymentInfo.reason }),
+        );
       }
 
       if (!lnurlPaymentInfo.pr) {
-        throw new Error("No pr in LNURL callback response data");
+        throw new Error(i18n.t("send.lnurl.missingInvoice"));
       }
 
       return lnurlPaymentInfo;
     } catch (e) {
       throw new Error(
-        `Connection problem or invalid lnurl / lightning address: ${
-          e instanceof Error ? e.message : ""
-        }`,
+        i18n.t("send.lnurl.connectionProblem", {
+          reason: e instanceof Error ? e.message : "",
+        }),
       );
     }
   },

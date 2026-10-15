@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FlatList,
   Platform,
@@ -15,10 +16,12 @@ import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { ALBY_URL, DEFAULT_CURRENCY } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 function CurrencyList() {
+  const { t } = useTranslation();
   const [fiatCurrency, setFiatCurrency] = React.useState(
     useAppStore.getState().fiatCurrency,
   );
@@ -43,7 +46,7 @@ function CurrencyList() {
           .sort((a, b) => a[2] - b[2]) as [string, string, number][];
         setCurrencies(mappedCurrencies);
       } catch (error) {
-        errorToast(error, "Failed to load currency list");
+        errorToast(error, i18n.t("settings.fiatCurrency.loadFailed"));
       } finally {
         setLoading(false);
       }
@@ -54,7 +57,7 @@ function CurrencyList() {
   function select(iso: string) {
     setFiatCurrency(iso);
     useAppStore.getState().setFiatCurrency(iso);
-    Toast.show({ type: "success", text1: "Fiat currency updated" });
+    Toast.show({ type: "success", text1: t("settings.fiatCurrency.updated") });
     router.dismissAll();
     router.navigate("/");
   }
@@ -134,6 +137,7 @@ function CurrencyList() {
 }
 
 export function FiatCurrency() {
+  const { t } = useTranslation();
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
 
   const toggleFiatCurrency = () => {
@@ -144,7 +148,7 @@ export function FiatCurrency() {
 
   return (
     <View className="flex-1 p-6">
-      <Screen title="Fiat Currency" />
+      <Screen title={t("settings.fiatCurrency.title")} />
 
       <View className="flex-row items-center justify-between gap-2 mb-2">
         <Pressable onPress={toggleFiatCurrency}>
@@ -154,7 +158,7 @@ export function FiatCurrency() {
               "font-semibold2",
             )}
           >
-            Display fiat currency
+            {t("settings.fiatCurrency.display")}
           </Text>
         </Pressable>
         <Switch checked={!!fiatCurrency} onCheckedChange={toggleFiatCurrency} />

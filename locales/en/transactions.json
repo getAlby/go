@@ -1,0 +1,49 @@
+{
+  "dateTimeFormat": "D MMMM YYYY, HH:mm",
+  "title": "Transactions",
+  "loadingMore": "Loading more transactions",
+  "empty": {
+    "title": "No transactions yet",
+    "description": "Top up your wallet to get started",
+    "receive": "Receive"
+  },
+  "status": {
+    "received": "Received",
+    "receiving": "Receiving",
+    "sent": "Sent",
+    "sending": "Sending",
+    "failed": "Failed"
+  },
+  "item": {
+    "from": "from {{name}}",
+    "zapFrom": "zap from {{npub}}...",
+    "to": "to {{recipient}}",
+    "paymentTo": "payment to {{recipient}}"
+  },
+  "detail": {
+    "title": "Transaction",
+    "loadFailed": "Failed to load transaction",
+    "openFailed": "Failed to open transaction",
+    "invalidData": "Invalid transaction data",
+    "to": "To",
+    "from": "From",
+    "dateTime": "Date & Time",
+    "nostrZap": "Nostr Zap",
+    "zapFrom": "From {{npub}}",
+    "fee": "Fee",
+    "feeValue": "{{amount}} ({{percent}}%)",
+    "paymentHash": "Payment Hash",
+    "preimage": "Preimage",
+    "metadata": "Metadata",
+    "boostagram": {
+      "message": "Message",
+      "podcast": "Podcast",
+      "episode": "Episode",
+      "action": "Action",
+      "timestamp": "Timestamp",
+      "totalAmount": "Total amount",
+      "sender": "Sender",
+      "app": "App"
+    }
+  }
+}

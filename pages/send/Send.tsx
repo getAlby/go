@@ -3,6 +3,7 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, View } from "react-native";
 import { AddressIcon, ImageIcon, PasteIcon } from "~/components/Icons";
 import Loading from "~/components/Loading";
@@ -15,6 +16,7 @@ import { initiatePaymentFlow } from "~/lib/initiatePaymentFlow";
 import { readClipboardText } from "~/lib/utils";
 
 export function Send() {
+  const { t } = useTranslation();
   const { url, amount } = useLocalSearchParams<{
     url: string;
     amount: string;
@@ -28,7 +30,7 @@ export function Send() {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      errorToast(new Error("Enable permissions to access camera roll"));
+      errorToast(new Error(t("send.scan.cameraRollPermission")));
       return;
     }
 
@@ -46,15 +48,15 @@ export function Send() {
           await loadPayment(scannedCodes[0].data);
         } else {
           Alert.alert(
-            "No QR Code Found",
-            "Could not find a QR code in the selected image.",
+            t("send.scan.noQrCodeTitle"),
+            t("send.scan.noQrCodeMessage"),
           );
         }
       }
     } catch {
       Alert.alert(
-        "Error Scanning Image",
-        "An error occurred while trying to scan the image for a QR code.",
+        t("send.scan.scanImageErrorTitle"),
+        t("send.scan.scanImageErrorMessage"),
       );
     } finally {
       setLoading(false);
@@ -108,7 +110,7 @@ export function Send() {
 
   return (
     <>
-      <Screen title="Send" />
+      <Screen title={t("send.title")} />
       <View className="flex-1 pt-2">
         {isLoading ? (
           <View className="flex-1 flex flex-col items-center justify-center">
@@ -131,7 +133,7 @@ export function Send() {
                   height={32}
                   className="text-muted-foreground"
                 />
-                <Text numberOfLines={1}>Import</Text>
+                <Text numberOfLines={1}>{t("send.scan.import")}</Text>
               </Button>
               <Button
                 variant="secondary"
@@ -145,7 +147,7 @@ export function Send() {
                   height={32}
                   className="text-muted-foreground"
                 />
-                <Text numberOfLines={1}>Address</Text>
+                <Text numberOfLines={1}>{t("send.scan.address")}</Text>
               </Button>
               <Button
                 variant="secondary"
@@ -157,7 +159,7 @@ export function Send() {
                   height={32}
                   className="text-muted-foreground"
                 />
-                <Text numberOfLines={1}>Paste</Text>
+                <Text numberOfLines={1}>{t("common.paste")}</Text>
               </Button>
             </View>
           </>

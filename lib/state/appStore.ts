@@ -3,6 +3,10 @@ import { hexToBytes } from "@noble/hashes/utils.js";
 import { getPublicKey } from "nostr-tools";
 import { create } from "zustand";
 import { removeAllInfo } from "~/lib/notificationsNativeStorage";
+import {
+  isSupportedLanguage,
+  type SupportedLanguage,
+} from "~/locales/generated";
 import { secureStorage } from "../secureStorage";
 
 interface AppState {
@@ -20,12 +24,14 @@ interface AppState {
   readonly theme?: Theme;
   readonly bitcoinDisplayFormat: BitcoinDisplayFormat;
   readonly balanceDisplayMode: BalanceDisplayMode;
+  readonly language: AppLanguage;
   readonly lastAppStateChangeTime: number;
   setUnlocked: (unlocked: boolean) => void;
   setLastAppStateChangeTime: (lastAppStateChangeTime: number) => void;
   setTheme: (theme: Theme) => void;
   setBitcoinDisplayFormat: (bitcoinDisplayFormat: BitcoinDisplayFormat) => void;
   setBalanceDisplayMode: (balanceDisplayMode: BalanceDisplayMode) => void;
+  setLanguage: (language: AppLanguage) => void;
   setOnboarded: (isOnboarded: boolean) => void;
   setExpoPushToken: (expoPushToken: string) => void;
   getNWCClient: (walletId: number) => NWCClient | undefined;
@@ -56,6 +62,7 @@ const lastAlbyPaymentKey = "lastAlbyPayment";
 const themeKey = "theme";
 const bitcoinDisplayFormatKey = "bitcoinDisplayFormat";
 const balanceDisplayModeKey = "balanceDisplayMode";
+const languageKey = "language";
 const isSecurityEnabledKey = "isSecurityEnabled";
 const isNotificationsEnabledKey = "isNotificationsEnabled";
 const ttsNotificationsEnabledKey = "ttsNotificationsEnabled";
@@ -63,6 +70,9 @@ const ttsNotificationsEnabledKey = "ttsNotificationsEnabled";
 export type BitcoinDisplayFormat = "sats" | "bip177";
 export type BalanceDisplayMode = "sats" | "fiat" | "hidden";
 export type Theme = "light" | "dark";
+// "system" follows the device language, see lib/i18n.ts; the language codes
+// come from locales/<code>/meta.json through the generated registry
+export type AppLanguage = "system" | SupportedLanguage;
 
 export type Wallet = {
   name?: string;
@@ -197,6 +207,12 @@ export const useAppStore = create<AppState>()((set, get) => {
   const balanceDisplayMode =
     (secureStorage.getItem(balanceDisplayModeKey) as BalanceDisplayMode) ||
     "sats";
+  const storedLanguage = secureStorage.getItem(languageKey);
+  // a stored language that is no longer shipped behaves like "system"
+  const language: AppLanguage =
+    storedLanguage === "system" || isSupportedLanguage(storedLanguage)
+      ? storedLanguage
+      : "system";
 
   const initialWallets = loadWallets();
 
@@ -221,6 +237,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     theme,
     bitcoinDisplayFormat,
     balanceDisplayMode,
+    language,
     isOnboarded: secureStorage.getItem(hasOnboardedKey) === "true",
     selectedWalletId: initialSelectedWalletId,
     expoPushToken: secureStorage.getItem(expoPushTokenKey) || "",
@@ -243,6 +260,10 @@ export const useAppStore = create<AppState>()((set, get) => {
     setBitcoinDisplayFormat: (bitcoinDisplayFormat) => {
       secureStorage.setItem(bitcoinDisplayFormatKey, bitcoinDisplayFormat);
       set({ bitcoinDisplayFormat });
+    },
+    setLanguage: (language) => {
+      secureStorage.setItem(languageKey, language);
+      set({ language });
     },
     setOnboarded: (isOnboarded) => {
       if (isOnboarded) {
@@ -387,6 +408,9 @@ export const useAppStore = create<AppState>()((set, get) => {
       // clear expo push notifications token
       secureStorage.removeItem(expoPushTokenKey);
 
+      // clear language
+      secureStorage.removeItem(languageKey);
+
       set({
         nwcClient: undefined,
         fiatCurrency: undefined,
@@ -395,6 +419,7 @@ export const useAppStore = create<AppState>()((set, get) => {
         addressBookEntries: [],
         isSecurityEnabled: false,
         isOnboarded: false,
+        language: "system",
       });
     },
   };

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Platform, Pressable, View } from "react-native";
 import Screen from "~/components/Screen";
 import { Switch } from "~/components/ui/switch";
@@ -14,6 +15,7 @@ import { cn } from "~/lib/utils";
 import { registerForPushNotificationsAsync } from "~/services/Notifications";
 
 export function Notifications() {
+  const { t } = useTranslation();
   const [isLoading, setLoading] = React.useState(false);
   const [isLoadingTTS, setLoadingTTS] = React.useState(false);
   const wallets = useAppStore((store) => store.wallets);
@@ -39,10 +41,7 @@ export function Notifications() {
           await deregisterWalletNotifications(wallet, id);
         }
       } catch (error) {
-        errorToast(
-          error,
-          "Failed to deregister notifications, please try again",
-        );
+        errorToast(error, t("settings.notifications.deregisterFailed"));
         setLoading(false);
         return;
       }
@@ -72,7 +71,7 @@ export function Notifications() {
 
   return (
     <View className="flex-1 p-6">
-      <Screen title="Notifications" />
+      <Screen title={t("settings.notifications.title")} />
       <View className="flex-1">
         <View className="flex-row items-center justify-between gap-2">
           <Pressable onPress={toggleNotifications}>
@@ -85,7 +84,7 @@ export function Notifications() {
                 "font-semibold2",
               )}
             >
-              Show app notifications
+              {t("settings.notifications.showAppNotifications")}
             </Text>
           </Pressable>
           <Switch
@@ -107,7 +106,7 @@ export function Notifications() {
                   "text-center text-secondary-foreground",
                 )}
               >
-                Choose from which wallets you want to receive app notifications
+                {t("settings.notifications.chooseWallets")}
               </Text>
             </View>
             <FlatList
@@ -142,7 +141,7 @@ export function Notifications() {
                 "font-semibold2",
               )}
             >
-              Spoken notifications
+              {t("settings.notifications.spokenNotifications")}
             </Text>
           </Pressable>
           <Switch
@@ -166,6 +165,7 @@ function WalletNotificationSwitch({
   index: number;
   isEnabled: boolean;
 }) {
+  const { t } = useTranslation();
   const checked = isEnabled && !!wallet.pushId;
   const [isLoading, setLoading] = React.useState(false);
 
@@ -177,10 +177,7 @@ function WalletNotificationSwitch({
       try {
         await deregisterWalletNotifications(wallet, index);
       } catch (error) {
-        errorToast(
-          error,
-          "Failed to deregister notifications, please try again",
-        );
+        errorToast(error, t("settings.notifications.deregisterFailed"));
         setLoading(false);
         return;
       }

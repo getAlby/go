@@ -8,6 +8,7 @@ import {
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
 import React, { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Keyboard,
   Platform,
@@ -30,9 +31,17 @@ import { Text } from "~/components/ui/text";
 import { useGetFiatAmount, useGetSatsAmount } from "~/hooks/useGetFiatAmount";
 import { MAX_SATS_THRESHOLD } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import {
+  formatBitcoinAmount,
+  formatNumber,
+  formatSatsUnit,
+  getCurrencySymbol,
+  getDecimalSeparator,
+  parseLocaleNumber,
+} from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
-import { cn, formatBitcoinAmount } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 
 interface DescriptionInputProps {
   description: string;
@@ -56,6 +65,7 @@ function DescriptionInput({
   setDescription,
   readOnly,
 }: DescriptionInputProps) {
+  const { t } = useTranslation();
   const [input, setInput] = useState(description);
   const { primary, foreground, background, mutedForeground } = useThemeColor(
     "primary",
@@ -117,7 +127,7 @@ function DescriptionInput({
             ellipsizeMode="tail"
             className="text-secondary-foreground font-medium2 ios:text-lg android:text-base text-center px-2"
           >
-            {description || "Add Description"}
+            {description || t("send.amountInput.addDescription")}
           </Text>
           {description && (
             <EditLineIcon className="text-secondary-foreground" />
@@ -164,12 +174,12 @@ function DescriptionInput({
                   "font-semibold2 text-secondary-foreground",
                 )}
               >
-                Add Description
+                {t("send.amountInput.addDescription")}
               </Text>
             </View>
             {isIOS ? (
               <BottomSheetTextInput
-                placeholder="Sats for Satoshi"
+                placeholder={t("send.amountInput.descriptionPlaceholder")}
                 className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border ios:text-xl ios:sm:text-2xl !leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted"
                 selectionColor={primary}
@@ -180,7 +190,7 @@ function DescriptionInput({
               />
             ) : (
               <Input
-                placeholder="Sats for Satoshi"
+                placeholder={t("send.amountInput.descriptionPlaceholder")}
                 className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 android:text-xl font-semibold2"
                 value={input}
                 onChangeText={setInput}
@@ -189,7 +199,7 @@ function DescriptionInput({
               />
             )}
             <Button size="lg" onPress={save}>
-              <Text>Save</Text>
+              <Text>{t("common.save")}</Text>
             </Button>
           </Wrapper>
         </BottomSheetView>
@@ -208,15 +218,19 @@ export function DualCurrencyInput({
   isAmountReadOnly,
   isDescriptionReadOnly,
 }: DualCurrencyInputProps) {
+  const { t } = useTranslation();
   const getFiatAmount = useGetFiatAmount();
   const getSatsAmount = useGetSatsAmount();
   const fiatCurrency = useAppStore((store) => store.fiatCurrency);
   const bitcoinDisplayFormat = useAppStore(
     (store) => store.bitcoinDisplayFormat,
   );
+  // text is kept canonical (with "." as decimal separator); the decimal key
+  // and the displayed value use the separator of the app language
   const [text, setText] = React.useState(amount);
   const [inputMode, setInputMode] = React.useState<"sats" | "fiat">("sats");
   const [showPasteAction, setShowPasteAction] = React.useState(false);
+  const decimalSeparator = getDecimalSeparator();
 
   const formatPlaceholderNumber = React.useCallback((value: number) => {
     const suffixes = { M: 1_000_000, k: 1_000 };
@@ -231,14 +245,14 @@ export function DualCurrencyInput({
             : Math.ceil(scaled * 10) / 10;
         const display =
           truncated < 100 && truncated % 1 !== 0
-            ? truncated.toFixed(1)
+            ? formatNumber(truncated, { maximumFractionDigits: 1 })
             : truncated.toString();
 
         return `${display}${suffix}`;
       }
     }
 
-    return new Intl.NumberFormat().format(value);
+    return formatNumber(value);
   }, []);
 
   const keypadRows = React.useMemo(
@@ -246,22 +260,16 @@ export function DualCurrencyInput({
       ["1", "2", "3"],
       ["4", "5", "6"],
       ["7", "8", "9"],
-      [inputMode === "fiat" ? "." : "000", "0", "Back"],
+      [inputMode === "fiat" ? decimalSeparator : "000", "0", "Back"],
     ],
-    [inputMode],
+    [inputMode, decimalSeparator],
   );
 
   const symbol = React.useMemo(() => {
     if (!fiatCurrency) {
       return "";
     }
-    return new Intl.NumberFormat(undefined, {
-      style: "currency",
-      currency: fiatCurrency,
-      currencyDisplay: "narrowSymbol",
-    })
-      .format(0)
-      .replace(/[0-9.,\s]/g, "");
+    return getCurrencySymbol(fiatCurrency);
   }, [fiatCurrency]);
 
   const formattedText = React.useMemo(() => {
@@ -270,31 +278,31 @@ export function DualCurrencyInput({
     }
     const sanitized = text.replace(/,/g, "");
     const [integer, decimal] = sanitized.split(".");
-    const formattedInteger = new Intl.NumberFormat().format(
-      Number(integer || 0),
-    );
+    const formattedInteger = formatNumber(Number(integer || 0));
     return decimal !== undefined
-      ? `${formattedInteger}.${decimal}`
+      ? `${formattedInteger}${decimalSeparator}${decimal}`
       : formattedInteger;
-  }, [text]);
+  }, [text, decimalSeparator]);
 
   const showSatsThresholdToast = useCallback(() => {
     errorToast(
       new Error(
-        `Maximum amount is ${formatBitcoinAmount(MAX_SATS_THRESHOLD, bitcoinDisplayFormat)}`,
+        t("send.amountInput.maximumAmount", {
+          amount: formatBitcoinAmount(MAX_SATS_THRESHOLD, bitcoinDisplayFormat),
+        }),
       ),
     );
-  }, [bitcoinDisplayFormat]);
+  }, [bitcoinDisplayFormat, t]);
 
   const applyPastedValue = useCallback(
     (rawValue: string) => {
+      const canonicalValue = parseLocaleNumber(rawValue);
+
       if (inputMode === "sats") {
-        const [integerPart = ""] = rawValue.split(".");
-        const next = integerPart.replace(/\D/g, "").replace(/^0+/, "");
+        const [integerPart = ""] = canonicalValue.split(".");
+        const next = integerPart.replace(/^0+/, "");
         if (!next) {
-          errorToast(
-            new Error("Your clipboard does not contain a valid amount."),
-          );
+          errorToast(new Error(t("send.amountInput.invalidClipboardAmount")));
           return;
         }
         if (Number(next) > MAX_SATS_THRESHOLD) {
@@ -306,9 +314,7 @@ export function DualCurrencyInput({
         return;
       }
 
-      const sanitized = rawValue.replace(/,/g, "").replace(/[^\d.]/g, "");
-
-      const [integerPart = "", ...decimalParts] = sanitized.split(".");
+      const [integerPart = "", ...decimalParts] = canonicalValue.split(".");
       const hasDecimal = decimalParts.length > 0;
 
       const normalizedInteger = integerPart.replace(/^0+(?=\d)/, "");
@@ -319,9 +325,7 @@ export function DualCurrencyInput({
         : normalizedInteger;
 
       if (!next) {
-        errorToast(
-          new Error("Your clipboard does not contain a valid amount."),
-        );
+        errorToast(new Error(t("send.amountInput.invalidClipboardAmount")));
         return;
       }
 
@@ -336,7 +340,7 @@ export function DualCurrencyInput({
         setAmount(satsAmount?.toString() || "");
       }
     },
-    [getSatsAmount, inputMode, setAmount, showSatsThresholdToast],
+    [getSatsAmount, inputMode, setAmount, showSatsThresholdToast, t],
   );
 
   const paste = useCallback(async () => {
@@ -344,13 +348,13 @@ export function DualCurrencyInput({
     try {
       clipboardText = await Clipboard.getStringAsync();
     } catch {
-      errorToast(new Error("Failed to read clipboard."));
+      errorToast(new Error(t("send.amountInput.clipboardReadFailed")));
       return;
     }
 
     applyPastedValue(clipboardText);
     setShowPasteAction(false);
-  }, [applyPastedValue]);
+  }, [applyPastedValue, t]);
 
   const handleKeyPress = (key: string) => {
     if (inputMode === "sats") {
@@ -368,13 +372,15 @@ export function DualCurrencyInput({
       setAmount(next);
       return;
     } else {
+      // the keypad shows the localized decimal separator, text stays canonical
+      const canonicalKey = key === decimalSeparator ? "." : key;
       let next;
       if (key === "Back") {
         next = text.slice(0, -1);
-      } else if (key === "." && text === "") {
+      } else if (canonicalKey === "." && text === "") {
         next = "0.";
       } else {
-        next = `${text}${key}`;
+        next = `${text}${canonicalKey}`;
       }
       next = next.replace(/^0+(?=\d)/, "");
       const satsAmount = getSatsAmount?.(+next);
@@ -396,21 +402,28 @@ export function DualCurrencyInput({
     const hasMin = min !== undefined;
     const hasMax = max !== undefined;
     if (hasMin && hasMax && (+amount > max || +amount < min)) {
-      return `Between ${formatBitcoinAmount(min, bitcoinDisplayFormat)} and ${formatBitcoinAmount(max, bitcoinDisplayFormat)}`;
+      return t("send.amountInput.between", {
+        min: formatBitcoinAmount(min, bitcoinDisplayFormat),
+        max: formatBitcoinAmount(max, bitcoinDisplayFormat),
+      });
     }
     if (hasMin && !hasMax && +amount < min) {
-      return `Should not be less than ${formatBitcoinAmount(min, bitcoinDisplayFormat)}`;
+      return t("send.amountInput.notLessThan", {
+        min: formatBitcoinAmount(min, bitcoinDisplayFormat),
+      });
     }
     if (hasMax && !hasMin && +amount > max) {
-      return `Should not be more than ${formatBitcoinAmount(max, bitcoinDisplayFormat)}`;
+      return t("send.amountInput.notMoreThan", {
+        max: formatBitcoinAmount(max, bitcoinDisplayFormat),
+      });
     }
     return "";
-  }, [amount, max, min, text, bitcoinDisplayFormat]);
+  }, [amount, max, min, text, bitcoinDisplayFormat, t]);
 
   function toggleInputMode() {
     if (inputMode === "sats") {
       const fiatAmount = getFiatAmount?.(+amount, false) || "";
-      const sanitizedFiatAmount = fiatAmount.replace(/[^0-9.]/g, "");
+      const sanitizedFiatAmount = parseLocaleNumber(fiatAmount);
       setText(+amount ? sanitizedFiatAmount : "");
     } else {
       setText(+amount ? amount : "");
@@ -514,11 +527,15 @@ export function DualCurrencyInput({
                       ? min
                         ? max
                           ? `${formatPlaceholderNumber(min)}-${formatPlaceholderNumber(max)}`
-                          : `Min ${formatPlaceholderNumber(min)}`
+                          : t("send.amountInput.min", {
+                              amount: formatPlaceholderNumber(min),
+                            })
                         : max
-                          ? `Max ${formatPlaceholderNumber(max)}`
+                          ? t("send.amountInput.max", {
+                              amount: formatPlaceholderNumber(max),
+                            })
                           : "0"
-                      : "0.00"}
+                      : `0${decimalSeparator}00`}
                 </Text>
                 {inputMode === "sats" && bitcoinDisplayFormat === "sats" && (
                   <Text
@@ -545,7 +562,7 @@ export function DualCurrencyInput({
                       !text && "text-muted",
                     )}
                   >
-                    {+amount === 1 ? "sat" : "sats"}
+                    {formatSatsUnit(+amount)}
                   </Text>
                 )}
               </View>
@@ -557,7 +574,9 @@ export function DualCurrencyInput({
                   onPress={paste}
                   className="bg-foreground rounded-xl px-5 py-2"
                 >
-                  <Text className="font-medium2 text-background">Paste</Text>
+                  <Text className="font-medium2 text-background">
+                    {t("common.paste")}
+                  </Text>
                 </Pressable>
               </View>
             )}
@@ -598,7 +617,7 @@ export function DualCurrencyInput({
           <View key={row.join("-")} className="flex-1 flex-row">
             {row.map((label) => {
               const isBackspace = label === "Back";
-              const isDecimalKey = label === ".";
+              const isDecimalKey = label === decimalSeparator;
               const isZeroKey = label === "0" || label === "000";
 
               const isDisabledKey = (() => {
