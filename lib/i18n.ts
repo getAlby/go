@@ -97,7 +97,9 @@ syncDayjsLocale(initialLanguage);
 
 useAppStore.subscribe((state, prevState) => {
   if (state.language !== prevState.language) {
-    applyLanguage(resolveLanguage(state.language));
+    applyLanguage(resolveLanguage(state.language)).catch((error) => {
+      console.error("Failed to apply language", error);
+    });
   }
 });
 

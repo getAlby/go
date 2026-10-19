@@ -41,12 +41,18 @@ const calendarOverrideLengths = new Map([
   ["common.calendar.weekdaysShort", 7],
   ["common.calendar.weekdaysMin", 7],
 ]);
+// static key literals only: dynamically built keys (template literals with
+// ${...}, concatenation, variables) are not allowed by convention and cannot
+// be checked here; mistyped literals are also caught by the typed t() keys
 const keyUsagePatterns = [
   /\bt\(\s*"([^"\n]+)"/g,
   /\bt\(\s*'([^'\n]+)'/g,
+  /\bt\(\s*`([^`$\n]+)`/g,
   /\bi18n\.t\(\s*"([^"\n]+)"/g,
   /\bi18n\.t\(\s*'([^'\n]+)'/g,
+  /\bi18n\.t\(\s*`([^`$\n]+)`/g,
   /\bi18nKey=["']([^"'\n]+)["']/g,
+  /\bi18nKey=\{\s*["']([^"'\n]+)["']\s*\}/g,
 ];
 
 const errors = [];
