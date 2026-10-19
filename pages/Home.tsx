@@ -1,8 +1,7 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { Link, router, useFocusEffect } from "expo-router";
 import { useBalance } from "hooks/useBalance";
 import React, { type JSX, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Platform,
   Pressable,
@@ -26,14 +25,18 @@ import { LinearGradient } from "~/components/LinearGradient";
 import Screen from "~/components/Screen";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
+import {
+  formatBitcoinAmount,
+  formatNumber,
+  formatSatsUnit,
+  getCurrencySymbol,
+} from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
-import { cn, formatBitcoinAmount } from "~/lib/utils";
-
-dayjs.extend(relativeTime);
+import { cn } from "~/lib/utils";
 
 export function Home() {
+  const { t } = useTranslation();
   const { data: balance, mutate: reloadBalance } = useBalance();
   const [refreshingBalance, setRefreshingBalance] = useState(false);
   const balanceDisplayMode = useAppStore((store) => store.balanceDisplayMode);
@@ -71,23 +74,13 @@ export function Home() {
     }
   }
 
-  const symbol = React.useMemo(() => {
-    if (!fiatCurrency) {
-      return "";
-    }
-    return new Intl.NumberFormat(undefined, {
-      style: "currency",
-      currency: fiatCurrency,
-      currencyDisplay: "narrowSymbol",
-    })
-      .format(0)
-      .replace(/[0-9.,\s]/g, "");
-  }, [fiatCurrency]);
+  // not memoized: the symbol depends on the current app language
+  const symbol = fiatCurrency ? getCurrencySymbol(fiatCurrency) : "";
 
   const displayCharacterCount = React.useMemo(
     () =>
-      new Intl.NumberFormat().format(Math.floor((balance?.balance || 0) / 1000))
-        .length + (bitcoinDisplayFormat === "bip177" ? 1 : 4),
+      formatNumber(Math.floor((balance?.balance || 0) / 1000)).length +
+      (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [bitcoinDisplayFormat, balance?.balance],
   );
 
@@ -156,7 +149,8 @@ export function Home() {
                       "text-center text-muted-foreground font-medium2 px-4",
                     )}
                   >
-                    {wallets[selectedWalletId].name || DEFAULT_WALLET_NAME}
+                    {wallets[selectedWalletId].name ||
+                      t("wallets.common.defaultName")}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -223,9 +217,7 @@ export function Home() {
                         )}
                       >
                         {balanceDisplayMode === "sats" &&
-                          new Intl.NumberFormat().format(
-                            Math.floor(balance.balance / 1000),
-                          )}
+                          formatNumber(Math.floor(balance.balance / 1000))}
                         {balanceDisplayMode === "fiat" &&
                           getFiatAmount?.(
                             Math.floor(balance.balance / 1000),
@@ -258,7 +250,7 @@ export function Home() {
                               "text-secondary-foreground !leading-[1.5] font-bold2",
                             )}
                           >
-                            sats
+                            {formatSatsUnit(Math.floor(balance.balance / 1000))}
                           </Text>
                         )}
                     </>
@@ -304,8 +296,12 @@ export function Home() {
           </Link>
         </View>
         <View className="flex flex-row gap-6 p-6">
-          <MainButton title="Receive" href="/receive" Icon={LargeArrowDown} />
-          <MainButton title="Send" href="/send" Icon={LargeArrowUp} />
+          <MainButton
+            title={t("home.receive")}
+            href="/receive"
+            Icon={LargeArrowDown}
+          />
+          <MainButton title={t("home.send")} href="/send" Icon={LargeArrowUp} />
         </View>
       </View>
     </>

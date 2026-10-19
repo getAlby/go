@@ -1,5 +1,6 @@
 import * as Location from "expo-location";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity, View } from "react-native";
 import { WebView } from "react-native-webview";
 import BTCMapModal from "~/components/BTCMapModal";
@@ -9,9 +10,11 @@ import Screen from "~/components/Screen";
 
 import { Text } from "~/components/ui/text";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { useThemeColor } from "~/lib/useThemeColor";
 
 export function BitcoinMap() {
+  const { t } = useTranslation();
   const { background } = useThemeColor("background");
   const [showModal, setShowModal] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -22,7 +25,8 @@ export function BitcoinMap() {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== Location.PermissionStatus.GRANTED) {
-          throw new Error("Enable permissions to access location");
+          // i18n.t instead of t() so the one-time effect does not depend on t
+          throw new Error(i18n.t("map.locationPermission"));
         }
 
         const location = await Location.getCurrentPositionAsync({});
@@ -40,7 +44,7 @@ export function BitcoinMap() {
   return (
     <View className="flex-1 pt-2">
       <Screen
-        title="Bitcoin Map"
+        title={t("map.title")}
         right={() => (
           <>
             <TouchableOpacity
@@ -64,7 +68,7 @@ export function BitcoinMap() {
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
           <Loading />
-          <Text className="mt-4">Loading BTC Map</Text>
+          <Text className="mt-4">{t("map.loading")}</Text>
         </View>
       ) : (
         <WebView

@@ -1,5 +1,6 @@
 import { openURL } from "expo-linking";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Image,
   Modal,
@@ -18,6 +19,7 @@ type BTCMapModalProps = {
 };
 
 function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
+  const { t } = useTranslation();
   const { shadow } = useThemeColor("shadow");
   return (
     <Modal
@@ -73,20 +75,13 @@ function BTCMapModal({ visible, onClose }: BTCMapModalProps) {
               BTC Map
             </Text>
             <View className="flex flex-col items-center gap-4">
-              <Text className="text-center">
-                BTC Map is an open-source project with the goal of mapping and
-                maintaining all the merchants accepting Bitcoin around the
-                world.
-              </Text>
-              <Text className="text-center">
-                Find merchants nearby, pay for goods and services, and help
-                improve the map by contributing!
-              </Text>
+              <Text className="text-center">{t("map.modal.description1")}</Text>
+              <Text className="text-center">{t("map.modal.description2")}</Text>
               <TouchableOpacity
                 className="my-2 flex flex-row gap-2 justify-center items-center"
                 onPress={() => openURL("https://btcmap.org/")}
               >
-                <Text className="font-semibold2">Visit btcmap.org</Text>
+                <Text className="font-semibold2">{t("map.modal.visit")}</Text>
                 <LinkIcon width={16} className="text-primary-foreground" />
               </TouchableOpacity>
             </View>

@@ -1,5 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { DualCurrencyInput } from "~/components/DualCurrencyInput";
@@ -11,6 +12,7 @@ import { errorToast } from "~/lib/errorToast";
 import { type LNURLPayServiceResponse, lnurl } from "~/lib/lnurl";
 
 export function LNURLPay() {
+  const { t } = useTranslation();
   const { lnurlDetailsJSON, amount: amountParam } = useLocalSearchParams() as {
     lnurlDetailsJSON: string;
     receiver: string;
@@ -39,11 +41,11 @@ export function LNURLPay() {
     if (isFixedAmount) {
       Toast.show({
         type: "success",
-        text1: "You are paying a fixed amount invoice",
+        text1: t("send.lnurlPay.fixedAmountInvoice"),
         position: "top",
       });
     }
-  }, [isFixedAmount]);
+  }, [isFixedAmount, t]);
 
   async function requestInvoice() {
     setLoading(true);
@@ -75,14 +77,14 @@ export function LNURLPay() {
         },
       });
     } catch (error) {
-      errorToast(error, "Failed to request invoice");
+      errorToast(error, t("send.lnurlPay.requestInvoiceFailed"));
     }
     setLoading(false);
   }
 
   return (
     <>
-      <Screen title="Send" />
+      <Screen title={t("send.title")} />
       <View className="flex-1">
         <DualCurrencyInput
           amount={amount}
@@ -101,7 +103,7 @@ export function LNURLPay() {
             disabled={isLoading || isAmountInvalid}
           >
             {isLoading && <Loading className="text-primary-foreground" />}
-            <Text>Next</Text>
+            <Text>{t("common.next")}</Text>
           </Button>
         </View>
       </View>

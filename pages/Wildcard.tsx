@@ -1,9 +1,12 @@
 import { router, Stack, useFocusEffect } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import Loading from "~/components/Loading";
 import { Text } from "~/components/ui/text";
 
 export function Wildcard() {
+  const { t } = useTranslation();
+
   // Should a user ever land on this page, redirect them to home
   useFocusEffect(() => {
     router.replace({
@@ -20,7 +23,7 @@ export function Wildcard() {
         }}
       />
       <Loading />
-      <Text>Loading</Text>
+      <Text>{t("home.wildcard.loading")}</Text>
     </View>
   );
 }

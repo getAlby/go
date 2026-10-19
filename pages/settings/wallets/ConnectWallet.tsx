@@ -4,6 +4,7 @@ import { openURL } from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import React from "react";
+import { Trans, useTranslation } from "react-i18next";
 import {
   Image,
   Modal,
@@ -28,11 +29,13 @@ import { Text } from "~/components/ui/text";
 import { WalletSwitcher } from "~/components/WalletSwitcher";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { useAppStore } from "~/lib/state/appStore";
 import { useThemeColor } from "~/lib/useThemeColor";
 import { cn, formatBitcoinAmount } from "~/lib/utils";
 
 export function ConnectWallet() {
+  const { t } = useTranslation();
   let { options: optionsJSON, flow } = useLocalSearchParams<{
     options: string;
     flow: "nwa" | "deeplink";
@@ -85,9 +88,7 @@ export function ConnectWallet() {
           try {
             await openURL(url.toString());
           } catch {
-            errorToast(
-              new Error("Couldn't open URL, do you have the app installed?"),
-            );
+            errorToast(new Error(i18n.t("wallets.connectApp.openUrlFailed")));
           }
         }
         if (router.canDismiss()) {
@@ -142,7 +143,7 @@ export function ConnectWallet() {
       setRedirectCountdown(3);
       setConnectionCreated(true);
     } catch (error) {
-      errorToast(error, "Failed to create app");
+      errorToast(error, t("wallets.connectApp.createFailed"));
     }
     setCreatingConnection(false);
   };
@@ -160,7 +161,11 @@ export function ConnectWallet() {
   return (
     <>
       <Screen
-        title={connectionCreated ? "App Connected" : "Connect App"}
+        title={
+          connectionCreated
+            ? t("wallets.connectApp.connectedTitle")
+            : t("wallets.connectApp.title")
+        }
         right={() => (
           <TouchableOpacity
             onPressIn={() => {
@@ -188,12 +193,12 @@ export function ConnectWallet() {
         {!supportsCreateConnection ? (
           <View className="flex-1 justify-center items-center gap-4">
             <Text className="text-center text-secondary-foreground">
-              This wallet connection does not support one tap connections.
+              {t("wallets.connectApp.notSupported")}
             </Text>
             <Text className="text-center text-secondary-foreground">
               {hasCreateConnectionWallet
-                ? "Please switch your wallet and try again."
-                : `Please re-connect Alby Go from Alby Hub using the "One Tap Connections" button.`}
+                ? t("wallets.connectApp.switchWallet")
+                : t("wallets.connectApp.reconnectFromHub")}
             </Text>
           </View>
         ) : connectionCreated ? (
@@ -229,15 +234,19 @@ export function ConnectWallet() {
             {isCreatingConnection && (
               <Loading className="text-primary-foreground" />
             )}
-            <Text>Confirm Connection</Text>
+            <Text>{t("wallets.connectApp.confirmConnection")}</Text>
           </Button>
           {returnTo && (
             <Text className="px-4 mt-2 text-center text-secondary-foreground ios:text-sm android:text-xs">
-              You will be redirected to{" "}
-              <Text className="font-semibold2 ios:text-sm android:text-xs">
-                {returnTo}
-              </Text>{" "}
-              after confirming.
+              <Trans
+                i18nKey="wallets.connectApp.redirectNotice"
+                values={{ returnTo }}
+                components={{
+                  bold: (
+                    <Text className="font-semibold2 ios:text-sm android:text-xs" />
+                  ),
+                }}
+              />
             </Text>
           )}
         </View>
@@ -256,6 +265,7 @@ function ConnectView({
   expiresAt,
   metadata,
 }: Omit<NWAOptions, "appPubkey" | "relayUrls">) {
+  const { t } = useTranslation();
   const { shadow } = useThemeColor("shadow");
   const getFiatAmount = useGetFiatAmount();
   const [showDetails, setShowDetails] = React.useState(false);
@@ -266,6 +276,24 @@ function ConnectView({
   const bitcoinDisplayFormat = useAppStore(
     (store) => store.bitcoinDisplayFormat,
   );
+  const boldText = (
+    <Text
+      className={cn(
+        Platform.select({
+          ios: "ios:text-base ios:sm:text-lg",
+          android: "android:text-base",
+        }),
+        "font-semibold2",
+      )}
+    />
+  );
+  // the renewal period is displayed in lowercase and capitalized by the style
+  const budgetRenewalLabels: Record<string, string> = {
+    daily: t("wallets.connectApp.budgetRenewal.daily"),
+    weekly: t("wallets.connectApp.budgetRenewal.weekly"),
+    monthly: t("wallets.connectApp.budgetRenewal.monthly"),
+    yearly: t("wallets.connectApp.budgetRenewal.yearly"),
+  };
   return (
     <>
       <Modal
@@ -320,7 +348,7 @@ function ConnectView({
                   "text-center font-bold2 text-secondary-foreground",
                 )}
               >
-                Connection Details
+                {t("wallets.connectApp.connectionDetails")}
               </Text>
             </View>
             <ScrollView
@@ -329,14 +357,19 @@ function ConnectView({
               contentContainerClassName="flex flex-col gap-2"
             >
               <View className="flex gap-2">
-                <Text className="font-semibold2">Requested methods</Text>
+                <Text className="font-semibold2">
+                  {t("wallets.connectApp.requestedMethods")}
+                </Text>
                 <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
-                  {requestMethods?.join(", ") || "all methods"}
+                  {requestMethods?.join(", ") ||
+                    t("wallets.connectApp.allMethods")}
                 </Text>
               </View>
               {notificationTypes && (
                 <View className="flex gap-2">
-                  <Text className="font-semibold2">Notification Types</Text>
+                  <Text className="font-semibold2">
+                    {t("wallets.connectApp.notificationTypes")}
+                  </Text>
                   <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                     {notificationTypes.join(", ")}
                   </Text>
@@ -344,13 +377,19 @@ function ConnectView({
               )}
               {isolated && (
                 <View className="flex gap-2">
-                  <Text className="font-semibold2">Isolated connection</Text>
-                  <Text className="font-medium2">Yes</Text>
+                  <Text className="font-semibold2">
+                    {t("wallets.connectApp.isolatedConnection")}
+                  </Text>
+                  <Text className="font-medium2">
+                    {t("wallets.connectApp.yes")}
+                  </Text>
                 </View>
               )}
               {!!expiresAt && (
                 <View className="flex gap-2">
-                  <Text className="font-semibold2">Expiry</Text>
+                  <Text className="font-semibold2">
+                    {t("wallets.connectApp.expiry")}
+                  </Text>
                   <Text className="font-medium2">
                     {new Date(expiresAt * 1000).toDateString()}
                   </Text>
@@ -358,7 +397,9 @@ function ConnectView({
               )}
               {!!metadata && (
                 <View className="flex gap-2">
-                  <Text className="font-semibold2">Metadata</Text>
+                  <Text className="font-semibold2">
+                    {t("wallets.connectApp.metadata")}
+                  </Text>
                   <Text className="bg-muted p-2 rounded-md ios:text-sm android:text-xs font-mono">
                     {JSON.stringify(metadata)}
                   </Text>
@@ -377,44 +418,19 @@ function ConnectView({
           "text-center",
         )}
       >
-        <Text
-          className={cn(
-            Platform.select({
-              ios: "ios:text-base ios:sm:text-lg",
-              android: "android:text-base",
-            }),
-            "font-semibold2",
-          )}
-        >
-          {name}
-        </Text>{" "}
-        is requesting{" "}
-        {!hasPayPermissions && (
-          <Text
-            className={cn(
-              Platform.select({
-                ios: "ios:text-base ios:sm:text-lg",
-                android: "android:text-base",
-              }),
-              "font-semibold2",
-            )}
-          >
-            receive-only{" "}
-          </Text>
+        {hasPayPermissions ? (
+          <Trans
+            i18nKey="wallets.connectApp.requestingAccess"
+            values={{ name }}
+            components={{ bold: boldText }}
+          />
+        ) : (
+          <Trans
+            i18nKey="wallets.connectApp.requestingReceiveOnlyAccess"
+            values={{ name }}
+            components={{ bold: boldText }}
+          />
         )}
-        access to your{" "}
-        <Text
-          className={cn(
-            Platform.select({
-              ios: "ios:text-base ios:sm:text-lg",
-              android: "android:text-base",
-            }),
-            "font-semibold2",
-          )}
-        >
-          Alby Hub
-        </Text>
-        .
       </Text>
 
       <View className="flex-1 flex justify-center">
@@ -432,20 +448,31 @@ function ConnectView({
                 "font-medium2",
               )}
             >
-              {budgetRenewal !== "never" && (
-                <Text
-                  className={cn(
-                    Platform.select({
-                      ios: "ios:text-base ios:sm:text-lg",
-                      android: "android:text-base",
-                    }),
-                    "font-medium2 capitalize",
-                  )}
-                >
-                  {budgetRenewal || "Monthly"}{" "}
-                </Text>
+              {budgetRenewal !== "never" ? (
+                <Trans
+                  i18nKey="wallets.connectApp.renewingBudget"
+                  values={{
+                    period:
+                      budgetRenewalLabels[budgetRenewal || "monthly"] ??
+                      budgetRenewal,
+                  }}
+                  components={{
+                    period: (
+                      <Text
+                        className={cn(
+                          Platform.select({
+                            ios: "ios:text-base ios:sm:text-lg",
+                            android: "android:text-base",
+                          }),
+                          "font-medium2 capitalize",
+                        )}
+                      />
+                    ),
+                  }}
+                />
+              ) : (
+                t("wallets.connectApp.budget")
               )}
-              budget
             </Text>
             <View className="flex flex-row items-center gap-4">
               {maxAmount && (
@@ -480,8 +507,7 @@ function ConnectView({
           </TouchableOpacity>
         )}
         <Text className="text-center text-secondary-foreground ios:text-sm android:text-xs px-4 my-2">
-          You can edit permissions and revoke access at any time in your Alby
-          Hub settings.
+          {t("wallets.connectApp.editPermissionsHint")}
         </Text>
       </View>
     </>
@@ -495,16 +521,22 @@ function ConnectedView({
   returnTo?: string;
   redirectCountdown?: number;
 }) {
+  const { t } = useTranslation();
   return (
     <View className="flex-1 items-center">
       <View className="flex-1 flex justify-center items-center">
         <Tick />
       </View>
       <Text className="text-center text-secondary-foreground">
-        Connected!{"\n"}
+        {t("wallets.connectApp.connected")}
+        {"\n"}
         {returnTo
-          ? `Redirecting in ${redirectCountdown} seconds...`
-          : `Returning home in ${redirectCountdown} seconds...`}
+          ? t("wallets.connectApp.redirecting", {
+              seconds: redirectCountdown,
+            })
+          : t("wallets.connectApp.returningHome", {
+              seconds: redirectCountdown,
+            })}
       </Text>
     </View>
   );
@@ -519,6 +551,7 @@ function PlugView({
   icon?: string;
   name?: string;
 }) {
+  const { t } = useTranslation();
   const { shadow: shadowColor } = useThemeColor("shadow");
   const shadow = React.useMemo(() => {
     return {
@@ -600,7 +633,7 @@ function PlugView({
           )}
         </View>
         <Text className="font-semibold2 text-center" numberOfLines={1}>
-          {name || "New App"}
+          {name || t("wallets.connectApp.newApp")}
         </Text>
       </View>
     </View>

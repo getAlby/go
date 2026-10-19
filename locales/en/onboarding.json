@@ -1,0 +1,7 @@
+{
+  "title": "Onboarding",
+  "greeting": "Hello there 👋",
+  "intro": "<bold>Alby Go</bold> is a simple mobile wallet interface for your Alby Hub or other lightning nodes and wallets.",
+  "connectWallet": "Connect Wallet",
+  "learnMore": "Learn more"
+}

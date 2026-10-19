@@ -1,5 +1,6 @@
 import { Link, router } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Platform, TouchableOpacity, View } from "react-native";
 import { SettingsIcon, WalletIcon } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
@@ -8,16 +9,16 @@ import Toast from "react-native-toast-message";
 import NWCIcon from "~/components/icons/NWCIcon";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
-import { DEFAULT_WALLET_NAME } from "~/lib/constants";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function Wallets() {
+  const { t } = useTranslation();
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   return (
     <>
-      <Screen title="Manage Wallets" />
+      <Screen title={t("wallets.manage.title")} />
       <View className="flex-1">
         <FlatList
           className="flex flex-col pt-4 px-6"
@@ -35,8 +36,10 @@ export function Wallets() {
                     router.navigate("/");
                     Toast.show({
                       type: "success",
-                      text1: `Switched wallet`,
-                      text2: `Current wallet set to ${item.item.name || DEFAULT_WALLET_NAME}`,
+                      text1: t("wallets.manage.switched"),
+                      text2: t("wallets.manage.currentWalletSet", {
+                        name: item.item.name || t("wallets.common.defaultName"),
+                      }),
                       position: "top",
                     });
                   }
@@ -68,7 +71,7 @@ export function Wallets() {
                     numberOfLines={1}
                     ellipsizeMode="tail"
                   >
-                    {item.item.name || DEFAULT_WALLET_NAME}
+                    {item.item.name || t("wallets.common.defaultName")}
                   </Text>
                 </View>
                 <Link
@@ -99,7 +102,9 @@ export function Wallets() {
             className="flex flex-row gap-2"
           >
             <NWCIcon />
-            <Text className="text-secondary-foreground">Connect a Wallet</Text>
+            <Text className="text-secondary-foreground">
+              {t("wallets.manage.connectWallet")}
+            </Text>
           </Button>
         </View>
       </View>

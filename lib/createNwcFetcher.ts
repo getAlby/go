@@ -1,5 +1,6 @@
 import type { NWCClient } from "@getalby/sdk/nwc";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { useAppStore } from "~/lib/state/appStore";
 
 type FetchArgs = Parameters<typeof fetch>;
@@ -25,7 +26,7 @@ export function createNwcFetcher<T>(
         // is severed
         throw new Error("app was backgrounded");
       }
-      errorToast(error, "NWC request failed");
+      errorToast(error, i18n.t("errors.nwcRequestFailed"));
       throw error;
     }
   };

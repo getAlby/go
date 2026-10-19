@@ -62,6 +62,9 @@ export async function setNotificationSettings(
   settings: Partial<{
     ttsEnabled: boolean;
     bitcoinDisplayFormat: BitcoinDisplayFormat;
+    language: string;
+    // BCP-47 tag from locales/<code>/meta.json, used for TTS and resources
+    languageTag: string;
   }>,
 ) {
   if (Platform.OS === "ios") {
@@ -70,7 +73,7 @@ export async function setNotificationSettings(
     const oldSettings = (await groupDefaults.get("settings")) || {};
     const updatedSettings = {
       ...oldSettings,
-      settings,
+      settings: { ...(oldSettings.settings || {}), ...settings },
     };
     await groupDefaults.set("settings", updatedSettings);
   } else {
@@ -79,7 +82,7 @@ export async function setNotificationSettings(
     const oldSettings = settingsString ? JSON.parse(settingsString) : {};
     const updatedSettings = {
       ...oldSettings,
-      settings,
+      settings: { ...(oldSettings.settings || {}), ...settings },
     };
     await SharedPreferences.setItemAsync(
       "settings",

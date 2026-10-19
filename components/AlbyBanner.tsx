@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, TouchableOpacity, View } from "react-native";
 import { XIcon } from "~/components/Icons";
 import { Text } from "~/components/ui/text";
@@ -10,6 +11,7 @@ import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
 
 function AlbyBanner({ className }: { className?: string }) {
+  const { t } = useTranslation();
   const { shadow } = useThemeColor("shadow");
   const lastPayment = useAppStore.getState().getLastAlbyPayment();
   const [showBanner, setShowBanner] = useState(
@@ -70,10 +72,10 @@ function AlbyBanner({ className }: { className?: string }) {
         <XIcon className="text-muted-foreground" />
       </TouchableOpacity>
       <Text className="font-semibold2 text-center ios:text-lg android:text-base">
-        ✨ Enjoying Alby Go?
+        {t("home.albyBanner.title")}
       </Text>
       <Text className="text-secondary-foreground text-center">
-        Help us grow and improve by supporting our development.
+        {t("home.albyBanner.description")}
       </Text>
       <View className="flex flex-row gap-3 mt-3">
         {amounts.map(({ value, label, emoji }) => (

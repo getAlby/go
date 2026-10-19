@@ -1,6 +1,7 @@
 import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, View } from "react-native";
 import { Tick } from "~/animations/Tick";
 import AlbyGo from "~/components/icons/AlbyGo";
@@ -9,10 +10,12 @@ import Screen from "~/components/Screen";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { formatNumber, formatSatsUnit } from "~/lib/format";
 import { useAppStore } from "~/lib/state/appStore";
 import { cn } from "~/lib/utils";
 
 export function ReceiveSuccess() {
+  const { t } = useTranslation();
   const { invoice } = useLocalSearchParams() as { invoice: string };
   const bitcoinDisplayFormat = useAppStore(
     (store) => store.bitcoinDisplayFormat,
@@ -24,14 +27,14 @@ export function ReceiveSuccess() {
 
   const displayCharacterCount = React.useMemo(
     () =>
-      new Intl.NumberFormat().format(decodedInvoice.satoshi).length +
+      formatNumber(decodedInvoice.satoshi).length +
       (bitcoinDisplayFormat === "bip177" ? 1 : 4),
     [decodedInvoice.satoshi, bitcoinDisplayFormat],
   );
 
   return (
     <>
-      <Screen title="Success" animation="slide_from_left" />
+      <Screen title={t("receive.success.title")} animation="slide_from_left" />
       <View className="flex flex-1 items-center gap-6 sm:gap-10 justify-center px-6">
         <Tick />
         <View className="flex items-center gap-2">
@@ -84,7 +87,7 @@ export function ReceiveSuccess() {
                 "text-receive !leading-[1.5] font-bold2",
               )}
             >
-              {new Intl.NumberFormat().format(+decodedInvoice.satoshi)}
+              {formatNumber(+decodedInvoice.satoshi)}
               {bitcoinDisplayFormat === "sats" && (
                 <Text
                   className={cn(
@@ -110,7 +113,7 @@ export function ReceiveSuccess() {
                   )}
                 >
                   {" "}
-                  sats
+                  {formatSatsUnit(+decodedInvoice.satoshi)}
                 </Text>
               )}
             </Text>
@@ -124,7 +127,7 @@ export function ReceiveSuccess() {
         </View>
         {decodedInvoice.description && (
           <LongTextBottomSheet
-            title="Description"
+            title={t("common.description")}
             content={decodedInvoice.description}
           />
         )}
@@ -136,7 +139,7 @@ export function ReceiveSuccess() {
             router.replace("/");
           }}
         >
-          <Text>Close</Text>
+          <Text>{t("common.close")}</Text>
         </Button>
         <View className="mt-6 flex items-center">
           <AlbyGo width={80} height={20} />

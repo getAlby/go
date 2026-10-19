@@ -2,6 +2,7 @@ import { NWCClient, type Nip47Capability } from "@getalby/sdk/nwc";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppStore } from "lib/state/appStore";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Alert from "~/components/Alert";
@@ -21,10 +22,12 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { IS_EXPO_GO, REQUIRED_CAPABILITIES } from "~/lib/constants";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { registerWalletNotifications } from "~/lib/notifications";
 import { cn, readClipboardText } from "~/lib/utils";
 
 export function SetupWallet() {
+  const { t } = useTranslation();
   const { nwcUrl: nwcUrlFromSchemeLink } = useLocalSearchParams<{
     nwcUrl: string;
   }>();
@@ -100,14 +103,14 @@ export function SetupWallet() {
 
         Toast.show({
           type: "success",
-          text1: "Connection successful",
-          text2: "Please set your wallet name to finish",
+          text1: i18n.t("wallets.setup.connectionSuccessful"),
+          text2: i18n.t("wallets.setup.setWalletNameToFinish"),
           position: "top",
         });
         setConnecting(false);
         return true;
       } catch (error) {
-        errorToast(error, "Failed to connect to wallet");
+        errorToast(error, i18n.t("wallets.setup.connectFailed"));
         setConnecting(false);
         return false;
       }
@@ -144,8 +147,8 @@ export function SetupWallet() {
 
     Toast.show({
       type: "success",
-      text1: "Wallet Connected",
-      text2: "Your lightning wallet is ready to use",
+      text1: t("wallets.setup.walletConnected"),
+      text2: t("wallets.setup.walletReady"),
       position: "top",
     });
 
@@ -176,7 +179,7 @@ export function SetupWallet() {
   return (
     <>
       <Screen
-        title="Connect Wallet"
+        title={t("wallets.setup.title")}
         right={() =>
           walletIdWithConnection !== -1 ? (
             <TouchableOpacity
@@ -216,13 +219,13 @@ export function SetupWallet() {
       {isConnecting ? (
         <View className="flex-1 justify-center items-center">
           <Loading />
-          <Text className="mt-4">Connecting to your Wallet</Text>
+          <Text className="mt-4">{t("wallets.setup.connecting")}</Text>
         </View>
       ) : !nostrWalletConnectUrl ? (
         <View className="flex-1">
           <View className="p-4">
             <Text className="text-center text-secondary-foreground font-medium2">
-              Scan a NWC connection secret to add a wallet
+              {t("wallets.setup.scanHint")}
             </Text>
           </View>
           <QRCodeScanner
@@ -236,7 +239,7 @@ export function SetupWallet() {
               className="flex-1 flex flex-col gap-2"
             >
               <PasteIcon className="text-muted-foreground" />
-              <Text>Paste</Text>
+              <Text>{t("common.paste")}</Text>
             </Button>
           </View>
         </View>
@@ -246,24 +249,25 @@ export function SetupWallet() {
             {!!insecureRelays.length && (
               <Alert
                 type="warn"
-                title="Insecure relay"
-                description={`${insecureRelays.join(", ")} ${
-                  insecureRelays.length > 1 ? "are" : "is"
-                } not using a secure (wss) connection.`}
+                title={t("wallets.common.insecureRelayTitle")}
+                description={t("wallets.common.insecureRelayDescription", {
+                  count: insecureRelays.length,
+                  relays: insecureRelays.join(", "),
+                })}
                 icon={TriangleAlertIcon}
               />
             )}
             {existingWalletMatch && !isLoading && (
               <Alert
                 type="warn"
-                title="You may already have this wallet"
-                description="A wallet with this lightning address or wallet connection is already set up."
+                title={t("wallets.setup.alreadyHaveTitle")}
+                description={t("wallets.setup.alreadyHaveDescription")}
                 icon={TriangleAlertIcon}
               />
             )}
             <View className="flex-1 flex flex-col items-center justify-center">
               <Text className="text-muted-foreground text-center">
-                Wallet name
+                {t("wallets.setup.walletName")}
               </Text>
               <Input
                 className={cn(
@@ -275,7 +279,7 @@ export function SetupWallet() {
                 )}
                 value={name}
                 onChangeText={setName}
-                placeholder="Enter a name for your wallet"
+                placeholder={t("wallets.setup.walletNamePlaceholder")}
                 returnKeyType="done"
                 autoFocus
               />
@@ -286,10 +290,12 @@ export function SetupWallet() {
               ) && (
                 <Alert
                   type="warn"
-                  title="Alby Go might not work as expected"
-                  description={`Missing capabilities: ${REQUIRED_CAPABILITIES.filter(
-                    (capability) => !capabilities.includes(capability),
-                  ).join(", ")}`}
+                  title={t("wallets.setup.mightNotWorkTitle")}
+                  description={t("wallets.common.missingCapabilities", {
+                    capabilities: REQUIRED_CAPABILITIES.filter(
+                      (capability) => !capabilities.includes(capability),
+                    ).join(", "),
+                  })}
                   icon={TriangleAlertIcon}
                 />
               )}
@@ -300,7 +306,7 @@ export function SetupWallet() {
               disabled={!name || isLoading}
             >
               {isLoading && <Loading className="text-primary-foreground" />}
-              <Text>Finish</Text>
+              <Text>{t("common.finish")}</Text>
             </Button>
           </View>
         </DismissableKeyboardView>

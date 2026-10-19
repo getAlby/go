@@ -1,0 +1,109 @@
+{
+  "common": {
+    "defaultName": "Default Wallet",
+    "walletNotFound": "Wallet not found",
+    "insecureRelayTitle": "Insecure relay",
+    "insecureRelayDescription_one": "{{relays}} is not using a secure (wss) connection.",
+    "insecureRelayDescription_other": "{{relays}} are not using a secure (wss) connection.",
+    "missingCapabilities": "Missing capabilities: {{capabilities}}"
+  },
+  "manage": {
+    "title": "Manage Wallets",
+    "switched": "Switched wallet",
+    "currentWalletSet": "Current wallet set to {{name}}",
+    "connectWallet": "Connect a Wallet"
+  },
+  "switcher": {
+    "title": "Switch Wallet",
+    "switchedTo": "Switched wallet to {{name}}"
+  },
+  "setup": {
+    "title": "Connect Wallet",
+    "connecting": "Connecting to your Wallet",
+    "scanHint": "Scan a NWC connection secret to add a wallet",
+    "connectionSuccessful": "Connection successful",
+    "setWalletNameToFinish": "Please set your wallet name to finish",
+    "connectFailed": "Failed to connect to wallet",
+    "walletConnected": "Wallet Connected",
+    "walletReady": "Your lightning wallet is ready to use",
+    "walletName": "Wallet name",
+    "walletNamePlaceholder": "Enter a name for your wallet",
+    "alreadyHaveTitle": "You may already have this wallet",
+    "alreadyHaveDescription": "A wallet with this lightning address or wallet connection is already set up.",
+    "mightNotWorkTitle": "Alby Go might not work as expected"
+  },
+  "edit": {
+    "title": "Edit Wallet",
+    "deleting": "Deleting wallet",
+    "mightNotWorkTitle": "This wallet might not work as expected",
+    "exportWallet": "Export Wallet",
+    "exportMessage": "Your Wallet Connection Secret will be copied to the clipboard which you can add to another app. For per-app permission management, try out Alby Hub or add your Wallet Connection Secret to an Alby Account.",
+    "cannotExportTitle": "Wallet cannot be exported",
+    "cannotExportMessage": "This wallet supports authorizing new connections and cannot be exported. Please create a new connection from Alby Hub instead",
+    "authenticateToExport": "Authenticate to export wallet",
+    "authenticateFailed": "Failed to authenticate",
+    "secretCopied": "Connection Secret copied to clipboard",
+    "deleteWallet": "Delete Wallet",
+    "removeTitle": "Remove Wallet Connection",
+    "removeMessage": "Are you sure you want to remove this wallet connection? This cannot be undone."
+  },
+  "rename": {
+    "title": "Wallet Name",
+    "updated": "Wallet name updated"
+  },
+  "lightningAddress": {
+    "title": "Lightning Address",
+    "onlyOwnTitle": "Only add lightning address you own",
+    "onlyOwnDescription": "This feature does not create a new lightning address for you. It adds an existing address to your Receive page.",
+    "updated": "Lightning address updated"
+  },
+  "connectionInfo": {
+    "title": "Connection Info",
+    "relays": "Relays",
+    "lightningAddress": "Lightning Address",
+    "capabilities": "Capabilities",
+    "appPubkey": "App Pubkey",
+    "walletPubkey": "Wallet Pubkey"
+  },
+  "help": {
+    "title": "How To Connect?",
+    "intro": "Follow these steps to connect Alby Go to your Hub:",
+    "step1": "1. Open your Alby Hub",
+    "step2": "2. Go to App Store » Alby Go",
+    "step3": "3. Scan the QR code with this app"
+  },
+  "connectApp": {
+    "title": "Connect App",
+    "connectedTitle": "App Connected",
+    "openUrlFailed": "Couldn't open URL, do you have the app installed?",
+    "createFailed": "Failed to create app",
+    "notSupported": "This wallet connection does not support one tap connections.",
+    "switchWallet": "Please switch your wallet and try again.",
+    "reconnectFromHub": "Please re-connect Alby Go from Alby Hub using the \"One Tap Connections\" button.",
+    "confirmConnection": "Confirm Connection",
+    "redirectNotice": "You will be redirected to <bold>{{returnTo}}</bold> after confirming.",
+    "connectionDetails": "Connection Details",
+    "requestedMethods": "Requested methods",
+    "allMethods": "all methods",
+    "notificationTypes": "Notification Types",
+    "isolatedConnection": "Isolated connection",
+    "yes": "Yes",
+    "expiry": "Expiry",
+    "metadata": "Metadata",
+    "requestingAccess": "<bold>{{name}}</bold> is requesting access to your <bold>Alby Hub</bold>.",
+    "requestingReceiveOnlyAccess": "<bold>{{name}}</bold> is requesting <bold>receive-only </bold>access to your <bold>Alby Hub</bold>.",
+    "budget": "budget",
+    "renewingBudget": "<period>{{period}} </period>budget",
+    "budgetRenewal": {
+      "daily": "daily",
+      "weekly": "weekly",
+      "monthly": "monthly",
+      "yearly": "yearly"
+    },
+    "editPermissionsHint": "You can edit permissions and revoke access at any time in your Alby Hub settings.",
+    "connected": "Connected!",
+    "redirecting": "Redirecting in {{seconds}} seconds...",
+    "returningHome": "Returning home in {{seconds}} seconds...",
+    "newApp": "New App"
+  }
+}

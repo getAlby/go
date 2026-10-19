@@ -2,6 +2,7 @@ import { Invoice } from "@getalby/lightning-tools/bolt11";
 import { router } from "expo-router";
 import { lnurl as lnurlLib } from "lib/lnurl";
 import { errorToast } from "~/lib/errorToast";
+import i18n from "~/lib/i18n";
 import { convertMerchantQRToLightningAddress } from "~/lib/merchants";
 
 export async function initiatePaymentFlow(
@@ -17,7 +18,7 @@ export async function initiatePaymentFlow(
       const query = bip21.includes("?") ? bip21.split("?")[1] : "";
       const lightningParam = new URLSearchParams(query).get("lightning");
       if (!lightningParam) {
-        throw new Error("No lightning param found in bitcoin payment link");
+        throw new Error(i18n.t("send.paymentFlow.noLightningParam"));
       }
       text = lightningParam;
     }
@@ -41,7 +42,7 @@ export async function initiatePaymentFlow(
         lnurlDetails.tag !== "payRequest" &&
         lnurlDetails.tag !== "withdrawRequest"
       ) {
-        throw new Error("LNURL tag not supported");
+        throw new Error(i18n.t("send.paymentFlow.lnurlTagNotSupported"));
       }
 
       if (lnurlDetails.tag === "withdrawRequest") {
@@ -85,7 +86,7 @@ export async function initiatePaymentFlow(
       return true;
     }
   } catch (error) {
-    errorToast(error, "Failed to load payment");
+    errorToast(error, i18n.t("send.paymentFlow.failed"));
   }
 
   return false;

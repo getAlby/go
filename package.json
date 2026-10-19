@@ -17,10 +17,12 @@
     "eas:build:android": "PLATFORM=android eas build --platform android",
     "ts:check": "tsc",
     "prepare": "husky",
-    "lint": "yarn lint:js && yarn tsc:compile && yarn format:fix --report-unused-disable-directives --max-warnings 0",
+    "lint": "yarn lint:js && yarn tsc:compile && yarn i18n:check && yarn format:fix --report-unused-disable-directives --max-warnings 0",
     "lint:js": "eslint . --max-warnings 0",
     "lint:js:fix": "eslint . --fix",
     "tsc:compile": "tsc --noEmit",
+    "i18n:generate": "node scripts/i18n-generate.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs",
     "format": "prettier --check '**/*.{js,ts,tsx,md,json}'",
     "format:fix": "prettier --log-level silent --write '**/*.{js,ts,tsx,md,json}'",
     "test": "jest",
@@ -28,6 +30,9 @@
   },
   "dependencies": {
     "@alevy97/react-native-userdefaults": "^0.2.2",
+    "@formatjs/intl-getcanonicallocales": "^3.2.12",
+    "@formatjs/intl-locale": "^5.3.12",
+    "@formatjs/intl-pluralrules": "^6.3.15",
     "@getalby/expo-shared-preferences": "^0.0.1",
     "@getalby/lightning-tools": "^8.1.1",
     "@getalby/sdk": "8.0.3",
@@ -55,6 +60,7 @@
     "expo-linear-gradient": "~57.0.1",
     "expo-linking": "~57.0.6",
     "expo-local-authentication": "~57.0.2",
+    "expo-localization": "~57.0.2",
     "expo-location": "~57.0.11",
     "expo-notification-service-extension-plugin": "^1.0.1",
     "expo-notifications": "~57.0.12",
@@ -62,12 +68,14 @@
     "expo-secure-store": "~57.0.1",
     "expo-splash-screen": "~57.0.7",
     "expo-status-bar": "~57.0.1",
+    "i18next": "^26.4.5",
     "message-port-polyfill": "^0.2.0",
     "nativewind": "^4.2.7",
     "nostr-tools": "2.23.5",
     "pastellify": "^0.1.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-i18next": "^17.0.16",
     "react-native": "0.86.2",
     "react-native-country-flag": "^2.0.2",
     "react-native-gesture-handler": "~2.32.0",
@@ -111,8 +119,11 @@
   "private": true,
   "jest": {
     "preset": "jest-expo",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|standard-navigation))"
+      "node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|@formatjs/.*|@noble/.*|@scure/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|standard-navigation))"
     ]
   },
   "expo": {

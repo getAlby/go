@@ -7,6 +7,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Keyboard,
   Platform,
@@ -39,6 +40,7 @@ function ContactInput({
   contactName,
   setContactName,
 }: ContactInputProps) {
+  const { t } = useTranslation();
   const match = lnAddress.trim().match(LN_ADDRESS_REGEX);
   const [input, setInput] = useState(
     contactName ||
@@ -97,7 +99,7 @@ function ContactInput({
         className="flex flex-row items-center justify-center px-12 py-2 gap-2"
       >
         <Text className="text-secondary-foreground font-medium2">
-          Add to Contacts
+          {t("send.address.addToContacts")}
         </Text>
       </Checkbox>
 
@@ -140,12 +142,12 @@ function ContactInput({
                   "font-semibold2 text-secondary-foreground",
                 )}
               >
-                Add to Contacts
+                {t("send.address.addToContacts")}
               </Text>
             </View>
             {isIOS ? (
               <BottomSheetTextInput
-                placeholder="Satoshi Nakamoto"
+                placeholder={t("send.address.contactNamePlaceholder")}
                 className="text-foreground placeholder:text-muted border-transparent bg-transparent text-center my-16 p-3 border ios:text-xl ios:sm:text-2xl !leading-[1.25] font-semibold2 caret-primary"
                 placeholderClassName="text-muted"
                 selectionColor={primary}
@@ -156,7 +158,7 @@ function ContactInput({
               />
             ) : (
               <Input
-                placeholder="Satoshi Nakamoto"
+                placeholder={t("send.address.contactNamePlaceholder")}
                 className="text-foreground border-0 border-transparent bg-transparent text-center my-16 p-3 android:text-xl font-semibold2"
                 value={input}
                 onChangeText={setInput}
@@ -165,7 +167,7 @@ function ContactInput({
               />
             )}
             <Button size="lg" onPress={save} disabled={!input}>
-              <Text>Save</Text>
+              <Text>{t("common.save")}</Text>
             </Button>
           </Wrapper>
         </BottomSheetView>
@@ -175,6 +177,7 @@ function ContactInput({
 }
 
 export function Address() {
+  const { t } = useTranslation();
   const [keyboardText, setKeyboardText] = useState("");
   const [contactName, setContactName] = useState("");
   const addressBookEntries = useAppStore((store) => store.addressBookEntries);
@@ -211,14 +214,14 @@ export function Address() {
 
   return (
     <>
-      <Screen title="Send to Address" />
+      <Screen title={t("send.address.title")} />
       <DismissableKeyboardView>
         <View className="flex-1 flex flex-col">
           <View className="flex-1 flex flex-col gap-8">
             <View className="flex items-center justify-center mt-6 px-12 relative">
               <Input
                 className="text-center border-transparent bg-transparent ios:text-2xl android:text-xl !leading-[1.25] font-semibold2 w-full"
-                placeholder="hello@getalby.com"
+                placeholder={t("send.address.placeholder")}
                 value={keyboardText}
                 onChangeText={setKeyboardText}
                 autoCapitalize="none"
@@ -245,7 +248,7 @@ export function Address() {
               )}
             <View className="flex-1 gap-4">
               <Text className="ios:text-xl android:text-lg text-center font-semibold2">
-                Address Book
+                {t("send.address.addressBook")}
               </Text>
               {filteredAddressBookEntries.length > 0 ? (
                 <ScrollView
@@ -263,7 +266,7 @@ export function Address() {
                 </ScrollView>
               ) : (
                 <Text className="text-secondary-foreground text-center">
-                  No matching entries.
+                  {t("send.address.noMatchingEntries")}
                 </Text>
               )}
             </View>
@@ -276,7 +279,7 @@ export function Address() {
               className="flex flex-row gap-2"
             >
               {isSubmitting && <Loading className="text-primary-foreground" />}
-              <Text>Next</Text>
+              <Text>{t("common.next")}</Text>
             </Button>
           </View>
         </View>

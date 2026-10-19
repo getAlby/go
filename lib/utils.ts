@@ -10,7 +10,10 @@ import { getPublicKey, nip19 } from "nostr-tools";
 import Toast from "react-native-toast-message";
 import { twMerge } from "tailwind-merge";
 import { errorToast } from "~/lib/errorToast";
-import { BitcoinDisplayFormat } from "~/lib/state/appStore";
+import i18n from "~/lib/i18n";
+
+// moved to lib/format.ts, re-exported so existing imports keep working
+export { formatBitcoinAmount } from "~/lib/format";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -47,16 +50,14 @@ export function safeNpubEncode(hex: string): string | undefined {
   }
 }
 
-export async function copyToClipboard(
-  text: string,
-  successMessage = "Copied to clipboard",
-) {
+export async function copyToClipboard(text: string, successMessage?: string) {
   // Clipboard.setStringAsync always resolves to true in iOS and
   // android so we don't have to add a catch block for errors
   await Clipboard.setStringAsync(text);
   Toast.show({
     type: "success",
-    text1: successMessage,
+    // resolved at call time so that the current language is used
+    text1: successMessage ?? i18n.t("common.copiedToClipboard"),
   });
 }
 
@@ -64,30 +65,12 @@ export async function readClipboardText() {
   try {
     const text = await Clipboard.getStringAsync();
     if (!text) {
-      errorToast(new Error("Your clipboard is empty."));
+      errorToast(new Error(i18n.t("errors.clipboardEmpty")));
       return undefined;
     }
     return text;
   } catch (error) {
-    errorToast(error, "Failed to read clipboard");
+    errorToast(error, i18n.t("errors.clipboardReadFailed"));
     return undefined;
-  }
-}
-
-export function formatBitcoinAmount(
-  amount: number,
-  displayFormat: BitcoinDisplayFormat = "bip177",
-  showSymbol: boolean = true,
-): string {
-  const formattedNumber = new Intl.NumberFormat().format(+amount);
-
-  if (!showSymbol) {
-    return formattedNumber;
-  }
-
-  if (displayFormat === "bip177") {
-    return `₿ ${formattedNumber}`;
-  } else {
-    return `${formattedNumber} ${amount === 1 ? "sat" : "sats"}`;
   }
 }

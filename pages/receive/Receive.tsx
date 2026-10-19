@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Share, TouchableOpacity, View } from "react-native";
 import { CreateInvoice } from "~/components/CreateInvoice";
 import {
@@ -19,6 +20,7 @@ import { useAppStore } from "~/lib/state/appStore";
 import { copyToClipboard } from "~/lib/utils";
 
 export function Receive() {
+  const { t } = useTranslation();
   const selectedWalletId = useAppStore((store) => store.selectedWalletId);
   const wallets = useAppStore((store) => store.wallets);
   const lightningAddress = wallets[selectedWalletId].lightningAddress;
@@ -26,7 +28,7 @@ export function Receive() {
   async function copy() {
     const text = lightningAddress;
     if (!text) {
-      errorToast(new Error("Nothing to copy"));
+      errorToast(new Error(t("receive.nothingToCopy")));
       return;
     }
     await copyToClipboard(text);
@@ -45,7 +47,7 @@ export function Receive() {
   return (
     <>
       <Screen
-        title="Receive"
+        title={t("receive.title")}
         className={(!lightningAddress && "ml-16") || undefined}
         animation="slide_from_left"
         right={
@@ -109,7 +111,7 @@ export function Receive() {
               }}
             >
               <RedeemIcon width={32} height={32} />
-              <Text numberOfLines={1}>Redeem</Text>
+              <Text numberOfLines={1}>{t("receive.redeem")}</Text>
             </Button>
             <Button
               variant="secondary"
@@ -121,7 +123,7 @@ export function Receive() {
                 height={32}
                 className="text-muted-foreground"
               />
-              <Text numberOfLines={1}>Share</Text>
+              <Text numberOfLines={1}>{t("common.share")}</Text>
             </Button>
             <Button
               variant="secondary"
@@ -135,7 +137,7 @@ export function Receive() {
                 height={32}
                 className="text-muted-foreground"
               />
-              <Text numberOfLines={1}>Amount</Text>
+              <Text numberOfLines={1}>{t("common.amount")}</Text>
             </Button>
           </View>
         </View>

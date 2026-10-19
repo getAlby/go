@@ -1,0 +1,10 @@
+{
+  "title": "Bitcoin Map",
+  "loading": "Loading BTC Map",
+  "locationPermission": "Enable permissions to access location",
+  "modal": {
+    "description1": "BTC Map is an open-source project with the goal of mapping and maintaining all the merchants accepting Bitcoin around the world.",
+    "description2": "Find merchants nearby, pay for goods and services, and help improve the map by contributing!",
+    "visit": "Visit btcmap.org"
+  }
+}
