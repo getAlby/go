@@ -4,15 +4,15 @@
   },
   "build": {
     "preview": {
-      "node": "22.23.2",
+      "node": "22.23.4",
       "distribution": "internal"
     },
     "production": {
-      "node": "22.23.2",
+      "node": "22.23.4",
       "autoIncrement": true
     },
     "production_apk": {
-      "node": "22.23.2",
+      "node": "22.23.4",
       "autoIncrement": true,
       "android": {
         "buildType": "apk"
