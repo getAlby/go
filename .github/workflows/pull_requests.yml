@@ -17,7 +17,8 @@ jobs:
       - name: 🏗 Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 22.x
+          node-version: ">=22.23.4 <23"
+          check-latest: true
           cache: yarn
 
       - name: 🏗 Setup EAS
