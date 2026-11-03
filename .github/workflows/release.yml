@@ -5,8 +5,13 @@ on:
     tags:
       - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
 
+permissions:
+  contents: read
+
 jobs:
   draft_release:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -25,11 +30,15 @@ jobs:
   #          prerelease: true
 
   build_android:
+    permissions:
+      contents: write
     needs: [draft_release]
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: Set up Java
         uses: actions/setup-java@v2

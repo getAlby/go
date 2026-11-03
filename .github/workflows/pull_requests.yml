@@ -1,12 +1,17 @@
 name: PR build
 on: [pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: Set up Java
         uses: actions/setup-java@v2
