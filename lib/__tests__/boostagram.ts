@@ -45,4 +45,15 @@ describe("getBoostagram", () => {
       } as Nip47TransactionMetadata),
     ).toBeUndefined();
   });
+
+  test.each(["true", "42", '"text"', "null", "[]"])(
+    "returns undefined for a TLV record that is not an object: %s",
+    (json) => {
+      expect(
+        getBoostagram({
+          tlv_records: [{ type: 7629169, value: toHex(json) }],
+        } as Nip47TransactionMetadata),
+      ).toBeUndefined();
+    },
+  );
 });

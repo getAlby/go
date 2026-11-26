@@ -1,5 +1,6 @@
 import type { Nip47TransactionMetadata } from "@getalby/sdk";
 import { hexToBytes } from "@noble/hashes/utils.js";
+import { isObject } from "~/lib/paymentMetadata";
 
 type TLVRecord = {
   type: number;
@@ -49,9 +50,11 @@ export function getBoostagram(
       return undefined;
     }
 
-    return JSON.parse(
+    const boostagram: unknown = JSON.parse(
       new TextDecoder().decode(hexToBytes(tlvRecord.value)),
-    ) as Boostagram;
+    );
+    // a record that is not an object is not a boostagram
+    return isObject(boostagram) ? (boostagram as Boostagram) : undefined;
   } catch {
     return undefined;
   }

@@ -126,6 +126,25 @@ describe("usePodcastingDetails", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  test("uses rss::payment when the keysend record is not a boostagram", async () => {
+    fetchMock.mockResolvedValue(mockHeadResponse(CASTAMATIC_METADATA));
+
+    const { result } = renderPodcastingDetails(
+      createTransaction({
+        metadata: {
+          comment: `rss::payment::stream ${CASTAMATIC_URL}`,
+          tlv_records: [
+            { type: 7629169, value: Buffer.from("true").toString("hex") },
+          ],
+        },
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current?.podcast).toBe("Example Podcast"),
+    );
+  });
+
   test("shows the metadata of a stream payment to a lightning address", async () => {
     fetchMock.mockResolvedValue(mockHeadResponse(CASTAMATIC_METADATA));
 
