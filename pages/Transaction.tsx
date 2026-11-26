@@ -1,5 +1,4 @@
 import type { Nip47Transaction, Nip47TransactionMetadata } from "@getalby/sdk";
-import { hexToBytes } from "@noble/hashes/utils.js";
 import dayjs from "dayjs";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { nip19 } from "nostr-tools";
@@ -21,6 +20,8 @@ import SentTransactionIcon from "~/components/icons/SentTransaction";
 import Screen from "~/components/Screen";
 import { Text } from "~/components/ui/text";
 import { useGetFiatAmount } from "~/hooks/useGetFiatAmount";
+import { usePodcastingDetails } from "~/hooks/usePodcastingDetails";
+import type { PodcastingDetails } from "~/lib/boostagram";
 import { errorToast } from "~/lib/errorToast";
 import { BitcoinDisplayFormat, useAppStore } from "~/lib/state/appStore";
 import {
@@ -33,27 +34,6 @@ import {
 type TransactionRouteParams = {
   transactionJSON: string;
   appPubkey?: string;
-};
-
-type TLVRecord = {
-  type: number;
-  value: string;
-};
-
-type Boostagram = {
-  app_name: string;
-  name: string;
-  podcast: string;
-  url: string;
-  episode?: string | number;
-  itemID?: string | number;
-  ts?: string | number;
-  message?: string;
-  sender_id: string | number;
-  sender_name: string;
-  time: string;
-  action: string;
-  value_msat_total: number;
 };
 
 export function Transaction() {
@@ -209,10 +189,7 @@ function TransactionDetails({
   bitcoinDisplayFormat: BitcoinDisplayFormat;
 }) {
   const encodedEventId = getEncodedEventId(transaction);
-  const boostagram = React.useMemo(
-    () => getBoostagram(transaction.metadata),
-    [transaction.metadata],
-  );
+  const podcastingDetails = usePodcastingDetails(transaction);
   const pubkey = transaction.metadata?.nostr?.pubkey;
   const npub = pubkey ? safeNpubEncode(pubkey) : undefined;
   const metadata = transaction.metadata as Nip47TransactionMetadata;
@@ -258,9 +235,9 @@ function TransactionDetails({
           </Link>
         </View>
       )}
-      {boostagram && (
+      {podcastingDetails && (
         <PodcastingInfo
-          boost={boostagram}
+          boost={podcastingDetails}
           bitcoinDisplayFormat={bitcoinDisplayFormat}
         />
       )}
@@ -341,26 +318,6 @@ function getEncodedEventId(transaction: Nip47Transaction) {
   }
 }
 
-function getBoostagram(
-  metadata?: Nip47TransactionMetadata,
-): Boostagram | undefined {
-  try {
-    const tlvRecord = (metadata?.tlv_records as TLVRecord[])?.find(
-      (record) => record.type === 7629169,
-    );
-
-    if (!tlvRecord) {
-      return undefined;
-    }
-
-    return JSON.parse(
-      new TextDecoder().decode(hexToBytes(tlvRecord.value)),
-    ) as Boostagram;
-  } catch {
-    return undefined;
-  }
-}
-
 function TransactionDetailRow(props: {
   title: string;
   content: string;
@@ -387,7 +344,7 @@ function PodcastingInfo({
   boost,
   bitcoinDisplayFormat,
 }: {
-  boost: Boostagram;
+  boost: PodcastingDetails;
   bitcoinDisplayFormat: BitcoinDisplayFormat;
 }) {
   const renderDetail = (title: string, content: any) => {
